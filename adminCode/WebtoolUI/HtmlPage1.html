@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>表格隔行换色+鼠标点击变色</title>
+    <style type="text/css">
+        /*表单样式 start*/
+ form table {
+     width:400px;
+     margin: 0 auto;
+    border: solid #E1E1E1;
+    border-width: 1px 0px 0px 1px;
+}
+
+   form  table tr th {
+        height: 20px;
+        line-height: 20px;
+        background: #E1E1E1;
+    }
+
+   form  table.stripes tr td {
+        height: 20px;
+        line-height: 20px;
+        background: #FFF;
+        vertical-align: middle;
+        border: solid #E1E1E1;
+        border-width: 0px 1px 1px 0px;
+        padding: 10px;
+    }
+    /* css注释：默认css背景被白色 */
+  form   table.stripes tr.alt td {
+        background: #F9F9F9;
+    }
+    /* css 注释：默认隔行背景颜色 */
+   form  table.stripes tr.over td {
+        background: #EFF4F7;
+    }
+/* css注释：鼠标经过时候背景颜色 */
+
+/*表单样式 end*/
+
+     
+    </style>
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+    <link href="textbox.css" rel="stylesheet" />
+    <script type="text/javascript">
+
+        $(document).ready(function () { //这个就是传说的ready 
+            $(".stripes tr").mouseover(function () {
+                //如果鼠标移到class为stripe的表格的tr上时，执行函数 
+                $(this).addClass("over");
+            }).mouseout(function () {
+                //给这行添加class值为over，并且当鼠标一出该行时执行函数 
+                $(this).removeClass("over");
+            }) //移除该行的class 
+            $(".stripes tr:even").addClass("alt");
+            //给class为stripe的表格的偶数行添加class值为alt 
+            //www.divcss5.com 整理特效 
+        });
+
+    </script>
+</head>
+<body>
+        <form>
+            <table class="stripes"  border="0" cellspacing="0" cellpadding="0">
+
+
+                <tr>
+                    <td width="92">1</td>
+                    <td width="339"><a href="http://www.divcss5.com/">CSS教程网</a></td>
+                    <td width="465"><a href="http://www.divcss5.com/">www.divcss5.com</a></td>
+                </tr>
+                <tr>
+                    <td width="92">2</td>
+                    <td width="339"><a href="http://www.divcss5.com/">DIVCSS5</a></td>
+                    <td width="465"><a href="http://www.divcss5.com/">www.divcss5.com</a></td>
+                </tr>
+                 <tr>
+                    <td width="92">2</td>
+                    <td width="339"><a href="http://www.divcss5.com/">DIVCSS5</a></td>
+                    <td width="465"><a href="http://www.divcss5.com/">www.divcss5.com</a></td>
+                </tr>
+                <tr>
+                    <td width="92">3</td>
+                    <td width="339"><a href="http://www.css5.com.cn/">CSS5</a></td>
+                    <td width="465"><input class="textbox" style="width:100%;height:25px"></td>
+                </tr>
+            </table>
+            </form>
+    </body>
+</html>

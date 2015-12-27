@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+      <script/ type="text/javascript">
+          var BaseUrl = "/PatServer/AppUser.ashx";
+          var json = '?json={"jsonEntity":{"":""},"action":"appreg"}';
+          function go() {
+
+              var dd = '?json={"jsonEntity":{"":""},"action":"HttpUploadImg"}';
+              var postData = $("#form1").serializeArray();
+              //发送异步请求到后台保存数据
+              $.post("/httpSever/File_ImageHandler.ashx" + dd, postData, function (result) {
+                  var data = eval('(' + result + ')');
+                  alert(data.Data);
+              });
+          }
+          function UPimg() {
+              var json = '?json={"jsonEntity":{"":""},"action":"HttpUploadImg"}';
+              //----上传头像
+              $("#form1").form('submit', {
+                  url: "/httpSever/File_ImageHandler.ashx" + json,
+                  onSubmit: function () {
+
+                  },
+                  success: function (data) {
+                      var d = eval('(' + data + ')');
+                      alerts(d.Data, 5);
+                  }
+              })
+
+          }
+         </script>
+</head>
+<body>
+     <form id="form1" method="post" enctype="multipart/form-data">
+        <input  name="appuser" type="text" />
+          <input  name="apppass" type="text" />
+        <input  name="file" type="file" />
+      <input id="Submit1" type="submit" value="submit" />
+    </form>
+  
+      <a href="javascript:void(0)"  onclick="UPimg();">确定</a>
+</body>
+</html>
