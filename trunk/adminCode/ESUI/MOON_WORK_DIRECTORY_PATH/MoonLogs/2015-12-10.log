@@ -1,0 +1,60 @@
+
+[Exception] 2015-12-10 22:35:28.3151 ThreadId=19
+无法将类型为“System.Guid”的对象强制转换为类型“System.String”。
+   在 SetMethod(v_TS_Car , Object )
+   在 Moon.Orm.MoonFastInvoker`1.GetTFrom(IDataRecord record)
+-------------------------------------------
+
+[Error] 2015-12-10 22:35:28.3151 ThreadId=19
+类型:e3net.Mode.TramStewardDB.v_TS_Car的属性:CreateManId,在赋值为079654f1-5033-4207-8919-9a8bc3212735(类型为:System.Guid)时出错
+-------------------------------------------
+
+[Exception] 2015-12-10 22:36:02.8411 ThreadId=42
+无法将类型为“System.Guid”的对象强制转换为类型“System.String”。
+   在 SetMethod(v_TS_Car , Object )
+   在 Moon.Orm.MoonFastInvoker`1.GetTFrom(IDataRecord record)
+-------------------------------------------
+
+[Error] 2015-12-10 22:36:02.8421 ThreadId=42
+类型:e3net.Mode.TramStewardDB.v_TS_Car的属性:CreateManId,在赋值为079654f1-5033-4207-8919-9a8bc3212735(类型为:System.Guid)时出错
+-------------------------------------------
+
+[Exception] 2015-12-10 22:36:05.7082 ThreadId=19
+无法将类型为“System.Guid”的对象强制转换为类型“System.String”。
+   在 SetMethod(v_TS_Car , Object )
+   在 Moon.Orm.MoonFastInvoker`1.GetTFrom(IDataRecord record)
+-------------------------------------------
+
+[Error] 2015-12-10 22:36:05.7092 ThreadId=19
+类型:e3net.Mode.TramStewardDB.v_TS_Car的属性:CreateManId,在赋值为079654f1-5033-4207-8919-9a8bc3212735(类型为:System.Guid)时出错
+-------------------------------------------
+
+[Exception] 2015-12-10 22:42:18.2485 ThreadId=5
+无法将类型为“System.Guid”的对象强制转换为类型“System.String”。
+   在 SetMethod(v_TS_Car , Object )
+   在 Moon.Orm.MoonFastInvoker`1.GetTFrom(IDataRecord record)
+-------------------------------------------
+
+[Error] 2015-12-10 22:42:18.2495 ThreadId=5
+类型:e3net.Mode.TramStewardDB.v_TS_Car的属性:CreateManId,在赋值为079654f1-5033-4207-8919-9a8bc3212735(类型为:System.Guid)时出错
+-------------------------------------------
+
+[Exception] 2015-12-10 22:43:10.5125 ThreadId=5
+无法将类型为“System.Guid”的对象强制转换为类型“System.String”。
+   在 SetMethod(v_TS_Car , Object )
+   在 Moon.Orm.MoonFastInvoker`1.GetTFrom(IDataRecord record)
+-------------------------------------------
+
+[Error] 2015-12-10 22:43:10.5365 ThreadId=5
+类型:e3net.Mode.TramStewardDB.v_TS_Car的属性:CreateManId,在赋值为079654f1-5033-4207-8919-9a8bc3212735(类型为:System.Guid)时出错
+-------------------------------------------
+
+[Exception] 2015-12-10 22:44:32.1852 ThreadId=11
+无法将类型为“System.Guid”的对象强制转换为类型“System.String”。
+   在 SetMethod(v_TS_Car , Object )
+   在 Moon.Orm.MoonFastInvoker`1.GetTFrom(IDataRecord record)
+-------------------------------------------
+
+[Error] 2015-12-10 22:44:32.1862 ThreadId=11
+类型:e3net.Mode.TramStewardDB.v_TS_Car的属性:CreateManId,在赋值为079654f1-5033-4207-8919-9a8bc3212735(类型为:System.Guid)时出错
+-------------------------------------------
