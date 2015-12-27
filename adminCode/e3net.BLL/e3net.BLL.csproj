@@ -57,6 +57,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DynamicTable\CategoryTableBiz.cs" />
+    <Compile Include="DynamicTable\ColumnChartsBiz.cs" />
     <Compile Include="File_ImageBiz.cs" />
     <Compile Include="ParameterXmlHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

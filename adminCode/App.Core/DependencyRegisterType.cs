@@ -7,8 +7,10 @@ using System.Web;
 //using App.IBLL;
 //using App.IDAL;
 using e3net.BLL;
+using e3net.BLL.DynamicTable;
 using e3net.BLL.RMS;
 using e3net.IDAL;
+using e3net.IDAL.DynamicTable;
 using e3net.IDAL.RMS;
 using Microsoft.Practices.Unity;
 
@@ -41,6 +43,8 @@ namespace App.Core
           container.RegisterType<ISys_DictionaryDao, Sys_DictionaryBiz>();
 
              container.RegisterType<IRMS_DepartmentDao, RMS_DepartmentBiz>();
+             container.RegisterType<ICategoryTableDao, CategoryTableBiz>();
+             container.RegisterType<IColumnChartsDao, ColumnChartsBiz>();
             #endregion
               
 
