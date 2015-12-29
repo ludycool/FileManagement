@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
 using Moon.Orm;
 
-namespace DefaultConnection
+namespace e3net.Mode
 {
 
     [Table("[CategoryTable]", DbType.SqlServer)]
@@ -24,10 +21,10 @@ namespace DefaultConnection
         /// <summary>
         /// 表名
         /// </summary>
-        public String TableName_
+        public String UserTableName
         {
-            get { return GetPropertyValue<String>("TableName"); }
-            set { SetPropertyValue("TableName", value); }
+            get { return GetPropertyValue<String>("UserTableName"); }
+            set { SetPropertyValue("UserTableName", value); }
         }
 
         /// <summary>
@@ -51,7 +48,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public DateTime? Column5
+        public DateTime? Column_5
         {
             get { return GetPropertyValue<DateTime?>("Column_5"); }
             set { SetPropertyValue("Column_5", value); }
@@ -60,7 +57,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public Boolean? Column6
+        public Boolean? Column_6
         {
             get { return GetPropertyValue<Boolean?>("Column_6"); }
             set { SetPropertyValue("Column_6", value); }
@@ -69,7 +66,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Column7
+        public String Column_7
         {
             get { return GetPropertyValue<String>("Column_7"); }
             set { SetPropertyValue("Column_7", value); }
@@ -78,7 +75,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Column8
+        public String Column_8
         {
             get { return GetPropertyValue<String>("Column_8"); }
             set { SetPropertyValue("Column_8", value); }
@@ -87,7 +84,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Column9
+        public String Column_9
         {
             get { return GetPropertyValue<String>("Column_9"); }
             set { SetPropertyValue("Column_9", value); }
@@ -96,7 +93,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public Int32? Column10
+        public Int32? Column_10
         {
             get { return GetPropertyValue<Int32?>("Column_10"); }
             set { SetPropertyValue("Column_10", value); }
@@ -127,7 +124,7 @@ namespace DefaultConnection
         /// <summary>
         /// 表名
         /// </summary>
-        public static readonly FieldBase TableName_ = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[TableName]");
+        public static readonly FieldBase UserTableName = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[UserTableName]");
 
         /// <summary>
         /// 中文名称
@@ -142,32 +139,32 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column5 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_5]");
+        public static readonly FieldBase Column_5 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_5]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column6 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_6]");
+        public static readonly FieldBase Column_6 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_6]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column7 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_7]");
+        public static readonly FieldBase Column_7 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_7]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column8 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_8]");
+        public static readonly FieldBase Column_8 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_8]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column9 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_9]");
+        public static readonly FieldBase Column_9 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_9]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column10 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_10]");
+        public static readonly FieldBase Column_10 = new FieldBase(DbType.SqlServer, "[CategoryTable]", FieldType.Common, "[Column_10]");
     }
 
 }

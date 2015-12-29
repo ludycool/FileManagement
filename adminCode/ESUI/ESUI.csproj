@@ -235,6 +235,7 @@
     <Compile Include="Controllers\ButtonsController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\DictionaryController.cs" />
+    <Compile Include="Controllers\DynamicTableController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManuController.cs" />
@@ -3451,6 +3452,7 @@
     <Content Include="Views\Parameter\Index.cshtml" />
     <Content Include="Views\Sys_CityArea\Index.cshtml" />
     <Content Include="Views\Login_old\Index.cshtml" />
+    <Content Include="Views\DynamicTable\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="upload\image\20150319\" />
