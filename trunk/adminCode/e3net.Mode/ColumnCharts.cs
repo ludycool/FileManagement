@@ -24,16 +24,16 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String CategoryTable
+        public String CategoryTableID
         {
-            get { return GetPropertyValue<String>("CategoryTable"); }
-            set { SetPropertyValue("CategoryTable", value); }
+            get { return GetPropertyValue<String>("CategoryTableID"); }
+            set { SetPropertyValue("CategoryTableID", value); }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public String Field
+        public String field
         {
             get { return GetPropertyValue<String>("field"); }
             set { SetPropertyValue("field", value); }
@@ -42,7 +42,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Title
+        public String title
         {
             get { return GetPropertyValue<String>("title"); }
             set { SetPropertyValue("title", value); }
@@ -51,7 +51,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public Int32? Rowspan
+        public Int32? rowspan
         {
             get { return GetPropertyValue<Int32?>("rowspan"); }
             set { SetPropertyValue("rowspan", value); }
@@ -60,7 +60,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public Int32? Width
+        public Int32? width
         {
             get { return GetPropertyValue<Int32?>("width"); }
             set { SetPropertyValue("width", value); }
@@ -69,7 +69,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public Int32? Colspan
+        public Int32? colspan
         {
             get { return GetPropertyValue<Int32?>("colspan"); }
             set { SetPropertyValue("colspan", value); }
@@ -78,7 +78,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Align
+        public String align
         {
             get { return GetPropertyValue<String>("align"); }
             set { SetPropertyValue("align", value); }
@@ -87,7 +87,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public Boolean? Resizable
+        public Boolean? resizable
         {
             get { return GetPropertyValue<Boolean?>("resizable"); }
             set { SetPropertyValue("resizable", value); }
@@ -96,16 +96,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public Boolean? Fixed
-        {
-            get { return GetPropertyValue<Boolean?>("fixed"); }
-            set { SetPropertyValue("fixed", value); }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Boolean? Hidden
+        public Boolean? hidden
         {
             get { return GetPropertyValue<Boolean?>("hidden"); }
             set { SetPropertyValue("hidden", value); }
@@ -114,7 +105,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Formatter
+        public String formatter
         {
             get { return GetPropertyValue<String>("formatter"); }
             set { SetPropertyValue("formatter", value); }
@@ -123,7 +114,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public Boolean? Checkbox
+        public Boolean? checkbox
         {
             get { return GetPropertyValue<Boolean?>("checkbox"); }
             set { SetPropertyValue("checkbox", value); }
@@ -132,7 +123,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Styler
+        public String styler
         {
             get { return GetPropertyValue<String>("styler"); }
             set { SetPropertyValue("styler", value); }
@@ -141,7 +132,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Editor
+        public String editor
         {
             get { return GetPropertyValue<String>("editor"); }
             set { SetPropertyValue("editor", value); }
@@ -208,72 +199,67 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase CategoryTable = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[CategoryTable]");
+        public static readonly FieldBase CategoryTableID = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[CategoryTableID]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Field = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[field]");
+        public static readonly FieldBase field = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[field]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Title = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[title]");
+        public static readonly FieldBase title = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[title]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Rowspan = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[rowspan]");
+        public static readonly FieldBase rowspan = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[rowspan]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Width = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[width]");
+        public static readonly FieldBase width = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[width]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Colspan = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[colspan]");
+        public static readonly FieldBase colspan = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[colspan]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Align = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[align]");
+        public static readonly FieldBase align = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[align]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Resizable = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[resizable]");
+        public static readonly FieldBase resizable = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[resizable]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Fixed = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[fixed]");
+        public static readonly FieldBase hidden = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[hidden]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Hidden = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[hidden]");
+        public static readonly FieldBase formatter = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[formatter]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Formatter = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[formatter]");
+        public static readonly FieldBase checkbox = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[checkbox]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Checkbox = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[checkbox]");
+        public static readonly FieldBase styler = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[styler]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Styler = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[styler]");
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static readonly FieldBase Editor = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[editor]");
+        public static readonly FieldBase editor = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[editor]");
 
         /// <summary>
         /// 
