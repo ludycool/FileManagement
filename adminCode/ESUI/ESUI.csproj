@@ -467,6 +467,7 @@
     <Content Include="Content\JqueryEasyUI\themes\default\validatebox.css" />
     <Content Include="Content\JqueryEasyUI\themes\default\window.css" />
     <Content Include="Content\js\area.js" />
+    <Content Include="Content\js\publicMethod.js" />
     <Content Include="Content\Login\wuye\base.css" />
     <Content Include="Content\Login\wuye\bc_bg.gif" />
     <Content Include="Content\Login\wuye\bc_separator.gif" />
@@ -3453,6 +3454,7 @@
     <Content Include="Views\Sys_CityArea\Index.cshtml" />
     <Content Include="Views\Login_old\Index.cshtml" />
     <Content Include="Views\DynamicTable\Index.cshtml" />
+    <Content Include="Views\DynamicTable\ListAdd.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="upload\image\20150319\" />
