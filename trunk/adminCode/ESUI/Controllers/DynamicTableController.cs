@@ -22,6 +22,9 @@ namespace ESUI.Controllers
         // GET: /DynamicTable/
         [Dependency]
         public CategoryTableBiz OPBiz { get; set; }
+        
+        [Dependency]
+        public ColumnChartsBiz CCBiz { get; set; }
         public ActionResult Index()
         {
             return View();
@@ -110,7 +113,7 @@ namespace ESUI.Controllers
             }
 
 
-            if (OPBiz.GetCount<ColumnChartsSet>(ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID).And(ColumnChartsSet.field.Equal(categoryTable.field))) > 0.0)
+            if (CCBiz.GetCount<ColumnChartsSet>(ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID).And(ColumnChartsSet.field.Equal(categoryTable.field))) > 0.0)
             {
                 return Json("Nok", JsonRequestBehavior.AllowGet);
             }
@@ -123,13 +126,13 @@ namespace ESUI.Controllers
                 //rol.RoleDescription = RMS_ButtonsModle.RoleDescription;
                 //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
 
-                OPBiz.Add(categoryTable);
+                CCBiz.Add(categoryTable);
 
 
            
             var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(categoryTable.CategoryTableID)));
 
-            OPBiz.ExecuteSqlWithNonQuery("alter table " + catmodle.UserTableName + " add " + categoryTable .field+ " nvarchar(500) [null]");
+            OPBiz.ExecuteSqlWithNonQuery("alter table " + catmodle.UserTableName + " add " + categoryTable .field+ " nvarchar(500) null");
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
@@ -137,7 +140,7 @@ namespace ESUI.Controllers
 
                 categoryTable.WhereExpression = ColumnChartsSet.ID.Equal(categoryTable.ID);
                 //  spmodel.GroupId = GroupId;
-                if (OPBiz.Update(categoryTable) > 0)
+                if (CCBiz.Update(categoryTable) > 0)
                 {
                     return Json("ok", JsonRequestBehavior.AllowGet);
                 }
@@ -188,7 +191,7 @@ namespace ESUI.Controllers
             //var list2 = OPBiz.GetPagingData(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
-            var list2 = OPBiz.GetEntities(ColumnChartsSet.SelectAll());
+            var list2 = CCBiz.GetEntities(ColumnChartsSet.SelectAll());
             // var mql = RMS_ButtonsSet.Id.NotEqual("");
             dic.Add("rows", list2);
             dic.Add("total", list2.Count);

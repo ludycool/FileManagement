@@ -32,8 +32,8 @@
 
 
             jQuery(document).ready(function() {
-                $("#CategoryTableID").val(@ViewBag.RuteUrl);
-                // AutoWH("#body", 40, 42);//自适应宽度
+              
+               AutoWH("#body", 40, 42);//自适应宽度
                 $('#dg').datagrid({
                     url: BaseUrl + 'ColumnGetList',
                     columns: [
@@ -81,6 +81,7 @@
                             handler: function() {
                                 //实现弹出注册信息的页面
                                 ShowAddDialog();
+                              
                             }
                         }, '-', {
                             id: 'btncut',
@@ -89,14 +90,6 @@
                             handler: function() {
                                 //实现修改的方法
                                 ShowUpdateInfo();
-                            }
-                        }, '-', {
-                            id: 'btnCancle',
-                            text: '直接删除',
-                            iconCls: 'icon-remove',
-                            handler: function() {
-                                //实现直接删除所有数据的方法
-                                deleteInfo();
                             }
                         }
                     ]
@@ -158,6 +151,7 @@
                     }
                 });
                 $("#ff").form("clear");
+                $("#CategoryTableID").val('@ViewBag.RuteUrl');
             }
 
 //实现按钮的编辑，包括增查改
