@@ -173,6 +173,15 @@ namespace DefaultConnection
             get { return GetPropertyValue<String>("NumberAddress"); }
             set { SetPropertyValue("NumberAddress", value); }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Boolean? MergeHeader
+        {
+            get { return GetPropertyValue<Boolean?>("MergeHeader"); }
+            set { SetPropertyValue("MergeHeader", value); }
+        }
     }
 
     [Table("[ColumnCharts]", DbType.SqlServer)]
@@ -280,6 +289,11 @@ namespace DefaultConnection
         /// 启动公式计算地址
         /// </summary>
         public static readonly FieldBase NumberAddress = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[NumberAddress]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase MergeHeader = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[MergeHeader]");
     }
 
 }
