@@ -190,13 +190,69 @@ namespace ESUI.Controllers
 
             //var list2 = OPBiz.GetPagingData(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
-
-            var list2 = CCBiz.GetEntities(ColumnChartsSet.SelectAll());
+            //var list2 = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "'");
+           var list2 = CCBiz.GetEntities(ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition)));
             // var mql = RMS_ButtonsSet.Id.NotEqual("");
             dic.Add("rows", list2);
             dic.Add("total", list2.Count);
 
             return Json(dic, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 获取列
+        /// </summary>
+        /// <returns></returns>
+        public string GetBtnColumn(string Condition)
+        {
+
+         string menus = " [\n";
+            var sql = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition));
+            List<ColumnCharts> list = CCBiz.GetOwnList<ColumnCharts>(sql);
+            if (list != null)
+            {
+                //menus += "{  ";
+
+                //menus += "title:\"名称\",field:\"Name\", width: 100";
+                //menus += "},";
+                //menus += "{  ";
+
+                //menus += "title:\"浏览\",field:\"ControlId_Browse\", width: 30,editor:{type:'checkbox',options:{on:'1',off:'0'}}, formatter: formatCheck";
+                //menus += "},";
+
+                foreach (ColumnCharts item in list)
+                {
+                    if (item.MergeHeader==true)
+                    {
+                        menus += "{  ";
+
+                        menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\"";
+                        menus += "},";
+                    }
+                    else
+                    {
+                        menus += "{  ";
+                        if (item.rowspan>1)
+                        {
+                            menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:\"{" + item.editor + "}\"";
+                        }
+                        else
+                        {
+                            menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" + item.width + "\",editor:\"{" + item.editor + "}\"";
+                        }
+
+                     
+                        menus += "},";
+                    }
+                   
+                }
+
+            }
+
+            menus = menus.Substring(0, menus.Length - 1);
+            menus = menus + "]";
+
+            return menus;
+
         }
     }
 }
