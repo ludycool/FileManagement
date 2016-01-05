@@ -3459,6 +3459,7 @@
     <Content Include="Views\TF_PaperFile\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controllers\FileManagementDB\" />
     <Folder Include="upload\image\20150319\" />
   </ItemGroup>
   <ItemGroup>
@@ -3512,7 +3513,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>8044</DevelopmentServerPort>
+          <DevelopmentServerPort>8043</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:31974/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
