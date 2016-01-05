@@ -59,6 +59,9 @@
   <ItemGroup>
     <Compile Include="DynamicTable\CategoryTableBiz.cs" />
     <Compile Include="DynamicTable\ColumnChartsBiz.cs" />
+    <Compile Include="FileManagementDB\TF_PaperFileBiz.cs" />
+    <Compile Include="FileManagementDB\TF_LifeCommentsBiz.cs" />
+    <Compile Include="FileManagementDB\TF_ElectronicFileBiz.cs" />
     <Compile Include="File_ImageBiz.cs" />
     <Compile Include="ParameterXmlHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

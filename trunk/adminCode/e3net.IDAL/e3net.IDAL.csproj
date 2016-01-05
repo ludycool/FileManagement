@@ -59,6 +59,9 @@
   <ItemGroup>
     <Compile Include="DynamicTable\ICategoryTableDao.cs" />
     <Compile Include="DynamicTable\IColumnChartsDao.cs" />
+    <Compile Include="FileManagementDB\ITF_PaperFileDao.cs" />
+    <Compile Include="FileManagementDB\ITF_LifeCommentsDao.cs" />
+    <Compile Include="FileManagementDB\ITF_ElectronicFileDao.cs" />
     <Compile Include="IBaseDao.cs" />
     <Compile Include="IFile_ImageDao.cs" />
     <Compile Include="ISys_DictionaryDao.cs" />
