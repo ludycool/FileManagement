@@ -1,13 +1,12 @@
 ﻿<!DOCTYPE html>
 @{
-    ViewBag.TName = "Index";
+    ViewBag.TrueName = "Index";
 }
 
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <script type="text/javascript" charset="utf-8" src="~/Content/js/ImgUp.js"></script>
     <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
     @* ReSharper disable once NotAllPathsReturnValue *@
 
@@ -24,29 +23,29 @@
                 FormStripes();//表单样式
                 AutoWH("#body", 40, 42);//自适应宽度
                 DataGridSet();
-                GetSonDictionaryNo("Category", "0101");
-                FTypes = 1;//上传类型 1为文件 0 为图片
+                $('#States').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
             })
             function DataGridSet() {
                 $('#dg').datagrid({
                     url: BaseUrl + 'Search',
                     columns: [[
                         { field: 'ck', checkbox: true },
-                        { field: 'TName', title: '名称', width: 150, sortable: true },
+                        { field: 'TrueName', title: '姓名', width: 150, sortable: true },
                         { field: 'Units', title: '单位', width: 100, sortable: true },
-                        { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
-                         {
-                             field: 'Summary', title: '摘要', width: 300, formatter: function (value, row, index) {
-                                 return value;
-                             }
-                         }, {
-                             field: 'location', title: '存放位置', width: 100, sortable: true, formatter: function (value, row, index) {
-                                 return value;
-                             }
-                         }
+                       {
+                           field: 'Duties', title: '职务', width: 100, sortable: true, formatter: function (value, row, index) {
+                               return value;
+                           }
+                       },
+                    { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
+            {
+                field: 'Summary', title: '评语', width: 300, formatter: function (value, row, index) {
+                    return value;
+                }
+            }
                     ]],
                     iconCls: 'icon-save',
-                    title: '纸质材料',
+                    title: '生平',
                     nowrap: true,
                     fit: true,
                     fitColumns: true,
@@ -56,7 +55,7 @@
                     pageSize: 20,
                     pagination: true,
                     rownumbers: true,
-                    sortName: 'CreateTime,TName',
+                    sortName: 'CreateTime',
                     sortOrder: 'desc',
                     toolbar: toolbars
                 });
@@ -66,21 +65,21 @@
                 //弹出层
                 // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
                 $('#DivEditor').dialog({
-                    title: '添加材料',
+                    title: '添加生平',
                     //width: 400,
                     //height: 200,
                     closed: false,
                     cache: false,
                     // href: 'get_content.php',
-                    modal: true, top: 50, 
+                    modal: true, top: 50,
                     onClose: function () {
                         //解决弹出窗口关闭后，验证消息还显示在最上面
 
                     }
                 });
+                AutoMaxH("#Div_form", 150)
                 $(".validatebox-tip").remove();//清除验证样式
                 DataBaseFunction.ClearForm("ff");
-                GetFileList();//清空文件
             }
 
 
@@ -93,7 +92,7 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.TName).window('resize', { top: 50});
+                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.TrueName).window('resize', { top: 50 });
                 $(".validatebox-tip").remove();//清除验证样式
                 var ID = rows.Id;  //获取到了用选择的ID
                 $.ajax({
@@ -106,8 +105,7 @@
                         //var result = eval('(' + data + ')');
                         DataBaseFunction.BindForm("ff", data);
                         $('#Category').combotree('setValue', data['Category']);
-
-                        GetFileList(data.Id);//图片
+                        $('#States').combobox('select', data.States);
                     }
                 });
 
@@ -130,14 +128,6 @@
                         $('#DivEditor').dialog('close');
                         $(".validatebox-tip").remove();
                         $("#dg").datagrid("reload");
-
-                        var id = $("input[name='Id']").val();
-                        if (id == "") {
-                            id = data.Data;//id
-                        }
-                        Delfile();//删除移除的图片
-                        SaveToid(id);//保存添加的图片
-
                     }
                 });
 
@@ -151,14 +141,12 @@
             //搜索
             function Search() {
                 // $("#fSearh").form("clear");
+                $('#States_eq').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
                 $("#Div_Searh").dialog('open').dialog('setTitle', '搜索').window('resize', { top: 100, left: 100 });
             }
             //删除
             function Del() {
-                DataBaseFunction.deleteInfo("dg", "Id", "TName");
-            }
-            function AddImg() {
-                FileUp("TF_PaperFile")
+                DataBaseFunction.deleteInfo("dg", "Id", "TrueName");
             }
         </script>
     }
@@ -179,15 +167,31 @@
                     <td style="width: 60px;">
                         <label>名称：</label></td>
                     <td>
-                        <input type="text" class="textbox" name="TName_like" style="width: 200px;" />
+                        <input type="text" class="textbox" name="TrueName_like" style="width: 200px;" />
                     </td>
 
                 </tr>
                 <tr>
                     <td>
-                        <label>摘要：</label></td>
+                        <label>职务：</label></td>
                     <td>
-                        <input type="text" class="textbox" name="Summary_like" style="width: 200px;" />
+                        <input type="text" class="textbox" name="Duties_like" style="width: 200px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>单位：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="Units_like" style="width: 200px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>状态：</label></td>
+                    <td>
+                        <input id="States_eq" class="easyui-combobox" name="States_eq"
+                            data-options="valueField:'ItemValue',textField:'ItemName'" />
+
                     </td>
                 </tr>
             </table>
@@ -200,32 +204,22 @@
         </div>
     </div>
     <!------------------------弹出信息的弹出层---------------------------------->
-    <div id="DivEditor" class="easyui-dialog" style="width: 700px;"
+    <div id="DivEditor" class="easyui-dialog" style="width: 900px;"
         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:490,width:680,border:false">
+        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:600,width:880,border:false">
             <form id="ff" method="post" enctype="multipart/form-data">
                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
                     <input type="hidden" name="Id" />
                     <input type="hidden" name="CreateMan" />
                     <input type="hidden" name="CreateTime" />
                     <input type="hidden" name="UpdateTime" />
-                    <input type="hidden" name="States" />
                     <input type="hidden" name="isValid" />
                     <input type="hidden" name="isDeleted" />
                     <tr>
-                        <td style="width: 200px;">
-                            <label>名称：</label></td>
+                        <td style="width: 100px;">
+                            <label>姓名：</label></td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="TName" data-options="required:true" /></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>类别：</label></td>
-                        <td>
-                            <select id="Category" name="Category" class="easyui-combotree" style="width: 200px;"
-                                data-options="required:true">
-                            </select>
-                        </td>
+                            <input class="easyui-validatebox textbox" type="text" name="TrueName" data-options="required:true" /></td>
                     </tr>
                     <tr>
                         <td>
@@ -235,42 +229,33 @@
                     </tr>
                     <tr>
                         <td>
-                            <label>存放位置：</label></td>
+                            <label>职务：</label></td>
                         <td>
-                            <textarea class="areabox" name="location" style="height: 100px;"></textarea></td>
+                            <input class="easyui-validatebox textbox" type="text" name="Duties" /></td>
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            <label>详情：</label></td>
+                        <td>
+                            <textarea class="areabox" name="Details" style="height: 400px; width: 600px;"></textarea></td>
                     </tr>
                     <tr>
                         <td>
-                            <label>扫描件：</label></td>
+                            <label>评语：</label></td>
                         <td>
+                            <textarea class="areabox" name="Summary" style="height: 100px; width: 600px;"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>状态：</label></td>
+                        <td>
+                            <input id="States" class="easyui-combobox" name="States"
+                                data-options="valueField:'ItemValue',textField:'ItemName'" />
 
-                             <div style="line-height: 20px; height: 20px;display: block;width: 450px;">
-                                <span style=" font-size: 16px; float: left;">
-                                    <input type="file" id="fileimg" name="file" style="width: 50px;" onchange="AddImg()" />
-                                </span>
-                                <span style="padding-left: 10px; float: left; color: red;">(右键另存为，可保存文件)</span>
-                            </div>
-                            
-                            <div style="display: none">
-                                <div id="content" style="display: block; width: 450px; float: left;margin-top:2px;">
-                                    <input id="fileId" type="hidden" />
-                                    <a href="/Content/js/ImgUp.js" target="_blank" id="aflie"></a>
-                                    <a id="jian" href="#" class="easyui-linkbutton" style="float: right; " data-options="iconCls:'icon-delete'">移除</a>
-                                </div>
-                            </div>
-                            <div id="zhi" style="display: block; width: 450px;">
-                            </div>
-                           
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            <label>摘要：</label></td>
-                        <td>
-                            <textarea class="areabox" name="Summary"></textarea></td>
-                    </tr>
-
-
                 </table>
             </form>
         </div>

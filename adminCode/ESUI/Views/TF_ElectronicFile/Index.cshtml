@@ -68,7 +68,7 @@
                     closed: false,
                     cache: false,
                     // href: 'get_content.php',
-                    modal: true, top: 50, left: 50,
+                    modal: true, top: 50, 
                     onClose: function () {
                         //解决弹出窗口关闭后，验证消息还显示在最上面
 
@@ -89,7 +89,7 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.TName).window('resize', { top: 50, left: 50 });
+                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.TName).window('resize', { top: 50 });
                 $(".validatebox-tip").remove();//清除验证样式
                 var ID = rows.Id;  //获取到了用选择的ID
                 $.ajax({
@@ -151,10 +151,10 @@
             }
             //删除
             function Del() {
-                DataBaseFunction.deleteInfo("dg", "Id", "Title");
+                DataBaseFunction.deleteInfo("dg", "Id", "TName");
             }
             function AddImg() {
-                FileUp("TF_PaperFile")
+                FileUp("TF_ElectronicFile")
             }
         </script>
     }
@@ -198,7 +198,7 @@
     <!------------------------弹出信息的弹出层---------------------------------->
     <div id="DivEditor" class="easyui-dialog" style="width: 700px;"
         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:400,width:680,border:false">
+        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:350,width:680,border:false">
             <form id="ff" method="post" enctype="multipart/form-data">
                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
                     <input type="hidden" name="Id" />

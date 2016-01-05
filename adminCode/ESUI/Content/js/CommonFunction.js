@@ -239,7 +239,7 @@ var DataBaseFunction = {
             var ids = "";   //1,2,3,4,5
             for (var i = 0; i < rows.length; i++) {
                 //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
-                ids +="'"+ rows[i][Idfield] + "',";
+                ids += "'" + rows[i][Idfield] + "',";
             }
             //最后去掉最后的那一个,
             ids = ids.substring(0, ids.length - 1);
@@ -323,25 +323,12 @@ var DataBaseFunction = {
     }
 
 }
-function PanelAutoResizeWH(PanelSelect, w, h) //设置宽高自适应w  h 宽高偏移量
+//设置宽高自适应w  h 宽高偏移量
+function PanelAutoResizeWH(PanelSelect, w, h) 
 {
-    var winWidth = 0;
-    var winHeight = 0;
-    //获取窗口宽度
-    if (window.innerWidth)
-        winWidth = window.innerWidth;
-    else if ((document.body) && (document.body.clientWidth))
-        winWidth = document.body.clientWidth;
-    //获取窗口高度
-    if (window.innerHeight)
-        winHeight = window.innerHeight;
-    else if ((document.body) && (document.body.clientHeight))
-        winHeight = document.body.clientHeight;
-    //通过深入Document内部对body进行检测，获取窗口大小
-    if (document.documentElement && document.documentElement.clientHeight && document.documentElement.clientWidth) {
-        winHeight = document.documentElement.clientHeight;
-        winWidth = document.documentElement.clientWidth;
-    }
+    var winWidth = GetwinWidth();
+    var winHeight = GetwinHeight();
+
     var ww = winWidth - w;
     var hh = winHeight - h;
     $(PanelSelect).window('resize', {
@@ -351,51 +338,48 @@ function PanelAutoResizeWH(PanelSelect, w, h) //设置宽高自适应w  h 宽高
 
 
 }
+//设置宽高自适应w  h 宽高偏移量
+function AutoWH(PanelSelect, w, h) {
+    var winWidth = GetwinWidth();
+    var winHeight = GetwinHeight();
 
-function AutoWH(PanelSelect, w, h) //设置宽高自适应w  h 宽高偏移量
-{
-    var winWidth = 0;
-    var winHeight = 0;
-    //获取窗口宽度
-    if (window.innerWidth)
-        winWidth = window.innerWidth;
-    else if ((document.body) && (document.body.clientWidth))
-        winWidth = document.body.clientWidth;
-    //获取窗口高度
-    if (window.innerHeight)
-        winHeight = window.innerHeight;
-    else if ((document.body) && (document.body.clientHeight))
-        winHeight = document.body.clientHeight;
-    //通过深入Document内部对body进行检测，获取窗口大小
-    if (document.documentElement && document.documentElement.clientHeight && document.documentElement.clientWidth) {
-        winHeight = document.documentElement.clientHeight;
-        winWidth = document.documentElement.clientWidth;
-    }
     var ww = winWidth - w;
     var hh = winHeight - h;
     $(PanelSelect).width(ww);
     $(PanelSelect).height(hh);
 
 }
+//设置宽自适应w  宽偏移量
 function AutoW(PanelSelect, w) //设置宽自适应w宽高偏移量
 {
-    var winWidth = 0;
     //获取窗口宽度
-    if (window.innerWidth)
-        winWidth = window.innerWidth;
-    else if ((document.body) && (document.body.clientWidth))
-        winWidth = document.body.clientWidth;
-
-    //通过深入Document内部对body进行检测，获取窗口大小
-    if (document.documentElement && document.documentElement.clientWidth) {
-        winWidth = document.documentElement.clientWidth;
-    }
+    var winWidth = GetwinWidth();
     var ww = winWidth - w;
     $(PanelSelect).width(ww);
 }
+
+//设置高自适应 h 高偏移量
 function AutoH(PanelSelect, h) //设置高自适应 h 宽高偏移量
 {
 
+    var winHeight = GetwinHeight();
+   
+    var hh = winHeight - h;
+    $(PanelSelect).height(hh);
+}
+
+//当高度》（浏览器高度值减去偏移量），设置高自适应 ，h 宽高偏移量
+function AutoMaxH(PanelSelect, h) {
+    //获取窗口高度
+    var winHeight = GetwinHeight();
+    var hh = winHeight - h;
+    if ($(PanelSelect).height() > hh) {
+        $(PanelSelect).height(hh);
+    }
+}
+
+//获取窗口高度
+function GetwinHeight() {
     var winHeight = 0;
     //获取窗口高度
     if (window.innerHeight)
@@ -406,6 +390,20 @@ function AutoH(PanelSelect, h) //设置高自适应 h 宽高偏移量
     if (document.documentElement && document.documentElement.clientHeight) {
         winHeight = document.documentElement.clientHeight;
     }
-    var hh = winHeight - h;
-    $(PanelSelect).height(hh);
+    return winHeight;
+}
+//获取窗口宽度
+function GetwinWidth() {
+    var winWidth = 0;
+    //获取窗口宽度
+    if (window.innerWidth)
+        winWidth = window.innerWidth;
+    else if ((document.body) && (document.body.clientWidth))
+        winWidth = document.body.clientWidth;
+    //通过深入Document内部对body进行检测，获取窗口大小
+    if (document.documentElement && document.documentElement.clientWidth) {
+        winWidth = document.documentElement.clientWidth;
+    }
+    return winWidth;
+
 }
