@@ -59,7 +59,11 @@
   <ItemGroup>
     <Compile Include="CategoryTable.cs" />
     <Compile Include="ColumnCharts.cs" />
+    <Compile Include="FileManagementDB\TF_ElectronicFile.cs" />
+    <Compile Include="FileManagementDB\TF_LifeComments.cs" />
+    <Compile Include="FileManagementDB\TF_PaperFile.cs" />
     <Compile Include="File_Image.cs" />
+    <Compile Include="RMS\V_Role.cs" />
     <Compile Include="SysItem.cs" />
     <Compile Include="Sys_CityArea.cs" />
     <Compile Include="V_mode\AdminUserInfo.cs" />
