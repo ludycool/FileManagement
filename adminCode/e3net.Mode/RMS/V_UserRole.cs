@@ -8,32 +8,8 @@ namespace e3net.Mode.RMS
 {
 
     [Table("[V_UserRole]", DbType.SqlServer)]
-    public class V_UserRoleSet : MQLBase
-    {
-        public static new MQLBase Select(params FieldBase[] fields)
-        {
-            return MQLBase.Select(DbType.SqlServer,"[V_UserRole]",fields);
-        }
-        public static new MQLBase SelectAll()
-        {
-            return MQLBase.SelectAll(DbType.SqlServer,"[V_UserRole]");
-        }
-        public static readonly FieldBase Id = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[Id]");
-        public static readonly FieldBase LoginName = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[LoginName]");
-        public static readonly FieldBase TrueName = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[TrueName]");
-        public static readonly FieldBase Password = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[Password]");
-        public static readonly FieldBase CreateTime = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[CreateTime]");
-        public static readonly FieldBase ModifyTime = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[ModifyTime]");
-        public static readonly FieldBase DepartmentId = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[DepartmentId]");
-        public static readonly FieldBase RoleId = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[RoleId]");
-        public static readonly FieldBase RoleName = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[RoleName]");
-        public static readonly FieldBase YH_HospitalId = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[YH_HospitalId]");
-    }
 
-
-    [Table("[V_UserRole]", DbType.SqlServer)]
-
-    public class V_UserRole : EntityBase
+    public partial class V_UserRole : EntityBase
     {
 
         /// <summary>
@@ -127,5 +103,67 @@ namespace e3net.Mode.RMS
         }
     }
 
+    [Table("[V_UserRole]", DbType.SqlServer)]
+    public  partial class V_UserRoleSet : MQLBase
+    {
+        public static new MQLBase Select(params FieldBase[] fields)
+        {
+            return MQLBase.Select(DbType.SqlServer,"[V_UserRole]",fields);
+        }
+        public static new MQLBase SelectAll()
+        {
+            return MQLBase.SelectAll(DbType.SqlServer,"[V_UserRole]");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase Id = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[Id]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase LoginName = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[LoginName]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase TrueName = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[TrueName]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase Password = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[Password]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase CreateTime = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[CreateTime]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase ModifyTime = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[ModifyTime]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase DepartmentId = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[DepartmentId]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase RoleId = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[RoleId]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase RoleName = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[RoleName]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase YH_HospitalId = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[YH_HospitalId]");
+    }
 
 }

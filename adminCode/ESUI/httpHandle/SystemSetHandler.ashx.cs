@@ -24,24 +24,30 @@ namespace ESUI.httpHandle
             context.Response.ContentType = "text/plain";
             //   context.Response.Write("Hello World");
             string action = context.Request["action"];
-            UserData = context.Session["UserData"] as AdminUserInfo; 
+            UserData = context.Session["UserData"] as AdminUserInfo;
             switch (action)
             {
                 case "GetList":
-
-                    context.Response.Write(GetList());
+                    string RoleTypes = context.Request["RoleTypes"];
+                    context.Response.Write(GetList(RoleTypes));
                     context.Response.End();
                     break;
-            
-            
+
+
             }
 
         }
-        public String GetList()
+        /// <summary>
+        /// 角色类型
+        /// 
+        /// </summary>
+        /// <param name="RoleTypes"></param>
+        /// <returns></returns>
+        public String GetList(string RoleTypes)
         {
 
             int pageIndex = 1;
-            int pageSize =500;
+            int pageSize = 500;
             ////字段排序
             //String sortField = Request["sortField"];
             //String sortOrder = Request["sortOrder"];
@@ -51,7 +57,7 @@ namespace ESUI.httpHandle
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = "RMS_Role";
-            pc.sys_Where = "1=1";
+            pc.sys_Where = "RoleTypes=" + RoleTypes;
             pc.sys_Order = "Id";
             if (!UserData.RoleId.ToString().Equals("fb38f312-0078-4f44-9cda-1183c8042db8"))//不是系统管理员，不请允许显示系统管理员
             {
@@ -66,7 +72,7 @@ namespace ESUI.httpHandle
             dic.Add("rows", list2);
             dic.Add("total", pc.RCount);
 
-            return JsonHelper.ToJson( dic,true);
+            return JsonHelper.ToJson(dic, true);
         }
         public bool IsReusable
         {

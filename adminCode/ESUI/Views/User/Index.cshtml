@@ -15,20 +15,19 @@
 
           BindUser();
           BindDepertment();
-        
+
           $('#DeparTree').combotree({
               width: 150,
               emptyText: '请选择'
           });
-        
+
           BindRole();
       });
 
-      function BindRole()
-      {
+      function BindRole() {
 
           $('#tbRole').datagrid({
-              url: '/httpHandle/SystemSetHandler.ashx?action=GetList',
+              url: '/httpHandle/SystemSetHandler.ashx?action=GetList&RoleTypes=1',
               columns: [[
                   { field: 'RoleName', title: '角色名称', width: 100 },
                   { field: 'Remarks', title: '描述', width: 370, align: 'right' }
@@ -39,13 +38,12 @@
               collapsible: true,
               pageSize: 1000,
               width: 510,
-              height:300,
+              height: 300,
               rownumbers: true
           });
 
       }
-      function BindUser()
-      {
+      function BindUser() {
           $('#dg').datagrid({
               url: BaseUrl + 'GetList',
               columns: [[
@@ -53,7 +51,7 @@
                   { field: 'LoginName', title: '登录名', width: 200 },
               { field: 'TrueName', title: '姓名', width: 200 },
                { field: 'RoleName', title: '角色', width: 200 },
-               { field: 'Password', title: '密码', width:100 },
+               { field: 'Password', title: '密码', width: 100 },
               { field: 'CreateTime', title: '创建时间', width: 200 }
               ]],
               nowrap: true,
@@ -62,11 +60,10 @@
               collapsible: true,
               pagination: true,
               fit: true,
-              fitColumns : true,
+              fitColumns: true,
               queryParams: { DepartmentId: DepartmentId, T: Math.floor(Math.random() * 1000000) },
               rownumbers: true,
-              onLoadError:function()
-              {
+              onLoadError: function () {
                   alert("没有数据");
               },
               toolbar: [{
@@ -117,12 +114,12 @@
               idField: 'Id',
               treeField: 'Name',
               showFooter: true,
-              fit:true,
+              fit: true,
               columns: [[
                   { title: '名称', field: 'Name', width: 140 }
               ]],
               onClickRow: function () {
-                  
+
                   DeParmentId = $("#tbDepartMent").datagrid("getSelections")[0].Id;  //获取到了用按钮选择的ID
 
                   $('#dg').datagrid('load', {
@@ -160,8 +157,7 @@
       }
 
 
-      function showRole()
-      {
+      function showRole() {
           var rows = $("#dg").datagrid("getSelected");
           if (rows) {
               UserId = rows.Id;
@@ -170,9 +166,9 @@
                   if (val.Id == rows.RoleId) {
                       $('#tbRole').datagrid('selectRow', idx);
                   }
-              }); 
+              });
 
-          
+
               $('#DivRole').dialog({
                   title: '角色设定',
                   //width: 400,
@@ -180,7 +176,7 @@
                   closed: false,
                   cache: false,
                   // href: 'get_content.php',
-                  modal: true,top: 100,
+                  modal: true, top: 100,
                   onClose: function () {
                       //解决弹出窗口关闭后，验证消息还显示在最上面
                   }
@@ -188,8 +184,7 @@
           }
       }
 
-      function SetRole()
-      {
+      function SetRole() {
           var rows = $("#tbRole").datagrid("getSelected");
           if (rows) {
               var postData =
@@ -221,7 +216,7 @@
               closed: false,
               cache: false,
               // href: 'get_content.php',
-              modal: true,top: 100,
+              modal: true, top: 100,
               onClose: function () {
                   //解决弹出窗口关闭后，验证消息还显示在最上面
 
@@ -238,7 +233,7 @@
               return false;
           }
           //获取需要传递的参数传递给前台 push
-          var postData = $("#ff").serializeArray(); 
+          var postData = $("#ff").serializeArray();
           var DeparId =
           {
               'name': "DepartmentId",        //属性名用引号括起来，属性间由逗号隔开
@@ -279,7 +274,7 @@
               $("#DivEditor").dialog('open').dialog('setTitle', '修改按钮信息').window('resize', { top: 100 });
               //绑定修改显示详细信息的方法
               BindShowUpdateInfo();
-             
+
           }
           else {
               //处理浏览的信息，弹出浏览狂，然后显示浏览信息的相信信息
@@ -293,23 +288,23 @@
       function BindShowUpdateInfo() {
           //首先按钮发送一个异步请求去后台实现方法
           var ID = $("#dg").datagrid("getSelections")[0].Id;  //获取到了用按钮选择的ID
-         $.ajax({
-             url: BaseUrl + 'GetInfo',
-             type: 'POST',
-             data: { ID: ID },
-             cache: false,
-             error: function () { alert('Error loading PHP document'); },
-             success: function (result) {
+          $.ajax({
+              url: BaseUrl + 'GetInfo',
+              type: 'POST',
+              data: { ID: ID },
+              cache: false,
+              error: function () { alert('Error loading PHP document'); },
+              success: function (result) {
 
-                 for (items in result) {
-                    
-                     $("#" + items).val(result[items]);
-                 }
-                 $('#DeparTree').combotree('setValue', result['DepartmentId']);
-               
-             }
-         });
-          
+                  for (items in result) {
+
+                      $("#" + items).val(result[items]);
+                  }
+                  $('#DeparTree').combotree('setValue', result['DepartmentId']);
+
+              }
+          });
+
       }
       //实现直接删除数据和伪删除数据的方法
       function deleteInfo(not) {
