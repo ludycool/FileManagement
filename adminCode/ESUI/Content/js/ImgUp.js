@@ -45,7 +45,7 @@ function FileUp2(tid, table) {//带所属id
                 }   
             }
             else {
-                alerts(d.Message, 5)
+                alerts(d.Msg, 5)
             }
 
         }
@@ -81,7 +81,7 @@ function FileUp(table) {
 
             }
             else {
-                alerts(d.Message, 5)
+                alerts(d.Msg, 5)
             }
 
         }
@@ -146,7 +146,7 @@ function SaveToid(Tid) {
 
         }
         else {
-            // alerts(d.Message, 5)
+            // alerts(d.Msg, 5)
         }
         imgAddIdSet = new Array();//清空
     });
@@ -171,7 +171,7 @@ function Delfile() {
 
         }
         else {
-            //  alerts(d.Message, 5)
+            //  alerts(d.Msg, 5)
         }
         imgDelIdSet = new Array();//清空
     });
