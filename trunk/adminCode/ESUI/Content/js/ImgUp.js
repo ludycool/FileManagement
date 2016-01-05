@@ -33,7 +33,7 @@ function FileUp2(tid, table) {//带所属id
         },
         success: function (data) {
             var d = eval('(' + data + ')');
-            if (d.Success) {
+            if (d.Code>0) {
                 var imgList = eval('(' + d.Data + ')');
                 $("#content").clone(true).appendTo("#zhi");
                 $("#zhi").children("div:last").children("#fileId").val(imgList[0].Id);
@@ -57,7 +57,7 @@ function FileUp(table) {
         },
         success: function (data) {
             var d = eval('(' + data + ')');
-            if (d.Success) {
+            if (d.Code>0) {
                 var imgList = eval('(' + d.Data + ')');
                 $("#content").clone(true).appendTo("#zhi");
                 $("#zhi").children("div:last").children("#fileId").val(imgList[0].Id);
@@ -100,7 +100,7 @@ function SaveToid(Tid) {
     //发送异步请求到后台保存按钮数据
     $.post("/httpHandle/ImageHandler.ashx?action=SaveToid", postData, function (data) {
         var d = eval('(' + data + ')');
-        if (d.Success) {
+        if (d.Code>0) {
 
         }
         else {
@@ -125,7 +125,7 @@ function Delfile() {
     //发送异步请求到后台保存按钮数据
     $.post("/httpHandle/ImageHandler.ashx?action=Delfile", postData, function (data) {
         var d = eval('(' + data + ')');
-        if (d.Success) {
+        if (d.Code>0) {
 
         }
         else {
