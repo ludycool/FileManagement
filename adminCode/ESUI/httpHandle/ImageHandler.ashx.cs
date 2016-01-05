@@ -180,7 +180,7 @@ namespace ESUI.httpHandle
                     List<File_Image> listFile2 = new List<File_Image>();
                     bool IsValid2 = true;//检查只能为图片,仅小于100k可以上传
                     string messge2 = "";
-                    int lenth2 = 1024 * 20000;//一百k
+                    int lenth2 = 1024 * 200000;//一百k
                     if (context.Request.Files.Count > 0)
                     {
 
