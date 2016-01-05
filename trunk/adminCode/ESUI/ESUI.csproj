@@ -237,6 +237,7 @@
     <Compile Include="Controllers\DictionaryController.cs" />
     <Compile Include="Controllers\DynamicTableController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PaperFileController.cs" />
+    <Compile Include="Controllers\FileManagementDB\TF_ElectronicFileController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManuController.cs" />
@@ -3457,9 +3458,9 @@
     <Content Include="Views\DynamicTable\Index.cshtml" />
     <Content Include="Views\DynamicTable\ListAdd.cshtml" />
     <Content Include="Views\TF_PaperFile\Index.cshtml" />
+    <Content Include="Views\TF_ElectronicFile\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\FileManagementDB\" />
     <Folder Include="upload\image\20150319\" />
   </ItemGroup>
   <ItemGroup>
