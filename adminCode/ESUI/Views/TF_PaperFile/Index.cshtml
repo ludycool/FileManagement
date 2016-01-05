@@ -1,0 +1,276 @@
+﻿<!DOCTYPE html>
+@{
+    ViewBag.TName = "Index";
+}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" charset="utf-8" src="~/Content/js/ImgUp.js"></script>
+    <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+    @* ReSharper disable once NotAllPathsReturnValue *@
+
+
+    @section Jsprepare{
+
+        <script type="text/javascript">
+            @Html.Raw(ViewBag.RuteUrl)
+         @Html.Raw(ViewBag.toolbar)
+
+
+            jQuery(document).ready(function () {
+
+                FormStripes();//表单样式
+                AutoWH("#body", 40, 42);//自适应宽度
+                DataGridSet();
+                GetSonDictionaryNo("Category", "0101");
+            })
+            function DataGridSet() {
+                $('#dg').datagrid({
+                    url: BaseUrl + 'Search',
+                    columns: [[
+                        { field: 'ck', checkbox: true },
+                        { field: 'TName', title: '名称', width: 150, sortable: true },
+                        { field: 'Units', title: '单位', width: 100, sortable: true },
+                        { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
+                         {
+                             field: 'Summary', title: '摘要', width: 300, formatter: function (value, row, index) {
+                                 return value;
+                             }
+                         }, {
+                             field: 'location', title: '存放位置', width: 100, sortable: true, formatter: function (value, row, index) {
+                                 return value;
+                             }
+                         }
+                    ]],
+                    iconCls: 'icon-save',
+                    title: '纸质材料',
+                    nowrap: true,
+                    fit: true,
+                    fitColumns: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    pageSize: 20,
+                    pagination: true,
+                    rownumbers: true,
+                    sortName: 'CreateTime,TName',
+                    sortOrder: 'desc',
+                    toolbar: toolbars
+                });
+            }
+            //easyUI 弹出添加的对话框
+            function AddInfo() {
+                //弹出层
+                // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
+                $('#DivEditor').dialog({
+                    title: '添加材料',
+                    //width: 400,
+                    //height: 200,
+                    closed: false,
+                    cache: false,
+                    // href: 'get_content.php',
+                    modal: true, top: 50, left: 50,
+                    onClose: function () {
+                        //解决弹出窗口关闭后，验证消息还显示在最上面
+
+                    }
+                });
+                $(".validatebox-tip").remove();//清除验证样式
+                DataBaseFunction.ClearForm("ff");
+            }
+
+
+            //绑定修改显示详细信息的方法
+            function EditInfo() {
+
+                var rows = $("#dg").datagrid('getSelected');
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.TName).window('resize', { top: 50, left: 50 });
+                $(".validatebox-tip").remove();//清除验证样式
+                var ID = rows.Id;  //获取到了用选择的ID
+                $.ajax({
+                    url: BaseUrl + 'GetInfo',
+                    type: 'POST',
+                    data: { ID: ID },
+                    cache: false,
+                    error: function () { alert('Error $.ajax'); },
+                    success: function (data) {
+                        //var result = eval('(' + data + ')');
+                        DataBaseFunction.BindForm("ff", data);
+                        $('#Category').combotree('setValue', data['Category']);
+
+                        GetFileList(data.Id);//图片
+                    }
+                });
+
+            }
+
+            //实现的编辑，包括增查改
+            function SaveInfo() {
+
+                //判断的信息是否通过验证
+                var validate = $("#ff").form('validate');
+                if (validate == false) {
+                    return false;
+                }
+                //获取需要传递的参数传递给前台
+                var data = DataBaseFunction.GetFormData("ff")
+                //发送异步请求到后台保存数据
+                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                    alerts(data.Msg, 2);
+                    if (data.Code > 0) {
+                        $('#DivEditor').dialog('close');
+                        $(".validatebox-tip").remove();
+                        $("#dg").datagrid("reload");
+
+                        var id = $("input[name='Id']").val();
+                        if (id == "") {
+                            id = data.Data;//id
+                        }
+                        Delfile();//删除移除的图片
+                        SaveToid(id);//保存添加的图片
+
+                    }
+                });
+
+            }
+
+            //搜索
+            function SearchGo() {
+                DataBaseFunction.Search("fSearh", "dg");
+                $("#Div_Searh").dialog('close');
+            }
+            //搜索
+            function Search() {
+                // $("#fSearh").form("clear");
+                $("#Div_Searh").dialog('open').dialog('setTitle', '搜索').window('resize', { top: 100, left: 100 });
+            }
+            //删除
+            function Del() {
+                DataBaseFunction.deleteInfo("dg", "Id", "Title");
+            }
+            function AddImg() {
+                FileUp("TF_PaperFile")
+            }
+        </script>
+    }
+
+</head>
+<body style="overflow-y: hidden">
+    <div id="body">
+        <table id="dg"></table>
+
+    </div>
+    <!------------------------搜索弹出层---------------------------------->
+    <div id="Div_Searh" class="easyui-dialog" style="width: 380px; padding: 10px 20px;"
+        closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+        <form id="fSearh">
+
+            <table class="stripes" style="table-layout: fixed; margin: 0 auto; width: 320px;" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td style="width: 60px;">
+                        <label>名称：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="TName_like" style="width: 200px;" />
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <label>摘要：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="Summary_like" style="width: 200px;" />
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <div style="text-align: center; width: 100%; margin: 5px 0px; display: block;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-undo" style="float: left;" onclick=" DataBaseFunction.ClearForm('fSearh');">清除</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" style="float: right;" iconcls="icon-search" onclick="SearchGo();">搜索</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" style="float: right;" iconcls="icon-cancel" onclick="$('#Div_Searh').dialog('close')">关闭</a>
+        </div>
+    </div>
+    <!------------------------弹出信息的弹出层---------------------------------->
+     <div id="DivEditor" class="easyui-dialog" style="width: 700px;"
+        closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:490,width:680,border:false">
+            <form id="ff" method="post" enctype="multipart/form-data">
+                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                    <input type="hidden" name="Id" />
+                    <input type="hidden" name="CreateMan" />
+                    <input type="hidden" name="CreateTime" />
+                    <input type="hidden" name="UpdateTime" />
+                    <input type="hidden" name="States" />
+                    <input type="hidden" name="isValid" />
+                    <input type="hidden" name="isDeleted" />
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>名称：</label></td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="TName" data-options="required:true" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>类别：</label></td>
+                        <td>
+                            <select id="Category" name="Category" class="easyui-combotree" style="width: 200px;"
+                                data-options="required:true">
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>单位：</label></td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="Units" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>存放位置：</label></td>
+                        <td>
+                            <textarea class="areabox" name="location" style="height: 100px;"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>扫描件：</label></td>
+                        <td>
+
+
+                            <input type="file" id="fileimg" name="file" style="width: 50px;" onchange="AddImg()" />
+                            <div style="display: none">
+                                <div id="content" style="display: block; width: 100px; float: left; text-align: center;">
+                                    <input id="fileId" type="hidden" />
+                                    <img alt="" id="imgShow" src="ss" style="width: 100px; height: 100px; margin-top: 10px;" />
+                                    <a id="jian" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-delete'">移除</a>
+                                </div>
+                            </div>
+                            <div id="zhi" style="display: block; width: 600px;">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>摘要：</label></td>
+                        <td>
+                            <textarea class="areabox" name="Summary"></textarea></td>
+                    </tr>
+
+
+                </table>
+            </form>
+        </div>
+
+        <div style="text-align: center; width: 100%; margin-bottom: 5px;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>
+        </div>
+    </div>
+</body>
+</html>
