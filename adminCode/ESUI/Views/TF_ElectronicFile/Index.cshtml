@@ -24,7 +24,7 @@
                 FormStripes();//表单样式
                 AutoWH("#body", 40, 42);//自适应宽度
                 DataGridSet();
-                GetSonDictionaryNo("Category", "0101");
+                GetSonDictionaryNo("Category", "0102");
                 FTypes = 1;//上传类型 1为文件 0 为图片
             })
             function DataGridSet() {
@@ -39,14 +39,10 @@
                              field: 'Summary', title: '摘要', width: 300, formatter: function (value, row, index) {
                                  return value;
                              }
-                         }, {
-                             field: 'location', title: '存放位置', width: 100, sortable: true, formatter: function (value, row, index) {
-                                 return value;
-                             }
                          }
                     ]],
                     iconCls: 'icon-save',
-                    title: '纸质材料',
+                    title: '电子材料',
                     nowrap: true,
                     fit: true,
                     fitColumns: true,
@@ -202,7 +198,7 @@
     <!------------------------弹出信息的弹出层---------------------------------->
     <div id="DivEditor" class="easyui-dialog" style="width: 700px;"
         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:490,width:680,border:false">
+        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:400,width:680,border:false">
             <form id="ff" method="post" enctype="multipart/form-data">
                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
                     <input type="hidden" name="Id" />
@@ -233,17 +229,11 @@
                         <td>
                             <input class="easyui-validatebox textbox" type="text" name="Units" /></td>
                     </tr>
+                    
                     <tr>
                         <td>
-                            <label>存放位置：</label></td>
+                            <label>附件：</label></td>
                         <td>
-                            <textarea class="areabox" name="location" style="height: 100px;"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>扫描件：</label></td>
-                        <td>
-
                              <div style="line-height: 20px; height: 20px;display: block;width: 500px;">
                                 <span style=" font-size: 16px; float: left;">
                                     <input type="file" id="fileimg" name="file" style="width: 50px;" onchange="AddImg()" />
@@ -260,7 +250,6 @@
                             </div>
                             <div id="zhi" style="display: block; width: 450px;">
                             </div>
-                           
                         </td>
                     </tr>
                     <tr>
