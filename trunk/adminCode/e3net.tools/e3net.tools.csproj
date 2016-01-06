@@ -94,6 +94,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComboxModle.cs" />
     <Compile Include="CustomEntity.cs" />
     <Compile Include="ExcelHelper.cs" />
     <Compile Include="FilterHelper\FilterGroup.cs" />

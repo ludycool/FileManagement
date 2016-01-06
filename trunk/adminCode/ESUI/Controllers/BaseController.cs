@@ -393,7 +393,7 @@ namespace ESUI.Controllers
         }
     }
 
-    public class JsonNetController : Controller
+    public class JsonNetController : BaseController
     {
         protected override JsonResult Json(object data, string contentType,
                   Encoding contentEncoding, JsonRequestBehavior behavior)

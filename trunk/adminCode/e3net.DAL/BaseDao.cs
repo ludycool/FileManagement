@@ -190,7 +190,15 @@ namespace e3net.DAL
                 return db.ExecuteSqlToOwnList<T>(sql);
             }
         }
+        public List<T2> ExecuteSqlToOwnList<T2>(string sql) where T2 :new () 
+        {
+            using (var db = GetDb())
+            {
+                //  db.DebugEnabled = true;
 
+                return db.ExecuteSqlToOwnList<T2>(sql);
+            }
+        }
         public List<T> ExecuteSqlToOwnList(string sql, params object[] values)
         {
             using (var db = GetDb())
@@ -269,6 +277,37 @@ namespace e3net.DAL
             {
                 //  db.DebugEnabled = true;
 
+                return db.ExecuteProToDataSet(procName, parameters);
+            }
+        }  
+        /// <summary>
+        /// 自定义执行存储过程
+        /// </summary>
+        /// <param name="procName"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public DataSet ExecuteProToDataSetNew(string procName, PageClass pc)
+        {
+            using (var db = GetDb())
+            {
+                //  db.DebugEnabled = true;
+                DbParameter[] parameters = {
+			           new SqlParameter("@tableName", SqlDbType.NVarChar,200) ,            
+                        new SqlParameter("@strGetFields", SqlDbType.NVarChar,200) ,   
+                         new SqlParameter("@strOrder", SqlDbType.NVarChar,200) ,  
+                        new SqlParameter("@PageSize", SqlDbType.Int,16) ,            
+                        new SqlParameter("@PageIndex", SqlDbType.Int,16) ,            
+                     new SqlParameter("@TotalCount", SqlDbType.Int,16 ) ,            
+                        new SqlParameter("@strWhere", SqlDbType.NVarChar,200)         
+              
+            };
+                parameters[0].Value = pc.sys_Table;
+                parameters[1].Value = pc.sys_Fields;
+                parameters[2].Value = pc.sys_Order;
+                parameters[3].Value = pc.sys_PageSize;
+                parameters[4].Value = pc.sys_PageIndex;
+                parameters[5].Direction = ParameterDirection.Output;
+                parameters[6].Value = pc.sys_Where;
                 return db.ExecuteProToDataSet(procName, parameters);
             }
         }
