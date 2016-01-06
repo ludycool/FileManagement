@@ -33,9 +33,10 @@
 
             jQuery(document).ready(function() {
 
-                AutoWH("#body", 40, 42); //自适应宽度
-                $('#dg').datagrid({
+                //  AutoWH("#body", 100, 100); //自适应宽度
+              @*  $('#dg').datagrid({
                     url: BaseUrl + 'ColumnGetList',
+                    height: 450,
                     columns: [
                         [
                             { field: 'ck', checkbox: true },
@@ -93,19 +94,36 @@
                             }
                         }
                     ]
+                });*@
+                loadColum();
+                bindconbox();
+            });
+
+            function bindconbox() {
+
+                $('#ParentId').combobox({
+                    url: BaseUrl + 'GetInfoParent?ID=' + '@ViewBag.RuteUrl',
+                    valueField: 'id',
+                    textField: 'text'
                 });
+
+            }
+
+            function loadColum() {
                 var Column = $.ajax({
                     //获取列数据
                     url: BaseUrl + 'GetBtnColumn',
                     cache: false,
                     data: { Condition: '@ViewBag.RuteUrl' },
                     async: false
-                }).responseText;
+                      }).responseText;
                 var Columndata = eval(Column);
-      
-                $('#dg2').datagrid({
-                    columns: [Columndata],
 
+                $('#dg2').datagrid({
+                    url: BaseUrl + 'GetAllJsonResultList',
+                    columns: Columndata,
+                    queryParams: { Condition: '@ViewBag.RuteUrl' },
+                    height: 450,
                     iconCls: 'icon-save',
                     title: '按钮编辑',
                     nowrap: true,
@@ -115,10 +133,31 @@
                     pagination: true,
                     fit: true,
                     fitColumns: true,
-                    rownumbers: true
+                    rownumbers: true,
+                    toolbar: [
+                        {
+                            id: 'btnadd',
+                            text: '添加',
+                            iconCls: 'icon-add',
+                            handler: function () {
+                                //实现弹出注册信息的页面
+                                ShowAddDialog();
+
+                            }
+                        }, '-', {
+                            id: 'btncut',
+                            text: '修改',
+                            iconCls: 'icon-cut',
+                            handler: function () {
+                                //实现修改的方法
+                                ShowUpdateInfo();
+                            }
+                        }
+                    ]
 
                 });
-            });
+            }
+
             serializeObject = function(form) { /*将form 表单元素的值序列化*/
                 var obj = {};
                 $.each(form.serializeArray(), function(index) {
@@ -131,7 +170,7 @@
             };
 
             function ShowSetRoleDiv() {
-          
+
             }
 
 //easyUI 弹出添加按钮的对话框
@@ -199,6 +238,8 @@
                         // $("#DivEditor").dialog("close");
                         $("#dg").datagrid("reload");
                         $("#ff").form("clear");
+                        loadColum();
+                        bindconbox();
                     } else {
                         alert("编辑失败，请您检查");
                     }
@@ -232,7 +273,7 @@
                 //首先按钮发送一个异步请求去后台实现方法
                 var ID = $("#dg").datagrid("getSelections")[0].ID; //获取到了用按钮选择的ID
                 $.ajax({
-                    url: BaseUrl + 'GetInfo',
+                    url: BaseUrl + 'GetColumnInfo',
                     type: 'POST',
                     data: { ID: ID },
                     cache: false,
@@ -242,6 +283,8 @@
                         for (items in result) {
                             $("#" + items).val(result[items]);
                         }
+                        $('#cc').combobox('setValue', result['editor']);
+                        $('#ParentId').combobox('setValue', result['ParentId']);
                     }
                 });
 
@@ -278,9 +321,9 @@
     }
 </head>
 <body>
-    <div id="body">
-        <table id="dg"></table>     <table id="dg2"></table>
-    </div>
+   @* <div id="body">*@
+        <table id="dg"></table>    
+   @* </div>*@
     <div id="DivEditor" class="easyui-dialog" style="width: 580px; padding: 10px 20px"
         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
         <form id="ff" method="post" novalidate="novalidate">
@@ -330,18 +373,7 @@
 
                     </tr>
                 
- <tr>
-                        <td>
-                            <label>是否启用：</label></td>
-                        <td>
-                               <div>
-                <input type="checkbox" name="IsEnable" value="True"   />是否启用
-                 
-                </div>
 
-                        </td>
-
-                    </tr>
                 <tr>
                         <td>
                             <label>编辑类型：</label></td>
@@ -354,6 +386,17 @@
                         </select>
                     </td>
 
+                    </tr>
+                       <tr>
+                        <td>
+                            <label>父列（合并列头使用）：</label></td>
+                    <td>
+                        
+                        <input class="easyui-combobox" 
+            name="ParentId" id="ParentId"
+            >
+                    </td>
+
                     </tr> 
                     <tr>
                         <td>
@@ -364,7 +407,18 @@
 
                     </tr>
                 
+                     <tr>
+                        <td>
+                            <label>是否启用：</label></td>
+                        <td>
+                               <div>
+                <input type="checkbox" name="IsEnable" value="True"   />是否启用
+                 
+                </div>
 
+                        </td>
+
+                    </tr>
                 </table>
             </fieldset>
 
@@ -375,7 +429,7 @@
         </div>
     </div>
 
-
+     <table id="dg2"></table>
 
     <div id="DviIcon" class="easyui-window" style="width: 680px; height: 400px; padding: 10px 20px" title="选择图标"
         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">

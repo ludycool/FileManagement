@@ -182,6 +182,17 @@ namespace DefaultConnection
             get { return GetPropertyValue<Boolean?>("MergeHeader"); }
             set { SetPropertyValue("MergeHeader", value); }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String ParentId
+        {
+            get { return GetPropertyValue<String>("ParentId"); }
+            set { SetPropertyValue("ParentId", value); }
+        }
+
+       
     }
 
     [Table("[ColumnCharts]", DbType.SqlServer)]
@@ -294,6 +305,11 @@ namespace DefaultConnection
         /// 
         /// </summary>
         public static readonly FieldBase MergeHeader = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[MergeHeader]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase ParentId = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[ParentId]");
     }
 
 }
