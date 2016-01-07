@@ -84,7 +84,17 @@
                             //实现直接删除所有数据的方法
                             deleteInfo(null);
                         }
-                    }]
+                    }
+                    , '-', {
+                        id: 'btnLook',
+                        text: '查看效果',
+                        iconCls: 'icon-remove',
+                        handler: function () {
+                            //实现直接删除所有数据的方法
+                            LooKInfo(null);
+                    }
+                    }
+                    ]
                 });
             });
             //easyUI 弹出添加按钮的对话框
@@ -193,6 +203,22 @@
                
                 }
                
+            }
+            function LooKInfo(not) {
+                //得到按钮选择的数据的ID
+                var rows = $("#dg").datagrid("getSelections");
+                //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
+                if (rows.length >= 1) {
+                    //遍历出按钮选择的数据的信息，这就是按钮按钮选择删除的按钮ID的信息
+                    var ids = "";   //1,2,3,4,5
+                    for (var i = 0; i < rows.length; i++) {
+                        //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
+                        ids += + ",";
+                    }
+                    addTab('测试', BaseUrl + 'IndexDynamicColumn?ID=' + rows[0].ID, '');
+
+                }
+
             }
         </script>
     }

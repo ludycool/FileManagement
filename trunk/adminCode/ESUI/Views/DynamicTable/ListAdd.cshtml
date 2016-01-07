@@ -1,6 +1,4 @@
-﻿
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html>
 <head>
@@ -29,12 +27,12 @@
     @section Jsprepare{
         <script type="text/javascript">
             var BaseUrl = '/DynamicTable/';
+            var editIndex = undefined;
 
-
-            jQuery(document).ready(function() {
+            jQuery(document).ready(function () {
 
                 //  AutoWH("#body", 100, 100); //自适应宽度
-              @*  $('#dg').datagrid({
+                $('#dg').datagrid({
                     url: BaseUrl + 'ColumnGetList',
                     height: 450,
                     columns: [
@@ -79,7 +77,7 @@
                             id: 'btnadd',
                             text: '添加',
                             iconCls: 'icon-add',
-                            handler: function() {
+                            handler: function () {
                                 //实现弹出注册信息的页面
                                 ShowAddDialog();
 
@@ -88,13 +86,13 @@
                             id: 'btncut',
                             text: '修改',
                             iconCls: 'icon-cut',
-                            handler: function() {
+                            handler: function () {
                                 //实现修改的方法
                                 ShowUpdateInfo();
                             }
                         }
                     ]
-                });*@
+             });
                 loadColum();
                 bindconbox();
             });
@@ -116,7 +114,7 @@
                     cache: false,
                     data: { Condition: '@ViewBag.RuteUrl' },
                     async: false
-                      }).responseText;
+                }).responseText;
                 var Columndata = eval(Column);
 
                 $('#dg2').datagrid({
@@ -141,7 +139,30 @@
                             iconCls: 'icon-add',
                             handler: function () {
                                 //实现弹出注册信息的页面
-                                ShowAddDialog();
+                                if (editIndex != undefined) {
+
+                                    $("#dg2").datagrid('endEdit', editIndex);
+
+                                }
+
+                                if (editIndex == undefined) {
+
+                                    $("#dg2").datagrid('insertRow', {
+
+                                        index: 0,
+
+                                        row: {}
+
+                                    });
+
+
+
+                                    $("#dg2").datagrid('beginEdit', 0);
+
+                                    editIndex = 0;
+
+                                }
+
 
                             }
                         }, '-', {
@@ -152,15 +173,58 @@
                                 //实现修改的方法
                                 ShowUpdateInfo();
                             }
+
+                        }, '-', {
+                            id: 'btnAccept',
+                            text: '保存',
+                            iconCls: 'icon-save',
+                            handler: function () {
+                                //实现修改的方法
+                                //if (endEditing()) {
+                                $("#dg2").datagrid('endEdit', editIndex);
+                                var rows = $("#dg2").datagrid('getChanges');
+
+
+
+                                var rowstr = JSON.stringify(rows);
+
+                                $.post('/Home/Create', rowstr, function (data) {
+
+
+
+                                });
+                              
+                            }
+
                         }
-                    ]
+                    ], onAfterEdit: function (rowIndex, rowData, changes) {//在添加完毕endEdit，保存时触发
+                        console.info(rowData);//在火狐浏览器的控制台下可看到传递到后台的数据，这里我们就可以利用这些数据异步到后台添加，添加完成后，刷新datagrid
+                        editIndex = undefined;//重置
+                    }, onDblClickCell: function (rowIndex, field, value) {//双击该行修改内容
+                        if (editIndex != undefined) {
+                            $("#dg").datagrid('endEdit', editIndex);//结束编辑，传入之前编辑的行
+                        }
+                        if (editIndex == undefined) {
+                            $("#dg").datagrid('beginEdit', rowIndex);//开启编辑并传入要编辑的行
+                            editIndex = rowIndex;
+                        }
+                    }
 
                 });
             }
-
-            serializeObject = function(form) { /*将form 表单元素的值序列化*/
+            function endEditing() {
+                if (editIndex == undefined) { return true }
+                if ($('#dg2').datagrid('validateRow', editIndex)) {
+                    $('#dg2').datagrid('endEdit', editIndex);
+                    editIndex = undefined;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            serializeObject = function (form) { /*将form 表单元素的值序列化*/
                 var obj = {};
-                $.each(form.serializeArray(), function(index) {
+                $.each(form.serializeArray(), function (index) {
                     if (obj[this['name']]) {
                         obj[this['name']] = obj[this['name']] + "," + this['value'];
                     } else {
@@ -173,7 +237,7 @@
 
             }
 
-//easyUI 弹出添加按钮的对话框
+            //easyUI 弹出添加按钮的对话框
             function ShowAddDialog() {
                 //弹出层
                 // $("#DivEditor").dialog('open').dialog('setTitle', '添加按钮信息');
@@ -186,7 +250,7 @@
                     // href: 'get_content.php',
                     modal: true,
                     top: 100,
-                    onClose: function() {
+                    onClose: function () {
                         //解决弹出窗口关闭后，验证消息还显示在最上面
 
                     }
@@ -195,7 +259,7 @@
                 $("#CategoryTableID").val('@ViewBag.RuteUrl');
             }
 
-//实现按钮的编辑，包括增查改
+            //实现按钮的编辑，包括增查改
             function EditInfo() {
 
                 //判断按钮的信息是否通过验证
@@ -229,7 +293,7 @@
                 //});
 
                 //发送异步请求到后台保存按钮数据
-                $.post(BaseUrl + 'ColumnEditInfo', postData, function(data) {
+                $.post(BaseUrl + 'ColumnEditInfo', postData, function (data) {
                     if (data = "OK") {
                         //添加成功  1.关闭弹出层，2.刷新DataGird
                         alert("编辑成功");
@@ -277,8 +341,8 @@
                     type: 'POST',
                     data: { ID: ID },
                     cache: false,
-                    error: function() { alert('Error loading PHP document'); },
-                    success: function(result) {
+                    error: function () { alert('Error loading PHP document'); },
+                    success: function (result) {
 
                         for (items in result) {
                             $("#" + items).val(result[items]);
@@ -290,7 +354,7 @@
 
             }
 
-//实现直接删除数据和伪删除数据的方法
+            //实现直接删除数据和伪删除数据的方法
             function deleteInfo(not) {
                 //得到按钮选择的数据的ID
                 var rows = $("#dg").datagrid("getSelections");
@@ -321,9 +385,9 @@
     }
 </head>
 <body>
-   @* <div id="body">*@
-        <table id="dg"></table>    
-   @* </div>*@
+    @* <div id="body">*@
+    <table id="dg"></table>
+    @* </div>*@
     <div id="DivEditor" class="easyui-dialog" style="width: 580px; padding: 10px 20px"
         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
         <form id="ff" method="post" novalidate="novalidate">
@@ -331,7 +395,7 @@
                 <legend>按钮信息填写栏</legend>
                 <table id="tblAdd">
                     <tr>
-                        <input type="hidden" id="ID" name="ID"/> 
+                        <input type="hidden" id="ID" name="ID" />
                         <input type="hidden" id="CategoryTableID" name="CategoryTableID" />
                         <td>
                             <label>表格名称：</label></td>
@@ -360,7 +424,7 @@
                         <td>
                             <label>列合并数：</label></td>
                         <td>
-                            <input class="easyui-numberbox" type="text" id="colspan" name="colspan" data-options="required:true,min:0"/>
+                            <input class="easyui-numberbox" type="text" id="colspan" name="colspan" data-options="required:true,min:0" />
                         </td>
 
                     </tr>
@@ -372,32 +436,31 @@
                         </td>
 
                     </tr>
-                
 
-                <tr>
+
+                    <tr>
                         <td>
                             <label>编辑类型：</label></td>
-                    <td>
-                        
-                        <select id="cc" class="easyui-combobox" name="editor" style="width: 200px;"  vlaue="0">
-                            <option value="">不编辑</option>
-                            <option value="type: 'validatebox', options: { required: true}">可输入的文本框</option>
-                            
-                        </select>
-                    </td>
+                        <td>
+
+                            <select id="cc" class="easyui-combobox" name="editor" style="width: 200px;" vlaue="0">
+                                <option value="">不编辑</option>
+                                <option value="type: 'validatebox', options: { required: true}">可输入的文本框</option>
+
+                            </select>
+                        </td>
 
                     </tr>
-                       <tr>
+                    <tr>
                         <td>
                             <label>父列（合并列头使用）：</label></td>
-                    <td>
-                        
-                        <input class="easyui-combobox" 
-            name="ParentId" id="ParentId"
-            >
-                    </td>
+                        <td>
 
-                    </tr> 
+                            <input class="easyui-combobox"
+                                name="ParentId" id="ParentId">
+                        </td>
+
+                    </tr>
                     <tr>
                         <td>
                             <label>排序号：</label></td>
@@ -406,15 +469,15 @@
                         </td>
 
                     </tr>
-                
-                     <tr>
+
+                    <tr>
                         <td>
                             <label>是否启用：</label></td>
                         <td>
-                               <div>
-                <input type="checkbox" name="IsEnable" value="True"   />是否启用
+                            <div>
+                                <input type="checkbox" name="IsEnable" value="True" />是否启用
                  
-                </div>
+                            </div>
 
                         </td>
 
@@ -429,7 +492,7 @@
         </div>
     </div>
 
-     <table id="dg2"></table>
+    <table id="dg2"></table>
 
     <div id="DviIcon" class="easyui-window" style="width: 680px; height: 400px; padding: 10px 20px" title="选择图标"
         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">

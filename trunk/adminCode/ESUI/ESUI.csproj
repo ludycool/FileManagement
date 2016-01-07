@@ -3461,6 +3461,7 @@
     <Content Include="Views\TF_PaperFile\Index.cshtml" />
     <Content Include="Views\TF_ElectronicFile\Index.cshtml" />
     <Content Include="Views\TF_LifeComments\Index.cshtml" />
+    <Content Include="Views\DynamicTable\IndexDynamicColumn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="upload\image\20150319\" />
