@@ -352,10 +352,68 @@ namespace ESUI.Controllers
 
             // var mql = RMS_ButtonsSet.Id.NotEqual("");
             dic.Add("rows", list2.Tables[0]);
-            dic.Add("total", list2.Tables[0].Rows.Count);
+            dic.Add("total", pc.RCount);
 
             return Json(dic);
         }
 
+
+        public ActionResult IndexDynamicColumn()
+        {
+            string id = Request.QueryString["ID"];
+            ViewBag.RuteUrl = id;
+            return View();
+        }
+        public JsonResult ColumnSave(string categoryTable)
+        {
+            // ColumnCharts categoryTable=new ColumnCharts();
+            bool IsAdd = false;
+            //if (categoryTable != null && string.IsNullOrEmpty(categoryTable.ID))//id为空，是添加
+            //{
+            //    IsAdd = true;
+            //}
+
+
+            //if (CCBiz.GetCount<ColumnChartsSet>(ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID).And(ColumnChartsSet.field.Equal(categoryTable.field))) > 0.0)
+            //{
+            //    return Json("Nok", JsonRequestBehavior.AllowGet);
+            //}
+
+            if (IsAdd)
+            {
+                //categoryTable.ID = Guid.NewGuid().ToString();
+                ////categoryTable.TableName_ = DateTime.Now;
+                ////categoryTable.TableProperties = DateTime.Now;
+                ////rol.RoleDescription = RMS_ButtonsModle.RoleDescription;
+                ////rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
+
+                //CCBiz.Add(categoryTable);
+
+
+
+                //var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(categoryTable.CategoryTableID)));
+
+                //OPBiz.ExecuteSqlWithNonQuery("alter table " + catmodle.UserTableName + " add " + categoryTable.field + " nvarchar(500) null");
+                return Json("ok", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+
+                //categoryTable.WhereExpression = ColumnChartsSet.ID.Equal(categoryTable.ID);
+                ////  spmodel.GroupId = GroupId;
+                //if (CCBiz.Update(categoryTable) > 0)
+                //{
+                //    return Json("ok", JsonRequestBehavior.AllowGet);
+                //}
+                //else
+                //{
+                    return Json("Nok", JsonRequestBehavior.AllowGet);
+               // }
+            }
+
+
+
+
+        }
     }
 }
