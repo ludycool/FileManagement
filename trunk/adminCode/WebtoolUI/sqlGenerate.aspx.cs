@@ -262,9 +262,66 @@ namespace WebtoolUI
 
                     return " @" + name + "   " + xtpye + ",  --" + remark;
             }
-
-
         }
+        /// <summary>
+        /// C#中的sql参数
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btn_DbParameter_Click(object sender, EventArgs e)
+        {
+            string sql = "SELECT   CAST(g.value AS nvarchar)as notes,  a.name,b.name as ztype ,c.isnullable,a.max_length  FROM     systypes b,    sys.columns AS a LEFT OUTER JOIN  sys.syscolumns AS c ON a.name = c.name AND a.object_id = c.id left join sys.extended_properties g on (a.object_id = g.major_id AND a.column_id=g.minor_id) WHERE   (a.object_id = OBJECT_ID('" + DropDownList1.SelectedValue + "'))and c.xtype=b.xusertype order by object_id,a.column_id";
+            DataSet ds = SqlOP.ExecuteDataset(sql);
+            var lenth = ds.Tables[0].Rows.Count;
+            string json = " DbParameter[] parameters = { \n";
 
+            for (int i = 0; i < lenth; i++)
+            {
+                DataRow dr = ds.Tables[0].Rows[i];
+                json += DbParameterType(dr[1].ToString(), dr[2].ToString(), dr[4].ToString());
+                if (i == lenth - 1)
+                {
+                    json = json.Substring(0, json.Length - 1);
+                }
+                json += " \n";
+            }
+            json += "              }; \n";
+            for (int i = 0; i < lenth; i++)
+            {
+                DataRow dr = ds.Tables[0].Rows[i];
+
+                json += " parameters["+i+"].Value = Modle."+dr[1].ToString()+";";
+                json += " \n";
+            }
+            txtVaule.Text = json;
+        }
+        /// <summary>
+        /// C# 中的Sql参数
+        /// </summary>
+        /// <param name="xtpye">类型</param>
+        /// <param name="lenth">长度</param>
+        /// <returns></returns>
+        protected string DbParameterType(string name, string xtpye, string lenth)
+        {
+
+            switch (xtpye)
+            {
+                case "bigint":
+                    return "             new SqlParameter(\"@" + name + "\", SqlDbType.BigInt," + lenth + ") ,";
+                case "uniqueidentifier":
+                    return "             new SqlParameter(\"@" + name + "\", SqlDbType.UniqueIdentifier," + lenth + ") ,";
+                case "varchar":
+                    return "             new SqlParameter(\"@" + name + "\", SqlDbType.VarChar," + lenth + ") ,";
+                case "nvarchar":
+                    return "             new SqlParameter(\"@" + name + "\", SqlDbType.NVarChar," + lenth + ") ,";
+                case "int":
+                    return "             new SqlParameter(\"@" + name + "\", SqlDbType.Int," + lenth + ") ,";
+                case "tinyint":
+                    return "             new SqlParameter(\"@" + name + "\", SqlDbType.TinyInt," + lenth + ") ,";
+                default:
+
+                    return "             new SqlParameter(\"@" + name + "\", SqlDbType." + xtpye + "," + lenth + ") ,";
+            }
+        }
     }
 }
