@@ -9,8 +9,7 @@
 <body>
     <form id="form1" runat="server">
     <div>
-      数据表：  <asp:DropDownList ID="DropDownList1" runat="server"></asp:DropDownList><asp:Button ID="Button1" runat="server" Text="执行" OnClick="Button1_Click" /><asp:Button ID="Button3" runat="server" Text="生成json格式" OnClick="Button3_Click"  />
-        <asp:Button ID="Button4" runat="server" OnClick="Button4_Click" Text="字段说明" /><asp:Button ID="btnEity" runat="server" Text="生成实体" OnClick="btnEity_Click" />
+      数据表：  <asp:DropDownList ID="DropDownList1" runat="server"></asp:DropDownList><asp:Button ID="Button1" runat="server" Text="执行" OnClick="Button1_Click" />
     </div>
       <div>  
           <asp:Table ID="Table1" runat="server"></asp:Table><asp:Button ID="Button2" runat="server" Text="生成Form表单" OnClick="Button2_Click" />
