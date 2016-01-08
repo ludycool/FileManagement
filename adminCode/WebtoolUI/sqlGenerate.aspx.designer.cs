@@ -31,15 +31,6 @@ namespace WebtoolUI {
         protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
         
         /// <summary>
-        /// btn_pro_add 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_pro_add;
-        
-        /// <summary>
         /// btn_json 控件。
         /// </summary>
         /// <remarks>
@@ -65,6 +56,24 @@ namespace WebtoolUI {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btn_entity;
+        
+        /// <summary>
+        /// btn_pro_add 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btn_pro_add;
+        
+        /// <summary>
+        /// btn_DbParameter 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btn_DbParameter;
         
         /// <summary>
         /// txtVaule 控件。
