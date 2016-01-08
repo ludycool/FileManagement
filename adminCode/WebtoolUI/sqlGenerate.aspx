@@ -28,7 +28,7 @@
                 
                 <tr>
                     <td colspan="2">
-                        <asp:TextBox ID="txtVaule" runat="server" Height="400px" TextMode="MultiLine" Width="400px"></asp:TextBox></td>
+                        <asp:TextBox ID="txtVaule" runat="server" Height="800px" TextMode="MultiLine" Width="800px"></asp:TextBox></td>
                 </tr>
             </table>
 
