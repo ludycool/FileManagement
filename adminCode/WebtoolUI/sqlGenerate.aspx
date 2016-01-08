@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="sqlGenerate.aspx.cs" Inherits="WebtoolUI.sqlGenerate" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" ValidateRequest="false" CodeBehind="sqlGenerate.aspx.cs" Inherits="WebtoolUI.sqlGenerate" %>
 
 <!DOCTYPE html>
 
@@ -17,6 +17,7 @@
                     <td>数据表： 
                         <asp:DropDownList ID="DropDownList1" runat="server"></asp:DropDownList></td>
                     <td>
+                      
                         <asp:Button ID="btn_json" runat="server" Text="生成json格式" OnClick="btn_json_Click"  />
                         <asp:Button ID="btn_remark" runat="server" Text="字段说明" OnClick="btn_remark_Click"  />
                         <asp:Button ID="btn_entity" runat="server" Text="生成实体" OnClick="btn_entity_Click"  />
