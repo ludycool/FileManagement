@@ -24,7 +24,7 @@ namespace ESUI.Controllers
         // GET: /DynamicTable/
         [Dependency]
         public CategoryTableBiz OPBiz { get; set; }
-        
+
         [Dependency]
         public ColumnChartsBiz CCBiz { get; set; }
         public ActionResult Index()
@@ -35,7 +35,7 @@ namespace ESUI.Controllers
         public JsonResult GetList()
         {
 
-       
+
 
             int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
             int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
@@ -50,7 +50,7 @@ namespace ESUI.Controllers
             pc.sys_Table = "CategoryTable";
             pc.sys_Where = "1=1";
             pc.sys_Order = "ID";
-       
+
             var list2 = OPBiz.GetPagingData(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
@@ -73,7 +73,7 @@ namespace ESUI.Controllers
             {
                 return Json("Nok", JsonRequestBehavior.AllowGet);
             }
-           
+
             if (IsAdd)
             {
                 categoryTable.ID = Guid.NewGuid().ToString();
@@ -83,7 +83,7 @@ namespace ESUI.Controllers
                 //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
 
                 OPBiz.Add(categoryTable);
-                OPBiz.ExecuteSqlWithNonQuery("create table " + categoryTable .UserTableName+ "  ( ID varchar(50) primary key)");
+                OPBiz.ExecuteSqlWithNonQuery("create table " + categoryTable.UserTableName + "  ( ID varchar(50) primary key)");
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
@@ -103,7 +103,7 @@ namespace ESUI.Controllers
 
 
 
-        
+
         }
 
         public JsonResult GetInfo(string ID)
@@ -115,8 +115,8 @@ namespace ESUI.Controllers
         }
         public ActionResult ListAdd()
         {
-          string id=  Request.QueryString["ID"];
-          ViewBag.RuteUrl = id;
+            string id = Request.QueryString["ID"];
+            ViewBag.RuteUrl = id;
             return View();
         }
         public JsonResult ColumnEditInfo(ColumnCharts categoryTable)
@@ -193,7 +193,7 @@ namespace ESUI.Controllers
             //var list2 = OPBiz.GetPagingData(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
             //var list2 = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "'");
-           var list2 = CCBiz.GetEntities(ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition)));
+            var list2 = CCBiz.GetEntities(ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition)));
             // var mql = RMS_ButtonsSet.Id.NotEqual("");
             dic.Add("rows", list2);
             dic.Add("total", list2.Count);
@@ -207,11 +207,11 @@ namespace ESUI.Controllers
         public string GetBtnColumn(string Condition)
         {
 
-         string menus = " [[\n";
-         //var sql = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition).And(ColumnChartsSet.ParentId.Contains("").Or(ColumnChartsSet.ParentId.IsNull())));
-         //   List<ColumnCharts> list = CCBiz.GetOwnList<ColumnCharts>(sql);
-         var list = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and (ParentId='' or ParentId is  null) and IsEnable=1 ORDER BY  SortNo");
-         var list2 = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and (ParentId<>'') and IsEnable=1 ORDER BY  SortNo");
+            string menus = " [[\n";
+            //var sql = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition).And(ColumnChartsSet.ParentId.Contains("").Or(ColumnChartsSet.ParentId.IsNull())));
+            //   List<ColumnCharts> list = CCBiz.GetOwnList<ColumnCharts>(sql);
+            var list = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and (ParentId='' or ParentId is  null) and IsEnable=1 ORDER BY  SortNo");
+            var list2 = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and (ParentId<>'') and IsEnable=1 ORDER BY  SortNo");
             if (list != null)
             {
                 menus += "{  ";
@@ -225,7 +225,7 @@ namespace ESUI.Controllers
 
                 foreach (ColumnCharts item in list)
                 {
-                    if (item.MergeHeader==true)
+                    if (item.MergeHeader == true)
                     {
                         menus += "{  ";
 
@@ -235,7 +235,7 @@ namespace ESUI.Controllers
                     else
                     {
                         menus += "{  ";
-                        if (item.rowspan>1)
+                        if (item.rowspan > 1)
                         {
                             menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
                         }
@@ -244,17 +244,17 @@ namespace ESUI.Controllers
                             menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
                         }
 
-                     
+
                         menus += "},";
                     }
-                   
+
                 }
 
             }
 
             menus = menus.Substring(0, menus.Length - 1);
             menus = menus + "]";
-            if (list2 != null && list2.Count>0)
+            if (list2 != null && list2.Count > 0)
             {
                 string menus2 = " ,[\n";
                 foreach (ColumnCharts item in list2)
@@ -263,7 +263,7 @@ namespace ESUI.Controllers
                     {
                         menus2 += "{  ";
 
-                        menus2+= "title:\"" + item.title + "\",colspan:" + item.colspan + "";
+                        menus2 += "title:\"" + item.title + "\",colspan:" + item.colspan + "";
                         menus2 += "},";
                     }
                     else
@@ -290,7 +290,7 @@ namespace ESUI.Controllers
             }
             else
             {
-                menus = menus + "]"; 
+                menus = menus + "]";
             }
 
             return menus;
@@ -299,10 +299,10 @@ namespace ESUI.Controllers
 
         public JsonResult GetInfoParent(string ID)
         {
-          //  var mql2 = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(ID).And(ColumnChartsSet.ParentId.IsNullOrEmpty()));
-         //   var Rmodel = CCBiz.GetEntities(mql2);
+            //  var mql2 = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(ID).And(ColumnChartsSet.ParentId.IsNullOrEmpty()));
+            //   var Rmodel = CCBiz.GetEntities(mql2);
             var Rmodel = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + ID + "' and (ParentId='' or ParentId is  null)");
-            List<ComboxModle> list=new List<ComboxModle>();
+            List<ComboxModle> list = new List<ComboxModle>();
             ComboxModle d2 = new ComboxModle();
             d2.id = "";
             d2.text = "";
@@ -314,7 +314,7 @@ namespace ESUI.Controllers
                 d.text = columnChart.title;
                 list.Add(d);
             }
-            
+
             //  groupsBiz.Add(rol);
             return Json(list, JsonRequestBehavior.AllowGet);
         }
@@ -330,7 +330,7 @@ namespace ESUI.Controllers
         public JsonResult GetAllJsonResultList(string Condition)
         {
 
-           var modle= OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
+            var modle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
 
             int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
             int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
@@ -364,51 +364,83 @@ namespace ESUI.Controllers
             ViewBag.RuteUrl = id;
             return View();
         }
-        public JsonResult ColumnSave(string categoryTable)
+        public JsonResult ColumnSave(string categoryTable, string CategoryTableID)
         {
             // ColumnCharts categoryTable=new ColumnCharts();
             bool IsAdd = false;
-            //if (categoryTable != null && string.IsNullOrEmpty(categoryTable.ID))//id为空，是添加
-            //{
-            //    IsAdd = true;
-            //}
 
-
-            //if (CCBiz.GetCount<ColumnChartsSet>(ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID).And(ColumnChartsSet.field.Equal(categoryTable.field))) > 0.0)
-            //{
-            //    return Json("Nok", JsonRequestBehavior.AllowGet);
-            //}
-
+            var o2 = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(categoryTable);
+            if (!o2[0].ContainsKey("ID"))
+            {
+                IsAdd = true;
+            }
+            
+           
             if (IsAdd)
             {
-                //categoryTable.ID = Guid.NewGuid().ToString();
-                ////categoryTable.TableName_ = DateTime.Now;
-                ////categoryTable.TableProperties = DateTime.Now;
-                ////rol.RoleDescription = RMS_ButtonsModle.RoleDescription;
-                ////rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
 
-                //CCBiz.Add(categoryTable);
+                try
+                {
+                    var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(CategoryTableID)));
 
+                    string sql = "INSERT INTO " + catmodle.UserTableName + "(ID,";
 
+                    foreach (KeyValuePair<string, string> kv in o2[0])
+                    {
+                        sql += kv.Key + ",";
 
-                //var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(categoryTable.CategoryTableID)));
+                    }
+                    sql = sql.Substring(0, sql.Length - 1);
+                    sql += ")VALUES ('"+Guid.NewGuid().ToString()+"',";
 
-                //OPBiz.ExecuteSqlWithNonQuery("alter table " + catmodle.UserTableName + " add " + categoryTable.field + " nvarchar(500) null");
-                return Json("ok", JsonRequestBehavior.AllowGet);
+                    foreach (KeyValuePair<string, string> kv in o2[0])
+                    {
+                        sql += "'"+kv.Value + "',";
+
+                    }
+                    sql = sql.Substring(0, sql.Length - 1);
+                    sql += ")";
+                    OPBiz.ExecuteSqlWithNonQuery(sql);
+                    return Json("ok", JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception e)
+                {
+                    return Json("Nok", JsonRequestBehavior.AllowGet);
+                }
             }
             else
             {
+                try
+                {
+                    var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(CategoryTableID)));
 
-                //categoryTable.WhereExpression = ColumnChartsSet.ID.Equal(categoryTable.ID);
-                ////  spmodel.GroupId = GroupId;
-                //if (CCBiz.Update(categoryTable) > 0)
-                //{
-                //    return Json("ok", JsonRequestBehavior.AllowGet);
-                //}
-                //else
-                //{
+                    string sql = "UPDATE " + catmodle.UserTableName + " set";
+                 
+                    foreach (KeyValuePair<string, string> kv in o2[0])
+                    {
+                        if (kv.Key!="ID")
+                        {
+                            sql += "[" + kv.Key + "]='" + kv.Value + "',";
+                        }
+                      
+
+                    }
+                   string updateID = "";
+                    o2[0].TryGetValue("ID", out updateID);
+                    sql = sql.Substring(0, sql.Length - 1);
+                    sql += " where  ID='" + updateID + "'";
+
+                  
+                    OPBiz.ExecuteSqlWithNonQuery(sql);
+                    return Json("ok", JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception e)
+                {
                     return Json("Nok", JsonRequestBehavior.AllowGet);
-               // }
+                }
+                 
+             
+             
             }
 
 

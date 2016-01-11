@@ -58,6 +58,7 @@
                     height: 450,
                     iconCls: 'icon-save',
                     title: '按钮编辑',
+                   // onClickCell: onClickCell,
                     //nowrap: true,
                     //singleSelect: true,
                     //striped: true,
@@ -99,52 +100,92 @@
 
 
                             }
-                        }, '-', {
-                            id: 'btncut',
-                            text: '修改',
-                            iconCls: 'icon-cut',
-                            handler: function () {
-                                //实现修改的方法
-                                ShowUpdateInfo();
-                            }
-
-                        }, '-', {
+                        },  '-', {
                             id: 'btnAccept',
                             text: '保存',
                             iconCls: 'icon-save',
                             handler: function () {
                                 //实现修改的方法
                                 //if (endEditing()) {
+                                alert(editIndex);
                                 $("#dg2").datagrid('endEdit', editIndex);
                                 var rows = $("#dg2").datagrid('getChanges');
 
 
 
                                 var rowstr = JSON.stringify(rows);
+                                alert(rowstr);
+                                $.ajax({
+                                    url: BaseUrl + 'ColumnSave',
+                                    type: 'POST',
+                                    data: { categoryTable: rowstr, CategoryTableID: '@ViewBag.RuteUrl' },
+                                    cache: false,
+                                    error: function () { alert('Error loading PHP document'); },
+                                    success: function (data) {
 
-                                $.post('/Home/Create', rowstr, function (data) {
-
-
-
+                                        if (data = "OK") {
+                                            //添加成功  1.关闭弹出层，2.刷新DataGird
+                                            alert("编辑成功");
+                                            //$('#DivEditor').dialog('close');
+                                            //$(".validatebox-tip").remove();
+                                            //// $("#DivEditor").dialog("close");
+                                            //$("#dg").datagrid("reload");
+                                            //$("#ff").form("clear");
+                                        } else {
+                                            alert("编辑失败，请您检查");
+                                        }
+                                    }
                                 });
+                                $('#dg2').datagrid('acceptChanges');
 
                             }
 
                         }
-                    ], onAfterEdit: function (rowIndex, rowData, changes) {//在添加完毕endEdit，保存时触发
-                        console.info(rowData);//在火狐浏览器的控制台下可看到传递到后台的数据，这里我们就可以利用这些数据异步到后台添加，添加完成后，刷新datagrid
-                        editIndex = undefined;//重置
-                    }, onDblClickCell: function (rowIndex, field, value) {//双击该行修改内容
-                        if (editIndex != undefined) {
-                            $("#dg").datagrid('endEdit', editIndex);//结束编辑，传入之前编辑的行
-                        }
-                        if (editIndex == undefined) {
-                            $("#dg").datagrid('beginEdit', rowIndex);//开启编辑并传入要编辑的行
-                            editIndex = rowIndex;
-                        }
-                    }
+                    ],
 
+                    onAfterEdit: function (rowIndex, rowData, changes) {
+
+                        editIndex = undefined;
+
+                    },
+
+                    onDblClickRow: function (rowIndex, rowData) {
+
+                        if (editIndex != undefined) {
+
+                            $("#dg2").datagrid('endEdit', editIndex);
+
+                        }
+
+
+
+                        if (editIndex == undefined) {
+
+                            $("#dg2").datagrid('beginEdit', rowIndex);
+
+                            editIndex = rowIndex;
+
+                        }
+
+                    },
                 });
+            }
+            function onClickCell(index, field) {
+                if (editIndex != index) {
+                    if (endEditing()) {
+                        $('#dg2').datagrid('selectRow', index)
+                                .datagrid('beginEdit', index);
+                        var ed = $('#dg2').datagrid('getEditor', { index: index, field: field });
+                        if (ed) {
+                            ($(ed.target).data('textbox') ? $(ed.target).textbox('textbox') : $(ed.target)).focus();
+                        }
+                        editIndex = index;
+                    } else {
+                        setTimeout(function () {
+                            $('#dg2').datagrid('selectRow', editIndex);
+                        }, 0);
+                    }
+                }
             }
             function endEditing() {
                 if (editIndex == undefined) { return true }
