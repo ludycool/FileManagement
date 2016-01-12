@@ -204,16 +204,17 @@ var DataBaseFunction = {
             if (dd != null) {
                 var ty = dd.attr("type");
                 if (ty != null && ty == "radio") {
-                    //dd.removeAttr("CHECKED");
-                    //$("[name=" + items + "][value=" + data[items] + "]").attr("checked", true); ie9以上失效
+                   
                     var _o = document.getElementsByName(items);
                     for (i = 0; i < _o.length; i++) {
-                        if (_o[i].value == data[items])
+                        if (_o[i].value == String(data[items]))
                         { _o[i].checked = true; }
                         else {
                             _o[i].checked = false;
                         }
                     }
+                   // dd.removeAttr("CHECKED");
+                   //$("[name=" + items + "][value=" + data[items] + "]").attr("checked", true); ie9以上失效
                 } else if (ty != null && ty == "checkbox") {
                     dd.removeAttr("CHECKED");
                     var strdata = data[items].split("%&");

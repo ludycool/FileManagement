@@ -1,34 +1,30 @@
 ﻿<!DOCTYPE html>
+@{
+    ViewBag.TName = "Index";
+}
 
 <html>
 <head>
-    <title>title</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
     @* ReSharper disable once NotAllPathsReturnValue *@
-    <style type="text/css">
-        #iconlist li {
-            display: block;
-            float: left;
-        }
 
-        a:hover {
-            font-size: 12px;
-        }
 
-            a:hover span {
-                font-weight: bold;
-                color: #F00;
-            }
-    </style>
-    <title>title</title>
     @section Jsprepare{
+
         <script type="text/javascript">
             var BaseUrl = '/DynamicTable/';
             var editIndex = undefined;
 
+
             jQuery(document).ready(function () {
+
                 FormStripes();//表单样式
-                //  AutoWH("#body", 100, 100); //自适应宽度
+                AutoWH("#body", 40, 42);//自适应宽度
+                DataGridSet();
+            })
+            function DataGridSet() {
                 $('#dg').datagrid({
                     url: BaseUrl + 'ColumnGetList',
                     height: 450,
@@ -75,8 +71,7 @@
                             text: '添加',
                             iconCls: 'icon-add',
                             handler: function () {
-                                //实现弹出注册信息的页面
-                                ShowAddDialog();
+                                AddInfo();
 
                             }
                         }, '-', {
@@ -85,15 +80,14 @@
                             iconCls: 'icon-cut',
                             handler: function () {
                                 //实现修改的方法
-                                ShowUpdateInfo();
+                                EditInfo();
                             }
                         }
                     ]
-             });
+                });
                 loadColum();
                 bindconbox();
-            });
-
+            }
             function bindconbox() {
 
                 $('#ParentId').combobox({
@@ -190,7 +184,7 @@
 
 
                                 });
-                              
+
                             }
 
                         }
@@ -219,204 +213,111 @@
                     return false;
                 }
             }
-            serializeObject = function (form) { /*将form 表单元素的值序列化*/
-                var obj = {};
-                $.each(form.serializeArray(), function (index) {
-                    if (obj[this['name']]) {
-                        obj[this['name']] = obj[this['name']] + "," + this['value'];
-                    } else {
-                        obj[this['name']] = this['name'];
-                    }
-                });
-            };
 
-            function ShowSetRoleDiv() {
-
-            }
-
-            //easyUI 弹出添加按钮的对话框
-            function ShowAddDialog() {
+            //easyUI 弹出添加的对话框
+            function AddInfo() {
                 //弹出层
-                // $("#DivEditor").dialog('open').dialog('setTitle', '添加按钮信息');
+                // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
                 $('#DivEditor').dialog({
-                    title: '添加按钮信息',
+                    title: '添加材料',
                     //width: 400,
                     //height: 200,
                     closed: false,
                     cache: false,
                     // href: 'get_content.php',
-                    modal: true,
-                    top: 100,
+                    modal: true, top: 50,
                     onClose: function () {
                         //解决弹出窗口关闭后，验证消息还显示在最上面
 
                     }
                 });
-                $("#ff").form("clear");
+                $(".validatebox-tip").remove();//清除验证样式
+                DataBaseFunction.ClearForm("ff");
                 $("#CategoryTableID").val('@ViewBag.RuteUrl');
             }
 
-            //实现按钮的编辑，包括增查改
-            function EditInfo() {
-
-                //判断按钮的信息是否通过验证
-                var validate = $("#ff").form('validate');
-                if (validate == false) {
-                    return false;
-                }
-
-                //获取需要传递的参数传递给前台
-                var postData = $("#ff").serializeArray();
-                //$.ajax({
-                //    url: BaseUrl + 'ColumnEditInfo',
-                //    type: 'POST',
-                //    data: { list: JSON.stringify(postData) },
-                //    cache: false,
-                //    error: function () { alert('Error loading PHP document'); },
-                //    success: function (data) {
-
-                //        if (data = "OK") {
-                //            //添加成功  1.关闭弹出层，2.刷新DataGird
-                //            alert("编辑成功");
-                //            $('#DivEditor').dialog('close');
-                //            $(".validatebox-tip").remove();
-                //            // $("#DivEditor").dialog("close");
-                //            $("#dg").datagrid("reload");
-                //            $("#ff").form("clear");
-                //        } else {
-                //            alert("编辑失败，请您检查");
-                //        }
-                //    }
-                //});
-
-                //发送异步请求到后台保存按钮数据
-                $.post(BaseUrl + 'ColumnEditInfo', postData, function (data) {
-                    if (data == "ok") {
-                        //添加成功  1.关闭弹出层，2.刷新DataGird
-                        alert("编辑成功");
-                        $('#DivEditor').dialog('close');
-                        $(".validatebox-tip").remove();
-                        // $("#DivEditor").dialog("close");
-                        $("#dg").datagrid("reload");
-                        $("#ff").form("clear");
-                        loadColum();
-                        bindconbox();
-                    } else {
-                        alert("编辑失败，请您检查");
-                    }
-                });
-            }
-
-            //修改按钮的信息
-            function ShowUpdateInfo(browse) {
-                //首先取出来按钮选择的数据的ID
-                var rows = $("#dg").datagrid("getSelections");
-                //首先取出来值判断按钮只能选择一个
-                if (rows.length != 1) {
-                    $.messager.alert("友情提示", "每次只能修改/浏览一条，你已经选择了<font color='red'  size='6'>" + rows.length + "</font>条", "error");
-                    return;
-                }
-                if (browse == null) {
-                    //处理修改的信息，弹出修改的对话框,然后显示选择的按钮的详细信息
-                    $("#DivEditor").dialog('open').dialog('setTitle', '修改按钮信息').window('resize', { top: 100 });
-                    //绑定修改显示详细信息的方法
-                    BindShowUpdateInfo();
-                } else {
-                    //处理浏览的信息，弹出浏览狂，然后显示浏览信息的相信信息
-                    $("#DivBrowerRole").dialog('open').dialog('setTitle', '按钮浏览').window('resize', { top: 100 });
-                    //绑定按钮的浏览信息
-                    BindBrowerRoleInfo();
-                }
-            }
 
             //绑定修改显示详细信息的方法
-            function BindShowUpdateInfo() {
-                //首先按钮发送一个异步请求去后台实现方法
-                var ID = $("#dg").datagrid("getSelections")[0].ID; //获取到了用按钮选择的ID
+            function EditInfo() {
+
+                var rows = $("#dg").datagrid('getSelected');
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.title).window('resize', { top: 50 });
+                $(".validatebox-tip").remove();//清除验证样式
+                var ID = rows.ID;  //获取到了用选择的ID
                 $.ajax({
                     url: BaseUrl + 'GetColumnInfo',
                     type: 'POST',
                     data: { ID: ID },
                     cache: false,
-                    error: function () { alert('Error loading PHP document'); },
-                    success: function (result) {
+                    error: function () { alert('Error $.ajax'); },
+                    success: function (data) {
+                        //var result = eval('(' + data + ')');
+                        DataBaseFunction.BindForm("ff", data);
+                        $('#cc').combobox('setValue', data['editor']);
 
-                        //for (items in result) {
-                        //    $("#" + items).val(result[items]);
-                        //    var dd = $("#" + 'ff' + " [name='" + items + "']");
-                            
-                        //    var ty = dd.attr("type");
-                        //    alert(ty);
-                        //    if (ty != null && ty == "radio") {
-                        //        //dd.removeAttr("CHECKED");
-                        //        //$("[name=" + items + "][value=" + data[items] + "]").attr("checked", true); ie9以上失效
-                        //        var _o = document.getElementsByName(items);
-                        //        for (i = 0; i < _o.length; i++) {
-                        //            if (_o[i].value == result[items])
-                        //            { _o[i].checked = true; }
-                        //            else {
-                        //                _o[i].checked = false;
-                        //            }
-                        //        }
-                        //    }
-                        //}
-                        DataBaseFunction.BindForm("ff", result);
-                        $('#cc').combobox('setValue', result['editor']);
-                        $('#ParentId').combobox('setValue', result['ParentId']);
-                        //$("input[name='IsEnable'][value=" + result['IsEnable'] + "]").attr("checked", true);
-                        //$("input[name='MergeHeader'][value=" + result['MergeHeader'] + "]").attr("checked", true);
+                        $('#ParentId').combobox('setValue', data['ParentId']);
                     }
                 });
 
             }
 
-            //实现直接删除数据和伪删除数据的方法
-            function deleteInfo(not) {
-                //得到按钮选择的数据的ID
-                var rows = $("#dg").datagrid("getSelections");
-                //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
-                if (rows.length >= 1) {
-                    //遍历出按钮选择的数据的信息，这就是按钮按钮选择删除的按钮ID的信息
-                    var ids = ""; //1,2,3,4,5
-                    for (var i = 0; i < rows.length; i++) {
-                        //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
-                        ids += rows[i].Id + ",";
-                    }
-                    //最后去掉最后的那一个,
-                    ids = ids.substring(0, ids.length - 1);
-                    //获取按钮选择的按钮信息，如果按钮选择了已经登录的按钮的话需要给出不能删除的信息
-                    var ButtonName = "";
-                    for (var i = 0; i < rows.length; i++) {
-                        ButtonName += rows[i].ButtonName + ",";
-                    }
-                    ButtonName = ButtonName.substring(0, ButtonName.length - 1);
-                    //首先取出来到底是直接删除还是伪删除发送异步请求的地址和是否是伪删除的参数
-                    var postData = "";
+            //实现的编辑，包括增查改
+            function SaveInfo() {
 
-
+                //判断的信息是否通过验证
+                var validate = $("#ff").form('validate');
+                if (validate == false) {
+                    return false;
                 }
-            }
+                //获取需要传递的参数传递给前台
+                var data = DataBaseFunction.GetFormData("ff")
+                //发送异步请求到后台保存数据
+                $.post(BaseUrl + 'ColumnEditInfo', data, function (data) {
+                    alerts(data.Msg, 2);
+                    if (data.Code > 0) {
+                        $('#DivEditor').dialog('close');
+                        $(".validatebox-tip").remove();
+                        $("#dg").datagrid("reload");
+                        loadColum();
+                        bindconbox();
 
+                    }
+                });
+
+            }
+            //删除
+            function Del() {
+                DataBaseFunction.deleteInfo("dg", "Id", "TName");
+            }
         </script>
     }
+
 </head>
-<body>
-    @* <div id="body">*@
-    <table id="dg"></table>
-    @* </div>*@
-    <div id="DivEditor" class="easyui-dialog" style="width: 580px; padding: 10px 20px"
+<body style="overflow-y: hidden">
+    <div id="body">
+        <table id="dg"></table>
+        <table id="dg2"></table>
+    </div>
+
+    <!------------------------弹出信息的弹出层---------------------------------->
+    <div id="DivEditor" class="easyui-dialog" style="width: 700px;"
         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <form id="ff" method="post" novalidate="novalidate">
-            <fieldset>
-                <legend>按钮信息填写栏</legend>
-                <table id="tblAdd">
+        <div id="Div_form" class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:440,width:680,border:false">
+            <form id="ff" method="post" enctype="multipart/form-data">
+
+                <table class="stripes" style="table-layout: fixed; width: 100%" border="0" cellspacing="0" cellpadding="0">
                     <tr>
                         <input type="hidden" id="ID" name="ID" />
                         <input type="hidden" id="CategoryTableID" name="CategoryTableID" />
-                        <td>
+                        <td style="width: 100px;">
                             <label>表格名称：</label></td>
                         <td>
-                            <input class="easyui-validatebox" type="text" id="title" name="title" data-options="required:true,validType:'length[1,32]'" />
+                            <input class="easyui-validatebox textbox" type="text" id="title" name="title" data-options="required:true,validType:'length[1,32]'" />
                         </td>
 
                     </tr>
@@ -424,7 +325,7 @@
                         <td>
                             <label>表格英文名称：</label></td>
                         <td>
-                            <input class="easyui-validatebox" type="text" id="field" name="field" data-options="required:true,validType:'length[1,32]'" />
+                            <input class="easyui-validatebox textbox" type="text" id="field" name="field" data-options="required:true,validType:'length[1,32]'" />
                         </td>
 
                     </tr>
@@ -432,7 +333,7 @@
                         <td>
                             <label>行合并数：</label></td>
                         <td>
-                            <input class="easyui-numberbox" type="text" id="rowspan" name="rowspan" data-options="required:true,min:0" />
+                            <input class="easyui-validatebox textbox" type="text" onkeyup="clearNoNumberContainDot(this);" name="rowspan" data-options="required:true" />
                         </td>
 
                     </tr>
@@ -440,7 +341,7 @@
                         <td>
                             <label>列合并数：</label></td>
                         <td>
-                            <input class="easyui-numberbox" type="text" id="colspan" name="colspan" data-options="required:true,min:0" />
+                            <input class="easyui-validatebox textbox" type="text" onkeyup="clearNoNumberContainDot(this);" name="colspan" data-options="required:true" />
                         </td>
 
                     </tr>
@@ -448,7 +349,7 @@
                         <td>
                             <label>宽度：</label></td>
                         <td>
-                            <input class="easyui-numberbox" type="text" id="width" name="width" data-options="required:true,min:0" />
+                            <input class="easyui-validatebox textbox" type="text" onkeyup="clearNoNumberContainDot(this);" name="width" data-options="required:true" />
                         </td>
 
                     </tr>
@@ -459,9 +360,9 @@
                             <label>编辑类型：</label></td>
                         <td>
 
-                            <select id="cc" class="easyui-combobox" name="editor" style="width: 200px;" vlaue="0">
-                                <option value="">不编辑</option>
-                                <option value="type: 'validatebox', options: { required: true}">可输入的文本框</option>
+                            <select id="cc" class="easyui-combobox" data-options="required:true" name="editor" style="width: 200px;" vlaue="0">
+                                <option value="1">不编辑</option>
+                                <option value="2">可输入的文本框</option>
 
                             </select>
                         </td>
@@ -481,7 +382,7 @@
                         <td>
                             <label>排序号：</label></td>
                         <td>
-                            <input class="easyui-numberbox" type="text" id="SortNo" name="SortNo" data-options="min:0" />
+                            <input class="easyui-validatebox textbox" type="text" onkeyup="clearNoNumberContainDot(this);" name="SortNo" data-options="required:true" />
                         </td>
 
                     </tr>
@@ -490,40 +391,38 @@
                         <td>
                             <label>是否启用：</label></td>
                         <td>
-                            
-                                <input name="IsEnable" type="radio" value="true"/>是
-                                <input name="IsEnable" type="radio" value="false"/>否
+
+                            <input name="IsEnable" type="radio" value="true" />是
+                                <input name="IsEnable" type="radio" value="false" />否
                               @*  <input type="checkbox" name="IsEnable" id="IsEnable" value="True"/>是否启用*@
 
-                           
+
 
                         </td>
 
                     </tr>
-                      <tr>
+                    <tr>
                         <td>
                             <label>作为合并列的头部：</label></td>
                         <td>
-                           
 
-                              <input name="MergeHeader" type="radio" value="True"/>是
-                                <input name="MergeHeader" type="radio" value="False"/>否
+
+                            <input name="MergeHeader" type="radio" value="true" />是
+                                <input name="MergeHeader" type="radio" value="false" />否
 
                         </td>
 
                     </tr>
                 </table>
-            </fieldset>
+            </form>
 
-        </form>
-        <div style="text-align: center; width: 100%">
-            <a href="javascript:void(0)" class="easyui-linkbutton" id="btnAddRole" iconcls="icon-ok" onclick="EditInfo();">确定</a>
+
+        </div>
+
+        <div style="text-align: center; width: 100%; margin-bottom: 5px;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>
         </div>
     </div>
-
-    <table id="dg2"></table>
-
-  
 </body>
 </html>
