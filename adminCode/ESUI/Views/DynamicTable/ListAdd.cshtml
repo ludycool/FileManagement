@@ -115,9 +115,9 @@
                 var Columndata = eval(Column);
 
                 $('#dg2').datagrid({
-                    url: BaseUrl + 'GetAllJsonResultList',
+                    //url: BaseUrl + 'GetAllJsonResultList',
                     columns: Columndata,
-                    queryParams: { Condition: '@ViewBag.RuteUrl' },
+                 @*   queryParams: { Condition: '@ViewBag.RuteUrl' },*@
                     height: 450,
                     iconCls: 'icon-save',
                     title: '按钮编辑',
