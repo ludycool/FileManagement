@@ -61,6 +61,11 @@ namespace ESUI.Controllers
 
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 创建表格
+        /// </summary>
+        /// <param name="categoryTable"></param>
+        /// <returns></returns>
         public JsonResult EditInfo(CategoryTable categoryTable)
         {
 
@@ -119,6 +124,11 @@ namespace ESUI.Controllers
             ViewBag.RuteUrl = id;
             return View();
         }
+        /// <summary>
+        /// 录入动态表头
+        /// </summary>
+        /// <param name="categoryTable"></param>
+        /// <returns></returns>
         public JsonResult ColumnEditInfo(ColumnCharts categoryTable)
         {
             // ColumnCharts categoryTable=new ColumnCharts();
@@ -129,7 +139,7 @@ namespace ESUI.Controllers
             }
 
 
-            if (CCBiz.GetCount<ColumnChartsSet>(ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID).And(ColumnChartsSet.field.Equal(categoryTable.field))) > 0.0)
+            if (IsAdd&&CCBiz.GetCount<ColumnChartsSet>(ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID).And(ColumnChartsSet.field.Equal(categoryTable.field))) > 0.0)
             {
                 return Json("Nok", JsonRequestBehavior.AllowGet);
             }
@@ -201,7 +211,7 @@ namespace ESUI.Controllers
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
-        /// 获取列
+        /// 绘制动态表头（含多维表头）
         /// </summary>
         /// <returns></returns>
         public string GetBtnColumn(string Condition)
@@ -296,12 +306,16 @@ namespace ESUI.Controllers
             return menus;
 
         }
-
+        /// <summary>
+        /// 设查找没有子级的
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         public JsonResult GetInfoParent(string ID)
         {
             //  var mql2 = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(ID).And(ColumnChartsSet.ParentId.IsNullOrEmpty()));
             //   var Rmodel = CCBiz.GetEntities(mql2);
-            var Rmodel = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + ID + "' and (ParentId='' or ParentId is  null)");
+            var Rmodel = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + ID + "' and MergeHeader=1");
             List<ComboxModle> list = new List<ComboxModle>();
             ComboxModle d2 = new ComboxModle();
             d2.id = "";
@@ -318,7 +332,11 @@ namespace ESUI.Controllers
             //  groupsBiz.Add(rol);
             return Json(list, JsonRequestBehavior.AllowGet);
         }
-
+        /// <summary>
+        /// 获取实体类
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         public JsonResult GetColumnInfo(string ID)
         {
             var mql2 = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.ID.Equal(ID));
@@ -326,6 +344,11 @@ namespace ESUI.Controllers
             //  groupsBiz.Add(rol);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 查询动态表格内容
+        /// </summary>
+        /// <param name="Condition"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult GetAllJsonResultList(string Condition)
         {
@@ -364,6 +387,12 @@ namespace ESUI.Controllers
             ViewBag.RuteUrl = id;
             return View();
         }
+        /// <summary>
+        /// 动态表格添加修改方法
+        /// </summary>
+        /// <param name="categoryTable"></param>
+        /// <param name="CategoryTableID"></param>
+        /// <returns></returns>
         public JsonResult ColumnSave(string categoryTable, string CategoryTableID)
         {
             // ColumnCharts categoryTable=new ColumnCharts();
