@@ -15,6 +15,7 @@ using e3net.tools;
 using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using TZHSWEET.Common;
+using e3net.Mode.HttpView;
 
 namespace ESUI.Controllers
 {
@@ -133,6 +134,8 @@ namespace ESUI.Controllers
         {
             // ColumnCharts categoryTable=new ColumnCharts();
             bool IsAdd = false;
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+
             if (categoryTable != null && string.IsNullOrEmpty(categoryTable.ID))//id为空，是添加
             {
                 IsAdd = true;
@@ -141,7 +144,9 @@ namespace ESUI.Controllers
 
             if (IsAdd&&CCBiz.GetCount<ColumnChartsSet>(ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID).And(ColumnChartsSet.field.Equal(categoryTable.field))) > 0.0)
             {
-                return Json("Nok", JsonRequestBehavior.AllowGet);
+                ReSultMode.Code = -11;
+                ReSultMode.Data = "";
+                ReSultMode.Msg = "已经存在";
             }
 
             if (IsAdd)
@@ -153,13 +158,11 @@ namespace ESUI.Controllers
                 //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
 
                 CCBiz.Add(categoryTable);
-
-
-
                 var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(categoryTable.CategoryTableID)));
-
                 OPBiz.ExecuteSqlWithNonQuery("alter table " + catmodle.UserTableName + " add " + categoryTable.field + " nvarchar(500) null");
-                return Json("ok", JsonRequestBehavior.AllowGet);
+                ReSultMode.Code = 11;
+                ReSultMode.Data = "";
+                ReSultMode.Msg = "添加成功";
             }
             else
             {
@@ -168,16 +171,18 @@ namespace ESUI.Controllers
                 //  spmodel.GroupId = GroupId;
                 if (CCBiz.Update(categoryTable) > 0)
                 {
-                    return Json("ok", JsonRequestBehavior.AllowGet);
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "更新成功";
                 }
                 else
                 {
-                    return Json("Nok", JsonRequestBehavior.AllowGet);
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data ="";
+                    ReSultMode.Msg = "更新失败";
                 }
             }
-
-
-
+            return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
         }
         [HttpPost]
