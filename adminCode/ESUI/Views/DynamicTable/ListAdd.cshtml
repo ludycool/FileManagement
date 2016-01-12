@@ -5,8 +5,8 @@
     <title>title</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <script src="~/Content/js/Buttons.js"></script>
-    <script src="~/Content/JqueryEasyUI/plugins/jquery.treegrid.js"></script>
+     <script type="text/javascript" charset="utf-8" src="~/Content/js/ImgUp.js"></script>
+    <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
     @* ReSharper disable once NotAllPathsReturnValue *@
     <style type="text/css">
         #iconlist li {
@@ -344,11 +344,30 @@
                     error: function () { alert('Error loading PHP document'); },
                     success: function (result) {
 
-                        for (items in result) {
-                            $("#" + items).val(result[items]);
-                        }
+                        //for (items in result) {
+                        //    $("#" + items).val(result[items]);
+                        //    var dd = $("#" + 'ff' + " [name='" + items + "']");
+                            
+                        //    var ty = dd.attr("type");
+                        //    alert(ty);
+                        //    if (ty != null && ty == "radio") {
+                        //        //dd.removeAttr("CHECKED");
+                        //        //$("[name=" + items + "][value=" + data[items] + "]").attr("checked", true); ie9以上失效
+                        //        var _o = document.getElementsByName(items);
+                        //        for (i = 0; i < _o.length; i++) {
+                        //            if (_o[i].value == result[items])
+                        //            { _o[i].checked = true; }
+                        //            else {
+                        //                _o[i].checked = false;
+                        //            }
+                        //        }
+                        //    }
+                        //}
+                        DataBaseFunction.BindForm("ff", result);
                         $('#cc').combobox('setValue', result['editor']);
                         $('#ParentId').combobox('setValue', result['ParentId']);
+                        //$("input[name='IsEnable'][value=" + result['IsEnable'] + "]").attr("checked", true);
+                        //$("input[name='MergeHeader'][value=" + result['MergeHeader'] + "]").attr("checked", true);
                     }
                 });
 
@@ -474,10 +493,12 @@
                         <td>
                             <label>是否启用：</label></td>
                         <td>
-                            <div>
-                                <input type="checkbox" name="IsEnable" id="IsEnable" value="True"/>是否启用
+                            
+                                <input name="IsEnable" type="radio" value="true"/>是
+                                <input name="IsEnable" type="radio" value="false"/>否
+                              @*  <input type="checkbox" name="IsEnable" id="IsEnable" value="True"/>是否启用*@
 
-                            </div>
+                           
 
                         </td>
 
@@ -486,10 +507,10 @@
                         <td>
                             <label>作为合并列的头部：</label></td>
                         <td>
-                            <div>
-                                <input type="checkbox" name="MergeHeader" id="MergeHeader" value="True" />是否
-                 
-                            </div>
+                           
+
+                              <input name="MergeHeader" type="radio" value="True"/>是
+                                <input name="MergeHeader" type="radio" value="False"/>否
 
                         </td>
 
