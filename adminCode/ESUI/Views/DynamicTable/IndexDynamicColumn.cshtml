@@ -100,21 +100,33 @@
 
 
                             }
-                        },  '-', {
+                        }, '-', {
+
+                            text: '撤销', iconCls: 'icon-redo', handler: function () {
+
+                                editRow = undefined;
+
+                                $("#dg2").datagrid('rejectChanges');
+
+                                $("#dg2").datagrid('unselectAll');
+
+                            }
+
+                        }, '-', {
                             id: 'btnAccept',
                             text: '保存',
                             iconCls: 'icon-save',
                             handler: function () {
                                 //实现修改的方法
                                 //if (endEditing()) {
-                                alert(editIndex);
+                                //alert(editIndex);
                                 $("#dg2").datagrid('endEdit', editIndex);
                                 var rows = $("#dg2").datagrid('getChanges');
 
 
 
                                 var rowstr = JSON.stringify(rows);
-                                alert(rowstr);
+                               // alert(rowstr);
                                 $.ajax({
                                     url: BaseUrl + 'ColumnSave',
                                     type: 'POST',
@@ -123,7 +135,7 @@
                                     error: function () { alert('Error loading PHP document'); },
                                     success: function (data) {
 
-                                        if (data = "OK") {
+                                        if (data == "ok") {
                                             //添加成功  1.关闭弹出层，2.刷新DataGird
                                             alert("编辑成功");
                                             //$('#DivEditor').dialog('close');
@@ -132,7 +144,13 @@
                                             //$("#dg").datagrid("reload");
                                             //$("#ff").form("clear");
                                         } else {
+                                            editIndex = undefined;
+
+                                            $("#dg2").datagrid('rejectChanges');
+
+                                            $("#dg2").datagrid('unselectAll');
                                             alert("编辑失败，请您检查");
+
                                         }
                                     }
                                 });

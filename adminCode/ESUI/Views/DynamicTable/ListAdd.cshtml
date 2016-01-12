@@ -294,7 +294,7 @@
 
                 //发送异步请求到后台保存按钮数据
                 $.post(BaseUrl + 'ColumnEditInfo', postData, function (data) {
-                    if (data = "OK") {
+                    if (data == "ok") {
                         //添加成功  1.关闭弹出层，2.刷新DataGird
                         alert("编辑成功");
                         $('#DivEditor').dialog('close');
@@ -475,7 +475,19 @@
                             <label>是否启用：</label></td>
                         <td>
                             <div>
-                                <input type="checkbox" name="IsEnable" value="True" />是否启用
+                                <input type="checkbox" name="IsEnable" id="IsEnable" value="True"/>是否启用
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                      <tr>
+                        <td>
+                            <label>作为合并列的头部：</label></td>
+                        <td>
+                            <div>
+                                <input type="checkbox" name="MergeHeader" id="MergeHeader" value="True" />是否
                  
                             </div>
 
