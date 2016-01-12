@@ -4,9 +4,6 @@
 <head>
     <title>title</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-     <script type="text/javascript" charset="utf-8" src="~/Content/js/ImgUp.js"></script>
-    <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
     @* ReSharper disable once NotAllPathsReturnValue *@
     <style type="text/css">
         #iconlist li {
@@ -30,7 +27,7 @@
             var editIndex = undefined;
 
             jQuery(document).ready(function () {
-
+                FormStripes();//表单样式
                 //  AutoWH("#body", 100, 100); //自适应宽度
                 $('#dg').datagrid({
                     url: BaseUrl + 'ColumnGetList',
@@ -527,8 +524,6 @@
 
     <table id="dg2"></table>
 
-    <div id="DviIcon" class="easyui-window" style="width: 680px; height: 400px; padding: 10px 20px" title="选择图标"
-        closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-    </div>
+  
 </body>
 </html>
