@@ -145,7 +145,7 @@ namespace ESUI.Controllers
             }
 
 
-            if (IsAdd&&CCBiz.GetCount<ColumnChartsSet>(ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID).And(ColumnChartsSet.field.Equal(categoryTable.field))) > 0.0)
+            if (IsAdd && CCBiz.GetCount<ColumnChartsSet>(ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID).And(ColumnChartsSet.field.Equal(categoryTable.field))) > 0.0)
             {
                 ReSultMode.Code = -11;
                 ReSultMode.Data = "";
@@ -189,7 +189,7 @@ namespace ESUI.Controllers
                 else
                 {
                     ReSultMode.Code = -11;
-                    ReSultMode.Data ="";
+                    ReSultMode.Data = "";
                     ReSultMode.Msg = "更新失败";
                 }
             }
@@ -256,13 +256,13 @@ namespace ESUI.Controllers
                         menus += "{  ";
                         if (!string.IsNullOrEmpty(item.align))
                         {
-                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\",align:\"" + item.align+"\"";
+                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\",align:\"" + item.align + "\"";
                         }
                         else
                         {
-                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\""; 
+                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\"";
                         }
-                    
+
                         menus += "},";
                     }
                     else
@@ -278,11 +278,11 @@ namespace ESUI.Controllers
                             else
                             {
                                 menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
- 
+
                             }
 
- 
-                           
+
+
                         }
                         else
                         {
@@ -334,31 +334,11 @@ namespace ESUI.Controllers
                         menus2 += "{  ";
                         if (item.rowspan > 1)
                         {
-                            if (!string.IsNullOrEmpty(item.align))
-                            {
-                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align + "\"";
-
-                            }
-                            else
-                            {
-                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
-
-                            }
+                            menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" + item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor + "}";
                         }
                         else
                         {
-                            if (!string.IsNullOrEmpty(item.align))
-                            {
-                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
-                                         item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align +
-                                         "\"";
-                            }
-                            else
-                            {
-
-                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
-                                         item.width + "\",editor:{" + item.editor + "}";
-                            }
+                            menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
                         }
 
 
@@ -476,8 +456,8 @@ namespace ESUI.Controllers
             {
                 IsAdd = true;
             }
-            
-           
+
+
             if (IsAdd)
             {
 
@@ -493,11 +473,11 @@ namespace ESUI.Controllers
 
                     }
                     sql = sql.Substring(0, sql.Length - 1);
-                    sql += ")VALUES ('"+Guid.NewGuid().ToString()+"',";
+                    sql += ")VALUES ('" + Guid.NewGuid().ToString() + "',";
 
                     foreach (KeyValuePair<string, string> kv in o2[0])
                     {
-                        sql += "'"+kv.Value + "',";
+                        sql += "'" + kv.Value + "',";
 
                     }
                     sql = sql.Substring(0, sql.Length - 1);
@@ -517,22 +497,22 @@ namespace ESUI.Controllers
                     var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(CategoryTableID)));
 
                     string sql = "UPDATE " + catmodle.UserTableName + " set";
-                 
+
                     foreach (KeyValuePair<string, string> kv in o2[0])
                     {
-                        if (kv.Key!="ID")
+                        if (kv.Key != "ID")
                         {
                             sql += "[" + kv.Key + "]='" + kv.Value + "',";
                         }
-                      
+
 
                     }
-                   string updateID = "";
+                    string updateID = "";
                     o2[0].TryGetValue("ID", out updateID);
                     sql = sql.Substring(0, sql.Length - 1);
                     sql += " where  ID='" + updateID + "'";
 
-                  
+
                     OPBiz.ExecuteSqlWithNonQuery(sql);
                     return Json("ok", JsonRequestBehavior.AllowGet);
                 }
@@ -540,9 +520,9 @@ namespace ESUI.Controllers
                 {
                     return Json("Nok", JsonRequestBehavior.AllowGet);
                 }
-                 
-             
-             
+
+
+
             }
 
 
@@ -554,19 +534,20 @@ namespace ESUI.Controllers
         {
             var fd = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition)
                 .And(ColumnChartsSet.IsNumber.Equal(true).And(ColumnChartsSet.IsEnable.Equal(true))));
-        var f=    CCBiz.GetEntity(fd);
-        string menus = "";
-            if (f!=null)
+            var f = CCBiz.GetEntity(fd);
+            string menus = "[\n";
+            menus += "{  ";
+            if (f != null)
             {
                 var ddd = BascharvalueSet.SelectAll().Where(BascharvalueSet.CharTypeId.Equal("Year"));
-            var g  = BBiz.GetEntity(ddd);
+                var g = BBiz.GetEntity(ddd);
                 if (g.CharName.Equals(DateTime.Today.Year.ToString()))
                 {
                     int count = 0;
                     int.TryParse(g.CharNumber, out count);
                     count = count + 1;
-                    menus = f.field + ":" + count.ToString();
-
+                    menus += "\""+f.field + "\":\"" +g.CharName+"-"+ count.ToString()+"\"";
+                    g.CharNumber = count.ToString();
                     g.WhereExpression = BascharvalueSet.CharId.Equal(g.CharId);
                     BBiz.Update(g);
                 }
@@ -575,16 +556,16 @@ namespace ESUI.Controllers
                     g.CharName = DateTime.Today.Year.ToString();
                     g.CharNumber = "1";
                     g.WhereExpression = BascharvalueSet.CharId.Equal(g.CharId);
-                    BBiz.Update(g); 
+                    BBiz.Update(g);
                 }
-               
+
             }
             else
             {
                 menus = "2";
             }
-        
-          
+
+            menus += "}]";
 
             return menus;
 

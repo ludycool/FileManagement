@@ -31,7 +31,7 @@
             var BaseUrl = '/DynamicTable/';
             var editIndex = undefined;
 
-            jQuery(document).ready(function () {
+            jQuery(document).ready(function() {
 
                 AutoWH("#body", 100, 100); //自适应宽度
 
@@ -39,7 +39,6 @@
 
             });
 
-          
 
             function loadColum() {
                 var Column = $.ajax({
@@ -58,7 +57,7 @@
                     height: 450,
                     iconCls: 'icon-save',
                     title: '按钮编辑',
-                   // onClickCell: onClickCell,
+                    // onClickCell: onClickCell,
                     //nowrap: true,
                     //singleSelect: true,
                     //striped: true,
@@ -68,162 +67,179 @@
                     //fitColumns: true,
                     rownumbers: true,
                     toolbar: [
-                        {
-                            id: 'btnadd',
-                            text: '添加',
-                            iconCls: 'icon-add',
-                            handler: function () {
-                                //实现弹出注册信息的页面
-                                if (editIndex != undefined) {
+                    {
+                        id: 'btnadd',
+                        text: '添加',
+                        iconCls: 'icon-add',
+                        handler: function() {
+                            //实现弹出注册信息的页面
+                            if (editIndex != undefined) {
 
-                                    $("#dg2").datagrid('endEdit', editIndex);
-
-                                }
-
-                                if (editIndex == undefined) {
-
-                                    var t = $.ajax({
-                                        //获取列数据
-                                        url: BaseUrl + 'GetBtnColumn',
-                                        cache: false,
-                                        data: { Condition: '@ViewBag.RuteUrl' },
-                                        async: false
-                                    }).responseText;
-                                    if (COND) {
-                                        
-                                    }
-                                    $("#dg2").datagrid('insertRow', {
-
-                                        index: 0,
-
-                                        row: {d5j:'20150002'}
-
-                                    });
-                             
-
-                                    $("#dg2").datagrid('beginEdit', 0);
-
-                                    editIndex = 0;
-
-                                }
-
+                                $("#dg2").datagrid('endEdit', editIndex);
 
                             }
-                        }, '-', {
 
-                            text: '撤销', iconCls: 'icon-redo', handler: function () {
+                            if (editIndex == undefined) {
 
-                                editRow = undefined;
+                                var t = $.ajax({
+                                    //获取列数据
+                                    url: BaseUrl + 'GetNumberColumn',
+                                    cache: false,
+                                    data: { Condition: '@ViewBag.RuteUrl' },
+                                async: false
+                            }).responseText;
+                            
+                            if (t != 2) {
+                            var f   = jQuery.parseJSON(t);
+                            $("#dg2").datagrid('insertRow', {
+                                index: 0,
+
+                                row: f[0]
+
+
+
+                            });
+                            } else {
+                                //alert(eval(newRow));
+                                $("#dg2").datagrid('insertRow', {
+                                    index: 0,
+
+                                    row: {}
+
+
+
+                                });
+                            }
+                         
+
+
+                $("#dg2").datagrid('beginEdit', 0);
+
+                editIndex = 0;
+
+            }
+
+
+            }
+            },
+            '-', {
+                text: '撤销',
+                iconCls: 'icon-redo',
+                handler: function() {
+
+                    editIndex = undefined;
+
+                    $("#dg2").datagrid('rejectChanges');
+
+                    $("#dg2").datagrid('unselectAll');
+
+                }
+
+            }, '-', {
+                id: 'btnAccept',
+                text: '保存',
+                iconCls: 'icon-save',
+                handler: function() {
+                    //实现修改的方法
+                    //if (endEditing()) {
+                    //alert(editIndex);
+                    $("#dg2").datagrid('endEdit', editIndex);
+                    var rows = $("#dg2").datagrid('getChanges');
+
+
+                    var rowstr = JSON.stringify(rows);
+                    // alert(rowstr);
+                    $.ajax({
+                        url: BaseUrl + 'ColumnSave',
+                        type: 'POST',
+                        data: { categoryTable: rowstr, CategoryTableID: '@ViewBag.RuteUrl' },
+                        cache: false,
+                        error: function() { alert('Error loading PHP document'); },
+                        success: function(data) {
+
+                            if (data == "ok") {
+                                //添加成功  1.关闭弹出层，2.刷新DataGird
+                                alert("编辑成功");
+                                //$('#DivEditor').dialog('close');
+                                //$(".validatebox-tip").remove();
+                                //// $("#DivEditor").dialog("close");
+                                //$("#dg").datagrid("reload");
+                                //$("#ff").form("clear");
+                            } else {
+                                editIndex = undefined;
 
                                 $("#dg2").datagrid('rejectChanges');
 
                                 $("#dg2").datagrid('unselectAll');
+                                alert("编辑失败，请您检查");
 
                             }
-
-                        }, '-', {
-                            id: 'btnAccept',
-                            text: '保存',
-                            iconCls: 'icon-save',
-                            handler: function () {
-                                //实现修改的方法
-                                //if (endEditing()) {
-                                //alert(editIndex);
-                                $("#dg2").datagrid('endEdit', editIndex);
-                                var rows = $("#dg2").datagrid('getChanges');
-
-
-
-                                var rowstr = JSON.stringify(rows);
-                               // alert(rowstr);
-                                $.ajax({
-                                    url: BaseUrl + 'ColumnSave',
-                                    type: 'POST',
-                                    data: { categoryTable: rowstr, CategoryTableID: '@ViewBag.RuteUrl' },
-                                    cache: false,
-                                    error: function () { alert('Error loading PHP document'); },
-                                    success: function (data) {
-
-                                        if (data == "ok") {
-                                            //添加成功  1.关闭弹出层，2.刷新DataGird
-                                            alert("编辑成功");
-                                            //$('#DivEditor').dialog('close');
-                                            //$(".validatebox-tip").remove();
-                                            //// $("#DivEditor").dialog("close");
-                                            //$("#dg").datagrid("reload");
-                                            //$("#ff").form("clear");
-                                        } else {
-                                            editIndex = undefined;
-
-                                            $("#dg2").datagrid('rejectChanges');
-
-                                            $("#dg2").datagrid('unselectAll');
-                                            alert("编辑失败，请您检查");
-
-                                        }
-                                    }
-                                });
-                                $('#dg2').datagrid('acceptChanges');
-
-                            }
-
                         }
-                    ],
+                    });
+                    $('#dg2').datagrid('acceptChanges');
 
-                    onAfterEdit: function (rowIndex, rowData, changes) {
+                }
 
-                        editIndex = undefined;
+            }
+            ],
 
-                    },
+            onAfterEdit: function(rowIndex, rowData, changes) {
 
-                    onDblClickRow: function (rowIndex, rowData) {
+                editIndex = undefined;
 
-                        if (editIndex != undefined) {
+            },
 
-                            $("#dg2").datagrid('endEdit', editIndex);
+            onDblClickRow: function(rowIndex, rowData) {
 
-                        }
+                if (editIndex != undefined) {
+
+                    $("#dg2").datagrid('endEdit', editIndex);
+
+                }
 
 
+                if (editIndex == undefined) {
 
-                        if (editIndex == undefined) {
+                    $("#dg2").datagrid('beginEdit', rowIndex);
 
-                            $("#dg2").datagrid('beginEdit', rowIndex);
+                    editIndex = rowIndex;
 
-                            editIndex = rowIndex;
+                }
 
-                        }
-                       
 
-                    },
-                });
+            },
+            });
             }
             function planUrl(val, row) {
-           
-                    return '<a   >' + 2015001 + '</a>';
-              
+
+                return '<a   >' + 2015001 + '</a>';
+
             }
+
             function onClickCell(index, field) {
                 if (editIndex != index) {
                     if (endEditing()) {
                         $('#dg2').datagrid('selectRow', index)
-                                .datagrid('beginEdit', index);
+                            .datagrid('beginEdit', index);
                         var ed = $('#dg2').datagrid('getEditor', { index: index, field: field });
                         if (ed) {
                             ($(ed.target).data('textbox') ? $(ed.target).textbox('textbox') : $(ed.target)).focus();
                         }
-                      
-                  
+
+
                         editIndex = index;
                     } else {
-                        setTimeout(function () {
+                        setTimeout(function() {
                             $('#dg2').datagrid('selectRow', editIndex);
                         }, 0);
                     }
                 }
             }
+
             function endEditing() {
-                if (editIndex == undefined) { return true }
+                if (editIndex == undefined) {
+                    return true
+                }
                 if ($('#dg2').datagrid('validateRow', editIndex)) {
                     $('#dg2').datagrid('endEdit', editIndex);
                     editIndex = undefined;
@@ -232,9 +248,10 @@
                     return false;
                 }
             }
-            serializeObject = function (form) { /*将form 表单元素的值序列化*/
+
+            serializeObject = function(form) { /*将form 表单元素的值序列化*/
                 var obj = {};
-                $.each(form.serializeArray(), function (index) {
+                $.each(form.serializeArray(), function(index) {
                     if (obj[this['name']]) {
                         obj[this['name']] = obj[this['name']] + "," + this['value'];
                     } else {
@@ -248,8 +265,7 @@
             }
 
 
-
-            //实现按钮的编辑，包括增查改
+//实现按钮的编辑，包括增查改
             function EditInfo() {
 
                 //判断按钮的信息是否通过验证
@@ -283,7 +299,7 @@
                 //});
 
                 //发送异步请求到后台保存按钮数据
-                $.post(BaseUrl + 'ColumnEditInfo', postData, function (data) {
+                $.post(BaseUrl + 'ColumnEditInfo', postData, function(data) {
                     if (data = "OK") {
                         //添加成功  1.关闭弹出层，2.刷新DataGird
                         alert("编辑成功");
@@ -331,8 +347,8 @@
                     type: 'POST',
                     data: { ID: ID },
                     cache: false,
-                    error: function () { alert('Error loading PHP document'); },
-                    success: function (result) {
+                    error: function() { alert('Error loading PHP document'); },
+                    success: function(result) {
 
                         for (items in result) {
                             $("#" + items).val(result[items]);
@@ -344,7 +360,6 @@
 
             }
 
-           
 
         </script>
     }
