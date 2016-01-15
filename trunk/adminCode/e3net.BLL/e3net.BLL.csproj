@@ -59,6 +59,8 @@
   <ItemGroup>
     <Compile Include="DynamicTable\CategoryTableBiz.cs" />
     <Compile Include="DynamicTable\ColumnChartsBiz.cs" />
+    <Compile Include="DynamicTable\BascharvalueBiz.cs" />
+    <Compile Include="DynamicTable\BaschartypeBiz.cs" />
     <Compile Include="FileManagementDB\TF_PaperFileBiz.cs" />
     <Compile Include="FileManagementDB\TF_LifeCommentsBiz.cs" />
     <Compile Include="FileManagementDB\TF_ElectronicFileBiz.cs" />

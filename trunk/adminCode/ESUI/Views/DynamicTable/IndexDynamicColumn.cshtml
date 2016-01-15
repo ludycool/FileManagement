@@ -39,7 +39,7 @@
 
             });
 
-
+          
 
             function loadColum() {
                 var Column = $.ajax({
@@ -82,15 +82,24 @@
 
                                 if (editIndex == undefined) {
 
+                                    var t = $.ajax({
+                                        //获取列数据
+                                        url: BaseUrl + 'GetBtnColumn',
+                                        cache: false,
+                                        data: { Condition: '@ViewBag.RuteUrl' },
+                                        async: false
+                                    }).responseText;
+                                    if (COND) {
+                                        
+                                    }
                                     $("#dg2").datagrid('insertRow', {
 
                                         index: 0,
 
-                                        row: {}
+                                        row: {d5j:'20150002'}
 
                                     });
-
-
+                             
 
                                     $("#dg2").datagrid('beginEdit', 0);
 
@@ -184,9 +193,15 @@
                             editIndex = rowIndex;
 
                         }
+                       
 
                     },
                 });
+            }
+            function planUrl(val, row) {
+           
+                    return '<a   >' + 2015001 + '</a>';
+              
             }
             function onClickCell(index, field) {
                 if (editIndex != index) {
@@ -197,6 +212,8 @@
                         if (ed) {
                             ($(ed.target).data('textbox') ? $(ed.target).textbox('textbox') : $(ed.target)).focus();
                         }
+                      
+                  
                         editIndex = index;
                     } else {
                         setTimeout(function () {
