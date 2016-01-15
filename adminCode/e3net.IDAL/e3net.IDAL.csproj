@@ -58,7 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DynamicTable\ICategoryTableDao.cs" />
+    <Compile Include="DynamicTable\IBaschartypeDao.cs" />
     <Compile Include="DynamicTable\IColumnChartsDao.cs" />
+    <Compile Include="DynamicTable\IBascharvalueDao.cs" />
     <Compile Include="FileManagementDB\ITF_PaperFileDao.cs" />
     <Compile Include="FileManagementDB\ITF_LifeCommentsDao.cs" />
     <Compile Include="FileManagementDB\ITF_ElectronicFileDao.cs" />
@@ -89,7 +91,6 @@
       <Name>e3net.Mode</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

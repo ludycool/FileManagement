@@ -57,6 +57,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Baschartype.cs" />
+    <Compile Include="Bascharvalue.cs" />
     <Compile Include="CategoryTable.cs" />
     <Compile Include="ColumnCharts.cs" />
     <Compile Include="FileManagementDB\TF_ElectronicFile.cs" />

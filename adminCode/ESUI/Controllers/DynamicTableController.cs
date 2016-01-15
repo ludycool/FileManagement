@@ -28,6 +28,9 @@ namespace ESUI.Controllers
 
         [Dependency]
         public ColumnChartsBiz CCBiz { get; set; }
+
+        [Dependency]
+        public BascharvalueBiz BBiz { get; set; }
         public ActionResult Index()
         {
             return View();
@@ -148,7 +151,15 @@ namespace ESUI.Controllers
                 ReSultMode.Data = "";
                 ReSultMode.Msg = "已经存在";
             }
-
+            if (
+                CCBiz.GetCount<ColumnChartsSet>(
+                    ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID)
+                        .And(ColumnChartsSet.IsNumber.Equal(true).And(ColumnChartsSet.IsEnable.Equal(true)))) > 0)
+            {
+                ReSultMode.Code = -11;
+                ReSultMode.Data = "";
+                ReSultMode.Msg = "已经有存在的编号列，不能再添加启用的编号列";
+            }
             if (IsAdd)
             {
                 categoryTable.ID = Guid.NewGuid().ToString();
@@ -243,8 +254,15 @@ namespace ESUI.Controllers
                     if (item.MergeHeader == true)
                     {
                         menus += "{  ";
-
-                        menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\"";
+                        if (!string.IsNullOrEmpty(item.align))
+                        {
+                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\",align:\"" + item.align+"\"";
+                        }
+                        else
+                        {
+                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\""; 
+                        }
+                    
                         menus += "},";
                     }
                     else
@@ -252,11 +270,34 @@ namespace ESUI.Controllers
                         menus += "{  ";
                         if (item.rowspan > 1)
                         {
-                            menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+                            if (!string.IsNullOrEmpty(item.align))
+                            {
+                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align + "\"";
+
+                            }
+                            else
+                            {
+                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+ 
+                            }
+
+ 
+                           
                         }
                         else
                         {
-                            menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+                            if (!string.IsNullOrEmpty(item.align))
+                            {
+                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
+                                         item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align +
+                                         "\"";
+                            }
+                            else
+                            {
+
+                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
+                                         item.width + "\",editor:{" + item.editor + "}";
+                            }
                         }
 
 
@@ -276,21 +317,48 @@ namespace ESUI.Controllers
                 {
                     if (item.MergeHeader == true)
                     {
-                        menus2 += "{  ";
+                        menus += "{  ";
+                        if (!string.IsNullOrEmpty(item.align))
+                        {
+                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\",align:\"" + item.align + "\"";
+                        }
+                        else
+                        {
+                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\"";
+                        }
 
-                        menus2 += "title:\"" + item.title + "\",colspan:" + item.colspan + "";
-                        menus2 += "},";
+                        menus += "},";
                     }
                     else
                     {
                         menus2 += "{  ";
                         if (item.rowspan > 1)
                         {
-                            menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" + item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+                            if (!string.IsNullOrEmpty(item.align))
+                            {
+                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align + "\"";
+
+                            }
+                            else
+                            {
+                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+
+                            }
                         }
                         else
                         {
-                            menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+                            if (!string.IsNullOrEmpty(item.align))
+                            {
+                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
+                                         item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align +
+                                         "\"";
+                            }
+                            else
+                            {
+
+                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
+                                         item.width + "\",editor:{" + item.editor + "}";
+                            }
                         }
 
 
@@ -481,5 +549,46 @@ namespace ESUI.Controllers
 
 
         }
+
+        public string GetNumberColumn(string Condition)
+        {
+            var fd = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition)
+                .And(ColumnChartsSet.IsNumber.Equal(true).And(ColumnChartsSet.IsEnable.Equal(true))));
+        var f=    CCBiz.GetEntity(fd);
+        string menus = "";
+            if (f!=null)
+            {
+                var ddd = BascharvalueSet.SelectAll().Where(BascharvalueSet.CharTypeId.Equal("Year"));
+            var g  = BBiz.GetEntity(ddd);
+                if (g.CharName.Equals(DateTime.Today.Year.ToString()))
+                {
+                    int count = 0;
+                    int.TryParse(g.CharNumber, out count);
+                    count = count + 1;
+                    menus = f.field + ":" + count.ToString();
+
+                    g.WhereExpression = BascharvalueSet.CharId.Equal(g.CharId);
+                    BBiz.Update(g);
+                }
+                else
+                {
+                    g.CharName = DateTime.Today.Year.ToString();
+                    g.CharNumber = "1";
+                    g.WhereExpression = BascharvalueSet.CharId.Equal(g.CharId);
+                    BBiz.Update(g); 
+                }
+               
+            }
+            else
+            {
+                menus = "2";
+            }
+        
+          
+
+            return menus;
+
+        }
+
     }
 }

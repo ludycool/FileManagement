@@ -45,6 +45,8 @@ namespace App.Core
              container.RegisterType<IRMS_DepartmentDao, RMS_DepartmentBiz>();
              container.RegisterType<ICategoryTableDao, CategoryTableBiz>();
              container.RegisterType<IColumnChartsDao, ColumnChartsBiz>();
+             container.RegisterType<IBaschartypeDao, BaschartypeBiz>();
+             container.RegisterType<IBascharvalueDao, BascharvalueBiz>();
             #endregion
               
 

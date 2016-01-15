@@ -259,7 +259,7 @@
                         //var result = eval('(' + data + ')');
                         DataBaseFunction.BindForm("ff", data);
                         $('#cc').combobox('setValue', data['editor']);
-
+                        $('#align').combobox('setValue', data['align']);
                         $('#ParentId').combobox('setValue', data['ParentId']);
                     }
                 });
@@ -353,16 +353,30 @@
                         </td>
 
                     </tr>
-
-
+                    
                     <tr>
                         <td>
                             <label>编辑类型：</label></td>
                         <td>
-
                             <select id="cc" class="easyui-combobox" data-options="required:true" name="editor" style="width: 200px;" vlaue="0">
-                                <option value="1">不编辑</option>
-                                <option value="2">可输入的文本框</option>
+                                <option value="">不编辑</option>
+                                <option value="type: 'validatebox', options: { required: true}">可输入的文本框</option>
+
+                            </select>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            <label>对齐方向：</label></td>
+                        <td>
+
+                            <select id="align" class="easyui-combobox" data-options="required:true" name="align" style="width: 200px;" vlaue="0">
+                                <option value="left">靠左</option>
+                                <option value="right">靠右</option> 
+                                <option value="center">居中</option>
 
                             </select>
                         </td>
@@ -394,6 +408,20 @@
 
                             <input name="IsEnable" type="radio" value="true" />是
                                 <input name="IsEnable" type="radio" value="false" />否
+                              @*  <input type="checkbox" name="IsEnable" id="IsEnable" value="True"/>是否启用*@
+
+
+
+                        </td>
+
+                    </tr> 
+                    <tr>
+                        <td>
+                            <label>编号（主：编号计算列只能有一个）：</label></td>
+                        <td>
+
+                            <input name="IsNumber" type="radio" value="true" />是
+                                <input name="IsNumber" type="radio" value="false" />否
                               @*  <input type="checkbox" name="IsEnable" id="IsEnable" value="True"/>是否启用*@
 
 
