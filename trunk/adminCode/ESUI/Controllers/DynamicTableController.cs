@@ -151,18 +151,22 @@ namespace ESUI.Controllers
                 ReSultMode.Data = "";
                 ReSultMode.Msg = "已经存在";
             }
-            if (
-                CCBiz.GetCount<ColumnChartsSet>(
-                    ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID)
-                        .And(ColumnChartsSet.IsNumber.Equal(true).And(ColumnChartsSet.IsEnable.Equal(true)))) > 0)
-            {
-                ReSultMode.Code = -11;
-                ReSultMode.Data = "";
-                ReSultMode.Msg = "已经有存在的编号列，不能再添加启用的编号列";
-            }
+         
             if (IsAdd)
             {
-                categoryTable.ID = Guid.NewGuid().ToString();
+
+                if (
+             CCBiz.GetCount<ColumnChartsSet>(
+                 ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID)
+                     .And(ColumnChartsSet.IsNumber.Equal(true).And(ColumnChartsSet.IsEnable.Equal(true)))) > 0)
+                {
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "已经有存在的编号列，不能再添加启用的编号列";
+                }
+                else
+                {
+                     categoryTable.ID = Guid.NewGuid().ToString();
                 //categoryTable.TableName_ = DateTime.Now;
                 //categoryTable.TableProperties = DateTime.Now;
                 //rol.RoleDescription = RMS_ButtonsModle.RoleDescription;
@@ -174,11 +178,23 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = "";
                 ReSultMode.Msg = "添加成功";
+                }
+               
             }
             else
             {
-
-                categoryTable.WhereExpression = ColumnChartsSet.ID.Equal(categoryTable.ID);
+                if (
+             CCBiz.GetCount<ColumnChartsSet>(
+                 ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID)
+                     .And(ColumnChartsSet.IsNumber.Equal(true).And(ColumnChartsSet.IsEnable.Equal(true)).And(ColumnChartsSet.ID.NotEqual(categoryTable.ID)))) > 0)
+                {
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "已经有存在的编号列，不能再添加启用的编号列";
+                }
+                else
+                {
+ categoryTable.WhereExpression = ColumnChartsSet.ID.Equal(categoryTable.ID);
                 //  spmodel.GroupId = GroupId;
                 if (CCBiz.Update(categoryTable) > 0)
                 {
@@ -192,6 +208,9 @@ namespace ESUI.Controllers
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "更新失败";
                 }
+                }
+
+               
             }
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
@@ -334,11 +353,28 @@ namespace ESUI.Controllers
                         menus2 += "{  ";
                         if (item.rowspan > 1)
                         {
-                            menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" + item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+                            if (!string.IsNullOrEmpty(item.align))
+                            {
+                                menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
+                                          item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align + "\"";
+                            }
+                            else
+                            {
+                                menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
+                                         item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+                            }
                         }
                         else
                         {
-                            menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+                            if (!string.IsNullOrEmpty(item.align))
+                            {
+                                menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align + "\"";
+                            }
+                            else
+                            {
+                                menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+
+                            }
                         }
 
 
@@ -546,7 +582,7 @@ namespace ESUI.Controllers
                     int count = 0;
                     int.TryParse(g.CharNumber, out count);
                     count = count + 1;
-                    menus += "\""+f.field + "\":\"" +g.CharName+"-"+ count.ToString()+"\"";
+                    menus += "\"" + f.field + "\":\"" + g.CharName + "-" + count.ToString() + "\"";
                     g.CharNumber = count.ToString();
                     g.WhereExpression = BascharvalueSet.CharId.Equal(g.CharId);
                     BBiz.Update(g);
