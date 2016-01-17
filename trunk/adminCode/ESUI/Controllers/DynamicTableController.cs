@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -143,22 +144,29 @@ namespace ESUI.Controllers
             {
                 IsAdd = true;
             }
-
+            if (categoryTable.ISLoginsector != null && (categoryTable.ISLogpeople != null && (categoryTable.ISLoginsector.Value && categoryTable.ISLogpeople.Value)))
+            {
+                ReSultMode.Code = -11;
+                ReSultMode.Data = "";
+                ReSultMode.Msg = "不能同时启用";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
 
             if (IsAdd && CCBiz.GetCount<ColumnChartsSet>(ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID).And(ColumnChartsSet.field.Equal(categoryTable.field))) > 0.0)
             {
                 ReSultMode.Code = -11;
                 ReSultMode.Data = "";
-                ReSultMode.Msg = "已经存在";
+                ReSultMode.Msg = "存在相同的表格英文名称";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
-         
+
             if (IsAdd)
             {
 
                 if (
              CCBiz.GetCount<ColumnChartsSet>(
                  ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID)
-                     .And(ColumnChartsSet.IsNumber.Equal(true).And(ColumnChartsSet.IsEnable.Equal(true)))) > 0)
+                     .And(ColumnChartsSet.IsNumber.Equal(true)).And(ColumnChartsSet.IsEnable.Equal(true))) > 0)
                 {
                     ReSultMode.Code = -11;
                     ReSultMode.Data = "";
@@ -166,51 +174,54 @@ namespace ESUI.Controllers
                 }
                 else
                 {
-                     categoryTable.ID = Guid.NewGuid().ToString();
-                //categoryTable.TableName_ = DateTime.Now;
-                //categoryTable.TableProperties = DateTime.Now;
-                //rol.RoleDescription = RMS_ButtonsModle.RoleDescription;
-                //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
+                    categoryTable.ID = Guid.NewGuid().ToString();
+                    //categoryTable.TableName_ = DateTime.Now;
+                    //categoryTable.TableProperties = DateTime.Now;
+                    //rol.RoleDescription = RMS_ButtonsModle.RoleDescription;
+                    //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
 
-                CCBiz.Add(categoryTable);
-                var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(categoryTable.CategoryTableID)));
-                OPBiz.ExecuteSqlWithNonQuery("alter table " + catmodle.UserTableName + " add " + categoryTable.field + " nvarchar(500) null");
-                ReSultMode.Code = 11;
-                ReSultMode.Data = "";
-                ReSultMode.Msg = "添加成功";
+                    CCBiz.Add(categoryTable);
+                    var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(categoryTable.CategoryTableID)));
+                    OPBiz.ExecuteSqlWithNonQuery("alter table " + catmodle.UserTableName + " add " + categoryTable.field + " nvarchar(500) null");
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "添加成功";
                 }
-               
+
             }
             else
             {
-                if (
-             CCBiz.GetCount<ColumnChartsSet>(
-                 ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID)
-                     .And(ColumnChartsSet.IsNumber.Equal(true).And(ColumnChartsSet.IsEnable.Equal(true)).And(ColumnChartsSet.ID.NotEqual(categoryTable.ID)))) > 0)
+                if (categoryTable.IsNumber != null && categoryTable.IsNumber.Value)
                 {
-                    ReSultMode.Code = -11;
-                    ReSultMode.Data = "";
-                    ReSultMode.Msg = "已经有存在的编号列，不能再添加启用的编号列";
+                    if (
+           CCBiz.GetCount<ColumnChartsSet>(
+               ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID).And(ColumnChartsSet.CategoryTableID.NotEqual(categoryTable.ID)).And(ColumnChartsSet.IsEnable.Equal(true).And(ColumnChartsSet.IsNumber.Equal(true)))) > 0)
+                    {
+                        ReSultMode.Code = -11;
+                        ReSultMode.Data = "";
+                        ReSultMode.Msg = "已经有存在的编号列，不能再添加启用的编号列";
+                        return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+                    }
                 }
-                else
-                {
- categoryTable.WhereExpression = ColumnChartsSet.ID.Equal(categoryTable.ID);
-                //  spmodel.GroupId = GroupId;
-                if (CCBiz.Update(categoryTable) > 0)
-                {
-                    ReSultMode.Code = 11;
-                    ReSultMode.Data = "";
-                    ReSultMode.Msg = "更新成功";
-                }
-                else
-                {
-                    ReSultMode.Code = -11;
-                    ReSultMode.Data = "";
-                    ReSultMode.Msg = "更新失败";
-                }
-                }
+              
+                
+                    categoryTable.WhereExpression = ColumnChartsSet.ID.Equal(categoryTable.ID);
+                    //  spmodel.GroupId = GroupId;
+                    if (CCBiz.Update(categoryTable) > 0)
+                    {
+                        ReSultMode.Code = 11;
+                        ReSultMode.Data = "";
+                        ReSultMode.Msg = "更新成功";
+                    }
+                    else
+                    {
+                        ReSultMode.Code = -11;
+                        ReSultMode.Data = "";
+                        ReSultMode.Msg = "更新失败";
+                    }
+                
 
-               
+
             }
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
@@ -593,12 +604,28 @@ namespace ESUI.Controllers
                     g.CharNumber = "1";
                     g.WhereExpression = BascharvalueSet.CharId.Equal(g.CharId);
                     BBiz.Update(g);
+                    menus += "\"" + f.field + "\":\"" + g.CharName + "-" + g.CharNumber + "\"";
                 }
 
             }
             else
             {
                 menus = "2";
+            }
+
+            var cheakwhere = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition).And(ColumnChartsSet.IsEnable.Equal(true))
+                         .And(ColumnChartsSet.ISLoginsector.Equal(true).Or(ColumnChartsSet.ISLogpeople.Equal(true))));
+            var cheaklist = CCBiz.GetEntities(cheakwhere);
+            foreach (ColumnCharts chartse in cheaklist)
+            {
+                if (chartse.ISLoginsector != null && chartse.ISLoginsector.Value)
+                {
+                    menus += ",\"" + chartse.field + "\":\"" + "" + "\"";
+                }
+                else if (chartse.ISLogpeople != null && chartse.ISLogpeople.Value)
+                {
+                    menus += ",\"" + chartse.field + "\":\"" + "" + "\"";
+                }
             }
 
             menus += "}]";
