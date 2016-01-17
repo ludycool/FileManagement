@@ -192,7 +192,23 @@ namespace DefaultConnection
             set { SetPropertyValue("ParentId", value); }
         }
 
-       
+        /// <summary>
+        /// 
+        /// </summary>
+        public Boolean? ISLogpeople
+        {
+            get { return GetPropertyValue<Boolean?>("ISLogpeople"); }
+            set { SetPropertyValue("ISLogpeople", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Boolean? ISLoginsector
+        {
+            get { return GetPropertyValue<Boolean?>("ISLoginsector"); }
+            set { SetPropertyValue("ISLoginsector", value); }
+        }
     }
 
     [Table("[ColumnCharts]", DbType.SqlServer)]
@@ -310,6 +326,16 @@ namespace DefaultConnection
         /// 
         /// </summary>
         public static readonly FieldBase ParentId = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[ParentId]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase ISLogpeople = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[ISLogpeople]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase ISLoginsector = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[ISLoginsector]");
     }
 
 }
