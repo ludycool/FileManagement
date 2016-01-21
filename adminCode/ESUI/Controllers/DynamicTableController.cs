@@ -93,7 +93,7 @@ namespace ESUI.Controllers
                 //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
 
                 OPBiz.Add(categoryTable);
-                OPBiz.ExecuteSqlWithNonQuery("create table " + categoryTable.UserTableName + "  ( ID varchar(50) primary key)");
+                OPBiz.ExecuteSqlWithNonQuery("create table " + categoryTable.UserTableName + "  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null) ");
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
@@ -162,23 +162,25 @@ namespace ESUI.Controllers
 
             if (IsAdd)
             {
-
-                if (
+                if (categoryTable.IsNumber==true)
+                {
+                    if (
              CCBiz.GetCount<ColumnChartsSet>(
                  ColumnChartsSet.CategoryTableID.Equal(categoryTable.CategoryTableID)
                      .And(ColumnChartsSet.IsNumber.Equal(true)).And(ColumnChartsSet.IsEnable.Equal(true))) > 0)
-                {
-                    ReSultMode.Code = -11;
-                    ReSultMode.Data = "";
-                    ReSultMode.Msg = "已经有存在的编号列，不能再添加启用的编号列";
+                    {
+                        ReSultMode.Code = -11;
+                        ReSultMode.Data = "";
+                        ReSultMode.Msg = "已经有存在的编号列，不能再添加启用的编号列";
+                        return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+                    }
                 }
+
+                
                 else
                 {
                     categoryTable.ID = Guid.NewGuid().ToString();
-                    //categoryTable.TableName_ = DateTime.Now;
-                    //categoryTable.TableProperties = DateTime.Now;
-                    //rol.RoleDescription = RMS_ButtonsModle.RoleDescription;
-                    //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
+                
 
                     CCBiz.Add(categoryTable);
                     var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(categoryTable.CategoryTableID)));
@@ -512,7 +514,7 @@ namespace ESUI.Controllers
                 {
                     var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(CategoryTableID)));
 
-                    string sql = "INSERT INTO " + catmodle.UserTableName + "(ID,";
+                    string sql = "INSERT INTO " + catmodle.UserTableName + "(ID,CreatName,";
 
                     foreach (KeyValuePair<string, string> kv in o2[0])
                     {
@@ -520,7 +522,7 @@ namespace ESUI.Controllers
 
                     }
                     sql = sql.Substring(0, sql.Length - 1);
-                    sql += ")VALUES ('" + Guid.NewGuid().ToString() + "',";
+                    sql += ")VALUES ('" + Guid.NewGuid().ToString() + "','" + UserData.UserName + "',";
 
                     foreach (KeyValuePair<string, string> kv in o2[0])
                     {
@@ -613,9 +615,10 @@ namespace ESUI.Controllers
                 menus = "2";
             }
 
-            var cheakwhere = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition).And(ColumnChartsSet.IsEnable.Equal(true))
-                         .And(ColumnChartsSet.ISLoginsector.Equal(true).Or(ColumnChartsSet.ISLogpeople.Equal(true))));
-            var cheaklist = CCBiz.GetEntities(cheakwhere);
+            //var cheakwhere = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition).And(ColumnChartsSet.IsEnable.Equal(true))
+            //             .And(ColumnChartsSet.ISLoginsector.Equal(true)).Or(ColumnChartsSet.ISLogpeople.Equal(true)));
+        var  cheaklist = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and IsEnable=1 and (ISLoginsector=1 or ISLogpeople=1)");
+          //  var cheaklist = CCBiz.GetEntities(cheakwhere);
             foreach (ColumnCharts chartse in cheaklist)
             {
                 if (chartse.ISLoginsector != null && chartse.ISLoginsector.Value)
@@ -624,7 +627,7 @@ namespace ESUI.Controllers
                 }
                 else if (chartse.ISLogpeople != null && chartse.ISLogpeople.Value)
                 {
-                    menus += ",\"" + chartse.field + "\":\"" + "" + "\"";
+                    menus += ",\"" + chartse.field + "\":\"" + UserData.UserName + "\"";
                 }
             }
 
