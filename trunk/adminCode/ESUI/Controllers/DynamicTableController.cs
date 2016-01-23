@@ -421,7 +421,7 @@ namespace ESUI.Controllers
             List<ComboxModle> list = new List<ComboxModle>();
             ComboxModle d2 = new ComboxModle();
             d2.id = "";
-            d2.text = "";
+            d2.text = "清空";
             list.Add(d2);
             foreach (var columnChart in Rmodel)
             {
@@ -482,7 +482,41 @@ namespace ESUI.Controllers
             return Json(dic);
         }
 
+        /// <summary>
+        /// 查询动态表格内容根据登录人
+        /// </summary>
+        /// <param name="Condition"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult GetJsonResultListByUser(string Condition)
+        {
 
+            var modle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
+
+            int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
+            ////字段排序
+            //String sortField = Request["sortField"];
+            //String sortOrder = Request["sortOrder"];
+            PageClass pc = new PageClass();
+            pc.sys_Fields = "*";
+            pc.sys_Key = "ID";
+            pc.sys_PageIndex = pageIndex;
+            pc.sys_PageSize = pageSize;
+            pc.sys_Table = modle.UserTableName;
+            pc.sys_Where = "1=1 and CreatName='" + UserData.UserName+"'";
+            pc.sys_Order = "ID";
+
+            var list2 = OPBiz.ExecuteProToDataSetNew("sp_PaginationEx", pc);
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+
+            // var mql = RMS_ButtonsSet.Id.NotEqual("");
+            dic.Add("rows", list2.Tables[0]);
+            dic.Add("total", pc.RCount);
+
+            return Json(dic);
+        }
         public ActionResult IndexDynamicColumn()
         {
             string id = Request.QueryString["ID"];
