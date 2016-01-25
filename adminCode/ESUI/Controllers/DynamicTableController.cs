@@ -522,6 +522,12 @@ namespace ESUI.Controllers
             string id = Request.QueryString["ID"];
             ViewBag.RuteUrl = id;
             return View();
+        } 
+        public ActionResult IndexDynamicColumnByUser()
+        {
+            string id = Request.QueryString["ID"];
+            ViewBag.RuteUrl = id;
+            return View();
         }
         /// <summary>
         /// 动态表格添加修改方法
