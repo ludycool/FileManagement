@@ -88,9 +88,9 @@
                                     data: { Condition: '@ViewBag.RuteUrl' },
                                     async: false
                                 }).responseText;
-
+                                var f = jQuery.parseJSON(t);
                                 if (t != 2) {
-                                    var f = jQuery.parseJSON(t);
+                                   
                                     $("#dg2").datagrid('insertRow', {
                                         index: 0,
 
