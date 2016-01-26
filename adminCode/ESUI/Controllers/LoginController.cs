@@ -30,6 +30,8 @@ namespace ESUI.Controllers
         /// </summary>
         [Dependency]
         public RMS_UserRoleBiz URBiz { get; set; }
+        [Dependency]
+        public RMS_DepartmentBiz dpBiz { get; set; }
         public ActionResult Index()
         {
             ViewData["UserType"] = GenerateList();
@@ -45,88 +47,96 @@ namespace ESUI.Controllers
             ViewData["UserType"] = GenerateList();
             //if (Session["ValidateCode"] != null)
             //{
-                //if (Request.Cookies["User"] != null)//Cookies保存 获取解析
-                //{
-                //    HttpCookie cookie = new HttpCookie("User");//初使化并设置Cookie的名称
-                //    DateTime dt = DateTime.Now;
-                //    TimeSpan ts = new TimeSpan(0, 1, 0, 0, 0);//过期时间为1分钟
-                //    cookie.Expires = dt.Add(ts);//设置过期时间
-                //    string info = JsonHelper.ToJson(UserData.ListManus, true);
-                //    string manuInfo = Server.HtmlEncode(info);
-                //    cookie.Values.Add("Manus", manuInfo);
+            //if (Request.Cookies["User"] != null)//Cookies保存 获取解析
+            //{
+            //    HttpCookie cookie = new HttpCookie("User");//初使化并设置Cookie的名称
+            //    DateTime dt = DateTime.Now;
+            //    TimeSpan ts = new TimeSpan(0, 1, 0, 0, 0);//过期时间为1分钟
+            //    cookie.Expires = dt.Add(ts);//设置过期时间
+            //    string info = JsonHelper.ToJson(UserData.ListManus, true);
+            //    string manuInfo = Server.HtmlEncode(info);
+            //    cookie.Values.Add("Manus", manuInfo);
 
-                //    string UserDataString = Server.HtmlEncode(Request.Cookies["User"]["UserInfo"]);
-                //    string ManusString = Server.HtmlEncode(Request.Cookies["User"]["Manus"]);
-                //    V_UserRole Rmodel = JsonHelper.FromJson<V_UserRole>(UserDataString);
-                //}
+            //    string UserDataString = Server.HtmlEncode(Request.Cookies["User"]["UserInfo"]);
+            //    string ManusString = Server.HtmlEncode(Request.Cookies["User"]["Manus"]);
+            //    V_UserRole Rmodel = JsonHelper.FromJson<V_UserRole>(UserDataString);
+            //}
 
 
-                //string Vcode = Session["ValidateCode"].ToString();
-                //if (mode.VCode.Trim().Equals(Vcode))//验证码
-                //{
+            //string Vcode = Session["ValidateCode"].ToString();
+            //if (mode.VCode.Trim().Equals(Vcode))//验证码
+            //{
 
-                    UserData = null;
-                    List<V_UserRole> adminRole = null;
-                    bool IsHaveP = false;//是否有权限登录
+            UserData = null;
+            List<V_UserRole> adminRole = null;
+            bool IsHaveP = false;//是否有权限登录
 
-                        var sql = V_UserRoleSet.SelectAll().Where(V_UserRoleSet.LoginName.Equal(mode.LoginName).And(V_UserRoleSet.Password.Equal(mode.Password)));
-                        adminRole = URBiz.GetOwnList<V_UserRole>(sql);
-                  
+            var sql = V_UserRoleSet.SelectAll().Where(V_UserRoleSet.LoginName.Equal(mode.LoginName).And(V_UserRoleSet.Password.Equal(mode.Password)));
+            adminRole = URBiz.GetOwnList<V_UserRole>(sql);
 
-                    if ((adminRole != null && adminRole.Count > 0)) // 账号是否存在，添加权限配置
+
+            if ((adminRole != null && adminRole.Count > 0)) // 账号是否存在，添加权限配置
+            {
+                #region 存用户数据
+
+                UserData = new AdminUserInfo();
+                UserData.UserTypes = UserType.admin;
+                // UserData.adminUserInfo = adminRole[0];
+                UserData.Id = adminRole[0].Id;
+                UserData.UserName = adminRole[0].LoginName;
+                UserData.RoleId = adminRole[0].RoleId;
+                UserData.Password = adminRole[0].Password;
+
+                var dpsql = RMS_DepartmentSet.SelectAll().Where(RMS_DepartmentSet.Id.Equal(adminRole[0].DepartmentId));
+                RMS_Department dpItem = dpBiz.GetEntity(dpsql);
+                if (dpItem != null)
+                {
+                    UserData.DepartmentId = dpItem.Id;
+                    UserData.DepartmentName = dpItem.Name;
+                }
+                IsHaveP = true;
+
+                #endregion
+
+                #region  获取权限
+                if (IsHaveP)//可以登录
+                {
+
+                    List<V_RoleManus> manus = URBiz.GetOwnList<V_RoleManus>(V_RoleManusSet.SelectAll().Where(V_RoleManusSet.RoleId.Equal(UserData.RoleId)));//所有的菜单
+                    List<V_RoleManuButtons> buttons = URBiz.GetOwnList<V_RoleManuButtons>(V_RoleManuButtonsSet.SelectAll().Where(V_RoleManuButtonsSet.RoleId.Equal(UserData.RoleId)));//角色拥有的菜单的所有按钮
+                    List<V_MenuButtons> AllButtons = URBiz.GetOwnList<V_MenuButtons>(V_MenuButtonsSet.SelectAll());//所有菜单的所有按钮
+                    List<Manu> ListManus = new List<Manu>();
+                    if (manus != null && manus.Count > 0)
                     {
-                        #region 存用户数据
-
-                            UserData = new AdminUserInfo();
-                            UserData.UserTypes = UserType.admin;
-                            // UserData.adminUserInfo = adminRole[0];
-                            UserData.Id = adminRole[0].Id;
-                            UserData.UserName = adminRole[0].LoginName;
-                            UserData.RoleId = adminRole[0].RoleId;
-                            UserData.Password = adminRole[0].Password;
-                            IsHaveP = true;
-                  
-                        #endregion
-
-                        #region  获取权限
-                        if (IsHaveP)//可以登录
+                        foreach (V_RoleManus item in manus)
                         {
-
-                            List<V_RoleManus> manus = URBiz.GetOwnList<V_RoleManus>(V_RoleManusSet.SelectAll().Where(V_RoleManusSet.RoleId.Equal(UserData.RoleId)));//所有的菜单
-                            List<V_RoleManuButtons> buttons = URBiz.GetOwnList<V_RoleManuButtons>(V_RoleManuButtonsSet.SelectAll().Where(V_RoleManuButtonsSet.RoleId.Equal(UserData.RoleId)));//角色拥有的菜单的所有按钮
-                            List<V_MenuButtons> AllButtons = URBiz.GetOwnList<V_MenuButtons>(V_MenuButtonsSet.SelectAll());//所有菜单的所有按钮
-                            List<Manu> ListManus = new List<Manu>();
-                            if (manus != null && manus.Count > 0)
-                            {
-                                foreach (V_RoleManus item in manus)
-                                {
-                                    Manu OneManu = new Manu();
-                                    OneManu.manuInfo = item;
-                                    OneManu.ListButtons = buttons.FindAll(p => p.ManuId.Equals(item.ManuId)).OrderBy(p => p.OrderNo).ToList();
-                                    OneManu.ManuAllButton = AllButtons.FindAll(p => p.ManuId.Equals(item.ManuId));
-                                    ListManus.Add(OneManu);
-                                }
-                                UserData.ListManus = ListManus;
-                            }
-                            return RedirectToAction("index", "home");
+                            Manu OneManu = new Manu();
+                            OneManu.manuInfo = item;
+                            OneManu.ListButtons = buttons.FindAll(p => p.ManuId.Equals(item.ManuId)).OrderBy(p => p.OrderNo).ToList();
+                            OneManu.ManuAllButton = AllButtons.FindAll(p => p.ManuId.Equals(item.ManuId));
+                            ListManus.Add(OneManu);
                         }
-
-                        #endregion
+                        UserData.ListManus = ListManus;
                     }
-                    else
-                    {
-                        //  return RedirectToAction("index", "Login");
-                        // 如果我们进行到这一步时某个地方出错，则重新显示表单
-                        ViewData["IsShowAlert"] = true;
-                        ViewData["Alert"] = "账号或者密码有误";
+                    return RedirectToAction("index", "home");
+                }
 
-                    }
-                //}
-                //else
-                //{
-                //    ViewData["IsShowAlert"] = true;
-                //    ViewData["Alert"] = "验证码有误";
-                //}
+                #endregion
+            }
+            else
+            {
+                //  return RedirectToAction("index", "Login");
+                // 如果我们进行到这一步时某个地方出错，则重新显示表单
+                ViewData["IsShowAlert"] = true;
+                ViewData["Alert"] = "账号或者密码有误";
+
+            }
+            //}
+            //else
+            //{
+            //    ViewData["IsShowAlert"] = true;
+            //    ViewData["Alert"] = "验证码有误";
+            //}
             //}
             return View();
 
