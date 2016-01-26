@@ -16,13 +16,13 @@ namespace ESUI.Models
         [Display(Name = "密码")]
         public string Password { get; set; }
 
-        
-        // [Required]
+
+        //[Required]
         //[Display(Name = "验证码")]
         //public string VCode { get; set; }
-        ///// <summary>
-        ///// 用户类型 商家为1 管理员为0
-        ///// </summary>
-        // public string UserType { get; set; }
+        /// <summary>
+        /// 用户类型 为1正常 姓名登录为0，身份证为2
+        /// </summary>
+        public string UserType { get; set; }
     }
 }

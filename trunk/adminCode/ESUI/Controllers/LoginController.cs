@@ -167,8 +167,9 @@ namespace ESUI.Controllers
         {
             List<SelectListItem> items = new List<SelectListItem>()
             {
-                new SelectListItem(){Text="商家", Value="1"},
-                new SelectListItem(){Text="管理员", Value="0"}
+                new SelectListItem(){Text="账号密码", Value="1"},
+                new SelectListItem(){Text="姓名登录", Value="0"},
+                   new SelectListItem(){Text="身份证登录", Value="2"}
             };
 
             SelectList generateList = new SelectList(items, "Value", "Text");

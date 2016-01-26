@@ -100,7 +100,8 @@ namespace e3net.Mode.V_mode
     public enum UserType
     {
         admin = 0,//管理员
-        ShopUser = 1,//商家
+        name = 1,//姓名登录
+        idCad = 1,//身份证登录
     }
     /// <summary>
     ///菜单

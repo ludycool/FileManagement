@@ -96,10 +96,10 @@ namespace e3net.Mode.RMS
         /// <summary>
         /// 
         /// </summary>
-        public Guid? YH_HospitalId
+        public Int32? UserType
         {
-            get { return GetPropertyValue<Guid?>("YH_HospitalId"); }
-            set { SetPropertyValue("YH_HospitalId", value); }
+            get { return GetPropertyValue<Int32?>("UserType"); }
+            set { SetPropertyValue("UserType", value); }
         }
     }
 
@@ -163,7 +163,7 @@ namespace e3net.Mode.RMS
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase YH_HospitalId = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[YH_HospitalId]");
+        public static readonly FieldBase UserType = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[UserType]");
     }
 
 }
