@@ -155,7 +155,7 @@ namespace ESUI.Controllers
                 #region 存用户数据
 
                 UserData = new AdminUserInfo();
-                UserData.UserTypes = UserType.admin;
+                UserData.UserTypes =int.Parse( adminRole[0].UserType.ToString());
                 // UserData.adminUserInfo = adminRole[0];
                 UserData.Id = adminRole[0].Id;
                 UserData.UserName = adminRole[0].LoginName;

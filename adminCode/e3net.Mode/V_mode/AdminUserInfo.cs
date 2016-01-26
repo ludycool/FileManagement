@@ -63,7 +63,7 @@ namespace e3net.Mode.V_mode
         /// <summary>
         /// 用户类型
         /// </summary>
-        public UserType UserTypes
+        public int UserTypes
         {
             get;
             set;
