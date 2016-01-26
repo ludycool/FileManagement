@@ -44,6 +44,15 @@ namespace e3net.Mode.V_mode
         
         }
         /// <summary>
+        /// 部门单位
+        /// </summary>
+        public string DepartmentName
+        {
+            get;
+            set;
+
+        }
+        /// <summary>
         /// 角色Id
         /// </summary>
         public Guid? RoleId
