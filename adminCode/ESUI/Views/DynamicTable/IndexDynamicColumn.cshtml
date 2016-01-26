@@ -58,13 +58,13 @@
                     iconCls: 'icon-save',
                     title: '按钮编辑',
                     // onClickCell: onClickCell,
-                    //nowrap: true,
+                    nowrap: true,
                     //singleSelect: true,
-                    //striped: true,
-                    //collapsible: true,
+                    striped: true,
+                    collapsible: true,
                     pagination: true,
-                    //fit: true,
-                    //fitColumns: true,
+                    fit: true,
+                   // fitColumns: true,
                     rownumbers: true,
                     toolbar: [
                     {
@@ -88,9 +88,9 @@
                                     data: { Condition: '@ViewBag.RuteUrl' },
                                 async: false
                             }).responseText;
-                            
+                                var f = jQuery.parseJSON(t);
                             if (t != 2) {
-                            var f   = jQuery.parseJSON(t);
+                           // var f   = jQuery.parseJSON(t);
                             $("#dg2").datagrid('insertRow', {
                                 index: 0,
 

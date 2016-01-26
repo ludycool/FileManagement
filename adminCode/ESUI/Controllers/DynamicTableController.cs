@@ -662,28 +662,32 @@ namespace ESUI.Controllers
                 }
 
             }
-            else
-            {
-                menus = "2";
-            }
+            //else
+            //{
+            //    menus = "2";
+            //}
 
             //var cheakwhere = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition).And(ColumnChartsSet.IsEnable.Equal(true))
             //             .And(ColumnChartsSet.ISLoginsector.Equal(true)).Or(ColumnChartsSet.ISLogpeople.Equal(true)));
             var cheaklist = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and IsEnable=1 and (ISLoginsector=1 or ISLogpeople=1)");
             //  var cheaklist = CCBiz.GetEntities(cheakwhere);
-            foreach (ColumnCharts chartse in cheaklist)
-            {
-                if (chartse.ISLoginsector != null && chartse.ISLoginsector.Value)
+            //if (cheaklist.Count>0)
+            //{
+                foreach (ColumnCharts chartse in cheaklist)
                 {
-                    menus += ",\"" + chartse.field + "\":\"" + "" + "\"";
+                    if (chartse.ISLoginsector != null && chartse.ISLoginsector.Value)
+                    {
+                        menus += ",\"" + chartse.field + "\":\"" + UserData.DepartmentName + "\"";
+                    }
+                    else if (chartse.ISLogpeople != null && chartse.ISLogpeople.Value)
+                    {
+                        menus += ",\"" + chartse.field + "\":\"" + UserData.UserName + "\"";
+                    }
                 }
-                else if (chartse.ISLogpeople != null && chartse.ISLogpeople.Value)
-                {
-                    menus += ",\"" + chartse.field + "\":\"" + UserData.UserName + "\"";
-                }
-            }
 
-            menus += "}]";
+                menus += "}]";  
+            //}
+            
 
             return menus;
 
