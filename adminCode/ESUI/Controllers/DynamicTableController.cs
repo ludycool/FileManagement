@@ -93,7 +93,7 @@ namespace ESUI.Controllers
                 //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
 
                 OPBiz.Add(categoryTable);
-                OPBiz.ExecuteSqlWithNonQuery("create table " + categoryTable.UserTableName + "  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null) ");
+                OPBiz.ExecuteSqlWithNonQuery("create table [" + categoryTable.UserTableName + "]  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null) ");
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
