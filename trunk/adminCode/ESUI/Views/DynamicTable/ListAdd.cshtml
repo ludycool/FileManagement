@@ -232,8 +232,13 @@
                     }
                 });
                 $(".validatebox-tip").remove();//清除验证样式
-                DataBaseFunction.ClearForm("ff");
-                $("#CategoryTableID").val('@ViewBag.RuteUrl');
+               DataBaseFunction.ClearForm("ff");
+               $("#CategoryTableID").val('@ViewBag.RuteUrl');
+                $('input:radio[name=IsEnable]')[0].checked = true;
+                $('input:radio[name=ISLogpeople]')[1].checked = true;
+                $('input:radio[name=ISLoginsector]')[1].checked = true;
+                $('input:radio[name=IsNumber]')[1].checked = true;
+                $('input:radio[name=MergeHeader]')[1].checked = true;
             }
 
 
@@ -420,7 +425,7 @@
                             <label>是否启用：</label></td>
                         <td>
 
-                            <input name="IsEnable" type="radio" value="true" />是
+                            <input name="IsEnable" type="radio" value="true"  checked="checked"/>是
                                 <input name="IsEnable" type="radio" value="false" />否
                               @*  <input type="checkbox" name="IsEnable" id="IsEnable" value="True"/>是否启用*@
 
@@ -435,7 +440,7 @@
                         <td>
 
                             <input name="IsNumber" type="radio" value="true" />是
-                                <input name="IsNumber" type="radio" value="false" />否
+                                <input name="IsNumber" type="radio" value="false" checked="checked"/>否
                               @*  <input type="checkbox" name="IsEnable" id="IsEnable" value="True"/>是否启用*@
 
 
@@ -450,7 +455,7 @@
 
 
                             <input name="MergeHeader" type="radio" value="true" />是
-                                <input name="MergeHeader" type="radio" value="false" />否
+                                <input name="MergeHeader" type="radio" value="false" checked="checked"/>否
 
                         </td>
 
