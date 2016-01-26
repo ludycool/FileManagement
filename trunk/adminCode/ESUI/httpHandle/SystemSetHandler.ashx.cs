@@ -32,10 +32,24 @@ namespace ESUI.httpHandle
                     context.Response.Write(GetList(RoleTypes));
                     context.Response.End();
                     break;
-
+                case "GetUser":
+                    context.Response.Write(GetUser( context));
+                    context.Response.End();
+                    break;
 
             }
 
+        }
+        /// <summary>
+        /// 获取用户数据
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public string GetUser(HttpContext context)
+        {
+            string user = JsonHelper.ToJson(UserData);
+            return user;
+        
         }
         /// <summary>
         /// 角色类型
