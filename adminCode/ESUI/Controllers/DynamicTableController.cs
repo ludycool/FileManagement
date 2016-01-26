@@ -162,7 +162,7 @@ namespace ESUI.Controllers
 
             if (IsAdd)
             {
-                if (categoryTable.IsNumber==true)
+                if (categoryTable.IsNumber == true)
                 {
                     if (
              CCBiz.GetCount<ColumnChartsSet>(
@@ -174,17 +174,29 @@ namespace ESUI.Controllers
                         ReSultMode.Msg = "已经有存在的编号列，不能再添加启用的编号列";
                         return Json(ReSultMode, JsonRequestBehavior.AllowGet);
                     }
+                    else
+                    {
+                        categoryTable.ID = Guid.NewGuid().ToString();
+
+
+                        CCBiz.Add(categoryTable);
+                        var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(categoryTable.CategoryTableID)));
+                        OPBiz.ExecuteSqlWithNonQuery("alter table [" + catmodle.UserTableName + "] add [" + categoryTable.field + "] nvarchar(500) null");
+                        ReSultMode.Code = 11;
+                        ReSultMode.Data = "";
+                        ReSultMode.Msg = "添加成功";  
+                    }
                 }
 
-                
+
                 else
                 {
                     categoryTable.ID = Guid.NewGuid().ToString();
-                
+
 
                     CCBiz.Add(categoryTable);
                     var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(categoryTable.CategoryTableID)));
-                    OPBiz.ExecuteSqlWithNonQuery("alter table " + catmodle.UserTableName + " add " + categoryTable.field + " nvarchar(500) null");
+                    OPBiz.ExecuteSqlWithNonQuery("alter table [" + catmodle.UserTableName + "] add [" + categoryTable.field + "] nvarchar(500) null");
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "添加成功";
@@ -205,23 +217,23 @@ namespace ESUI.Controllers
                         return Json(ReSultMode, JsonRequestBehavior.AllowGet);
                     }
                 }
-              
-                
-                    categoryTable.WhereExpression = ColumnChartsSet.ID.Equal(categoryTable.ID);
-                    //  spmodel.GroupId = GroupId;
-                    if (CCBiz.Update(categoryTable) > 0)
-                    {
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "更新成功";
-                    }
-                    else
-                    {
-                        ReSultMode.Code = -11;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "更新失败";
-                    }
-                
+
+
+                categoryTable.WhereExpression = ColumnChartsSet.ID.Equal(categoryTable.ID);
+                //  spmodel.GroupId = GroupId;
+                if (CCBiz.Update(categoryTable) > 0)
+                {
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "更新成功";
+                }
+                else
+                {
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "更新失败";
+                }
+
 
 
             }
@@ -504,7 +516,7 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = modle.UserTableName;
-            pc.sys_Where = "1=1 and CreatName='" + UserData.UserName+"'";
+            pc.sys_Where = "1=1 and CreatName='" + UserData.UserName + "'";
             pc.sys_Order = "ID";
 
             var list2 = OPBiz.ExecuteProToDataSetNew("sp_PaginationEx", pc);
@@ -522,7 +534,7 @@ namespace ESUI.Controllers
             string id = Request.QueryString["ID"];
             ViewBag.RuteUrl = id;
             return View();
-        } 
+        }
         public ActionResult IndexDynamicColumnByUser()
         {
             string id = Request.QueryString["ID"];
@@ -657,8 +669,8 @@ namespace ESUI.Controllers
 
             //var cheakwhere = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition).And(ColumnChartsSet.IsEnable.Equal(true))
             //             .And(ColumnChartsSet.ISLoginsector.Equal(true)).Or(ColumnChartsSet.ISLogpeople.Equal(true)));
-        var  cheaklist = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and IsEnable=1 and (ISLoginsector=1 or ISLogpeople=1)");
-          //  var cheaklist = CCBiz.GetEntities(cheakwhere);
+            var cheaklist = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and IsEnable=1 and (ISLoginsector=1 or ISLogpeople=1)");
+            //  var cheaklist = CCBiz.GetEntities(cheakwhere);
             foreach (ColumnCharts chartse in cheaklist)
             {
                 if (chartse.ISLoginsector != null && chartse.ISLoginsector.Value)
