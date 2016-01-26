@@ -32,6 +32,12 @@ namespace ESUI.Controllers
         public RMS_UserRoleBiz URBiz { get; set; }
         [Dependency]
         public RMS_DepartmentBiz dpBiz { get; set; }
+        [Dependency]
+        public RMS_UserBiz uBiz { get; set; }
+
+
+        [Dependency]
+        public RMS_UserRoleBiz urBiz { get; set; }
         public ActionResult Index()
         {
             ViewData["UserType"] = GenerateList();
@@ -71,9 +77,78 @@ namespace ESUI.Controllers
             List<V_UserRole> adminRole = null;
             bool IsHaveP = false;//是否有权限登录
 
-            var sql = V_UserRoleSet.SelectAll().Where(V_UserRoleSet.LoginName.Equal(mode.LoginName).And(V_UserRoleSet.Password.Equal(mode.Password)));
-            adminRole = URBiz.GetOwnList<V_UserRole>(sql);
+            #region  根据类型登录
+            switch (mode.UserType)
+            {
+                case "1"://账号密码登录
+                    var sql = V_UserRoleSet.SelectAll().Where(V_UserRoleSet.LoginName.Equal(mode.LoginName).And(V_UserRoleSet.Password.Equal(mode.Password)));
+                    adminRole = URBiz.GetOwnList<V_UserRole>(sql);
+                    break;
+                case "0"://姓名登录
+                    var sql0 = V_UserRoleSet.SelectAll().Where(V_UserRoleSet.LoginName.Equal(mode.LoginName).And(V_UserRoleSet.UserType.Equal(0)));
+                    adminRole = URBiz.GetOwnList<V_UserRole>(sql0);
+                    if (adminRole != null && adminRole.Count > 0)//检查是否存在，不存在就添加，给登录用户的角色
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        RMS_User item = new RMS_User();
+                        item.Id = Guid.NewGuid();
+                        item.LoginName = mode.LoginName;
+                        item.UserType = 0;
+                        item.CreateTime = DateTime.Now;
+                        item.ModifyTime = DateTime.Now;
+                        uBiz.Add(item);
 
+                        List<RMS_Role> listRole = URBiz.GetOwnList<RMS_Role>(RMS_RoleSet.SelectAll().Where(RMS_RoleSet.RoleTypes.Equal(0)));//所有的姓名登录角色
+
+                        RMS_UserRole urItem = new RMS_UserRole();
+                        urItem.Id = Guid.NewGuid();
+                        urItem.UserId = item.Id;
+                        urItem.RoleId = listRole[0].Id;
+                        urBiz.Add(urItem);
+
+                        adminRole = URBiz.GetOwnList<V_UserRole>(sql0);
+                    }
+
+
+
+                    break;
+                case "2"://身份证登录
+                    var sql2 = V_UserRoleSet.SelectAll().Where(V_UserRoleSet.LoginName.Equal(mode.LoginName).And(V_UserRoleSet.UserType.Equal(2)));
+                    adminRole = URBiz.GetOwnList<V_UserRole>(sql2);
+                    if (adminRole != null && adminRole.Count > 0)//检查是否存在，不存在就添加，给身份证用户的角色
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        RMS_User item = new RMS_User();
+                        item.Id = Guid.NewGuid();
+                        item.LoginName = mode.LoginName;
+                        item.UserType = 2;
+                        item.CreateTime = DateTime.Now;
+                        item.ModifyTime = DateTime.Now;
+                        uBiz.Add(item);
+
+                        List<RMS_Role> listRole = URBiz.GetOwnList<RMS_Role>(RMS_RoleSet.SelectAll().Where(RMS_RoleSet.RoleTypes.Equal(2)));//所有的姓名登录角色
+
+                        RMS_UserRole urItem = new RMS_UserRole();
+                        urItem.Id = Guid.NewGuid();
+                        urItem.UserId = item.Id;
+                        urItem.RoleId = listRole[0].Id;
+                        urBiz.Add(urItem);
+
+                        adminRole = URBiz.GetOwnList<V_UserRole>(sql2);
+                    }
+                    break;
+                default:
+
+                    break;
+            }
+
+            #endregion
 
             if ((adminRole != null && adminRole.Count > 0)) // 账号是否存在，添加权限配置
             {
@@ -87,12 +162,15 @@ namespace ESUI.Controllers
                 UserData.RoleId = adminRole[0].RoleId;
                 UserData.Password = adminRole[0].Password;
 
-                var dpsql = RMS_DepartmentSet.SelectAll().Where(RMS_DepartmentSet.Id.Equal(adminRole[0].DepartmentId));
-                RMS_Department dpItem = dpBiz.GetEntity(dpsql);
-                if (dpItem != null)
+                if (adminRole[0].DepartmentId != null)
                 {
-                    UserData.DepartmentId = dpItem.Id;
-                    UserData.DepartmentName = dpItem.Name;
+                    var dpsql = RMS_DepartmentSet.SelectAll().Where(RMS_DepartmentSet.Id.Equal(adminRole[0].DepartmentId));
+                    RMS_Department dpItem = dpBiz.GetEntity(dpsql);
+                    if (dpItem != null)
+                    {
+                        UserData.DepartmentId = dpItem.Id;
+                        UserData.DepartmentName = dpItem.Name;
+                    }
                 }
                 IsHaveP = true;
 

@@ -83,6 +83,24 @@ namespace e3net.Mode.RMS
             get { return GetPropertyValue<Int32?>("UserType"); }
             set { SetPropertyValue("UserType", value); }
         }
+
+        /// <summary>
+        /// 办公电话
+        /// </summary>
+        public String Tel
+        {
+            get { return GetPropertyValue<String>("Tel"); }
+            set { SetPropertyValue("Tel", value); }
+        }
+
+        /// <summary>
+        /// 手机
+        /// </summary>
+        public String Phone
+        {
+            get { return GetPropertyValue<String>("Phone"); }
+            set { SetPropertyValue("Phone", value); }
+        }
     }
 
     [Table("[RMS_User]", DbType.SqlServer)]
@@ -136,6 +154,16 @@ namespace e3net.Mode.RMS
         /// 用户类型 为1正常 姓名登录为0，身份证为2
         /// </summary>
         public static readonly FieldBase UserType = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[UserType]");
+
+        /// <summary>
+        /// 办公电话
+        /// </summary>
+        public static readonly FieldBase Tel = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[Tel]");
+
+        /// <summary>
+        /// 手机
+        /// </summary>
+        public static readonly FieldBase Phone = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[Phone]");
     }
 
 }
