@@ -13,11 +13,12 @@ using e3net.common.SysMode;
 using e3net.Mode.FileManagementDB;
 using e3net.Mode.HttpView;
 using e3net.BLL;
+using System.Data;
 
 namespace ESUI.Controllers
 {
     //[Export]
-    public class TF_PaperFileController : BaseController
+    public class TF_PaperFileController : JsonNetController
     {
 
         [Dependency]
@@ -51,11 +52,12 @@ namespace ESUI.Controllers
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
             List<TF_PaperFile> list2 = OPBiz.GetPagingData<TF_PaperFile>(pc);
+            DataSet ds= OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
 
             // var mql = TF_PaperFileSet.Id.NotEqual("");
-            dic.Add("rows", list2);
+            dic.Add("rows", ds.Tables[0]);
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }

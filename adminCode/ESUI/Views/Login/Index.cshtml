@@ -102,11 +102,11 @@
                     <div class="login fr">
                         <p>
                             <label>用户名</label>
-                            @Html.TextBoxFor(m => m.LoginName, new { @class = "TxtUserNameCssClass" })
+                            @Html.TextBoxFor(m => m.LoginName, new { @class = "TxtUserNameCssClass" ,@Value ="admin"})
                         </p>
                         <p>
                             <label><a href="#"></a>密码</label>
-                            @Html.PasswordFor(m => m.Password, new { @class = "TxtPasswordCssClass" })
+                            @Html.PasswordFor(m => m.Password, new { @class = "TxtPasswordCssClass",@Value="123456" })
                         </p>
                      @*   <p class="verify">
                             @Html.TextBoxFor(m => m.VCode, new { @class = "TxtValidateCodeCssClass", @Value = "验证码", @onfocus = "cleartxt();" })
