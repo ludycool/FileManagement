@@ -30,28 +30,38 @@
     <script type="text/javascript">
         $(function () {
 
-        //    //首次加载
+            //    //首次加载
 
-        //    CV();
+            //    CV();
 
-        //    //单击验证码事件
-
-        //    $("#valiCode").bind("click", function () {
-
-        //        this.src = "/Login/GetValidateCode?time=" + (new Date()).getTime();
-
-        //    });
+            //    //单击验证码事件
 
 
-        //});
 
-        //function CV() {
-        //    $("#valiCode").attr("src", "/Login/GetValidateCode?time=" + (new Date()).getTime());
 
+            });
+
+            //function CV() {
+            //    $("#valiCode").attr("src", "/Login/GetValidateCode?time=" + (new Date()).getTime());
+
+            //}
+            //function cleartxt() {
+            //    $('#VCode').val('');
         //}
-        //function cleartxt() {
-        //    $('#VCode').val('');
-        //}
+        function onchanges() {
+
+            var se = $("#UserType").val();
+            if (se != "1") {
+                $("#ppwd").hide();
+                $("#LoginName").focus();
+
+            } else {
+
+                $("#ppwd").show();
+                $("#LoginName").focus();
+            }
+
+        }
     </script>
 </head>
 
@@ -66,7 +76,7 @@
 
                         <td style="width: 700px;">
                             @*  <img src="~/Content/Login/wuye/header.png" style="border: 0px;" alt="">*@
-                            <span style="padding-left: 10px; font-size: 30px; float: left; color:#566695; line-height: 70px; font-family: Verdana, 微软雅黑,黑体">
+                            <span style="padding-left: 10px; font-size: 30px; float: left; color: #566695; line-height: 70px; font-family: Verdana, 微软雅黑,黑体">
                                 <img src="~/Content/Images/logo.png" width="64" height="64" align="absmiddle" />
                                 南宁市组织部日常工作管理系统
                             </span>
@@ -77,7 +87,7 @@
                                 <ul id="breadcrumb">
 
                                     <li><a href="#" class="chinese" target="_blank">联系我们</a></li>
-                                     <li><a href="#" class="chinese" target="_blank">系统说明</a></li>
+                                    <li><a href="#" class="chinese" target="_blank">系统说明</a></li>
                                 </ul>
                             </div>
 
@@ -102,22 +112,22 @@
                     <div class="login fr">
                         <p>
                             <label>用户名</label>
-                            @Html.TextBoxFor(m => m.LoginName, new { @class = "TxtUserNameCssClass" ,@Value ="admin"})
+                            @Html.TextBoxFor(m => m.LoginName, new { @class = "TxtUserNameCssClass", @Value = "admin" })
                         </p>
-                        <p>
+                        <p id="ppwd">
                             <label><a href="#"></a>密码</label>
-                            @Html.PasswordFor(m => m.Password, new { @class = "TxtPasswordCssClass",@Value="123456" })
+                            @Html.PasswordFor(m => m.Password, new { @class = "TxtPasswordCssClass", @Value = "123456" })
                         </p>
-                     @*   <p class="verify">
+                        @*   <p class="verify">
                             @Html.TextBoxFor(m => m.VCode, new { @class = "TxtValidateCodeCssClass", @Value = "验证码", @onfocus = "cleartxt();" })
                             <span class="code">
                                 <img id="valiCode" style="cursor: pointer;" class="img" src="/Common/GetValidateCode" alt="看不清？请点我" /></span>
                             <a href="#" onclick="CV();">看不清楚</a>
-                        </p>
+                        </p>*@
                         <p>
                             <label><a href="#"></a>类型</label>
-                            @Html.DropDownListFor(model => model.UserType, ViewData["UserType"] as SelectList, new { @class="selecttor"})
-                        </p>*@
+                            @Html.DropDownListFor(model => model.UserType, ViewData["UserType"] as SelectList, new { @class = "selecttor" ,@onchange="onchanges()"})
+                        </p>
                         <p class="btn">
                             <input name="" type="submit" value="登录">
                         </p>

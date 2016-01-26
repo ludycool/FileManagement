@@ -8,30 +8,8 @@ namespace e3net.Mode.RMS
 {
 
     [Table("[RMS_User]", DbType.SqlServer)]
-    public class RMS_UserSet : MQLBase
-    {
-        public static new MQLBase Select(params FieldBase[] fields)
-        {
-            return MQLBase.Select(DbType.SqlServer,"[RMS_User]",fields);
-        }
-        public static new MQLBase SelectAll()
-        {
-            return MQLBase.SelectAll(DbType.SqlServer,"[RMS_User]");
-        }
-        public static readonly FieldBase Id = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.OnlyPrimaryKey, "[Id]");
-        public static readonly FieldBase LoginName = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[LoginName]");
-        public static readonly FieldBase TrueName = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[TrueName]");
-        public static readonly FieldBase Password = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[Password]");
-        public static readonly FieldBase CreateTime = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[CreateTime]");
-        public static readonly FieldBase ModifyTime = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[ModifyTime]");
-        public static readonly FieldBase DepartmentId = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[DepartmentId]");
-        public static readonly FieldBase YH_HospitalId = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[YH_HospitalId]");
-    }
-
-
-    [Table("[RMS_User]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
-    public class RMS_User : EntityBase
+    public partial class RMS_User : EntityBase
     {
 
         /// <summary>
@@ -98,14 +76,66 @@ namespace e3net.Mode.RMS
         }
 
         /// <summary>
-        /// 
+        /// 用户类型 为1正常 姓名登录为0，身份证为2
         /// </summary>
-        public Guid? YH_HospitalId
+        public Int32? UserType
         {
-            get { return GetPropertyValue<Guid?>("YH_HospitalId"); }
-            set { SetPropertyValue("YH_HospitalId", value); }
+            get { return GetPropertyValue<Int32?>("UserType"); }
+            set { SetPropertyValue("UserType", value); }
         }
     }
 
+    [Table("[RMS_User]", DbType.SqlServer)]
+    public  partial class RMS_UserSet : MQLBase
+    {
+        public static new MQLBase Select(params FieldBase[] fields)
+        {
+            return MQLBase.Select(DbType.SqlServer,"[RMS_User]",fields);
+        }
+        public static new MQLBase SelectAll()
+        {
+            return MQLBase.SelectAll(DbType.SqlServer,"[RMS_User]");
+        }
+
+        /// <summary>
+        /// 主键
+        /// </summary>
+        public static readonly FieldBase Id = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.OnlyPrimaryKey, "[Id]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase LoginName = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[LoginName]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase TrueName = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[TrueName]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase Password = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[Password]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase CreateTime = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[CreateTime]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase ModifyTime = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[ModifyTime]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase DepartmentId = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[DepartmentId]");
+
+        /// <summary>
+        /// 用户类型 为1正常 姓名登录为0，身份证为2
+        /// </summary>
+        public static readonly FieldBase UserType = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[UserType]");
+    }
 
 }
