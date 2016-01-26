@@ -84,6 +84,7 @@ namespace YH_Webtool
                 dd.Items.Add(new ListItem("多选", "checkbox"));
                 dd.Items.Add(new ListItem("textarea", "textarea"));
                 dd.Items.Add(new ListItem("文件", "File"));
+                dd.Items.Add(new ListItem("span", "span"));
                 tcC.Controls.Add(dd);
                 tr.Cells.Add(tcC);
                 Table1.Rows.Add(tr);
@@ -169,6 +170,13 @@ namespace YH_Webtool
                     File += "<td><input  type=\"file\"   name=\"" + values + "\"  /></td>";
                     File += "</tr>\n";
                     return File;
+                case "span":
+                    string span = "<tr>";
+
+                    span += "<td><label >" + name + "：</label></td>";
+                    span += "<td><span   name=\"" + values + "\"  ></span></td>";
+                    span += "</tr>\n";
+                    return span;
                 default:
                     return "";
             }
