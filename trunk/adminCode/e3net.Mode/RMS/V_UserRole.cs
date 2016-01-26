@@ -101,6 +101,24 @@ namespace e3net.Mode.RMS
             get { return GetPropertyValue<Int32?>("UserType"); }
             set { SetPropertyValue("UserType", value); }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String Phone
+        {
+            get { return GetPropertyValue<String>("Phone"); }
+            set { SetPropertyValue("Phone", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String Tel
+        {
+            get { return GetPropertyValue<String>("Tel"); }
+            set { SetPropertyValue("Tel", value); }
+        }
     }
 
     [Table("[V_UserRole]", DbType.SqlServer)]
@@ -164,6 +182,16 @@ namespace e3net.Mode.RMS
         /// 
         /// </summary>
         public static readonly FieldBase UserType = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[UserType]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase Phone = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[Phone]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase Tel = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[Tel]");
     }
 
 }
