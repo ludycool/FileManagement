@@ -286,6 +286,10 @@ namespace ESUI.Controllers
             {
                 menus += "{  ";
 
+                menus += "title:\"ck\" ,checkbox:true";
+                menus += "},"; 
+                menus += "{  ";
+
                 menus += "title:\"名称\",field:\"ID\", width: 100,hidden:true";
                 menus += "},";
                 //menus += "{  ";
@@ -630,7 +634,30 @@ namespace ESUI.Controllers
 
 
         }
+        public JsonResult Del(string IDSet, string CategoryTableID)
+        {
+            //int f
+            //=0;
 
+            var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(CategoryTableID)));
+            string sql = "DELETE FROM  [" + catmodle.UserTableName + "] where  ID  in(" + IDSet+")";
+         int f =  OPBiz.ExecuteSqlWithNonQuery(sql);;
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            if (f > 0)
+            {
+                ReSultMode.Code = 11;
+                ReSultMode.Data = f.ToString();
+                ReSultMode.Msg = "成功删除" + f + "条数据！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                ReSultMode.Code = -13;
+                ReSultMode.Data = "0";
+                ReSultMode.Msg = "删除失败！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
+        }
         public string GetNumberColumn(string Condition)
         {
             var fd = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition)

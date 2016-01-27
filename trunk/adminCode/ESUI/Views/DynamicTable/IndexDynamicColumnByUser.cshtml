@@ -180,7 +180,14 @@
 
                 }
 
-            }
+            },'-',{
+                    id: 'btnAccept',
+                    text: '删除',
+                    iconCls: 'icon-save',
+                    handler: function() {
+
+                        Del();
+                    }}
                     ],
 
                     onAfterEdit: function (rowIndex, rowData, changes) {
@@ -215,7 +222,59 @@
         return '<a   >' + 2015001 + '</a>';
 
     }
+    //删除
+    function Del() {
+        //DataBaseFunction.deleteInfo("dg", "ID", "TrueName");
+        //得到按钮选择的数据的ID
+        var rows = $("#dg2").datagrid("getSelections");
+        //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
+        if (rows.length >= 1) {
+            //遍历出按钮选择的数据的信息，这就是按钮按钮选择删除的按钮ID的信息
+            var ids = "";   //1,2,3,4,5
+            for (var i = 0; i < rows.length; i++) {
+                //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
+                ids += "'" + rows[i]["ID"] + "',";
 
+            }
+            //最后去掉最后的那一个,
+            ids = ids.substring(0, ids.length - 1);
+            //获取按钮选择的按钮信息，如果按钮选择了已经登录的按钮的话需要给出不能删除的信息
+            //var Name = "";
+            //for (var i = 0; i < rows.length; i++) {
+            //    Name += rows[i][Namefield] + ",";
+            //}
+            //Name = Name.substring(0, Name.length - 1);
+            //首先取出来到底是直接删除还是伪删除发送异步请求的地址和是否是伪删除的参数
+            var postData = "";
+
+            postData = {
+                IDSet: ids, CategoryTableID: '@ViewBag.RuteUrl'
+                    };
+                    //}
+                    //else {
+                    //    postData = {
+                    //        ID: ids, Not: not
+                    //    }
+                    //}
+                    //然后确认发送异步请求的信息到后台删除数据
+                    $.messager.confirm("删除信息", "您确认删除<font color='red' size='3'>" + "" + "</font>吗？", function (Delete) {
+                        if (Delete) {
+                            $.get(BaseUrl + "Del", postData, function (data) {
+                                alerts(data.Msg, 2);
+                                if (data.Code > 0) {
+                                    $("#dg2").datagrid("reload");
+                                    $("#dg2").datagrid("clearSelections");
+                                }
+
+                            });
+                        }
+                    });
+                }
+                else {
+                    alert("请选择你要删除的数据");
+                }
+
+            }
     function onClickCell(index, field) {
         if (editIndex != index) {
             if (endEditing()) {
