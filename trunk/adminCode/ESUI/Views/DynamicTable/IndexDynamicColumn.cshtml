@@ -55,8 +55,8 @@
                     columns: Columndata,
                     queryParams: { Condition: '@ViewBag.RuteUrl' },
                     height: 450,
-                    iconCls: 'icon-save',
-                    title: '按钮编辑',
+                    //iconCls: 'icon-save',
+                    title: '@ViewBag.ViewBag',
                     // onClickCell: onClickCell,
                     nowrap: true,
                     //singleSelect: true,
@@ -184,7 +184,7 @@
             }, '-',{
                 id: 'btnAccept',
                 text: '删除',
-                iconCls: 'icon-save',
+                iconCls: 'icon-remove',
                 handler: function() {
 
                     Del();
