@@ -67,6 +67,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\e3net.tools\dll\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NPOI, Version=2.0.5.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\e3net.tools\dll\NPOI.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>True</Private>
@@ -236,6 +240,7 @@
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\DictionaryController.cs" />
     <Compile Include="Controllers\DynamicTableController.cs" />
+    <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PaperFileController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_ElectronicFileController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_LifeCommentsController.cs" />
@@ -258,7 +263,10 @@
     <Compile Include="httpHandle\SystemSetHandler.ashx.cs">
       <DependentUpon>SystemSetHandler.ashx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Column.cs" />
+    <Compile Include="Models\Sheet.cs" />
     <Compile Include="Models\ViewModes.cs" />
+    <Compile Include="Models\Workbook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
@@ -3383,6 +3391,7 @@
     <Content Include="moon.license">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\linq.min.js" />
     <Content Include="test.html" />
     <Content Include="upload\file\20150319022047_psb.jpg" />
     <Content Include="Content\ueditor\net\config.json" />
@@ -3463,6 +3472,7 @@
     <Content Include="Views\TF_LifeComments\Index.cshtml" />
     <Content Include="Views\DynamicTable\IndexDynamicColumn.cshtml" />
     <Content Include="Views\DynamicTable\IndexDynamicColumnByUser.cshtml" />
+    <Content Include="Views\Excel\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="upload\image\20150319\" />
