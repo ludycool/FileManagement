@@ -537,12 +537,17 @@ namespace ESUI.Controllers
         {
             string id = Request.QueryString["ID"];
             ViewBag.RuteUrl = id;
+            var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(id)));
+            ViewBag.ViewBag = catmodle.ChineseName + catmodle.TableProperties;
+
             return View();
         }
         public ActionResult IndexDynamicColumnByUser()
         {
             string id = Request.QueryString["ID"];
             ViewBag.RuteUrl = id;
+            var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(id)));
+            ViewBag.ViewBag = catmodle.ChineseName + catmodle.TableProperties;
             return View();
         }
         /// <summary>
