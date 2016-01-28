@@ -477,6 +477,8 @@
     <Content Include="Content\JqueryEasyUI\themes\default\tree.css" />
     <Content Include="Content\JqueryEasyUI\themes\default\validatebox.css" />
     <Content Include="Content\JqueryEasyUI\themes\default\window.css" />
+    <Content Include="Content\jQueryload\fakeloader.css" />
+    <Content Include="Content\jQueryload\fakeloader.js" />
     <Content Include="Content\js\area.js" />
     <Content Include="Content\js\publicMethod.js" />
     <Content Include="Content\Login\wuye\base.css" />

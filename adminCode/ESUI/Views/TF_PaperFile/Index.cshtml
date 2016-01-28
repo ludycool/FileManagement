@@ -9,6 +9,9 @@
 
     <script type="text/javascript" charset="utf-8" src="~/Content/js/ImgUp.js"></script>
     <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+        <script src="~/Content/jQueryload/fakeloader.js"></script>
+    <link href="~/Content/jQueryload/fakeloader.css" rel="stylesheet" />
+
     @* ReSharper disable once NotAllPathsReturnValue *@
 
 
@@ -20,8 +23,6 @@
 
 
             jQuery(document).ready(function () {
-
-                FormStripes();//表单样式
                 AutoWH("#body", 40, 42);//自适应宽度
                 DataGridSet();
                 GetSonDictionaryNo("Category", "0101");
@@ -165,6 +166,7 @@
 
 </head>
 <body style="overflow-y: hidden">
+    
     <div id="body">
         <table id="dg"></table>
 
@@ -200,8 +202,8 @@
         </div>
     </div>
     <!------------------------弹出信息的弹出层---------------------------------->
-    <div id="DivEditor" class="easyui-dialog" style="width: 700px;"
-        closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+    <div id="DivEditor" class="easyui-dialog" style="width: 700px;" data-options="closed:true,resizable:true,modal:true"
+         buttons="#dlg-buttons">
         <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:490,width:680,border:false">
             <form id="ff" method="post" enctype="multipart/form-data">
                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
