@@ -43,17 +43,13 @@
                 postData = {
                     ID: rows.Id
                 };
-                $.messager.confirm("删除信息", "您确认删除<font color='red' size='3'>" + rows.Name + "</font>角色吗？", function (DeleteRole) {
+                $.messager.confirm("删除信息", "您确认删除<font color='red' size='3'>" + rows.Name + "</font>菜单吗？", function (DeleteRole) {
                     if (DeleteRole) {
                         $.get(BaseUrl + "DeleteInfo", postData, function (data) {
                             if (data == "OK") {
                                 //友情提示用户删除成功，刷新表格
                                 $.messager.alert("友情提示", "删除成功");
-                                $("#tg").treegrid("reload");
-                                //当删除完成之后，第二次删除的时候还记得上次的信息，这样是不可以的，所以我们需要清除第一次的信息
-                                //第一种方法
-                                rows.length = "";
-                                //第二种方法
+                                SetTreeGridData();
                                 $("#tg").datagrid("clearSelections");
                             }
                             else {
