@@ -109,10 +109,16 @@
     <link href="@Url.Content("~/Content/JqueryEasyUI/themes/icon.css")" rel="stylesheet" />
     <script src="~/Content/JqueryEasyUI/jquery1.9.min.js"></script>
     <script src="~/Content/JqueryEasyUI/jquery.easyui133.min.js"></script>
-     <script src="@Url.Content("~/Content/JqueryEasyUI/locale/easyui-lang-zh_CN.js")"></script>
+    <script src="@Url.Content("~/Content/JqueryEasyUI/locale/easyui-lang-zh_CN.js")"></script>
     <script src="~/Content/JqueryEasyUI/outlook.js"></script>
     <script src="~/Content/js/CommonFunction.js"></script>
+
+
+    <link href="~/Content/jQueryload/fakeloader.css" rel="stylesheet" />
+    <script src="@Url.Content("~/Content/jQueryload/fakeloader.js")"></script>
+
     <link href="~/Content/Style.css" rel="stylesheet" />
+    <script src="@Url.Content("~/Content/Style.js")"></script>
     <script type="text/javascript">
 
         var BaseUrl = '/Home/';
@@ -244,17 +250,16 @@
                 <script>
                     jQuery(document).ready(function () {
 
-                       
+
                         $.ajax({
                             url: '/httpHandle/SystemSetHandler.ashx?action=GetUser',
                             type: 'GET',
-                            data: { },
+                            data: {},
                             cache: false,
                             error: function () { alert('Error $.ajax'); },
                             success: function (data) {
                                 var result = eval('(' + data + ')');
-                                if (result.UserTypes != 1)
-                                {
+                                if (result.UserTypes != 1) {
                                     $("#DivEditor").dialog('open').dialog('setTitle', '请完善个人信息').window('resize', { top: 200 });
                                 }
                             }
@@ -265,7 +270,7 @@
 
                 <!------------------------弹出信息的弹出层---------------------------------->
                 <div id="DivEditor" class="easyui-dialog" style="width: 600px;"
-                     closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+                    closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
                     <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:200,width:580,border:false">
                         <form id="ff" method="post" enctype="multipart/form-data">
                             <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
@@ -292,7 +297,7 @@
                                     <td>
                                         <label>单位：</label></td>
                                     <td>
-                                        <textarea class="textbox" name="DepartmentName" style="width:400px;"></textarea></td>
+                                        <textarea class="textbox" name="DepartmentName" style="width: 400px;"></textarea></td>
                                 </tr>
 
 
@@ -302,7 +307,7 @@
 
                     <div style="text-align: center; width: 100%; margin-bottom: 5px;">
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
-@*                        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>*@
+                        @*                        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>*@
                     </div>
                 </div>
             </div>

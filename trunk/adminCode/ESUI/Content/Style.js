@@ -1,4 +1,15 @@
-﻿function FormStripes() { //表单样式
+﻿
+jQuery(document).ready(function () {
+
+    $(document.body).append('<div class="fakeloader"></div>');//页面加载前滚动
+    $(".fakeloader").fakeLoader({//页面加载前滚动
+        timeToHide: 500,
+        bgColor: "#34495e",
+        spinner: "spinner2"
+    });
+    FormStripes();//表单样式
+})
+function FormStripes() { //表单样式
 
     $(".stripes tr").mouseover(function () {
         //如果鼠标移到class为stripe的表格的tr上时，执行函数 
@@ -18,3 +29,4 @@
         $(this).removeClass("textbox-focused");
     }) //移除该行的class 
 }
+
