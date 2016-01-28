@@ -79,7 +79,8 @@ namespace YH_Webtool
                 dd.ID = "dd" + dr[1].ToString();
                 dd.Items.Add(new ListItem("文本框", "text"));
                 dd.Items.Add(new ListItem("隐藏", "hidden"));
-                dd.Items.Add(new ListItem("下拉框", "select"));
+                dd.Items.Add(new ListItem("combobox", "combobox"));
+                 dd.Items.Add(new ListItem("combotree", "combotree"));
                 dd.Items.Add(new ListItem("单选", "radio"));
                 dd.Items.Add(new ListItem("多选", "checkbox"));
                 dd.Items.Add(new ListItem("textarea", "textarea"));
@@ -135,13 +136,21 @@ namespace YH_Webtool
                 case "hidden":
                     string hidden = "<input  type=\"hidden\"  name=\"" + values + "\" />";
                     return hidden;
-                case "select":
-                    string select = "<tr>";
+                case "combobox":
+                    string combobox = "<tr>";
 
-                    select += "<td><label >" + name + "：</label></td>";
-                    select += "<td><select id=\"" + values + "\" name=\"" + values + "\" class=\"easyui-combotree\" style=\"width:200px;\" data-options=\"required:true\" > </select></td>";
-                    select += "</tr>\n";
-                    return select;
+                    combobox += "<td><label >" + name + "：</label></td>";
+                    combobox += "<td><select id=\"" + values + "\" name=\"" + values + "\" class=\"easyui-combotree\" style=\"width:200px;\" data-options=\"required:true\" > </select></td>";
+                    combobox += "</tr>\n";
+                    return combobox;
+                case "combotree":
+                    string combotree = "<tr>";
+
+                    combotree += "<td><label >" + name + "：</label></td>";
+
+                    combotree += "<td> <input id=\"" + values + "\" class=\"easyui-combobox\" name=\"" + values + "\" style=\"width:200px;\" data-options=\"valueField:'ItemValue',textField:'ItemName',required:true\" /></td>";
+                    combotree += "</tr>\n";
+                    return combotree;
                 case "radio":
                     string radio = "<tr>";
 
