@@ -23,6 +23,7 @@
           默认  <select id="defalseSelect" onchange="go()" >
 			<option value="text">文本框</option>
 			<option value="hidden">隐藏</option>
+              <option value="select">下拉</option>
 			<option value="combobox">combobox</option>
               	<option value="combotree">combotree</option>
 			<option value="radio">单选</option>
