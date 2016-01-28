@@ -79,6 +79,7 @@ namespace YH_Webtool
                 dd.ID = "dd" + dr[1].ToString();
                 dd.Items.Add(new ListItem("文本框", "text"));
                 dd.Items.Add(new ListItem("隐藏", "hidden"));
+                dd.Items.Add(new ListItem("下拉", "select"));
                 dd.Items.Add(new ListItem("combobox", "combobox"));
                  dd.Items.Add(new ListItem("combotree", "combotree"));
                 dd.Items.Add(new ListItem("单选", "radio"));
@@ -136,6 +137,14 @@ namespace YH_Webtool
                 case "hidden":
                     string hidden = "<input  type=\"hidden\"  name=\"" + values + "\" />";
                     return hidden;
+                case "select":
+                    string select = "<tr>";
+
+                    select += "<td><label >" + name + "：</label></td>";
+                    select += "<td><select id=\"" + values + "\" name=\"" + values + "\"  style=\"width:200px;\"  > <option value=\"\">哈喽</option></select></td>";
+                    select += "</tr>\n";
+                    return select;
+
                 case "combobox":
                     string combobox = "<tr>";
 
