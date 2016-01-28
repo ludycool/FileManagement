@@ -23,27 +23,27 @@ namespace ESUI.Controllers
     {
         // GET: /HelloWorld/
         //[Import(typeof(IRMS_MenusDao))]
-      //  public IRMS_MenusDao uBiz { get; set; }
-     //   public RMS_MenusBiz uBiz = new RMS_MenusBiz();
+        //  public IRMS_MenusDao uBiz { get; set; }
+        //   public RMS_MenusBiz uBiz = new RMS_MenusBiz();
         [Dependency]
         public RMS_MenusBiz uBiz { get; set; }
         [Dependency]
         public RMS_UserBiz userBiz { get; set; }
         public ActionResult Index()
         {
-       
+
 
             ViewBag.Message = "修改此模板以快速启动你的 ASP.NET MVC 应用程序。";
-        //  ViewBag.ManuString= GetManu();
-           ViewBag.testString = "<div title=\"功能管理\" iconcls=\"icon-edit\" style=\"padding: 10px;\"><p><a href=\"javascript:void(0)\" src=\"/RoleManagement/Index\" class=\"MenuLink\">角色管理</a></p> </div>";
+            //  ViewBag.ManuString= GetManu();
+            ViewBag.testString = "<div title=\"功能管理\" iconcls=\"icon-edit\" style=\"padding: 10px;\"><p><a href=\"javascript:void(0)\" src=\"/RoleManagement/Index\" class=\"MenuLink\">角色管理</a></p> </div>";
 
             return View();
         }
 
         public JsonResult GetManu()
         {
-         List<TreeMenus> listTree= GetTreeManus(UserData.ListManus);
-         return Json(listTree);
+            List<TreeMenus> listTree = GetTreeManus(UserData.ListManus);
+            return Json(listTree);
         }
         public JsonResult GetNanue()
         {
@@ -70,9 +70,9 @@ namespace ESUI.Controllers
         public ActionResult loginOut()
         {
             UserData = null;
-        
-          return Json("OK", JsonRequestBehavior.AllowGet);
-       
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
+
         }
         /// <summary>
         /// 修改密码
@@ -84,9 +84,10 @@ namespace ESUI.Controllers
             {
                 return Json("旧密码不成确", JsonRequestBehavior.AllowGet);
             }
-            else {
+            else
+            {
 
-                 var mql = RMS_UserSet.SelectAll().Where(RMS_UserSet.Id.Equal(UserData.Id));
+                var mql = RMS_UserSet.SelectAll().Where(RMS_UserSet.Id.Equal(UserData.Id));
                 RMS_User item = userBiz.GetEntity(mql);
                 item.Password = NewPwd;
                 item.WhereExpression = RMS_UserSet.Id.Equal(item.Id);
@@ -99,7 +100,7 @@ namespace ESUI.Controllers
                 {
                     return Json("密码修改失败", JsonRequestBehavior.AllowGet);
                 }
-             
+
             }
         }
 
@@ -108,44 +109,52 @@ namespace ESUI.Controllers
         /// </summary>
         /// <param name="mql"></param>
         /// <returns></returns>
-        public List<TreeMenus> GetTreeManus(List<Manu> list)
+        public List<TreeMenus> GetTreeManus(List<Manu> all)
         {
-            List<TreeMenus> resultList = new List<TreeMenus>();
-            for (int i = 0; i < list.Count; i++)
+            int allcout = all.Count;
+            List<V_RoleManus> list = new List<V_RoleManus>();//所有的
+            for (int i = 0; i < all.Count; i++)
             {
-                if (list.Find(p => p.manuInfo.ManuId == list[i].manuInfo.ParentManuId) == null)//此项没有父级
-                {
-                    TreeMenus resultItem = new TreeMenus();
-                    resultItem.Id = list[i].manuInfo.ManuId;
-                    resultItem.ParentManuId = list[i].manuInfo.ParentManuId;
-                    resultItem.OrderNo = list[i].manuInfo.OrderNo;
-                    resultItem.Name = list[i].manuInfo.ManuName;
-                    resultItem.iconCls = list[i].manuInfo.Icon;
-                    resultItem.MIcon = list[i].manuInfo.MIcon;
-                    resultItem.URL = list[i].manuInfo.URL;
-                    List<TreeMenus> Son = GetTreeManus(list, list[i]);
-                    resultItem.children = Son;
-                    resultList.Add(resultItem);
+                list.Add(all[i].manuInfo);
+            }//取出所有
 
-                }
+            List<TreeMenus> resultList = new List<TreeMenus>();
 
+            List<V_RoleManus> listfather = list.FindAll(p => p.ParentManuId == Guid.Parse("00000000-0000-0000-0000-000000000000"));//父项
+            listfather = listfather.OrderBy(i => i.OrderNo).ToList();
+            int fatherCout = listfather.Count;
+
+            for (int i = 0; i < fatherCout; i++)
+            {
+                TreeMenus resultItem = new TreeMenus();
+                resultItem.Id = listfather[i].ManuId;
+                resultItem.ParentManuId = listfather[i].ParentManuId;
+                resultItem.OrderNo = listfather[i].OrderNo;
+                resultItem.Name = listfather[i].ManuName;
+                resultItem.iconCls = listfather[i].Icon;
+                resultItem.MIcon = listfather[i].MIcon;
+                resultItem.URL = listfather[i].URL;
+                List<TreeMenus> Son = GetTreeManus(list, listfather[i]);
+                resultItem.children = Son;
+                resultList.Add(resultItem);
             }
             return resultList;
         }
-        public List<TreeMenus> GetTreeManus(List<Manu> listAll, Manu item)
+        public List<TreeMenus> GetTreeManus(List<V_RoleManus> listAll, V_RoleManus item)
         {
             List<TreeMenus> resultList = new List<TreeMenus>();
-            List<Manu> list = listAll.FindAll(p => p.manuInfo.ParentManuId == item.manuInfo.ManuId);
-            for (int i = 0; i < list.Count; i++)
+            List<V_RoleManus> list = listAll.FindAll(p => p.ParentManuId == item.ManuId).OrderBy(i => i.OrderNo).ToList();
+            int allcout = list.Count;
+            for (int i = 0; i < allcout; i++)
             {
                 TreeMenus resultItem = new TreeMenus();
-                resultItem.Id = list[i].manuInfo.ManuId;
-                resultItem.ParentManuId = list[i].manuInfo.ParentManuId;
-                resultItem.OrderNo = list[i].manuInfo.OrderNo;
-                resultItem.Name = list[i].manuInfo.ManuName;
-                resultItem.iconCls = list[i].manuInfo.Icon;
-                resultItem.MIcon = list[i].manuInfo.MIcon;
-                resultItem.URL = list[i].manuInfo.URL;
+                resultItem.Id = list[i].ManuId;
+                resultItem.ParentManuId = list[i].ParentManuId;
+                resultItem.OrderNo = list[i].OrderNo;
+                resultItem.Name = list[i].ManuName;
+                resultItem.iconCls = list[i].Icon;
+                resultItem.MIcon = list[i].MIcon;
+                resultItem.URL = list[i].URL;
                 List<TreeMenus> Son = GetTreeManus(listAll, list[i]);
                 resultItem.children = Son;
                 resultList.Add(resultItem);
