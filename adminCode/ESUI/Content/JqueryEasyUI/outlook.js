@@ -14,8 +14,8 @@ $(function () {
 	            animate: false
 	        });
 	        var firstMenuName = $('#css3menu a:first').attr('name');
-	        _menus = [result];
-	        addNav(_menus[0]);
+	        _menus = result;
+	        addNav(_menus);
 	        InitLeftMenu();
 	    }
 	});
@@ -101,8 +101,7 @@ function hoverMenuItem() {
 // 获取左侧导航的图标
 function getIcon(Id) {
     var iconCls = 'icon ';
-	$.each(_menus, function(i, n) {
-		$.each(n, function(j, o) {
+	    $.each(_menus, function (j, o) {
 			$.each(o.children, function(k, m){
 			    if (m.Id == Id) {
 				    iconCls += m.iconCls;
@@ -110,7 +109,6 @@ function getIcon(Id) {
 				}
 			});
 		});
-	});
 	return iconCls;
 }
 

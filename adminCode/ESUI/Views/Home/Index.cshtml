@@ -131,10 +131,27 @@
             $('#w').window('close');
         }
 
-
-
-
-
+        //跳转url 内有的菜单少可以 window.parent.JumpN("CommunityNotice");
+        function JumpN(URL) {
+            $.each(_menus, function (j, o) {
+                $.each(o.children, function (k, m) {
+                    if (m.URL == URL) {
+                        var iconCls = getIcon(m.Id);
+                        addTab(m.Name, URL, iconCls);
+                        return false;
+                    }
+                });
+            });
+        }
+        //关闭页面  Pname 标题 window.parent.closeN("发布公告");
+        function closeN(Pname) {
+            $('.tabs-inner span').each(function (i, n) {
+                var t = $(n).text();
+                if (Pname == t) {
+                    $('#tabs').tabs('close', t);
+                }
+            });
+        }
         $(function () {
 
 
