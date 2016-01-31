@@ -237,6 +237,7 @@
                 $('input:radio[name=ISLoginsector]')[1].checked = true;
                 $('input:radio[name=IsNumber]')[1].checked = true;
                 $('input:radio[name=MergeHeader]')[1].checked = true;
+                $('#field').attr('readonly', false);
             }
 
 
@@ -299,6 +300,16 @@
             function Del() {
                 DataBaseFunction.deleteInfo("dg", "Id", "TName");
             }
+            //function myfunction2() {
+                
+             
+            //    alert("t");
+            //}
+            //function myfunction() {
+            //    $("#title").val("ck");
+            //    alert("a");
+
+            //}
         </script>
     }
 
@@ -457,7 +468,19 @@
 
                         </td>
 
-                    </tr>
+                    </tr> 
+                  @*  <tr>
+                        <td>
+                            <label>选择列（表格选择选择框，只需要输入行合并数）：</label></td>
+                        <td>
+
+
+                            <input name="ck" type="radio" value="true"  onchange="myfunction()"/>是
+                                <input name="ck" type="radio" value="false" checked="checked"  onchange="myfunction2()"/>否
+
+                        </td>
+
+                    </tr>*@
                 </table>
             </form>
 

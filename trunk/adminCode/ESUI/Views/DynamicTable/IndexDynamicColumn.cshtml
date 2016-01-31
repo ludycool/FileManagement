@@ -190,15 +190,16 @@
 
                     Del();
                 }
-            }, '-', {
-                id: 'btnAccept',
-                text: '导出',
-                iconCls: 'icon-remove',
-                handler: function () {
-
-                    exportToExcel();
-                }
             }
+            //, '-', {
+            //    id: 'btnAccept',
+            //    text: '导出',
+            //    iconCls: 'icon-remove',
+            //    handler: function () {
+
+            //        exportToExcel();
+            //    }
+            //}
             ],
 
             onAfterEdit: function(rowIndex, rowData, changes) {
@@ -472,19 +473,13 @@
         }
 
         function getColumns() {
-            var allColsTitle = $("#dg2").datagrid("options").columns;
+          var grid = $("#dg2");
+          var titles = [[]], length = Math.max(grid.frozenColumns.length, grid.columns.length);
+          for (var i = 0; i < length; i++) {
+              titles[i] = (grid.frozenColumns[i] || []).concat(grid.columns[i] || []);
+          }
+               
 
-            return Enumerable.From(allColsTitle[0]).Select(function (c) {
-                //if (c.field) {
-                var obj = {};
-                obj.Code = c.field;
-                obj.Name = c.title;
-                obj.DataType = c.datatype || "S";
-                obj.Width = (c.width || 80) / 10;
-                obj.Hidden = c.hidden;
-                return obj
-                //}
-            }).ToArray();
         }
 
         </script>
