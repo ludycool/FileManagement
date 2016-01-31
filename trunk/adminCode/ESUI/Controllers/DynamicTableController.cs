@@ -286,10 +286,15 @@ namespace ESUI.Controllers
             var list3 = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and (title='ck') and IsEnable=1 ORDER BY  SortNo");
             if (list != null)
             {
+                if (list3.Count>0)
+                {
+                    
+               
                 menus += "{  ";
 
                 menus += "field:\"ck\" ,checkbox:true,rowspan:\"" + list3[0].rowspan + "\", width:\"" + list3[0].width + "\"";
-                menus += "},"; 
+                menus += "},";
+                }
                 menus += "{  ";
 
                 menus += "title:\"名称\",field:\"ID\", width: 100,hidden:true";
