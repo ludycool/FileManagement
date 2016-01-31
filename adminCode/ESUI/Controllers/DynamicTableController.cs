@@ -93,7 +93,8 @@ namespace ESUI.Controllers
                 //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
 
                 OPBiz.Add(categoryTable);
-                OPBiz.ExecuteSqlWithNonQuery("create table [" + categoryTable.UserTableName + "]  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null) ");
+                OPBiz.ExecuteSqlWithNonQuery("create table [" + categoryTable.UserTableName + "]  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null,ck nvarchar(100) null) ");
+                OPBiz.ExecuteSqlWithNonQuery("INSERT INTO [ColumnCharts]      ([ID],[CategoryTableID],[field],[title],[rowspan],[width],[IsEnable]) VALUES('" + Guid.NewGuid().ToString() + "','" + categoryTable .ID+ "','ck','ck',1,100,1) ");
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
@@ -263,7 +264,7 @@ namespace ESUI.Controllers
             //var list2 = OPBiz.GetPagingData(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
             //var list2 = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "'");
-            var list2 = CCBiz.GetEntities(ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition)));
+            var list2 = CCBiz.GetEntities(ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition)).OrderByASC(ColumnChartsSet.SortNo));
             // var mql = RMS_ButtonsSet.Id.NotEqual("");
             dic.Add("rows", list2);
             dic.Add("total", list2.Count);
@@ -282,11 +283,12 @@ namespace ESUI.Controllers
             //   List<ColumnCharts> list = CCBiz.GetOwnList<ColumnCharts>(sql);
             var list = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and (ParentId='' or ParentId is  null) and IsEnable=1 ORDER BY  SortNo");
             var list2 = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and (ParentId<>'') and IsEnable=1 ORDER BY  SortNo");
+            var list3 = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and (title='ck') and IsEnable=1 ORDER BY  SortNo");
             if (list != null)
             {
                 menus += "{  ";
 
-                menus += "title:\"ck\" ,checkbox:true";
+                menus += "field:\"ck\" ,checkbox:true,rowspan:\"" + list3[0].rowspan + "\", width:\"" + list3[0].width + "\"";
                 menus += "},"; 
                 menus += "{  ";
 
@@ -299,57 +301,65 @@ namespace ESUI.Controllers
 
                 foreach (ColumnCharts item in list)
                 {
-                    if (item.MergeHeader == true)
+                    if (item.title!="ck")
                     {
-                        menus += "{  ";
-                        if (!string.IsNullOrEmpty(item.align))
+                        if (item.MergeHeader == true)
                         {
-                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\",align:\"" + item.align + "\"";
+                            menus += "{  ";
+                            if (!string.IsNullOrEmpty(item.align))
+                            {
+                                menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\",align:\"" +
+                                         item.align + "\"";
+                            }
+                            else
+                            {
+                                menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\"";
+                            }
+
+                            menus += "},";
                         }
                         else
                         {
-                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\"";
-                        }
-
-                        menus += "},";
-                    }
-                    else
-                    {
-                        menus += "{  ";
-                        if (item.rowspan > 1)
-                        {
-                            if (!string.IsNullOrEmpty(item.align))
+                            menus += "{  ";
+                            if (item.rowspan > 1)
                             {
-                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align + "\"";
+                                if (!string.IsNullOrEmpty(item.align))
+                                {
+                                    menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" +
+                                             item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor +
+                                             "}" + ",align:\"" + item.align + "\"";
+
+                                }
+                                else
+                                {
+                                    menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" +
+                                             item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor +
+                                             "}";
+
+                                }
+
+
 
                             }
                             else
                             {
-                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" + item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+                                if (!string.IsNullOrEmpty(item.align))
+                                {
+                                    menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
+                                             item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align +
+                                             "\"";
+                                }
+                                else
+                                {
 
+                                    menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
+                                             item.width + "\",editor:{" + item.editor + "}";
+                                }
                             }
 
 
-
+                            menus += "},";
                         }
-                        else
-                        {
-                            if (!string.IsNullOrEmpty(item.align))
-                            {
-                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
-                                         item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align +
-                                         "\"";
-                            }
-                            else
-                            {
-
-                                menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
-                                         item.width + "\",editor:{" + item.editor + "}";
-                            }
-                        }
-
-
-                        menus += "},";
                     }
 
                 }
@@ -363,51 +373,60 @@ namespace ESUI.Controllers
                 string menus2 = " ,[\n";
                 foreach (ColumnCharts item in list2)
                 {
-                    if (item.MergeHeader == true)
+                    if (item.title != "ck")
                     {
-                        menus += "{  ";
-                        if (!string.IsNullOrEmpty(item.align))
+                        if (item.MergeHeader == true)
                         {
-                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\",align:\"" + item.align + "\"";
-                        }
-                        else
-                        {
-                            menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\"";
-                        }
-
-                        menus += "},";
-                    }
-                    else
-                    {
-                        menus2 += "{  ";
-                        if (item.rowspan > 1)
-                        {
+                            menus += "{  ";
                             if (!string.IsNullOrEmpty(item.align))
                             {
-                                menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
-                                          item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align + "\"";
+                                menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\",align:\"" +
+                                         item.align + "\"";
                             }
                             else
                             {
-                                menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
-                                         item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+                                menus += "title:\"" + item.title + "\",colspan:\"" + item.colspan + "\"";
                             }
+
+                            menus += "},";
                         }
                         else
                         {
-                            if (!string.IsNullOrEmpty(item.align))
+                            menus2 += "{  ";
+                            if (item.rowspan > 1)
                             {
-                                menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align + "\"";
+                                if (!string.IsNullOrEmpty(item.align))
+                                {
+                                    menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
+                                              item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor +
+                                              "}" + ",align:\"" + item.align + "\"";
+                                }
+                                else
+                                {
+                                    menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
+                                              item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor +
+                                              "}";
+                                }
                             }
                             else
                             {
-                                menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" + item.width + "\",editor:{" + item.editor + "}";
+                                if (!string.IsNullOrEmpty(item.align))
+                                {
+                                    menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
+                                              item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align +
+                                              "\"";
+                                }
+                                else
+                                {
+                                    menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
+                                              item.width + "\",editor:{" + item.editor + "}";
 
+                                }
                             }
+
+
+                            menus2 += "},";
                         }
-
-
-                        menus2 += "},";
                     }
 
                 }
@@ -579,7 +598,7 @@ namespace ESUI.Controllers
 
                     foreach (KeyValuePair<string, string> kv in o2[0])
                     {
-                        sql += kv.Key + ",";
+                        sql += "["+kv.Key + "],";
 
                     }
                     sql = sql.Substring(0, sql.Length - 1);
