@@ -3387,10 +3387,12 @@
     <Content Include="Content\JqueryEasyUI\themes\icons\16\Thumbs.db" />
     <Content Include="Content\JqueryEasyUI\themes\icons\32\Thumbs.db" />
     <Content Include="Content\Login\images\Thumbs.db" />
+    <Content Include="HtmlPage1.html" />
     <Content Include="moon.license">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\linq.min.js" />
+    <Content Include="Scripts\search.js" />
     <Content Include="test.html" />
     <Content Include="upload\file\20150319022047_psb.jpg" />
     <Content Include="Content\ueditor\net\config.json" />
@@ -3474,6 +3476,7 @@
     <Content Include="Views\Excel\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="temp\" />
     <Folder Include="upload\image\20150319\" />
   </ItemGroup>
   <ItemGroup>
