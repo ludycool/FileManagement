@@ -35,7 +35,7 @@ namespace ESUI.Controllers
             //return File(fileStream, "application/ms-excel", string.Format("{0}.xls", Title));
             string filename = Guid.NewGuid().ToString() + ".xlsx";
             var ff = Exporter.Instance(Server.MapPath("~/temp/" + filename )).Download();
-            return File(Server.MapPath("~/temp/" + filename), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "测试文件.xlsx");
+            return File(Server.MapPath("~/temp/" + filename), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", string.Format("{0}.xls", Title));
          // return File(ff, "application/ms-excel", string.Format("{0}.xls", "czc"));
         }
 
