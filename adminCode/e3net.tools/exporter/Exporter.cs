@@ -176,9 +176,9 @@ namespace Zephyr.Core
             }
 
             export.FillTitleData(0, 0, "", _toptile);
-            export.MergeCell(0, 0, currentCell-1, 1);
+            export.MergeCell(0, 0, currentCell - 1, 1);
             //设置题头样式
-            export.SetHeadStyle(currentCell, 0, currentCell - 1, currentRow - 1);
+            export.SetHeadStyle(0, 0 , currentCell - 1, currentRow - 1);
 
             //设置数据样式
             var dataCount = 0;
