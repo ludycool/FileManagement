@@ -185,14 +185,14 @@ namespace Zephyr.Core
           //  headStyle.FillForegroundColor = HSSFColor.LightGreen .index;
            // headStyle.FillPattern =   FillPatternType.SOLID_FOREGROUND;
             //表头单元格边框
-            headStyle.BorderTop = BorderStyle.Thin;
-            headStyle.TopBorderColor = HSSFColor.Black.Index;
-            headStyle.BorderRight = BorderStyle.Thin;
-            headStyle.RightBorderColor = HSSFColor.Black.Index;
-            headStyle.BorderBottom = BorderStyle.Thin;
-            headStyle.BottomBorderColor = HSSFColor.Black.Index;
-            headStyle.BorderLeft = BorderStyle.Thin;
-            headStyle.LeftBorderColor = HSSFColor.Black.Index;
+            //headStyle.BorderTop = BorderStyle.Thin;
+            //headStyle.TopBorderColor = HSSFColor.Black.Index;
+            //headStyle.BorderRight = BorderStyle.Thin;
+            //headStyle.RightBorderColor = HSSFColor.Black.Index;
+            //headStyle.BorderBottom = BorderStyle.Thin;
+            //headStyle.BottomBorderColor = HSSFColor.Black.Index;
+            //headStyle.BorderLeft = BorderStyle.Thin;
+            //headStyle.LeftBorderColor = HSSFColor.Black.Index;
             //表头字体设置
             var font = workbook.CreateFont();
             font.FontHeightInPoints = 12;//字号
