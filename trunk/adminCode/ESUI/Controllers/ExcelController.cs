@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using ESUI.Models;
 using Newtonsoft.Json;
+using Zephyr.Core;
 
 namespace ESUI.Controllers
 {
@@ -21,12 +22,21 @@ namespace ESUI.Controllers
         [HttpPost]
         public FileResult CommonExport(string Title, string Columns, string Data)
         {
-            var tb = JsonConvert.DeserializeObject<DataTable>(Data);
-            var Columnslist = JsonConvert.DeserializeObject<List<Column>>(Columns);
-            var workbook = new Workbook();
-            workbook.CreateSheet(new Sheet(Title, Columnslist, tb));
-            var fileStream = workbook.GetMemoryStream();
-            return File(fileStream, "application/ms-excel", string.Format("{0}.xls", Title));
+            //var tb = JsonConvert.DeserializeObject<DataTable>(Data);
+            //var Columnslist = JsonConvert.DeserializeObject<List<Column>>(Columns);
+            //var workbook = new Workbook();
+            //workbook.CreateSheet(new Sheet(Title, Columnslist, tb));
+            //var tb = JsonConvert.DeserializeObject<DataTable>(Data);
+            //var Columnslist = JsonConvert.DeserializeObject<List<Column>>(Columns);
+            //var workbook = new Workbook();
+            //workbook.CreateSheet(new Sheet(Title, Columnslist, tb));
+            //var fileStream = workbook.GetMemoryStream();
+            //return File(fileStream, "application/ms-excel", string.Format("{0}.xls", Title));
+            //return File(fileStream, "application/ms-excel", string.Format("{0}.xls", Title));
+            string filename = Guid.NewGuid().ToString() + ".xlsx";
+            var ff = Exporter.Instance(Server.MapPath("~/temp/" + filename )).Download();
+            return File(Server.MapPath("~/temp/" + filename), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "测试文件.xlsx");
+         // return File(ff, "application/ms-excel", string.Format("{0}.xls", "czc"));
         }
 
     }
