@@ -40,15 +40,15 @@
 
             });
 
-
-            function loadColum() {
-                var Column = $.ajax({
+    var Column = $.ajax({
                     //获取列数据
                     url: BaseUrl + 'GetBtnColumn',
                     cache: false,
                     data: { Condition: '@ViewBag.RuteUrl' },
                     async: false
                 }).responseText;
+            function loadColum() {
+            
                 var Columndata = eval(Column);
 
                 $('#dg2').datagrid({
