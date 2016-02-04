@@ -324,6 +324,8 @@ var DataBaseFunction = {
     }
 
 }
+
+
 //设置宽高自适应w  h 宽高偏移量
 function PanelAutoResizeWH(PanelSelect, w, h) 
 {
@@ -379,6 +381,8 @@ function AutoMaxH(PanelSelect, h) {
     }
 }
 
+var winWidth = GetwinWidth();
+var winHeight = GetwinHeight();
 //获取窗口高度
 function GetwinHeight() {
     var winHeight = 0;

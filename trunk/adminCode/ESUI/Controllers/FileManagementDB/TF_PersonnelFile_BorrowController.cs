@@ -18,11 +18,11 @@ using System.Data;
 namespace ESUI.Controllers
 {
     //[Export]
-    public class TF_PaperFileController : JsonNetController
+    public class TF_PersonnelFile_BorrowController : JsonNetController
     {
 
         [Dependency]
-        public TF_PaperFileBiz OPBiz { get; set; }
+        public TF_PersonnelFile_BorrowBiz OPBiz { get; set; }
         public ActionResult Index()
         {
             ViewBag.RuteUrl = RuteUrl();
@@ -48,25 +48,25 @@ namespace ESUI.Controllers
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "TF_PaperFile";
+            pc.sys_Table = "TF_PersonnelFile_Borrow";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
             DataSet ds= OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
 
-            // var mql = TF_PaperFileSet.Id.NotEqual("");
+            // var mql = TF_PersonnelFile_BorrowSet.Id.NotEqual("");
             dic.Add("rows", ds.Tables[0]);
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult EditInfo(TF_PaperFile EidModle)
+        public JsonResult EditInfo(TF_PersonnelFile_Borrow EidModle)
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
             bool IsAdd = false;
            
-                EidModle.UpdateTime = DateTime.Now;
+
                 if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
                 {
                     IsAdd = true;
@@ -75,8 +75,9 @@ namespace ESUI.Controllers
                 {
                     EidModle.Id = Guid.NewGuid();
                     EidModle.CreateMan = UserData.UserName;
+                    EidModle.CreateManId = UserData.Id;        
                     EidModle.CreateTime = DateTime.Now;
-                    EidModle.isValid = true;
+    
                     EidModle.isDeleted = false;
                     EidModle.States = 0;
                     try
@@ -98,7 +99,7 @@ namespace ESUI.Controllers
                 }
                 else
                 {
-                    EidModle.WhereExpression = TF_PaperFileSet.Id.Equal(EidModle.Id);
+                    EidModle.WhereExpression = TF_PersonnelFile_BorrowSet.Id.Equal(EidModle.Id);
                     // EidModle.ChangedMap.Remove("id");//移除主键值
                     if (OPBiz.Update(EidModle) > 0)
                     {
@@ -120,8 +121,8 @@ namespace ESUI.Controllers
         }
         public JsonResult GetInfo(string ID)
         {
-            var mql2 = TF_PaperFileSet.SelectAll().Where(TF_PaperFileSet.Id.Equal(ID));
-            TF_PaperFile Rmodel = OPBiz.GetEntity(mql2);
+            var mql2 = TF_PersonnelFile_BorrowSet.SelectAll().Where(TF_PersonnelFile_BorrowSet.Id.Equal(ID));
+            TF_PersonnelFile_Borrow Rmodel = OPBiz.GetEntity(mql2);
             //  groupsBiz.Add(rol);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
