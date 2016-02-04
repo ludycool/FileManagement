@@ -3474,6 +3474,7 @@
     <Content Include="Views\DynamicTable\IndexDynamicColumn.cshtml" />
     <Content Include="Views\DynamicTable\IndexDynamicColumnByUser.cshtml" />
     <Content Include="Views\Excel\Index.cshtml" />
+    <Content Include="Views\DynamicTable\TemplateList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="temp\" />

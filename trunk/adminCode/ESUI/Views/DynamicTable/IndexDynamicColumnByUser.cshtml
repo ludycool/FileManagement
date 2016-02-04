@@ -9,6 +9,7 @@
 
     <script src="~/Content/js/Buttons.js"></script>
     <script src="~/Content/JqueryEasyUI/plugins/jquery.treegrid.js"></script>
+    <script src="~/Scripts/linq.min.js"></script>
     @* ReSharper disable once NotAllPathsReturnValue *@
     <style type="text/css">
         #iconlist li {
@@ -58,13 +59,13 @@
                     //iconCls: 'icon-save',
                     title: '@ViewBag.ViewBag',
                     // onClickCell: onClickCell,
-                    //nowrap: true,
+                    nowrap: true,
                     //singleSelect: true,
-                    //striped: true,
-                    //collapsible: true,
+                    striped: true,
+                    collapsible: true,
                     pagination: true,
-                    //fit: true,
-                    //fitColumns: true,
+                    fit: true,
+                   // fitColumns: true,
                     rownumbers: true,
                     toolbar: [
                     {
@@ -160,6 +161,7 @@
                             if (data == "ok") {
                                 //添加成功  1.关闭弹出层，2.刷新DataGird
                                 alert("编辑成功");
+                                $("#dg2").datagrid("reload");
                                 //$('#DivEditor').dialog('close');
                                 //$(".validatebox-tip").remove();
                                 //// $("#DivEditor").dialog("close");
@@ -180,15 +182,46 @@
 
                 }
 
-            },'-',{
-                    id: 'btnAccept',
-                    text: '删除',
-                    iconCls: 'icon-save',
-                    handler: function() {
+            }, '-',{
+                id: 'btnAccept',
+                text: '删除',
+                iconCls: 'icon-remove',
+                handler: function() {
 
-                        Del();
-                    }}
-                    ],
+                    Del();
+                }
+            }
+            , '-', {
+                id: 'btnAccept',
+                text: '导出',
+                iconCls: 'icon-remove',
+                handler: function () {
+
+                    exportToExcel();
+                }
+            }
+            //, '-', {
+            //    id: 'btnchax',
+            //    text: '查询',
+            //    iconCls: '',
+            //    handler: function () {
+
+            //        $('#DivEditor').dialog({
+            //            title: '添加材料',
+            //            //width: 400,
+            //            //height: 200,
+            //            closed: false,
+            //            cache: false,
+            //            // href: 'get_content.php',
+            //            modal: true, top: 50,
+            //            onClose: function () {
+            //                //解决弹出窗口关闭后，验证消息还显示在最上面
+
+            //            }
+            //        });
+            //    }
+            //}
+            ],
 
                     onAfterEdit: function (rowIndex, rowData, changes) {
 
@@ -214,38 +247,34 @@
                         }
 
 
-                    },
-                });
-    }
-    function planUrl(val, row) {
-
-        return '<a   >' + 2015001 + '</a>';
-
-    }
-    //删除
-    function Del() {
-        //DataBaseFunction.deleteInfo("dg", "ID", "TrueName");
-        //得到按钮选择的数据的ID
-        var rows = $("#dg2").datagrid("getSelections");
-        //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
-        if (rows.length >= 1) {
-            //遍历出按钮选择的数据的信息，这就是按钮按钮选择删除的按钮ID的信息
-            var ids = "";   //1,2,3,4,5
-            for (var i = 0; i < rows.length; i++) {
-                //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
-                ids += "'" + rows[i]["ID"] + "',";
-
             }
-            //最后去掉最后的那一个,
-            ids = ids.substring(0, ids.length - 1);
-            //获取按钮选择的按钮信息，如果按钮选择了已经登录的按钮的话需要给出不能删除的信息
-            //var Name = "";
-            //for (var i = 0; i < rows.length; i++) {
-            //    Name += rows[i][Namefield] + ",";
-            //}
-            //Name = Name.substring(0, Name.length - 1);
-            //首先取出来到底是直接删除还是伪删除发送异步请求的地址和是否是伪删除的参数
-            var postData = "";
+            });
+            }
+
+            //删除
+            function Del() {
+                //DataBaseFunction.deleteInfo("dg", "ID", "TrueName");
+                //得到按钮选择的数据的ID
+                var rows = $("#dg2").datagrid("getSelections");
+                //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
+                if (rows.length >= 1) {
+                    //遍历出按钮选择的数据的信息，这就是按钮按钮选择删除的按钮ID的信息
+                    var ids = "";   //1,2,3,4,5
+                    for (var i = 0; i < rows.length; i++) {
+                        //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
+                        ids += "'" + rows[i]["ID"] + "',";
+                        
+                    }
+                    //最后去掉最后的那一个,
+                    ids = ids.substring(0, ids.length - 1);
+                    //获取按钮选择的按钮信息，如果按钮选择了已经登录的按钮的话需要给出不能删除的信息
+                    //var Name = "";
+                    //for (var i = 0; i < rows.length; i++) {
+                    //    Name += rows[i][Namefield] + ",";
+                    //}
+                    //Name = Name.substring(0, Name.length - 1);
+                    //首先取出来到底是直接删除还是伪删除发送异步请求的地址和是否是伪删除的参数
+                    var postData = "";
 
             postData = {
                 IDSet: ids, CategoryTableID: '@ViewBag.RuteUrl'
@@ -357,23 +386,23 @@
         //    }
         //});
 
-        //发送异步请求到后台保存按钮数据
-        $.post(BaseUrl + 'ColumnEditInfo', postData, function (data) {
-            if (data = "OK") {
-                //添加成功  1.关闭弹出层，2.刷新DataGird
-                alert("编辑成功");
-                $('#DivEditor').dialog('close');
-                $(".validatebox-tip").remove();
-                // $("#DivEditor").dialog("close");
-                $("#dg").datagrid("reload");
-                $("#ff").form("clear");
-                loadColum();
-                bindconbox();
-            } else {
-                alert("编辑失败，请您检查");
+                //发送异步请求到后台保存按钮数据
+                $.post(BaseUrl + 'ColumnEditInfo', postData, function(data) {
+                    if (data = "OK") {
+                        //添加成功  1.关闭弹出层，2.刷新DataGird
+                        alert("编辑成功");
+                        $('#DivEditor').dialog('close');
+                        $(".validatebox-tip").remove();
+                        // $("#DivEditor").dialog("close");
+                        $("#dg").datagrid("reload");
+                        $("#ff").form("clear");
+                        loadColum();
+                       // bindconbox();
+                    } else {
+                        alert("编辑失败，请您检查");
+                    }
+                });
             }
-        });
-    }
 
     //修改按钮的信息
     function ShowUpdateInfo(browse) {
@@ -417,8 +446,62 @@
             }
         });
 
-    }
+            }
+            function exportToExcel() {
+                $("#exportToExcelForm").remove();
+                var form = $("<form>");//定义一个form表单
+                form.attr("id", "exportToExcelForm");
+                form.attr("style", "display:none");
+                form.attr("target", "");
+                form.attr("method", "post");
+                form.attr("action", "/Excel/CommonExport");
+                var input1 = $("<input>");
+                input1.attr("type", "hidden");
+                input1.attr("name", "Title");
+                input1.attr("value", '@ViewBag.ViewBag');
+            var input2 = $("<input>");
+            input2.attr("type", "hidden");
+            input2.attr("name", "titles");
+            input2.attr("value", JSON.stringify(getColumns()));
+            var input4 = $("<input>");
+            input4.attr("type", "hidden");
+            input4.attr("name", "fileType");
+            input4.attr("value", 'xls');
+            var input3 = $("<input>");
+            input3.attr("type", "hidden");
+            input3.attr("name", "dataGetter");
+            input3.attr("value", JSON.stringify(getData($('#dg2').datagrid("getSelections"))));
+            $("body").append(form);//将表单放置在web中
+            form.append(input1);
+            form.append(input2);
+            form.append(input3);  form.append(input4);
+            form.submit();//表单提交
 
+            $("#exportToExcelForm").remove();
+        }
+
+            function getData(Data) {
+                var allColsTitle = $("#dg2").datagrid("options").columns;
+            return Enumerable.From(Data).Select(function (c) {
+                var obj = {};
+                for (var i in allColsTitle[0]) {
+                    obj[allColsTitle[0][i].field] = c[allColsTitle[0][i].field];
+                }
+                return obj
+            }).ToArray();
+        }
+
+        function getColumns() {
+            var grid =           $("#dg2").datagrid("options") ;
+            var titles = [[]], length = Math.max(grid.frozenColumns.length, grid.columns.length);
+            //alert(grid.columns[0].field);
+        
+          for (var i = 0; i < length; i++) {
+              titles[i] = (grid.frozenColumns[i] || []).concat(grid.columns[i] || []);
+          }
+            return titles;
+
+        }
 
         </script>
     }

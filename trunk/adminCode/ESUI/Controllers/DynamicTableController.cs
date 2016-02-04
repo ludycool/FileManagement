@@ -749,5 +749,10 @@ namespace ESUI.Controllers
 
         }
 
+        public ActionResult TemplateList()
+        {
+            return View();
+        }
+
     }
 }
