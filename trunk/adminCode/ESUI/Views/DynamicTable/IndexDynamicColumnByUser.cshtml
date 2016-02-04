@@ -160,7 +160,7 @@
 
                             if (data == "ok") {
                                 //添加成功  1.关闭弹出层，2.刷新DataGird
-                                alert("编辑成功");
+                                alert("保存成功");
                                 $("#dg2").datagrid("reload");
                                 //$('#DivEditor').dialog('close');
                                 //$(".validatebox-tip").remove();
@@ -173,7 +173,7 @@
                                 $("#dg2").datagrid('rejectChanges');
 
                                 $("#dg2").datagrid('unselectAll');
-                                alert("编辑失败，请您检查");
+                                alert("保存失败，请您检查");
 
                             }
                         }
