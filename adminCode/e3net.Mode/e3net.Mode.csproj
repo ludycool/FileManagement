@@ -64,6 +64,16 @@
     <Compile Include="FileManagementDB\TF_ElectronicFile.cs" />
     <Compile Include="FileManagementDB\TF_LifeComments.cs" />
     <Compile Include="FileManagementDB\TF_PaperFile.cs" />
+    <Compile Include="FileManagementDB\TF_PersonnelFile.cs" />
+    <Compile Include="FileManagementDB\TF_PersonnelFile_Borrow.cs" />
+    <Compile Include="FileManagementDB\TF_PersonnelFile_Consult.cs" />
+    <Compile Include="FileManagementDB\TF_PersonnelFile_Transmitting_In.cs" />
+    <Compile Include="FileManagementDB\TF_PersonnelFile_Transmitting_In_Item.cs" />
+    <Compile Include="FileManagementDB\TF_PersonnelFile_Transmitting_Out.cs" />
+    <Compile Include="FileManagementDB\TF_PersonnelFile_Transmitting_Out_Item.cs" />
+    <Compile Include="FileManagementDB\TF_PersonnelFile_Units_In.cs" />
+    <Compile Include="FileManagementDB\TF_PersonnelFile_Units_Out.cs" />
+    <Compile Include="FileManagementDB\TF_Units.cs" />
     <Compile Include="File_Image.cs" />
     <Compile Include="RMS\V_Role.cs" />
     <Compile Include="SysItem.cs" />

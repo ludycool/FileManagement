@@ -18,11 +18,11 @@ using System.Data;
 namespace ESUI.Controllers
 {
     //[Export]
-    public class TF_PaperFileController : JsonNetController
+    public class TF_UnitsController : JsonNetController
     {
 
         [Dependency]
-        public TF_PaperFileBiz OPBiz { get; set; }
+        public TF_UnitsBiz OPBiz { get; set; }
         public ActionResult Index()
         {
             ViewBag.RuteUrl = RuteUrl();
@@ -48,20 +48,21 @@ namespace ESUI.Controllers
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "TF_PaperFile";
+            pc.sys_Table = "TF_Units";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
+            //List<TF_Units> list2 = OPBiz.GetPagingData<TF_Units>(pc);
             DataSet ds= OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
 
-            // var mql = TF_PaperFileSet.Id.NotEqual("");
+            // var mql = TF_UnitsSet.Id.NotEqual("");
             dic.Add("rows", ds.Tables[0]);
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult EditInfo(TF_PaperFile EidModle)
+        public JsonResult EditInfo(TF_Units EidModle)
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
             bool IsAdd = false;
@@ -78,7 +79,6 @@ namespace ESUI.Controllers
                     EidModle.CreateTime = DateTime.Now;
                     EidModle.isValid = true;
                     EidModle.isDeleted = false;
-                    EidModle.States = 0;
                     try
                     {
                         OPBiz.Add(EidModle);
@@ -98,7 +98,7 @@ namespace ESUI.Controllers
                 }
                 else
                 {
-                    EidModle.WhereExpression = TF_PaperFileSet.Id.Equal(EidModle.Id);
+                    EidModle.WhereExpression = TF_UnitsSet.Id.Equal(EidModle.Id);
                     // EidModle.ChangedMap.Remove("id");//移除主键值
                     if (OPBiz.Update(EidModle) > 0)
                     {
@@ -120,8 +120,8 @@ namespace ESUI.Controllers
         }
         public JsonResult GetInfo(string ID)
         {
-            var mql2 = TF_PaperFileSet.SelectAll().Where(TF_PaperFileSet.Id.Equal(ID));
-            TF_PaperFile Rmodel = OPBiz.GetEntity(mql2);
+            var mql2 = TF_UnitsSet.SelectAll().Where(TF_UnitsSet.Id.Equal(ID));
+            TF_Units Rmodel = OPBiz.GetEntity(mql2);
             //  groupsBiz.Add(rol);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }

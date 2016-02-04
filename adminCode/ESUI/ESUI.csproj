@@ -244,6 +244,10 @@
     <Compile Include="Controllers\FileManagementDB\TF_PaperFileController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_ElectronicFileController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_LifeCommentsController.cs" />
+    <Compile Include="Controllers\FileManagementDB\TF_PersonnelFileController.cs" />
+    <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_BorrowController.cs" />
+    <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_ConsultController.cs" />
+    <Compile Include="Controllers\FileManagementDB\TF_UnitsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManuController.cs" />
@@ -3475,6 +3479,10 @@
     <Content Include="Views\DynamicTable\IndexDynamicColumnByUser.cshtml" />
     <Content Include="Views\Excel\Index.cshtml" />
     <Content Include="Views\DynamicTable\TemplateList.cshtml" />
+    <Content Include="Views\TF_PersonnelFile\Index.cshtml" />
+    <Content Include="Views\TF_Units\Index.cshtml" />
+    <Content Include="Views\TF_PersonnelFile\SetUnitsIn.cshtml" />
+    <Content Include="Views\TF_PersonnelFile\SetUnitsOut.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="temp\" />

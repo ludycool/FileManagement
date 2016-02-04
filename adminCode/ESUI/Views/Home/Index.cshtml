@@ -143,6 +143,11 @@
                 });
             });
         }
+        //跳转url  window.parent.JumpP("哈哈", "TF_PersonnelFile/SetUnits", "icon-plugin");
+        function JumpP(Name, URL, iconCls) {
+            addTab(Name, URL, 'icon '+iconCls);
+        }
+
         //关闭页面  Pname 标题 window.parent.closeN("发布公告");
         function closeN(Pname) {
             $('.tabs-inner span').each(function (i, n) {
@@ -151,6 +156,13 @@
                     $('#tabs').tabs('close', t);
                 }
             });
+        }
+        //关闭当前页面 window.parent.closeC();
+        function closeC() {
+            var currentTab = $('#tabs').tabs('getSelected');
+           var   currentTabIndex = $('#tabs').tabs('getTabIndex', currentTab);
+            $('#tabs').tabs('close', currentTabIndex);
+
         }
         $(function () {
 

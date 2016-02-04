@@ -64,6 +64,16 @@
     <Compile Include="FileManagementDB\ITF_PaperFileDao.cs" />
     <Compile Include="FileManagementDB\ITF_LifeCommentsDao.cs" />
     <Compile Include="FileManagementDB\ITF_ElectronicFileDao.cs" />
+    <Compile Include="FileManagementDB\ITF_PersonnelFileDao.cs" />
+    <Compile Include="FileManagementDB\ITF_PersonnelFile_BorrowDao.cs" />
+    <Compile Include="FileManagementDB\ITF_PersonnelFile_ConsultDao.cs" />
+    <Compile Include="FileManagementDB\ITF_PersonnelFile_Transmitting_InDao.cs" />
+    <Compile Include="FileManagementDB\ITF_PersonnelFile_Transmitting_In_ItemDao.cs" />
+    <Compile Include="FileManagementDB\ITF_PersonnelFile_Transmitting_OutDao.cs" />
+    <Compile Include="FileManagementDB\ITF_PersonnelFile_Transmitting_Out_ItemDao.cs" />
+    <Compile Include="FileManagementDB\ITF_PersonnelFile_Units_InDao.cs" />
+    <Compile Include="FileManagementDB\ITF_PersonnelFile_Units_OutDao.cs" />
+    <Compile Include="FileManagementDB\ITF_UnitsDao.cs" />
     <Compile Include="IBaseDao.cs" />
     <Compile Include="IFile_ImageDao.cs" />
     <Compile Include="ISys_DictionaryDao.cs" />
