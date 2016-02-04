@@ -308,7 +308,10 @@ namespace e3net.DAL
                 parameters[4].Value = pc.sys_PageIndex;
                 parameters[5].Direction = ParameterDirection.Output;
                 parameters[6].Value = pc.sys_Where;
-                return db.ExecuteProToDataSet(procName, parameters);
+           var d=  db.ExecuteProToDataSet(procName, parameters);
+                pc.RCount = Convert.ToInt32(parameters[5].Value);
+                pc.PCount = pc.RCount / pc.sys_PageIndex;
+                return d;
             }
         }
         #endregion
