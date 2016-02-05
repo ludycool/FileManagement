@@ -18,10 +18,12 @@
             @Html.Raw(ViewBag.RuteUrl)
          @Html.Raw(ViewBag.toolbar)
 
-
+            var CurrentList;
             jQuery(document).ready(function () {
                 AutoWH("#body", 40, 42);//自适应宽度
                 DataGridSet();
+                PersonnelFile_Units();
+                CurrentList=  new Array();//当前选择的
             })
             function DataGridSet() {
                 $('#dg').datagrid({
@@ -71,6 +73,7 @@
 
                     }
                 });
+                $('#TransmittingTime').datetimebox('setValue', '9999');
                 $(".validatebox-tip").remove();//清除验证样式
             }
 
@@ -84,7 +87,7 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.Series + "字" + rows.Nos+"号").window('resize', { top: 50 });
+                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.Series + "字" + rows.Nos + "号").window('resize', { top: 50 });
                 $(".validatebox-tip").remove();//清除验证样式
                 var ID = rows.Id;  //获取到了用选择的ID
                 $.ajax({
@@ -96,6 +99,7 @@
                     success: function (data) {
                         //var result = eval('(' + data + ')');
                         DataBaseFunction.BindForm("ff", data);
+                        $('#TransmittingTime').datetimebox('setValue', data.TransmittingTime);
                     }
                 });
 
@@ -138,6 +142,64 @@
             function Del() {
                 DataBaseFunction.deleteInfo("dg", "Id", "TransmittingMan");
             }
+
+            function PersonnelFile_Units() {
+                $('#tblist').datagrid({
+                    url: BaseUrl + 'PersonnelFile_Units',
+                    columns: [[
+                          { field: 'ck', checkbox: true },
+                { field: 'RealName', title: '姓名', width: 100, sortable: true },
+              //{ field: 'Category', title: '类别', width: 100, sortable: true },
+              { field: 'Units', title: '单位', width: 100, sortable: true },
+              { field: 'Duties', title: '职务', width: 100, sortable: true },
+              { field: 'Summary', title: '摘要', width: 100, sortable: true }
+                    ]],
+                    iconCls: 'icon-save',
+                    title: '可用的档案',
+                    nowrap: true,
+                    fitColumns: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    width: 620,
+                    height: 400,
+                    pageSize: 10,
+                    pagination: true,
+                    rownumbers: true,
+                    sortName: 'CreateTime',
+                    sortOrder: 'desc',
+                    toolbar: [{
+                        id: 'btnadd',
+                        text: '选择',
+                        iconCls: 'icon-add',
+                        handler: function () {
+                            addItem();
+                        }
+                    }]
+                });
+            }
+            function selectItem()
+            {
+                var rows = $("#tblist").datagrid('getSelections');
+                
+                $.each(rows, function (j, o) {
+                    var ishave = false;
+                    if (CurrentList.length > 0) {
+                       
+                        $.each(CurrentList, function (k, m) {
+                            if (m.Id == o.Id) {
+                                ishave = true;
+                                return false;
+                            }
+                        });
+                    }
+                    if (!ishave) {
+                        CurrentList.push(rows);
+                    }
+                });
+
+
+            }
         </script>
     }
 
@@ -169,7 +231,7 @@
                         <input type="text" class="textbox" name="Series_like" style="width: 200px;" />
                     </td>
                 </tr>
-                       <tr>
+                <tr>
                     <td>
                         <label>号：</label></td>
                     <td>
@@ -188,75 +250,61 @@
     <!------------------------弹出信息的弹出层---------------------------------->
     <div id="DivEditor" class="easyui-dialog" style="width: 700px;" data-options="closed:true,resizable:true,modal:true"
         buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:490,width:680,border:false">
+        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:700,width:680,border:false">
+
+              <table id="tblist"></table>
             <form id="ff" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="Id" />
+                <input type="hidden" name="FistName" />
+                <input type="hidden" name="NumberS" />
+                <input type="hidden" name="CreateManId" />
+                <input type="hidden" name="CreateMan" />
+                <input type="hidden" name="States" />
+                <input type="hidden" name="CreateTime" />
+                <input type="hidden" name="isDeleted" />
                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
-                    <input type="hidden" name="Id" />
-                    <input type="hidden" name="CreateMan" />
-                    <input type="hidden" name="CreateTime" />
-                    <input type="hidden" name="UpdateTime" />
-                    <input type="hidden" name="States" />
-                    <input type="hidden" name="isValid" />
-                    <input type="hidden" name="isDeleted" />
                     <tr>
-                        <td style="width: 200px;">
-                            <label>名称：</label></td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="TName" data-options="required:true" /></td>
+                        <td style="width: 120px;">
+                            <label>转递人：</label></td>
+                        <td style="width:520px;">
+                            <input class="easyui-validatebox textbox" type="text" name="TransmittingMan" /></td>
                     </tr>
                     <tr>
                         <td>
-                            <label>类别：</label></td>
+                            <label>字：</label></td>
                         <td>
-                            <select id="Category" name="Category" class="easyui-combotree" style="width: 200px;"
-                                data-options="required:true">
-                            </select>
-                        </td>
+                            <input class="easyui-validatebox textbox" type="text" name="Series" /></td>
                     </tr>
                     <tr>
                         <td>
-                            <label>单位：</label></td>
+                            <label>号：</label></td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Units" /></td>
+                            <input class="easyui-validatebox textbox" type="text" name="Nos" /></td>
                     </tr>
                     <tr>
                         <td>
-                            <label>存放位置：</label></td>
+                            <label>正本（卷）：</label></td>
                         <td>
-                            <textarea class="areabox" name="location" style="height: 100px;"></textarea></td>
+                            <input class="easyui-validatebox textbox" type="text" name="OriginalCount" /></td>
                     </tr>
                     <tr>
                         <td>
-                            <label>扫描件：</label></td>
+                            <label>副本（卷）：</label></td>
                         <td>
-
-                            <div style="line-height: 20px; height: 20px; display: block; width: 450px;">
-                                <span style="font-size: 16px; float: left;">
-                                    <input type="file" id="fileimg" name="file" style="width: 50px;" onchange="AddImg()" />
-                                </span>
-                                <span style="padding-left: 10px; float: left; color: red;">(右键另存为，可保存文件)</span>
-                            </div>
-
-                            <div style="display: none">
-                                <div id="content" style="display: block; width: 450px; float: left; margin-top: 2px;">
-                                    <input id="fileId" type="hidden" />
-                                    <a href="/Content/js/ImgUp.js" target="_blank" id="aflie"></a>
-                                    <a id="jian" href="#" class="easyui-linkbutton" style="float: right;" data-options="iconCls:'icon-delete'">移除</a>
-                                </div>
-                            </div>
-                            <div id="zhi" style="display: block; width: 450px;">
-                            </div>
-
-                        </td>
+                            <input class="easyui-validatebox textbox" type="text" name="DuplicateCount" /></td>
                     </tr>
                     <tr>
                         <td>
-                            <label>摘要：</label></td>
+                            <label>材料（份）：</label></td>
                         <td>
-                            <textarea class="areabox" name="Summary"></textarea></td>
+                            <input class="easyui-validatebox textbox" type="text" name="MaterialCount" /></td>
                     </tr>
-
-
+                    <tr>
+                        <td>
+                            <label>转递时间：</label></td>
+                        <td>
+                            <input class="easyui-datetimebox" name="TransmittingTime" id="TransmittingTime" data-options="required:true,showSeconds:false" style="width: 200px"></td>
+                    </tr>
                 </table>
             </form>
         </div>

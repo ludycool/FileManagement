@@ -146,5 +146,44 @@ namespace ESUI.Controllers
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+      
+        /// <summary>
+        /// 单位可用
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        ///   [HttpPost]
+        public JsonResult PersonnelFile_Units()
+        {
+            int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            int pageSize = Request["rows"] == null ? 1000 : int.Parse(Request["rows"]);
+          string  Where = "  (isDeleted=0) ";
+          string table = "TF_PersonnelFile";
+            if (UserData.UserTypes != 1)
+            {
+                 Where += " and ( UnitsId='" + UserData.DepartmentId + "')";
+                 table = "v_TF_PersonnelFile_Units_In";
+            }
+            ////字段排序
+            String sortField = Request["sort"];
+            String sortOrder = Request["order"];
+            PageClass pc = new PageClass();
+            pc.sys_Fields = "*";
+            pc.sys_Key = "Id";
+            pc.sys_PageIndex = pageIndex;
+            pc.sys_PageSize = pageSize;
+            pc.sys_Table = table;
+            pc.sys_Where = Where;
+            pc.sys_Order = " " + sortField + " " + sortOrder;
+            DataSet ds = OPBiz.GetPagingDataP(pc);
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+            // var mql = TF_PersonnelFileSet.Id.NotEqual("");
+            dic.Add("rows", ds.Tables[0]);
+            dic.Add("total", pc.RCount);
+            return Json(dic, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -119,6 +119,15 @@ namespace e3net.Mode.RMS
             get { return GetPropertyValue<String>("Tel"); }
             set { SetPropertyValue("Tel", value); }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String DepartmentName
+        {
+            get { return GetPropertyValue<String>("DepartmentName"); }
+            set { SetPropertyValue("DepartmentName", value); }
+        }
     }
 
     [Table("[V_UserRole]", DbType.SqlServer)]
@@ -192,6 +201,11 @@ namespace e3net.Mode.RMS
         /// 
         /// </summary>
         public static readonly FieldBase Tel = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[Tel]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase DepartmentName = new FieldBase(DbType.SqlServer, "[V_UserRole]", FieldType.Common, "[DepartmentName]");
     }
 
 }

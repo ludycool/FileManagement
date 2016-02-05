@@ -1,6 +1,7 @@
 ﻿using e3net.BLL;
 using e3net.BLL.RMS;
 using e3net.Mode;
+using e3net.Mode.FileManagementDB;
 using e3net.Mode.RMS;
 using e3net.Mode.V_mode;
 using System;
@@ -59,15 +60,25 @@ namespace ESUI.httpHandle
                     break;
             }
         }
-        public string GetDepartment()
-        {
-            RMS_DepartmentBiz DDBiz = new RMS_DepartmentBiz();
-            var sql = RMS_DepartmentSet.SelectAll();
-            List<RMS_Department> listAll = DDBiz.GetOwnList<RMS_Department>(sql);
-            string jsonstring = DDBiz.GetTree(listAll);
-            return jsonstring;
-        }
 
+
+        //public string GetDepartment()
+        //{
+        //    RMS_DepartmentBiz DDBiz = new RMS_DepartmentBiz();
+        //    var sql = RMS_DepartmentSet.SelectAll();
+        //    List<RMS_Department> listAll = DDBiz.GetOwnList<RMS_Department>(sql);
+        //    string jsonstring = DDBiz.GetTree(listAll);
+        //    return jsonstring;
+        //}
+        public string GetDepartment( )
+        {
+            List<TF_Units> AllList = new List<TF_Units>();
+            var sql = TF_UnitsSet.SelectAll();
+            AllList = OPBiz.GetOwnList<TF_Units>(sql);
+
+            return JsonHelper.ToJson(AllList, true);
+
+        }
 
         public string GetSys_CityArea(HttpContext context)
         {
