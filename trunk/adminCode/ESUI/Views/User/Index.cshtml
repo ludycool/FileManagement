@@ -16,11 +16,6 @@
           BindUser();
           BindDepertment();
 
-          $('#DeparTree').combotree({
-              width: 150,
-              emptyText: '请选择'
-          });
-
           BindRole();
       });
 
@@ -52,6 +47,7 @@
               { field: 'TrueName', title: '姓名', width: 200 },
                { field: 'RoleName', title: '角色', width: 200 },
                { field: 'Password', title: '密码', width: 100 },
+                { field: 'DepartmentName', title: '部门', width: 100 },
               { field: 'CreateTime', title: '创建时间', width: 200 }
               ]],
               nowrap: true,
@@ -104,20 +100,19 @@
 
       }
       function BindDepertment() {
-          $('#tbDepartMent').treegrid({
-              iconCls: 'icon-users',
-              rownumbers: true,
-              animate: true,
-              collapsible: true,
-              fitColumns: true,
-              method: 'get',
-              idField: 'Id',
-              treeField: 'Name',
-              showFooter: true,
-              fit: true,
+
+          $('#tbDepartMent').datagrid({
+              url: '/httpHandle/DictionaryHandler.ashx?action=GetDepartment',
               columns: [[
-                  { title: '名称', field: 'Name', width: 140 }
+                  { field: 'TName', title: '名称', width: 140 }
               ]],
+              nowrap: true,
+              singleSelect: true,
+              striped: true,
+              collapsible: true,
+              pageSize: 1000,
+              fit: true,
+              rownumbers: true,
               onClickRow: function () {
 
                   DeParmentId = $("#tbDepartMent").datagrid("getSelections")[0].Id;  //获取到了用按钮选择的ID
@@ -126,32 +121,9 @@
                       page: 1,
                       DepartmentId: DeParmentId
                   });
-                  //$.ajax({
-                  //    url: BaseUrl + 'GetList',
-                  //    type: 'POST',
-                  //    cache: false,
-                  //    data: {
-                  //        page: 1,
-                  //        DepartmentId: DeParmentId
-                  //    },
-                  //    error: function () { alert('GetList'); },
-                  //    success: function (result) {
-                  //        $('#dg').datagrid('loadData', result);
-                  //    }
-                  //});
               }
           });
-          $.ajax({
-              url: '/httpHandle/DictionaryHandler.ashx?action=GetDepartment',
-              type: 'POST',
-              cache: false,
-              error: function () { alert('GetDepartment'); },
-              success: function (result) {
-                  var data = eval(result);
-                  $('#tbDepartMent').treegrid('loadData', data);
-                  $('#DeparTree').combotree('loadData', ConvertToTreeData(data));
-              }
-          });
+          $('#DepartmentId').combobox('reload',  '/httpHandle/DictionaryHandler.ashx?action=GetDepartment');  // 使用新的URL重新载入列表数据
 
 
       }
@@ -234,12 +206,12 @@
           }
           //获取需要传递的参数传递给前台 push
           var postData = $("#ff").serializeArray();
-          var DeparId =
-          {
-              'name': "DepartmentId",        //属性名用引号括起来，属性间由逗号隔开
-              'value': $('#DeparTree').combotree('getValue')
-          };
-          postData.push(DeparId);
+          //var DeparId =
+          //{
+          //    'name': "DepartmentId",        //属性名用引号括起来，属性间由逗号隔开
+          //    'value': $('#DepartmentId').combotree('getValue')
+          //};
+          //postData.push(DeparId);
 
 
           //发送异步请求到后台保存按钮数据
@@ -300,7 +272,7 @@
 
                       $("#" + items).val(result[items]);
                   }
-                  $('#DeparTree').combotree('setValue', result['DepartmentId']);
+                  $('#DepartmentId').combobox('setValue', result['DepartmentId']);
 
               }
           });
@@ -369,7 +341,7 @@
 <body>
 
     <div  class="easyui-layout"  data-options="fit:true" style="margin:5px;">
-    <div region="west" split="true" title="所属部门" style="width:180px;"><table id="tbDepartMent"></table></div>
+    <div region="west" split="true" title="所属单位" style="width:180px;"><table id="tbDepartMent"></table></div>
     <div region="center" title="用户" style="padding:5px;background:#eee;" iconCls: 'icon-user_earth'><table id="dg" ></table></div>
      </div>
     <div id="DivEditor" class="easyui-dialog" style="width:580px;padding:10px 20px"
@@ -396,9 +368,11 @@
 
 
                                           <tr>
-                        <td><label >部门：</label></td>
+                        <td><label >单位：</label></td>
                         <td>
-                            <ul id="DeparTree"></ul>
+                         
+                                 <input id="DepartmentId" class="easyui-combobox" name="DepartmentId"
+                            data-options="valueField:'Id',textField:'TName'" />
                         </td>           
                         
                     </tr>

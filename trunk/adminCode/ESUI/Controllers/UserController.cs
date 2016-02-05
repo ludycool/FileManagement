@@ -9,11 +9,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity;
+using System.Data;
 
 namespace ESUI.Controllers
 {
     //  [Export]
-    public class UserController : BaseController
+    public class UserController : JsonNetController
     {
         //
         // GET: /User/
@@ -72,12 +73,9 @@ namespace ESUI.Controllers
             pc.sys_Order = "Id";
 
 
-            List<V_UserRole> list2 = OPBiz.GetPagingData<V_UserRole>(pc);
+            DataSet ds = OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
-
-
-            // var mql = RMS_UserSet.Id.NotEqual("");
-            dic.Add("rows", list2);
+            dic.Add("rows", ds.Tables[0]);
             dic.Add("total", pc.RCount);
 
             return Json(dic, JsonRequestBehavior.AllowGet);
