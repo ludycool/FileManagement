@@ -79,13 +79,11 @@ namespace ESUI.Controllers
             //TimeSpan ts = new TimeSpan(0, 1, 0, 0, 0);//过期时间为1分钟
             //cookie.Expires = dt.Add(ts);//设置过期时间
 
-            //datajson = Server.HtmlEncode(datajson);
             //cookie.Values.Add("AdminUserInfo", datajson);
             //Response.AppendCookie(cookie);
 
 
             //string dataj = Response.Cookies["UserData"]["AdminUserInfo"];
-            //dataj = Server.HtmlDecode(dataj);
             //AdminUserInfo item = JsonHelper.FromJson<AdminUserInfo>(dataj);
             #endregion
 
