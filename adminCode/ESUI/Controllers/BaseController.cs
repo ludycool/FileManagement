@@ -135,6 +135,23 @@ namespace ESUI.Controllers
         }
 
 
+        public static string GetNewSql(string sqlSet)
+        {
+            string sql = " 1=1 ";
+
+            if (!string.IsNullOrEmpty(sqlSet))
+            {
+                
+            
+            var f = JsonConvert.DeserializeObject<List<Searchclass>>(sqlSet);
+            foreach (Searchclass searchclass in f)
+            {
+                sql += searchclass.BinaryOperation + " " + searchclass.FieldName +" "+ searchclass.CompareType +" "+
+                       searchclass.KeyValue;
+            }
+            }
+            return sql;
+        }
         #region 获取客户端IP地址
 
 
