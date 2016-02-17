@@ -492,7 +492,7 @@ namespace ESUI.Controllers
         /// <param name="Condition"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult GetAllJsonResultList(string Condition)
+        public JsonResult GetAllJsonResultList(string Condition,string seachsql)
         {
 
             var modle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
@@ -508,7 +508,7 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = modle.UserTableName;
-            pc.sys_Where = "1=1";
+            pc.sys_Where = GetNewSql(seachsql);
             pc.sys_Order = "ID";
 
             var list2 = OPBiz.ExecuteProToDataSetNew("sp_PaginationEx", pc);
@@ -754,5 +754,13 @@ namespace ESUI.Controllers
             return View();
         }
 
+        public JsonResult GetSeachJson(string Condition)
+        {
+            var list3 =
+                CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition +
+                                          "' and (title<>'ck') and IsEnable=1 and MergeHeader<>1 ORDER BY  SortNo");
+
+            return Json(list3);
+        }
     }
 }
