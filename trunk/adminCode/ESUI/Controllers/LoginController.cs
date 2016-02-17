@@ -53,38 +53,16 @@ namespace ESUI.Controllers
             ViewData["UserType"] = GenerateList();
             //if (Session["ValidateCode"] != null)
             //{
-            //if (Request.Cookies["User"] != null)//Cookies保存 获取解析
-            //{
-            //    HttpCookie cookie = new HttpCookie("User");//初使化并设置Cookie的名称
-            //    DateTime dt = DateTime.Now;
-            //    TimeSpan ts = new TimeSpan(0, 1, 0, 0, 0);//过期时间为1分钟
-            //    cookie.Expires = dt.Add(ts);//设置过期时间
-            //    string info = JsonHelper.ToJson(UserData.ListManus, true);
-            //    string manuInfo = Server.HtmlEncode(info);
-            //    cookie.Values.Add("Manus", manuInfo);
-
-            //    string UserDataString = Server.HtmlEncode(Request.Cookies["User"]["UserInfo"]);
-            //    string ManusString = Server.HtmlEncode(Request.Cookies["User"]["Manus"]);
-            //    V_UserRole Rmodel = JsonHelper.FromJson<V_UserRole>(UserDataString);
-            //}
-
-
-
-
-            #region 可用代码
-
-            //string datajson = JsonHelper.ToJson(UserData);
-            //HttpCookie cookie = new HttpCookie("UserData");//初使化并设置Cookie的名称
-            //DateTime dt = DateTime.Now;
-            //TimeSpan ts = new TimeSpan(0, 1, 0, 0, 0);//过期时间为1分钟
-            //cookie.Expires = dt.Add(ts);//设置过期时间
-
-            //cookie.Values.Add("AdminUserInfo", datajson);
-            //Response.AppendCookie(cookie);
-
-
-            //string dataj = Response.Cookies["UserData"]["AdminUserInfo"];
-            //AdminUserInfo item = JsonHelper.FromJson<AdminUserInfo>(dataj);
+            #region  获取cookies
+            if (!string.IsNullOrEmpty(Request.Cookies["UserData"]["AdminUserInfo"]))//Cookies保存 获取解析
+            {
+                string dataj = Request.Cookies["UserData"]["AdminUserInfo"];
+                UserData = JsonHelper.FromJson<AdminUserInfo>(dataj);
+                if (UserData != null)
+                {
+                    return RedirectToAction("index", "home");
+                }
+            }
             #endregion
 
             //string Vcode = Session["ValidateCode"].ToString();
@@ -214,6 +192,20 @@ namespace ESUI.Controllers
                         }
                         UserData.ListManus = ListManus;
                     }
+
+                    #region   存cookies
+                    string datajson = JsonHelper.ToJson(UserData);
+                    HttpCookie cookie = new HttpCookie("UserData");//初使化并设置Cookie的名称
+                    DateTime dt = DateTime.Now;
+                    TimeSpan ts = new TimeSpan(0, 1, 0, 0, 0);//过期时间为1分钟
+                    cookie.Expires = dt.Add(ts);//设置过期时间
+
+                    cookie.Values.Add("AdminUserInfo", datajson);
+                    Response.AppendCookie(cookie);
+
+                    #endregion
+
+
                     return RedirectToAction("index", "home");
                 }
 
