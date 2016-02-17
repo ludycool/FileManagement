@@ -144,6 +144,7 @@
     <Compile Include="Reflection\PropertyExpressionParser.cs" />
     <Compile Include="Reflection\ZGeneric.cs" />
     <Compile Include="Reflection\ZReflection.cs" />
+    <Compile Include="Searchclass.cs" />
     <Compile Include="StringHelpTool.cs" />
     <Compile Include="ToEntityByEmit.cs" />
     <Compile Include="ToolsHelper\AESHelper.cs" />
