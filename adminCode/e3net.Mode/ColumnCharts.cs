@@ -209,6 +209,15 @@ namespace DefaultConnection
             get { return GetPropertyValue<Boolean?>("ISLoginsector"); }
             set { SetPropertyValue("ISLoginsector", value); }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Boolean? ManagingStatus
+        {
+            get { return GetPropertyValue<Boolean?>("ManagingStatus"); }
+            set { SetPropertyValue("ManagingStatus", value); }
+        }
     }
 
     [Table("[ColumnCharts]", DbType.SqlServer)]
@@ -336,6 +345,11 @@ namespace DefaultConnection
         /// 
         /// </summary>
         public static readonly FieldBase ISLoginsector = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[ISLoginsector]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase ManagingStatus = new FieldBase(DbType.SqlServer, "[ColumnCharts]", FieldType.Common, "[ManagingStatus]");
     }
 
 }
