@@ -3485,6 +3485,8 @@
     <Content Include="Views\TF_PersonnelFile\SetUnitsIn.cshtml" />
     <Content Include="Views\TF_PersonnelFile\SetUnitsOut.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Transmitting_In\Index.cshtml" />
+    <Content Include="Views\DynamicTable\BaschartypeResult.cshtml" />
+    <Content Include="Views\DynamicTable\BascharvalueResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="temp\" />
