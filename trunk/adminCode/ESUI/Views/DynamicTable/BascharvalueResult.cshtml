@@ -1,0 +1,302 @@
+﻿
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+@section Jsprepare
+    {  
+  <script type="text/javascript">
+      var BaseUrl = '/DynamicTable/';
+      var DepartmentId = "";
+      var UserId = "";
+      jQuery(document).ready(function () {
+          InitTreeData();
+          //BindUser();
+         
+    
+
+      });
+
+
+
+
+      function BindUser(charID) {
+          $('#dg').datagrid({
+              url: BaseUrl + 'GetBascharvalueList',
+              columns: [
+                  [
+                      { field: 'ck', checkbox: true },
+                      { field: 'CharName', title: '字典名称', width: 200 },
+                      { field: 'CharNumber', title: '字典值', width: 200 },
+                      { field: 'SerialNo', title: '排序号', width: 200 }
+                      
+                  ]
+              ],
+              nowrap: true,
+              singleSelect: true,
+              striped: true,
+              collapsible: true,
+              pagination: true,
+              fit: true,
+              fitColumns: true,
+              queryParams: { Condition: charID },
+             
+              rownumbers: true,
+              onLoadError: function () {
+                  //alert("没有数据");
+              },
+              toolbar: [
+                  {
+                      id: 'btnadd',
+                      text: '添加',
+                      iconCls: 'icon-add',
+                      handler: function () {
+                          //实现弹出注册信息的页面
+                          ShowAddDialog(charID);
+                      }
+                  }, '-', {
+                      id: 'btncut',
+                      text: '修改',
+                      iconCls: 'icon-cut',
+                      handler: function () {
+                          //实现修改的方法
+                          EditInfo();
+                      }
+                  }, '-', {
+                      id: 'btnCancle',
+                      text: '直接删除',
+                      iconCls: 'icon-remove',
+                      handler: function () {
+                          //实现直接删除所有数据的方法
+                          deleteInfo();
+                      }
+
+                  }
+              ]
+          });
+
+      }
+
+      function InitTreeData() {
+      
+          $('#tt').tree({
+              url: BaseUrl + 'GetTreeJsonResult',
+             
+              onClick: function (node) {
+                  BindUser(node.id);
+                 // alert();
+              }
+              //onContextMenu: function (e, node) {
+              //    e.preventDefault();
+              //    $('#tree').tree('select', node.target);
+              //    $('#mm').menu('show', {
+              //        left: e.pageX,
+              //        top: e.pageY
+              //    });
+              //}
+          });
+      }
+
+
+
+      //easyUI 弹出添加按钮的对话框
+      function ShowAddDialog(id) {
+          //弹出层
+          // $("#DivEditor").dialog('open').dialog('setTitle', '添加按钮信息');
+          $('#DivEditor').dialog({
+              title: '添加按钮信息',
+              //width: 400,
+              //height: 200,
+              closed: false,
+              cache: false,
+              // href: 'get_content.php',
+              modal: true,
+              top: 100,
+              onClose: function () {
+                  //解决弹出窗口关闭后，验证消息还显示在最上面
+
+              }
+          });
+          DataBaseFunction.ClearForm("ff");
+          $('#CharTypeId').val(id);
+      }
+
+      //实现按钮的编辑，包括增查改
+      function EditInfo() {
+
+          var rows = $("#dg").datagrid('getSelected');
+
+          //首先取出来值判断只能选择一个
+          if (rows == null) {
+              $.messager.alert("友情提示", "请选择", "error");
+              return;
+          }
+          $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.title).window('resize', { top: 50 });
+          $(".validatebox-tip").remove();//清除验证样式
+          var ID = rows.CharId;  //获取到了用选择的ID
+          $.ajax({
+              url: BaseUrl + 'GetBascharvalue',
+              type: 'POST',
+              data: { ID: ID },
+              cache: false,
+              error: function () { alert('Error $.ajax'); },
+              success: function (data) {
+                  //var result = eval('(' + data + ')');
+                  DataBaseFunction.BindForm("ff", data);
+
+              }
+          });
+
+      }
+          //实现的编辑，包括增查改
+          function SaveInfo() {
+              
+              //判断的信息是否通过验证
+              var validate = $("#ff").form('validate');
+              if (validate == false) {
+                  return false;
+              }
+              //获取需要传递的参数传递给前台
+              var data = DataBaseFunction.GetFormData("ff");
+              //发送异步请求到后台保存数据
+              $.post(BaseUrl + 'EditBascharvalue', data, function (data) {
+                  alerts(data.Msg, 2);
+                  if (data.Code > 0) {
+                      $('#DivEditor').dialog('close');
+                      $(".validatebox-tip").remove();
+                      $("#dg").datagrid("reload");
+                     
+
+                  }
+              });
+
+          }
+    
+
+      //绑定修改显示详细信息的方法
+      function BindShowUpdateInfo() {
+          //首先按钮发送一个异步请求去后台实现方法
+          var ID = $("#dg").datagrid("getSelections")[0].Id; //获取到了用按钮选择的ID
+          $.ajax({
+              url: BaseUrl + 'GetInfo',
+              type: 'POST',
+              data: { ID: ID },
+              cache: false,
+              error: function () { alert('Error loading PHP document'); },
+              success: function (result) {
+
+                  for (items in result) {
+
+                      $("#" + items).val(result[items]);
+                  }
+                  $('#DepartmentId').combobox('setValue', result['DepartmentId']);
+
+              }
+          });
+
+      }
+
+      //实现直接删除数据和伪删除数据的方法
+      function deleteInfo(not) {
+          //得到按钮选择的数据的ID
+          var rows = $("#dg").datagrid("getSelections");
+          //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
+          if (rows.length >= 1) {
+              //遍历出按钮选择的数据的信息，这就是按钮按钮选择删除的按钮ID的信息
+              var ids = ""; //1,2,3,4,5
+              for (var i = 0; i < rows.length; i++) {
+                  //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
+                  ids += "'"+rows[i].CharId + "',";
+              }
+              //最后去掉最后的那一个,
+              ids = ids.substring(0, ids.length - 1);
+              
+              //首先取出来到底是直接删除还是伪删除发送异步请求的地址和是否是伪删除的参数
+              var postData = "";
+
+              postData = {
+                  IDSet: ids
+              };
+         
+              //然后确认发送异步请求的信息到后台删除数据
+              $.messager.confirm("删除信息", "您确认删除吗？", function (DeleteRole) {
+                  if (DeleteRole) {
+                      $.get(BaseUrl + "DelBaschartype", postData, function (data) {
+
+                          alerts(data.Msg, 2);
+                          if (data.Code > 0) {
+                              $("#dg").datagrid("reload");
+                              
+                              
+                          }
+                        
+                      });
+                  }
+              });
+          }
+          else {
+              alert("请选择你要删除的数据");
+          }
+      }
+
+
+</script>
+           }
+</head>
+<body>
+
+    <div  class="easyui-layout"  data-options="fit:true" style="margin:5px;">
+    <div region="west" split="true" title="字典类型" style="width:180px;">   <ul id="tt" class="easyui-tree"></ul></div>
+    <div region="center" title="字典值" style="padding:5px;background:#eee;" iconCls: 'icon-user_earth'><table id="dg" ></table></div>
+     </div>
+    <div id="DivEditor" class="easyui-dialog" style="width:580px;padding:10px 20px"
+         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+              <form id="ff" method="post" novalidate="novalidate">
+            <fieldset>
+                <legend>按钮信息填写栏</legend>
+                <table id="tblAdd">
+                    <tr>
+                        <input type="hidden" id="CharId" name="CharId"/> 
+                        <input type="hidden" id="CharTypeId" name="CharTypeId" />
+                        <td><label >字典名称：</label></td>
+                        <td>
+                            <input class="easyui-validatebox" type="text" id="CharName" name="CharName" data-options="required:true,validType:'length[1,32]'" />
+                        </td>           
+                        
+                    </tr>
+                      <tr>
+                        <td><label >字典值：</label></td>
+                        <td>
+                            <input class="easyui-validatebox" type="text" id="CharNumber" name="CharNumber"  />
+                        </td>           
+                        
+                    </tr>
+
+
+                                          <tr>
+                        <td><label >排序号：</label></td>
+                        <td>
+                          <input class="easyui-validatebox" type="text" id="SerialNo" name="SerialNo"  />
+                        </td>           
+                        
+                    </tr>
+                   
+
+                     
+                </table>
+            </fieldset>
+
+        </form>
+         <div style="text-align: center; width: 100%">
+             <a href="javascript:void(0)" class="easyui-linkbutton" id="btnAddRole" iconcls="icon-ok" onclick="SaveInfo();" >确定</a>
+                            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>
+             </div>
+    </div>
+ 
+       
+
+</body>
+</html>
