@@ -84,7 +84,7 @@ namespace ESUI.Controllers
             {
                 IsAdd = true;
             }
-            if (OPBiz.GetCount<CategoryTableSet>(CategoryTableSet.UserTableName.Equal(categoryTable.UserTableName)) > 0.0)
+            if (OPBiz.GetCount<CategoryTableSet>(CategoryTableSet.UserTableName.Equal(categoryTable.UserTableName)) > 0.0 && IsAdd)
             {
                 return Json("Nok", JsonRequestBehavior.AllowGet);
             }
@@ -1101,6 +1101,14 @@ namespace ESUI.Controllers
                 ReSultMode.Msg = "删除失败！";
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public JsonResult GetBascharvalueS(string ID)
+        {
+            var mql2 = BascharvalueSet.SelectAll().Where(BascharvalueSet.CharTypeId.Equal(ID));
+            var Rmodel = Bcviz.GetEntities(mql2);
+            //  groupsBiz.Add(rol);
+            return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
     }
 }
