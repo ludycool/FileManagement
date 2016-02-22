@@ -96,6 +96,15 @@
                     }
                     ]
                 });
+
+                $('#cc').combobox({
+                    url: BaseUrl+'GetBascharvalueS',
+                    valueField: 'CharId',
+                    textField: 'CharName', onBeforeLoad: function (param) {
+                        param.ID = 'a3eda5f9-af4c-428b-a2fe-30588ceaf9c9';
+                        
+                    }
+                });
             });
             //easyUI 弹出添加按钮的对话框
             function ShowAddDialog() {
@@ -129,7 +138,7 @@
 
                 //发送异步请求到后台保存按钮数据
                 $.post(BaseUrl + 'EditInfo', postData, function (data) {
-                    if (data = "OK") {
+                    if (data == "ok") {
                         //添加成功  1.关闭弹出层，2.刷新DataGird
                         alert("编辑成功");
                         $('#DivEditor').dialog('close');
@@ -184,6 +193,7 @@
                             $("#" + items).val(result[items]);
                         }
                         $('#UserTableName').attr('readonly', true);
+                        $('#cc').combobox('setValue', result['Column_7']);
                     }
                 });
 
@@ -252,6 +262,16 @@
 
                     </tr>
                     <tr>
+                        <td>
+                            <label>类型：</label></td>
+                        <td>
+                           <select id="cc" class="easyui-combobox" data-options="required:true" name="Column_7" style="width: 200px;" >
+                            
+
+                            </select>
+                        </td>
+
+                    </tr>   <tr>
                         <td>
                             <label>描述：</label></td>
                         <td>
