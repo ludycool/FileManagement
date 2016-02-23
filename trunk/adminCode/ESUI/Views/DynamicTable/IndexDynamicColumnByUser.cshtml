@@ -32,23 +32,40 @@
             var BaseUrl = '/DynamicTable/';
             var editIndex = undefined;
 
-            jQuery(document).ready(function () {
+            jQuery(document).ready(function() {
 
                 AutoWH("#body", 100, 100); //自适应宽度
 
                 loadColum();
 
             });
+            $.ajax({
+                url: BaseUrl + 'GetSeachJson',
+                type: 'POST',
+                data: { Condition: '@ViewBag.RuteUrl' },
+                cache: false,
+                error: function() { alert('Error loading PHP document'); },
+                success: function(data) {
+                    var g = data;
+                    var a = new Array();
+                    for (var i = 0; i < g.length; i++) {
+                        a[i] = new Array(g[i].field, g[i].title, 's');
+                    }
+                    colFilter = a;
+               
+                }
+              });
+           
+            var Column = $.ajax({
+                //获取列数据
+                url: BaseUrl + 'GetBtnColumn',
+                cache: false,
+                data: { Condition: '@ViewBag.RuteUrl' },
+                async: false
+            }).responseText;
 
-    var Column = $.ajax({
-                    //获取列数据
-                    url: BaseUrl + 'GetBtnColumn',
-                    cache: false,
-                    data: { Condition: '@ViewBag.RuteUrl' },
-                    async: false
-                }).responseText;
             function loadColum() {
-            
+
                 var Columndata = eval(Column);
 
                 $('#dg2').datagrid({
@@ -65,171 +82,193 @@
                     collapsible: true,
                     pagination: true,
                     fit: true,
-                   // fitColumns: true,
+                    // fitColumns: true,
                     rownumbers: true,
                     toolbar: [
-                    {
-                        id: 'btnadd',
-                        text: '添加',
-                        iconCls: 'icon-add',
-                        handler: function () {
-                            //实现弹出注册信息的页面
-                            if (editIndex != undefined) {
+                        {
+                            id: 'btnadd',
+                            text: '添加',
+                            iconCls: 'icon-add',
+                            handler: function() {
+                                //实现弹出注册信息的页面
+                                if (editIndex != undefined) {
 
-                                $("#dg2").datagrid('endEdit', editIndex);
+                                    $("#dg2").datagrid('endEdit', editIndex);
 
-                            }
+                                }
 
-                            if (editIndex == undefined) {
+                                if (editIndex == undefined) {
 
-                                var t = $.ajax({
-                                    //获取列数据
-                                    url: BaseUrl + 'GetNumberColumn',
-                                    cache: false,
-                                    data: { Condition: '@ViewBag.RuteUrl' },
-                                    async: false
-                                }).responseText;
-                                var f = jQuery.parseJSON(t);
-                                if (t != 2) {
-                                   
-                                    $("#dg2").datagrid('insertRow', {
-                                        index: 0,
+                                    var t = $.ajax({
+                                        //获取列数据
+                                        url: BaseUrl + 'GetNumberColumn',
+                                        cache: false,
+                                        data: { Condition: '@ViewBag.RuteUrl' },
+                                        async: false
+                                    }).responseText;
+                                    var f = jQuery.parseJSON(t);
+                                    if (t != 2) {
 
-                                        row: f[0]
+                                        $("#dg2").datagrid('insertRow', {
+                                            index: 0,
 
-
-
-                                    });
-                                } else {
-                                    //alert(eval(newRow));
-                                    $("#dg2").datagrid('insertRow', {
-                                        index: 0,
-
-                                        row: {}
+                                            row: f[0]
 
 
+                                        });
+                                    } else {
+                                        //alert(eval(newRow));
+                                        $("#dg2").datagrid('insertRow', {
+                                            index: 0,
 
-                                    });
+                                            row: {}
+
+
+                                        });
+                                    }
+
+
+                                    $("#dg2").datagrid('beginEdit', 0);
+
+                                    editIndex = 0;
+
                                 }
 
 
-
-                                $("#dg2").datagrid('beginEdit', 0);
-
-                                editIndex = 0;
-
                             }
+                        },
+                        '-', {
+                            text: '撤销',
+                            iconCls: 'icon-redo',
+                            handler: function() {
 
-
-                        }
-                    },
-            '-', {
-                text: '撤销',
-                iconCls: 'icon-redo',
-                handler: function () {
-
-                    editIndex = undefined;
-
-                    $("#dg2").datagrid('rejectChanges');
-
-                    $("#dg2").datagrid('unselectAll');
-
-                }
-
-            }, '-', {
-                id: 'btnAccept',
-                text: '保存',
-                iconCls: 'icon-save',
-                handler: function () {
-                    //实现修改的方法
-                    //if (endEditing()) {
-                    //alert(editIndex);
-                    $("#dg2").datagrid('endEdit', editIndex);
-                    var rows = $("#dg2").datagrid('getChanges');
-
-
-                    var rowstr = JSON.stringify(rows);
-                    // alert(rowstr);
-                    $.ajax({
-                        url: BaseUrl + 'ColumnSave',
-                        type: 'POST',
-                        data: { categoryTable: rowstr, CategoryTableID: '@ViewBag.RuteUrl' },
-                        cache: false,
-                        error: function () { alert('Error loading PHP document'); },
-                        success: function (data) {
-
-                            if (data == "ok") {
-                                //添加成功  1.关闭弹出层，2.刷新DataGird
-                                alert("保存成功");
-                                $("#dg2").datagrid("reload");
-                                //$('#DivEditor').dialog('close');
-                                //$(".validatebox-tip").remove();
-                                //// $("#DivEditor").dialog("close");
-                                //$("#dg").datagrid("reload");
-                                //$("#ff").form("clear");
-                            } else {
                                 editIndex = undefined;
 
                                 $("#dg2").datagrid('rejectChanges');
 
                                 $("#dg2").datagrid('unselectAll');
-                                alert("保存失败，请您检查");
 
                             }
-                        }
-                    });
-                    $('#dg2').datagrid('acceptChanges');
 
+                        }, '-', {
+                            id: 'btnAccept',
+                            text: '保存',
+                            iconCls: 'icon-save',
+                            handler: function() {
+                                //实现修改的方法
+                                //if (endEditing()) {
+                                //alert(editIndex);
+                                $("#dg2").datagrid('endEdit', editIndex);
+                                var rows = $("#dg2").datagrid('getChanges');
+
+
+                                if (rows.length > 0) {
+
+                                    var rowstr = JSON.stringify(rows);
+                                    // alert(rowstr);
+                                    $.ajax({
+                                        url: BaseUrl + 'ColumnSave',
+                                        type: 'POST',
+                                        data: { categoryTable: rowstr, CategoryTableID: '@ViewBag.RuteUrl' },
+                                        cache: false,
+                                        error: function() { alert('Error loading PHP document'); },
+                                        success: function(data) {
+
+                                            if (data == "ok") {
+                                                //添加成功  1.关闭弹出层，2.刷新DataGird
+                                                alert("保存成功");
+                                                $("#dg2").datagrid("reload");
+                                                //$('#DivEditor').dialog('close');
+                                                //$(".validatebox-tip").remove();
+                                                //// $("#DivEditor").dialog("close");
+                                                //$("#dg").datagrid("reload");
+                                                //$("#ff").form("clear");
+                                            } else {
+                                                editIndex = undefined;
+
+                                                $("#dg2").datagrid('rejectChanges');
+
+                                                $("#dg2").datagrid('unselectAll');
+                                                alert("保存失败，请您检查");
+
+                                            }
+                                        }
+                                    });
+                                }
+                                $('#dg2').datagrid('acceptChanges');
+
+                            }
+
+                        }, '-', {
+                            id: 'btnAccept',
+                            text: '删除',
+                            iconCls: 'icon-remove',
+                            handler: function() {
+
+                                Del();
+                            }
+                        }, '-', {
+                            id: 'btnAccept',
+                            text: '导出',
+                            iconCls: 'icon-remove',
+                            handler: function() {
+
+                                exportToExcel();
+                            }
+                        },'-', {
+                    id: 'btnchax',
+                    text: '查询',
+                    iconCls: '',
+                    handler: function() {
+
+
+                        //colFilter = jQuery.parseJSON(f);
+                        $('#DivEditor').dialog({
+                            title: '添加材料',
+                            //width: 400,
+                            //height: 200,
+                            closed: false,
+                            cache: false,
+                            // href: 'get_content.php',
+                            modal: true,
+                            top: 50,
+                            onClose: function() {
+                                //解决弹出窗口关闭后，验证消息还显示在最上面
+
+                            }
+                        });
+                    }
                 }
+                        //, '-', {
+                        //    id: 'btnchax',
+                        //    text: '查询',
+                        //    iconCls: '',
+                        //    handler: function () {
 
-            }, '-',{
-                id: 'btnAccept',
-                text: '删除',
-                iconCls: 'icon-remove',
-                handler: function() {
+                        //        $('#DivEditor').dialog({
+                        //            title: '添加材料',
+                        //            //width: 400,
+                        //            //height: 200,
+                        //            closed: false,
+                        //            cache: false,
+                        //            // href: 'get_content.php',
+                        //            modal: true, top: 50,
+                        //            onClose: function () {
+                        //                //解决弹出窗口关闭后，验证消息还显示在最上面
 
-                    Del();
-                }
-            }
-            , '-', {
-                id: 'btnAccept',
-                text: '导出',
-                iconCls: 'icon-remove',
-                handler: function () {
+                        //            }
+                        //        });
+                        //    }
+                        //}
+                    ],
 
-                    exportToExcel();
-                }
-            }
-            //, '-', {
-            //    id: 'btnchax',
-            //    text: '查询',
-            //    iconCls: '',
-            //    handler: function () {
-
-            //        $('#DivEditor').dialog({
-            //            title: '添加材料',
-            //            //width: 400,
-            //            //height: 200,
-            //            closed: false,
-            //            cache: false,
-            //            // href: 'get_content.php',
-            //            modal: true, top: 50,
-            //            onClose: function () {
-            //                //解决弹出窗口关闭后，验证消息还显示在最上面
-
-            //            }
-            //        });
-            //    }
-            //}
-            ],
-
-                    onAfterEdit: function (rowIndex, rowData, changes) {
+                    onAfterEdit: function(rowIndex, rowData, changes) {
 
                         editIndex = undefined;
 
                     },
 
-                    onDblClickRow: function (rowIndex, rowData) {
+                    onDblClickRow: function(rowIndex, rowData) {
 
                         if (editIndex != undefined) {
 
@@ -247,8 +286,8 @@
                         }
 
 
-            }
-            });
+                    }
+                });
             }
 
             //删除
@@ -259,11 +298,11 @@
                 //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
                 if (rows.length >= 1) {
                     //遍历出按钮选择的数据的信息，这就是按钮按钮选择删除的按钮ID的信息
-                    var ids = "";   //1,2,3,4,5
+                    var ids = ""; //1,2,3,4,5
                     for (var i = 0; i < rows.length; i++) {
                         //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
                         ids += "'" + rows[i]["ID"] + "',";
-                        
+
                     }
                     //最后去掉最后的那一个,
                     ids = ids.substring(0, ids.length - 1);
@@ -276,8 +315,9 @@
                     //首先取出来到底是直接删除还是伪删除发送异步请求的地址和是否是伪删除的参数
                     var postData = "";
 
-            postData = {
-                IDSet: ids, CategoryTableID: '@ViewBag.RuteUrl'
+                    postData = {
+                        IDSet: ids,
+                        CategoryTableID: '@ViewBag.RuteUrl'
                     };
                     //}
                     //else {
@@ -286,9 +326,9 @@
                     //    }
                     //}
                     //然后确认发送异步请求的信息到后台删除数据
-                    $.messager.confirm("删除信息", "您确认删除<font color='red' size='3'>" + "" + "</font>吗？", function (Delete) {
+                    $.messager.confirm("删除信息", "您确认删除<font color='red' size='3'>" + "" + "</font>吗？", function(Delete) {
                         if (Delete) {
-                            $.get(BaseUrl + "Del", postData, function (data) {
+                            $.get(BaseUrl + "Del", postData, function(data) {
                                 alerts(data.Msg, 2);
                                 if (data.Code > 0) {
                                     $("#dg2").datagrid("reload");
@@ -298,93 +338,93 @@
                             });
                         }
                     });
-                }
-                else {
+                } else {
                     alert("请选择你要删除的数据");
                 }
 
             }
-    function onClickCell(index, field) {
-        if (editIndex != index) {
-            if (endEditing()) {
-                $('#dg2').datagrid('selectRow', index)
-                    .datagrid('beginEdit', index);
-                var ed = $('#dg2').datagrid('getEditor', { index: index, field: field });
-                if (ed) {
-                    ($(ed.target).data('textbox') ? $(ed.target).textbox('textbox') : $(ed.target)).focus();
+
+            function onClickCell(index, field) {
+                if (editIndex != index) {
+                    if (endEditing()) {
+                        $('#dg2').datagrid('selectRow', index)
+                            .datagrid('beginEdit', index);
+                        var ed = $('#dg2').datagrid('getEditor', { index: index, field: field });
+                        if (ed) {
+                            ($(ed.target).data('textbox') ? $(ed.target).textbox('textbox') : $(ed.target)).focus();
+                        }
+
+
+                        editIndex = index;
+                    } else {
+                        setTimeout(function() {
+                            $('#dg2').datagrid('selectRow', editIndex);
+                        }, 0);
+                    }
+                }
+            }
+
+            function endEditing() {
+                if (editIndex == undefined) {
+                    return true
+                }
+                if ($('#dg2').datagrid('validateRow', editIndex)) {
+                    $('#dg2').datagrid('endEdit', editIndex);
+                    editIndex = undefined;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            serializeObject = function(form) { /*将form 表单元素的值序列化*/
+                var obj = {};
+                $.each(form.serializeArray(), function(index) {
+                    if (obj[this['name']]) {
+                        obj[this['name']] = obj[this['name']] + "," + this['value'];
+                    } else {
+                        obj[this['name']] = this['name'];
+                    }
+                });
+            };
+
+            function ShowSetRoleDiv() {
+
+            }
+
+
+            //实现按钮的编辑，包括增查改
+            function EditInfo() {
+
+                //判断按钮的信息是否通过验证
+                var validate = $("#ff").form('validate');
+                if (validate == false) {
+                    return false;
                 }
 
+                //获取需要传递的参数传递给前台
+                var postData = $("#ff").serializeArray();
+                //$.ajax({
+                //    url: BaseUrl + 'ColumnEditInfo',
+                //    type: 'POST',
+                //    data: { list: JSON.stringify(postData) },
+                //    cache: false,
+                //    error: function () { alert('Error loading PHP document'); },
+                //    success: function (data) {
 
-                editIndex = index;
-            } else {
-                setTimeout(function () {
-                    $('#dg2').datagrid('selectRow', editIndex);
-                }, 0);
-            }
-        }
-    }
-
-    function endEditing() {
-        if (editIndex == undefined) {
-            return true
-        }
-        if ($('#dg2').datagrid('validateRow', editIndex)) {
-            $('#dg2').datagrid('endEdit', editIndex);
-            editIndex = undefined;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    serializeObject = function (form) { /*将form 表单元素的值序列化*/
-        var obj = {};
-        $.each(form.serializeArray(), function (index) {
-            if (obj[this['name']]) {
-                obj[this['name']] = obj[this['name']] + "," + this['value'];
-            } else {
-                obj[this['name']] = this['name'];
-            }
-        });
-    };
-
-    function ShowSetRoleDiv() {
-
-    }
-
-
-    //实现按钮的编辑，包括增查改
-    function EditInfo() {
-
-        //判断按钮的信息是否通过验证
-        var validate = $("#ff").form('validate');
-        if (validate == false) {
-            return false;
-        }
-
-        //获取需要传递的参数传递给前台
-        var postData = $("#ff").serializeArray();
-        //$.ajax({
-        //    url: BaseUrl + 'ColumnEditInfo',
-        //    type: 'POST',
-        //    data: { list: JSON.stringify(postData) },
-        //    cache: false,
-        //    error: function () { alert('Error loading PHP document'); },
-        //    success: function (data) {
-
-        //        if (data = "OK") {
-        //            //添加成功  1.关闭弹出层，2.刷新DataGird
-        //            alert("编辑成功");
-        //            $('#DivEditor').dialog('close');
-        //            $(".validatebox-tip").remove();
-        //            // $("#DivEditor").dialog("close");
-        //            $("#dg").datagrid("reload");
-        //            $("#ff").form("clear");
-        //        } else {
-        //            alert("编辑失败，请您检查");
-        //        }
-        //    }
-        //});
+                //        if (data = "OK") {
+                //            //添加成功  1.关闭弹出层，2.刷新DataGird
+                //            alert("编辑成功");
+                //            $('#DivEditor').dialog('close');
+                //            $(".validatebox-tip").remove();
+                //            // $("#DivEditor").dialog("close");
+                //            $("#dg").datagrid("reload");
+                //            $("#ff").form("clear");
+                //        } else {
+                //            alert("编辑失败，请您检查");
+                //        }
+                //    }
+                //});
 
                 //发送异步请求到后台保存按钮数据
                 $.post(BaseUrl + 'ColumnEditInfo', postData, function(data) {
@@ -397,59 +437,60 @@
                         $("#dg").datagrid("reload");
                         $("#ff").form("clear");
                         loadColum();
-                       // bindconbox();
+                        // bindconbox();
                     } else {
                         alert("编辑失败，请您检查");
                     }
                 });
             }
 
-    //修改按钮的信息
-    function ShowUpdateInfo(browse) {
-        //首先取出来按钮选择的数据的ID
-        var rows = $("#dg").datagrid("getSelections");
-        //首先取出来值判断按钮只能选择一个
-        if (rows.length != 1) {
-            $.messager.alert("友情提示", "每次只能修改/浏览一条，你已经选择了<font color='red'  size='6'>" + rows.length + "</font>条", "error");
-            return;
-        }
-        if (browse == null) {
-            //处理修改的信息，弹出修改的对话框,然后显示选择的按钮的详细信息
-            $("#DivEditor").dialog('open').dialog('setTitle', '修改按钮信息').window('resize', { top: 100 });
-            //绑定修改显示详细信息的方法
-            BindShowUpdateInfo();
-        } else {
-            //处理浏览的信息，弹出浏览狂，然后显示浏览信息的相信信息
-            $("#DivBrowerRole").dialog('open').dialog('setTitle', '按钮浏览').window('resize', { top: 100 });
-            //绑定按钮的浏览信息
-            BindBrowerRoleInfo();
-        }
-    }
-
-    //绑定修改显示详细信息的方法
-    function BindShowUpdateInfo() {
-        //首先按钮发送一个异步请求去后台实现方法
-        var ID = $("#dg").datagrid("getSelections")[0].ID; //获取到了用按钮选择的ID
-        $.ajax({
-            url: BaseUrl + 'GetColumnInfo',
-            type: 'POST',
-            data: { ID: ID },
-            cache: false,
-            error: function () { alert('Error loading PHP document'); },
-            success: function (result) {
-
-                for (items in result) {
-                    $("#" + items).val(result[items]);
+            //修改按钮的信息
+            function ShowUpdateInfo(browse) {
+                //首先取出来按钮选择的数据的ID
+                var rows = $("#dg").datagrid("getSelections");
+                //首先取出来值判断按钮只能选择一个
+                if (rows.length != 1) {
+                    $.messager.alert("友情提示", "每次只能修改/浏览一条，你已经选择了<font color='red'  size='6'>" + rows.length + "</font>条", "error");
+                    return;
                 }
-                $('#cc').combobox('setValue', result['editor']);
-                $('#ParentId').combobox('setValue', result['ParentId']);
+                if (browse == null) {
+                    //处理修改的信息，弹出修改的对话框,然后显示选择的按钮的详细信息
+                    $("#DivEditor").dialog('open').dialog('setTitle', '修改按钮信息').window('resize', { top: 100 });
+                    //绑定修改显示详细信息的方法
+                    BindShowUpdateInfo();
+                } else {
+                    //处理浏览的信息，弹出浏览狂，然后显示浏览信息的相信信息
+                    $("#DivBrowerRole").dialog('open').dialog('setTitle', '按钮浏览').window('resize', { top: 100 });
+                    //绑定按钮的浏览信息
+                    BindBrowerRoleInfo();
+                }
             }
-        });
+
+            //绑定修改显示详细信息的方法
+            function BindShowUpdateInfo() {
+                //首先按钮发送一个异步请求去后台实现方法
+                var ID = $("#dg").datagrid("getSelections")[0].ID; //获取到了用按钮选择的ID
+                $.ajax({
+                    url: BaseUrl + 'GetColumnInfo',
+                    type: 'POST',
+                    data: { ID: ID },
+                    cache: false,
+                    error: function() { alert('Error loading PHP document'); },
+                    success: function(result) {
+
+                        for (items in result) {
+                            $("#" + items).val(result[items]);
+                        }
+                        $('#cc').combobox('setValue', result['editor']);
+                        $('#ParentId').combobox('setValue', result['ParentId']);
+                    }
+                });
 
             }
+
             function exportToExcel() {
                 $("#exportToExcelForm").remove();
-                var form = $("<form>");//定义一个form表单
+                var form = $("<form>"); //定义一个form表单
                 form.attr("id", "exportToExcelForm");
                 form.attr("style", "display:none");
                 form.attr("target", "");
@@ -459,50 +500,74 @@
                 input1.attr("type", "hidden");
                 input1.attr("name", "Title");
                 input1.attr("value", '@ViewBag.ViewBag');
-            var input2 = $("<input>");
-            input2.attr("type", "hidden");
-            input2.attr("name", "titles");
-            input2.attr("value", JSON.stringify(getColumns()));
-            var input4 = $("<input>");
-            input4.attr("type", "hidden");
-            input4.attr("name", "fileType");
-            input4.attr("value", 'xls');
-            var input3 = $("<input>");
-            input3.attr("type", "hidden");
-            input3.attr("name", "dataGetter");
-            input3.attr("value", JSON.stringify(getData($('#dg2').datagrid("getSelections"))));
-            $("body").append(form);//将表单放置在web中
-            form.append(input1);
-            form.append(input2);
-            form.append(input3);  form.append(input4);
-            form.submit();//表单提交
+                var input2 = $("<input>");
+                input2.attr("type", "hidden");
+                input2.attr("name", "titles");
+                input2.attr("value", JSON.stringify(getColumns()));
+                var input4 = $("<input>");
+                input4.attr("type", "hidden");
+                input4.attr("name", "fileType");
+                input4.attr("value", 'xls');
+                var input3 = $("<input>");
+                input3.attr("type", "hidden");
+                input3.attr("name", "dataGetter");
+                input3.attr("value", JSON.stringify(getData($('#dg2').datagrid("getSelections"))));
+                $("body").append(form); //将表单放置在web中
+                form.append(input1);
+                form.append(input2);
+                form.append(input3);
+                form.append(input4);
+                form.submit(); //表单提交
 
-            $("#exportToExcelForm").remove();
-        }
+                $("#exportToExcelForm").remove();
+            }
 
             function getData(Data) {
                 var allColsTitle = $("#dg2").datagrid("options").columns;
-            return Enumerable.From(Data).Select(function (c) {
-                var obj = {};
-                for (var i in allColsTitle[0]) {
-                    obj[allColsTitle[0][i].field] = c[allColsTitle[0][i].field];
+                return Enumerable.From(Data).Select(function(c) {
+                    var obj = {};
+                    for (var i in allColsTitle[0]) {
+                        obj[allColsTitle[0][i].field] = c[allColsTitle[0][i].field];
+                    }
+                    return obj
+                }).ToArray();
+            }
+
+            function getColumns() {
+                var grid = $("#dg2").datagrid("options");
+                var titles = [[]], length = Math.max(grid.frozenColumns.length, grid.columns.length);
+                //alert(grid.columns[0].field);
+
+                for (var i = 0; i < length; i++) {
+                    titles[i] = (grid.frozenColumns[i] || []).concat(grid.columns[i] || []);
                 }
-                return obj
-            }).ToArray();
-        }
+                return titles;
 
-        function getColumns() {
-            var grid =           $("#dg2").datagrid("options") ;
-            var titles = [[]], length = Math.max(grid.frozenColumns.length, grid.columns.length);
-            //alert(grid.columns[0].field);
-        
-          for (var i = 0; i < length; i++) {
-              titles[i] = (grid.frozenColumns[i] || []).concat(grid.columns[i] || []);
-          }
-            return titles;
+            }
+            function closeDiv() {
+                $('#DivEditor').dialog('close');
+                var queryParams = $('#dg2').datagrid('options').queryParams;
 
-        }
+                queryParams.seachsql = JSON.stringify(param);
 
+                $('#dg2').datagrid('options').queryParams = queryParams;
+
+                $("#dg2").datagrid('reload');
+            }
+
+            function closeD() {
+                $('#DivEditor').dialog('close');
+            }
+
+            function clearaway() {
+                var queryParams = $('#dg2').datagrid('options').queryParams;
+
+                queryParams.seachsql = '';
+
+                $('#dg2').datagrid('options').queryParams = queryParams;
+
+                $("#dg2").datagrid('reload');
+            }
         </script>
     }
 </head>
@@ -512,7 +577,31 @@
     </div>
     
 
-    
+      <!------------------------弹出信息的弹出层---------------------------------->
+    <div id="DivEditor" class="easyui-dialog" style="width: 700px;"
+        closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+        <div id="Div_form" class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:440,width:680,border:false">
+        <div id="filter" >
+			<div id="filterTitle" style=""><!--高级检索-->
+				<a id="find" href="#" class="easyui-linkbutton" onclick="findData2()">开始检索</a>
+				<a id="add" href="#" class="easyui-linkbutton" onclick="addFilter()">增加</a>
+				<a id="del" href="#" class="easyui-linkbutton" onclick="delFilter()">删除</a>
+			 
+				<a id="clear" href="#" class="easyui-linkbutton" onclick="clearFilter()">清除</a>
+				<a id="closewin" href="#" class="easyui-linkbutton" onclick="closeD()">关闭高级检索</a>
+			</div>
+
+                <table class="stripes" style="table-layout: fixed; width: 100%" border="0" id="filterContent" cellspacing="0" cellpadding="0">
+            
+                </table>
+          
+
+
+        </div>
+
+    </div>
+
+    </div>  
 
     
 </body>
