@@ -162,7 +162,10 @@
                                 $("#dg2").datagrid('endEdit', editIndex);
                                 var rows = $("#dg2").datagrid('getChanges');
 
-
+                                if (rows.length>0) {
+                                    
+                               
+                             
                                 var rowstr = JSON.stringify(rows);
                                 // alert(rowstr);
                                 $.ajax({
@@ -193,6 +196,7 @@
                                         }
                                     }
                                 });
+                                }
                                 $('#dg2').datagrid('acceptChanges');
 
                             }

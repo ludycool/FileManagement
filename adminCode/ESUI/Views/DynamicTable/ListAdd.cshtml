@@ -299,6 +299,7 @@
             //删除
             function Del() {
                 DataBaseFunction.deleteInfo("dg", "Id", "TName");
+               
             }
             //function myfunction2() {
                 
@@ -376,7 +377,15 @@
                         <td>
                             <select id="cc" class="easyui-combobox" data-options="required:true" name="editor" style="width: 200px;" vlaue="0">
                                 <option value="">不编辑</option>
-                                <option value="type: 'validatebox', options: { required: true}">可输入的文本框</option>
+                                <option value="type: 'text', options: { }">可输入的文本框</option>
+
+                                <option value="type: 'combobox', options:{
+								valueField:'CharName',
+								textField:'CharName',
+								method:'get',
+								url:'/DynamicTable/GetBascharvalueS?ID=Dic',
+								required:true
+							}">下拉选择控件</option>
 
                             </select>
                         </td>
@@ -465,6 +474,18 @@
 
                             <input name="MergeHeader" type="radio" value="true" />是
                                 <input name="MergeHeader" type="radio" value="false" checked="checked"/>否
+
+                        </td>
+
+                    </tr> 
+                    <tr>
+                        <td>
+                            <label>只允许管理员编辑：</label></td>
+                        <td>
+
+
+                            <input name="ManagingStatus" type="radio" value="true" />是
+                                <input name="ManagingStatus" type="radio" value="false" checked="checked"/>否
 
                         </td>
 
