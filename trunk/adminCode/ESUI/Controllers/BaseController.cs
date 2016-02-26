@@ -49,7 +49,8 @@ namespace ESUI.Controllers
             Manu ManuItem = UserData.ListManus.Find(p => p.manuInfo.URL.Equals(controller));
             if (ManuItem != null)//
             {
-                for (int i = 0; i < ManuItem.ListButtons.Count; i++)
+                int listbtnCout = ManuItem.ListButtons.Count;
+                for (int i = 0; i < listbtnCout; i++)
                 {
 
                     tool += "{";
@@ -59,7 +60,10 @@ namespace ESUI.Controllers
                     tool += "handler: function () { " + ManuItem.ListButtons[i].FunctionName + "(); }}";
                     tool += ",'-',";
                 }
-                tool = tool.Substring(0, tool.Length - 5);
+                if (listbtnCout > 0)
+                {
+                    tool = tool.Substring(0, tool.Length - 5);
+                }
             }
             tool += "];";
             return tool + search;
