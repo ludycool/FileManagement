@@ -61,7 +61,7 @@
      
          
             $(function () {
-                AutoWH("#body", 40, 40);//自适应宽度
+             
                 $('#AreaTypes').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=AreaTypes');  // 使用新的URL重新载入列表数据
             @Html.Raw(ViewBag.toolbar)
                 $('#tg').treegrid({
@@ -210,10 +210,8 @@
 
 </head>
 <body>
-    <div id="body">
+  
         <table id="tg"></table>
-
-    </div>
 
     <!------------------------弹出修改角色信息的弹出层---------------------------------->
     <div id="DivEditor" class="easyui-dialog" style="width: 580px; padding: 10px 20px;"
