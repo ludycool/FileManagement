@@ -54,15 +54,15 @@ namespace ESUI.Controllers
             //if (Session["ValidateCode"] != null)
             //{
             #region  获取cookies
-            if (!string.IsNullOrEmpty(Request.Cookies["UserData"]["AdminUserInfo"]))//Cookies保存 获取解析
-            {
-                string dataj = Request.Cookies["UserData"]["AdminUserInfo"];
-                UserData = JsonHelper.FromJson<AdminUserInfo>(dataj);
-                if (UserData != null)
-                {
-                    return RedirectToAction("index", "home");
-                }
-            }
+            //if (!string.IsNullOrEmpty(Request.Cookies["UserData"]["AdminUserInfo"]))//Cookies保存 获取解析
+            //{
+            //    string dataj = Request.Cookies["UserData"]["AdminUserInfo"];
+            //    UserData = JsonHelper.FromJson<AdminUserInfo>(dataj);
+            //    if (UserData != null)
+            //    {
+            //        return RedirectToAction("index", "home");
+            //    }
+            //}
             #endregion
 
             //string Vcode = Session["ValidateCode"].ToString();

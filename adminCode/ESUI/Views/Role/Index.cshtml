@@ -13,7 +13,7 @@
             var MenuButtonsData;
             var RoleId;
             jQuery(document).ready(function () {//获取每个菜单有的按钮
-                AutoWH("#body", 40, 42);//自适应宽度
+              
                 FormStripes();//表单样式
                 $('#RoleTypes').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=RoleTypes');  // 使用新的URL重新载入列表数据
                 $.ajax({
@@ -501,9 +501,9 @@
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="adddiv();">Add</a>
        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="$('#del').window('open');">delte</a>
     </div>*@
-    <div id="body">
+    
         <table id="dg"></table>
-    </div>
+    
     <!------------------------弹出修改角色信息的弹出层---------------------------------->
     <div id="DivEditor" class="easyui-dialog" style="width: 680px;"
         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
