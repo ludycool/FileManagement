@@ -610,7 +610,7 @@ namespace ESUI.Controllers
         /// <param name="Condition"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult GetJsonResultListByUser(string Condition)
+        public JsonResult GetJsonResultListByUser(string Condition, string seachsql)
         {
 
             var modle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
@@ -626,7 +626,7 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = modle.UserTableName;
-            pc.sys_Where = "1=1 and CreatName='" + UserData.UserName + "'";
+            pc.sys_Where =GetNewSql(seachsql)+ "and CreatName='" + UserData.UserName + "'";
             pc.sys_Order = "ID";
 
             var list2 = OPBiz.ExecuteProToDataSetNew("sp_PaginationEx", pc);
