@@ -47,6 +47,10 @@ namespace App.Core
              container.RegisterType<IColumnChartsDao, ColumnChartsBiz>();
              container.RegisterType<IBaschartypeDao, BaschartypeBiz>();
              container.RegisterType<IBascharvalueDao, BascharvalueBiz>();
+
+             container.RegisterType<ICorrelateColumnsDao, CorrelateColumnsBiz>();
+
+             container.RegisterType<IMainAssociationDao, MainAssociationBiz>();
             #endregion
               
 
