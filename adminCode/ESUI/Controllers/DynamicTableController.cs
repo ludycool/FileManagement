@@ -36,7 +36,16 @@ namespace ESUI.Controllers
         public BaschartypeBiz Bciz { get; set; }
         
         [Dependency]
-        public BascharvalueBiz Bcviz { get; set; }
+        public BascharvalueBiz Bcviz { get; set; }  
+        
+        
+        [Dependency]
+        public MainAssociationBiz Mabiz { get; set; }   
+        
+        [Dependency]
+        public CorrelateColumnsBiz Correlatecbiz { get; set; }    
+        [Dependency]
+        public VcorrelateColumnsBiz Vcbiz { get; set; }
         public ActionResult Index()
         {
             return View();
@@ -1110,5 +1119,167 @@ namespace ESUI.Controllers
             //  groupsBiz.Add(rol);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public JsonResult GetBdlList(string Condition, string seachsql, string ChildCategoryTableID)
+        {
+            var sqlc2 = MainAssociationSet.SelectAll().Where(MainAssociationSet.CategoryTableID.Equal(Condition).And(MainAssociationSet.ChildCategoryTableID.Equal(ChildCategoryTableID)));
+           var d= Mabiz.GetEntity(sqlc2);
+            var dic = new List<ColumnCharts>();
+            if (d==null)
+            {
+                var sqlc = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition));
+                 dic = CCBiz.GetEntities(sqlc);
+            }
+            else
+            {
+                dic = CCBiz.ExecuteSqlToOwnList("select * from  ColumnCharts where ID not in ( select ChildColumnChartsID from CorrelateColumns where MainAssociationID='" + d.ID + "') and CategoryTableID='" + Condition + "'");
+            }
+
+
+            return Json(dic);
+        }
+        [HttpPost]
+        public JsonResult GetalreadyBdlList(string Condition, string seachsql, string ChildCategoryTableID)
+        {
+            var sqlc2 = MainAssociationSet.SelectAll().Where(MainAssociationSet.CategoryTableID.Equal(Condition).And(MainAssociationSet.ChildCategoryTableID.Equal(ChildCategoryTableID)));
+            var d = Mabiz.GetEntity(sqlc2);
+            var dic = new List<VcorrelateColumns>();
+            if (d != null)
+            {
+            var sqlc = VcorrelateColumnsSet.SelectAll().Where(VcorrelateColumnsSet.MainAssociationID.Equal(d.ID));
+            dic = Vcbiz.GetEntities(sqlc);
+            }
+            //else
+            //{
+            //    dic = CCBiz.ExecuteSqlToOwnList("select * from  ColumnCharts where ID not in ( select ChildColumnChartsID from CorrelateColumns where MainAssociationID='" + d.ID + "')");
+            //}
+
+
+            return Json(dic);
+        }
+        public JsonResult GetCategoryTable(string ID )
+        {
+            var mql2 = CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.NotEqual(ID));
+            var Rmodel = OPBiz.GetEntities(mql2);
+            //  groupsBiz.Add(rol);
+            return Json(Rmodel, JsonRequestBehavior.AllowGet);
+        }
+       // CategoryTableID: categoryTableID, ChildCategoryTableID: childCategoryTableID, tbOutrow: tbOutrow, dgrows: dgrows 
+        public JsonResult EditconnectionRelation(string CategoryTableID, string ChildCategoryTableID, string tbOutrow, string dgrows)
+        {
+
+            bool IsAdd = false;
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            var ColumnChartstbOutrow = JsonConvert.DeserializeObject<ColumnCharts>(tbOutrow);
+            var ColumnChartsdgrows = JsonConvert.DeserializeObject<ColumnCharts>(dgrows);
+            var sqlc2 = MainAssociationSet.SelectAll().Where(MainAssociationSet.CategoryTableID.Equal(CategoryTableID).And(MainAssociationSet.ChildCategoryTableID.Equal(ChildCategoryTableID)));
+              
+            var newmodle = Mabiz.GetEntity(sqlc2);
+           
+            if (newmodle==null)
+            {
+               newmodle=new MainAssociation();
+                newmodle.ID = Guid.NewGuid().ToString();
+                newmodle.CategoryTableID = CategoryTableID;
+                newmodle.ChildCategoryTableID = ChildCategoryTableID;
+                Mabiz.Add(newmodle);
+            }
+            var CorrelateColumnsmodle = new CorrelateColumns();
+            CorrelateColumnsmodle.ID = Guid.NewGuid().ToString();
+            CorrelateColumnsmodle.ColumnChartsID = ColumnChartsdgrows.ID;
+            CorrelateColumnsmodle.ChildColumnChartsID = ColumnChartstbOutrow.ID;
+            CorrelateColumnsmodle.MainAssociationID = newmodle.ID;
+            try
+            {
+                Correlatecbiz.Add(CorrelateColumnsmodle);
+                ReSultMode.Code = 11;
+                ReSultMode.Data = "";
+                ReSultMode.Msg = "更新成功";
+            }
+            catch (Exception e)
+            {
+                ReSultMode.Code = -11;
+                        ReSultMode.Data = "";
+                        ReSultMode.Msg = "更新失败";
+            }
+            //else
+            //{
+                
+            //}
+            //if (categoryTable != null && string.IsNullOrEmpty(categoryTable.CharId))//id为空，是添加
+            //{
+            //    IsAdd = true;
+            //}
+            ////if (OPBiz.GetCount<CategoryTableSet>(CategoryTableSet.UserTableName.Equal(categoryTable.UserTableName)) > 0.0)
+            ////{
+            ////    return Json("Nok", JsonRequestBehavior.AllowGet);
+            ////}
+
+            //if (IsAdd)
+            //{
+            //    categoryTable.CharId = Guid.NewGuid().ToString();
+            //    //categoryTable.TableName_ = DateTime.Now;
+            //    //categoryTable.TableProperties = DateTime.Now;
+            //    //rol.RoleDescription = RMS_ButtonsModle.RoleDescription;
+            //    //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
+
+            //    Bcviz.Add(categoryTable);
+            //    ReSultMode.Code = 11;
+            //    ReSultMode.Data = "";
+            //    ReSultMode.Msg = "添加成功";
+            //    //                OPBiz.ExecuteSqlWithNonQuery("create table [" + categoryTable.UserTableName + "]  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null,ck nvarchar(100) null) ");
+            //    //                OPBiz.ExecuteSqlWithNonQuery("INSERT INTO [ColumnCharts]      ([ID],[CategoryTableID],[field],[title],[rowspan],[width],[IsEnable]) VALUES('" + Guid.NewGuid().ToString() + "','" + categoryTable.ID + "','ck','ck',1,100,1) ");
+            //    //return Json("ok", JsonRequestBehavior.AllowGet);
+            //}
+            //else
+            //{
+
+            //    categoryTable.WhereExpression = BascharvalueSet.CharId.Equal(categoryTable.CharId);
+            //    //  spmodel.GroupId = GroupId;
+            //    if (Bcviz.Update(categoryTable) > 0)
+            //    {
+            //        ReSultMode.Code = 11;
+            //        ReSultMode.Data = "";
+            //        ReSultMode.Msg = "更新成功";
+            //    }
+            //    else
+            //    {
+            //        ReSultMode.Code = -11;
+            //        ReSultMode.Data = "";
+            //        ReSultMode.Msg = "更新失败";
+            //    }
+            //}
+            return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+
+
+
+        }
+
+        public JsonResult DelconnectionRelation(string IDSet )
+        {
+            //int f
+            //=0;
+
+            //var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(CategoryTableID)));
+            string sql = "DELETE FROM  [CorrelateColumns] where  ID  in(" + IDSet + ")";
+            int f = OPBiz.ExecuteSqlWithNonQuery(sql); ;
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            if (f > 0)
+            {
+                ReSultMode.Code = 11;
+                ReSultMode.Data = f.ToString();
+                ReSultMode.Msg = "成功删除" + f + "条数据！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                ReSultMode.Code = -13;
+                ReSultMode.Data = "0";
+                ReSultMode.Msg = "删除失败！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
+        }
+
     }
 }

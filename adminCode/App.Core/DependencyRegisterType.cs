@@ -50,7 +50,8 @@ namespace App.Core
 
              container.RegisterType<ICorrelateColumnsDao, CorrelateColumnsBiz>();
 
-             container.RegisterType<IMainAssociationDao, MainAssociationBiz>();
+             container.RegisterType<IMainAssociationDao, MainAssociationBiz>(); 
+            container.RegisterType<IVcorrelateColumnsDao, VcorrelateColumnsBiz>();
             #endregion
               
 

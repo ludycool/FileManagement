@@ -80,6 +80,7 @@
     <Compile Include="RMS\V_Role.cs" />
     <Compile Include="SysItem.cs" />
     <Compile Include="Sys_CityArea.cs" />
+    <Compile Include="VcorrelateColumns.cs" />
     <Compile Include="V_mode\AdminUserInfo.cs" />
     <Compile Include="V_mode\v_Sys_Advertising.cs" />
     <Compile Include="V_mode\v_Sys_AppVerSion.cs" />
@@ -103,7 +104,6 @@
     <Compile Include="RMS\V_RoleManuButtons.cs" />
     <Compile Include="Parameter.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
