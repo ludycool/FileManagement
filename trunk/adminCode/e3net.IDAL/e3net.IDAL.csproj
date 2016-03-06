@@ -63,6 +63,7 @@
     <Compile Include="DynamicTable\IBaschartypeDao.cs" />
     <Compile Include="DynamicTable\IColumnChartsDao.cs" />
     <Compile Include="DynamicTable\IBascharvalueDao.cs" />
+    <Compile Include="DynamicTable\IVcorrelateColumnsDao.cs" />
     <Compile Include="FileManagementDB\ITF_PaperFileDao.cs" />
     <Compile Include="FileManagementDB\ITF_LifeCommentsDao.cs" />
     <Compile Include="FileManagementDB\ITF_ElectronicFileDao.cs" />
