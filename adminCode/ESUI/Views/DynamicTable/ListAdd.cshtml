@@ -8,40 +8,29 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
-    @* ReSharper disable once NotAllPathsReturnValue *@
 
 
-    @section Jsprepare{
+
+    @section Jsprepare
+    {
 
         <script type="text/javascript">
             var BaseUrl = '/DynamicTable/';
             var editIndex = undefined;
 
 
-            jQuery(document).ready(function () {
+            jQuery(document).ready(function() {
 
                 DataGridSet();
 
                 $('#language').combobox({
                     url: "/DynamicTable/GetCategoryTable?ID=" + '@ViewBag.RuteUrl',
-                    //editable: false,
-                    //panelWidth: 130,
-                    //width: 130,
-                    // queryParams: { ID: '@ViewBag.RuteUrl' },
-                    onSelect: function (record) {
+
+                    onSelect: function(record) {
                         var peo = $('#language').combobox('getValue');
                         bingbdinglist(peo);
                         bingalreadybdinglist(peo);
-                        //                        if (peo == "1") {
-                        //                            $('#select2id').combobox({
-                        //                                disabled: true
-                        //                            });
-                        //                        }
-                        //                        else {
-                        //                            $('#select2id').combobox({
-                        //                                disabled: false
-                        //                            });
-                        //                        }
+
                     }
                 });
                 var peo2 = $('#language').combobox('getValue');
@@ -95,7 +84,7 @@
                             id: 'btnadd',
                             text: '添加',
                             iconCls: 'icon-add',
-                            handler: function () {
+                            handler: function() {
                                 AddInfo();
 
                             }
@@ -103,7 +92,7 @@
                             id: 'btncut',
                             text: '修改',
                             iconCls: 'icon-cut',
-                            handler: function () {
+                            handler: function() {
                                 //实现修改的方法
                                 EditInfo();
                             }
@@ -111,7 +100,7 @@
                             id: 'btncut',
                             text: '添加关联表字段',
                             iconCls: 'icon-cut',
-                            handler: function () {
+                            handler: function() {
                                 //实现修改的方法
                                 $('#DivSetRole').window({
                                     title: '角色:' + ' --  权限分配',
@@ -126,6 +115,7 @@
                 loadColum();
                 bindconbox();
             }
+
             function Processeddata() {
 
 
@@ -133,12 +123,11 @@
                     url: BaseUrl + 'GetBdlList',
                     columns: [
                         [
-
                             { field: 'title', title: '中文名称', width: 60, align: 'right' },
                             { field: 'field', title: '英文名称', width: 60, align: 'right' }
                         ]
                     ],
-                    onDblClickRow: function (index, row) {
+                    onDblClickRow: function(index, row) {
                         //                        Delbtn();
                         //  DelManuBtn(row.Id, id)//删菜单按钮
                     },
@@ -155,13 +144,13 @@
                 });
 
             }
+
             function bingbdinglist(id) {
 
                 $('#tbOut').datagrid({
                     url: BaseUrl + 'GetBdlList',
                     columns: [
                         [
-
                             { field: 'title', title: '中文名称', width: 60, align: 'right' },
                             { field: 'field', title: '英文名称', width: 60, align: 'right' }
                         ]
@@ -179,13 +168,13 @@
                     rownumbers: true
                 });
             }
+
             function bingalreadybdinglist(id) {
 
                 $('#tbIn').datagrid({
                     url: BaseUrl + 'GetalreadyBdlList',
                     columns: [
                         [
-
                             { field: 'yuanlai', title: '中文名称', width: 60, align: 'right' },
                             { field: 'guanlian', title: '英文名称', width: 60, align: 'right' }
                         ]
@@ -203,16 +192,17 @@
                     rownumbers: true
                 });
             }
-            //处理关联功能添加
+
+//处理关联功能添加
             function addbtn() {
-                var tbOutrow =  JSON.stringify( $('#tbOut').datagrid('getSelected'));
+                var tbOutrow = JSON.stringify($('#tbOut').datagrid('getSelected'));
                 //if (row != null) {
                 //    $("#tbIn").datagrid("appendRow", row);
                 //}
                 //var b = $('#tbOut').datagrid('getRowIndex', row);
                 //$('#tbOut').datagrid('deleteRow', b);
                 //$('#tbOut').datagrid('selectRow', b - 1);
-                var dgrows =  JSON.stringify( $("#dg").datagrid('getSelected'));
+                var dgrows = JSON.stringify($("#dg").datagrid('getSelected'));
                 var categoryTableID = $('#language').combobox('getValue');
                 var childCategoryTableID = '@ViewBag.RuteUrl';
 
@@ -221,8 +211,8 @@
                     type: 'POST',
                     data: { CategoryTableID: categoryTableID, ChildCategoryTableID: childCategoryTableID, tbOutrow: tbOutrow, dgrows: dgrows },
                     cache: false,
-                    error: function () { alert('Error $.ajax'); },
-                    success: function (data) {
+                    error: function() { alert('Error $.ajax'); },
+                    success: function(data) {
                         $("#tbOut").datagrid("reload");
                         $("#tbIn").datagrid("reload");
                         //var result = eval('(' + data + ')');
@@ -237,10 +227,10 @@
             }
 
 
-            function Delbtn() {
+            function Delbtn2() {
                 var rows = $('#tbIn').datagrid('getSelected');
                 if (rows.length > 0) {
-                    
+
 
                     var ids = ""; //1,2,3,4,5
                     for (var i = 0; i < rows.length; i++) {
@@ -250,29 +240,18 @@
                     }
                     //最后去掉最后的那一个,
                     ids = ids.substring(0, ids.length - 1);
-                    //获取按钮选择的按钮信息，如果按钮选择了已经登录的按钮的话需要给出不能删除的信息
-                    //var Name = "";
-                    //for (var i = 0; i < rows.length; i++) {
-                    //    Name += rows[i][Namefield] + ",";
-                    //}
-                    //Name = Name.substring(0, Name.length - 1);
-                    //首先取出来到底是直接删除还是伪删除发送异步请求的地址和是否是伪删除的参数
+                  
                     var postData = "";
 
                     postData = {
                         IDSet: ids
-                    
+
                     };
-                    //}
-                    //else {
-                    //    postData = {
-                    //        ID: ids, Not: not
-                    //    }
-                    //}
+               
                     //然后确认发送异步请求的信息到后台删除数据
-                    $.messager.confirm("删除信息", "您确认删除<font color='red' size='3'>" + "" + "</font>吗？", function (Delete) {
+                    $.messager.confirm("删除信息", "您确认删除<font color='red' size='3'>" + "" + "</font>吗？", function(Delete) {
                         if (Delete) {
-                            $.get(BaseUrl + "DelconnectionRelation", postData, function (data) {
+                            $.get(BaseUrl + "DelconnectionRelation", postData, function(data) {
                                 alerts(data.Msg, 2);
                                 if (data.Code > 0) {
                                     $("#tbIn").datagrid("reload");
@@ -282,17 +261,14 @@
                             });
                         }
                     });
+                } else {
+                    alert("请选择你要删除的数据");
                 }
-                //if (row != null) {
-                //    $("#tbOut").datagrid("appendRow", row);
-                //}
-                //var b = $('#tbIn').datagrid('getRowIndex', row);
-                //$('#tbIn').datagrid('deleteRow', b);
 
-                //$('#tbIn').datagrid('selectRow', b - 1);
+    }
 
 
-            }
+             
             function bindconbox() {
 
                 $('#ParentId').combobox({
@@ -439,85 +415,76 @@
                 $(".validatebox-tip").remove();//清除验证样式
                 DataBaseFunction.ClearForm("ff");
                 $("#CategoryTableID").val('@ViewBag.RuteUrl');
-               $('input:radio[name=IsEnable]')[0].checked = true;
-               $('input:radio[name=ISLogpeople]')[1].checked = true;
-               $('input:radio[name=ISLoginsector]')[1].checked = true;
-               $('input:radio[name=IsNumber]')[1].checked = true;
-               $('input:radio[name=MergeHeader]')[1].checked = true;
-               $('#field').attr('readonly', false);
-           }
+                $('input:radio[name=IsEnable]')[0].checked = true;
+                $('input:radio[name=ISLogpeople]')[1].checked = true;
+                $('input:radio[name=ISLoginsector]')[1].checked = true;
+                $('input:radio[name=IsNumber]')[1].checked = true;
+                $('input:radio[name=MergeHeader]')[1].checked = true;
+                $('#field').attr('readonly', false);
+            }
 
 
-           //绑定修改显示详细信息的方法
-           function EditInfo() {
+            //绑定修改显示详细信息的方法
+            function EditInfo() {
 
-               var rows = $("#dg").datagrid('getSelected');
+                var rows = $("#dg").datagrid('getSelected');
 
-               //首先取出来值判断只能选择一个
-               if (rows == null) {
-                   $.messager.alert("友情提示", "请选择", "error");
-                   return;
-               }
-               $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.title).window('resize', { top: 50 });
-               $(".validatebox-tip").remove();//清除验证样式
-               var ID = rows.ID;  //获取到了用选择的ID
-               $.ajax({
-                   url: BaseUrl + 'GetColumnInfo',
-                   type: 'POST',
-                   data: { ID: ID },
-                   cache: false,
-                   error: function () { alert('Error $.ajax'); },
-                   success: function (data) {
-                       //var result = eval('(' + data + ')');
-                       DataBaseFunction.BindForm("ff", data);
-                       $('#cc').combobox('setValue', data['editor']);
-                       $('#align').combobox('setValue', data['align']);
-                       $('#ParentId').combobox('setValue', data['ParentId']);
-                       $('#field').attr('readonly', true);
-                   }
-               });
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.title).window('resize', { top: 50 });
+                $(".validatebox-tip").remove();//清除验证样式
+                var ID = rows.ID;  //获取到了用选择的ID
+                $.ajax({
+                    url: BaseUrl + 'GetColumnInfo',
+                    type: 'POST',
+                    data: { ID: ID },
+                    cache: false,
+                    error: function () { alert('Error $.ajax'); },
+                    success: function (data) {
+                        //var result = eval('(' + data + ')');
+                        DataBaseFunction.BindForm("ff", data);
+                        $('#cc').combobox('setValue', data['editor']);
+                        $('#align').combobox('setValue', data['align']);
+                        $('#ParentId').combobox('setValue', data['ParentId']);
+                        $('#field').attr('readonly', true);
+                    }
+                });
 
-           }
+            }
 
-           //实现的编辑，包括增查改
-           function SaveInfo() {
+            //实现的编辑，包括增查改
+            function SaveInfo() {
 
-               //判断的信息是否通过验证
-               var validate = $("#ff").form('validate');
-               if (validate == false) {
-                   return false;
-               }
-               //获取需要传递的参数传递给前台
-               var data = DataBaseFunction.GetFormData("ff")
-               //发送异步请求到后台保存数据
-               $.post(BaseUrl + 'ColumnEditInfo', data, function (data) {
-                   alerts(data.Msg, 2);
-                   if (data.Code > 0) {
-                       $('#DivEditor').dialog('close');
-                       $(".validatebox-tip").remove();
-                       $("#dg").datagrid("reload");
-                       loadColum();
-                       bindconbox();
+                //判断的信息是否通过验证
+                var validate = $("#ff").form('validate');
+                if (validate == false) {
+                    return false;
+                }
+                //获取需要传递的参数传递给前台
+                var data = DataBaseFunction.GetFormData("ff")
+                //发送异步请求到后台保存数据
+                $.post(BaseUrl + 'ColumnEditInfo', data, function (data) {
+                    alerts(data.Msg, 2);
+                    if (data.Code > 0) {
+                        $('#DivEditor').dialog('close');
+                        $(".validatebox-tip").remove();
+                        $("#dg").datagrid("reload");
+                        loadColum();
+                        bindconbox();
 
-                   }
-               });
+                    }
+                });
 
-           }
-           //删除
-           function Del() {
-               DataBaseFunction.deleteInfo("dg", "Id", "TName");
+            }
+            //删除
+            function Del() {
+                DataBaseFunction.deleteInfo("dg", "Id", "TName");
 
-           }
-           //function myfunction2() {
+            }
 
-
-           //    alert("t");
-           //}
-           //function myfunction() {
-           //    $("#title").val("ck");
-           //    alert("a");
-
-           //}
         </script>
     }
 
@@ -720,54 +687,55 @@
             <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>
         </div>
     </div>
-    <div id="DivSetRole" class="easyui-window" style="width: 510px; height: 440px;"
-        closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+<div id="DivSetRole" class="easyui-window" style="width: 510px; height: 440px;"
+     closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
 
-        <input class="easyui-combobox" id="language" name="language"
-            data-options="valueField:'ID',textField:'ChineseName'">
+    <input class="easyui-combobox" id="language" name="language"
+           data-options="valueField:'ID',textField:'ChineseName'">
 
-        <div style="display: block; width: 210px; float: left; height: 340px;">
-            <table id="tbOut"></table>@*//未选择的*@
+    <div style="display: block; width: 210px; float: left; height: 340px;">
+        <table id="tbOut"></table>@*//未选择的*@
 
-        </div>
-        <div style="display: block; width: 30px; float: left; height: 340px;">
+    </div>
+    <div style="display: block; width: 30px; float: left; height: 340px;">
 
-            <div id="divSelect" style="height: 100px; height: 30px; padding-top: 130px; padding-left: 5px;">
-
-
-                <span class=" icon icon-arrow_right" style="display: block; cursor: pointer" onclick="addbtn();">&nbsp;</span>
-                <br />
-                <span class=" icon icon-arrow_left" style="display: block; cursor: pointer" onclick="Delbtn();">&nbsp;</span>
-            </div>
+        <div id="divSelect" style="height: 100px; height: 30px; padding-top: 130px; padding-left: 5px;">
 
 
-        </div>
-        <div style="display: block; width: 210px; float: left; height: 340px;">
-
-            <table id="tbIn"></table>@*已选择的*@
-        </div>
-        <div style="display: block; width: 20px; float: right; height: 340px;">
-            <div style="height: 100px; height: 20px; padding-top: 130px;">
-                <span class=" icon icon-arrow_up" style="display: block; cursor: pointer" onclick="Upbtn()">&nbsp;</span>
-                <br />
-                <span class=" icon icon-arrow_down" style="display: block; cursor: pointer" onclick="Downbtn()">&nbsp;</span>
-            </div>
-        </div>
-
-        <div style="display: block; width: 480px; height: 20px; text-align: center; line-height: 20px;">
-            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'"
-                onclick="javascript:addbtnAll()">全选</a>
-            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-delete'"
-                onclick="javascript:delbtnAll()">清除</a>
-            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
-                onclick="javascript:SaveBtnSet()">应用</a>
-
-            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cross'"
-                onclick="javascript: $('#DivSetBtn').dialog('close');">关闭</a>
-
+            <span class=" icon icon-arrow_right" style="display: block; cursor: pointer" onclick="addbtn();">&nbsp;</span>
+            <br/>
+            <span class=" icon icon-arrow_left" style="display: block; cursor: pointer" onclick="Delbtn2();">&nbsp;</span>
         </div>
 
 
     </div>
+    <div style="display: block; width: 210px; float: left; height: 340px;">
+
+        <table id="tbIn"></table>@*已选择的*@
+    </div>
+    <div style="display: block; width: 20px; float: right; height: 340px;">
+        <div style="height: 100px; height: 20px; padding-top: 130px;">
+            <span class=" icon icon-arrow_up" style="display: block; cursor: pointer" onclick="Upbtn()">&nbsp;</span>
+            <br/>
+            <span class=" icon icon-arrow_down" style="display: block; cursor: pointer" onclick="Downbtn()">&nbsp;</span>
+        </div>
+    </div>
+
+    <div style="display: block; width: 480px; height: 20px; text-align: center; line-height: 20px;">
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'"
+           onclick="javascript:addbtnAll()">全选</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-delete'"
+           onclick="javascript:delbtnAll()">清除</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
+           onclick="javascript:SaveBtnSet()">应用</a>
+
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cross'"
+           onclick="javascript: $('#DivSetBtn').dialog('close');">关闭</a>
+
+    </div>
+
+
+</div>
+
 </body>
 </html>
