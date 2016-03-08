@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity;
 using e3net.Mode.HttpView;
+using System.Configuration;
 
 namespace ESUI.Controllers
 {
@@ -162,7 +163,13 @@ namespace ESUI.Controllers
         public string GetManeOP(string Id)
         {
             string menus = " [\n";
+
             var sql = RMS_MenusSet.SelectAll();
+            string SysRoleId = ConfigurationManager.AppSettings["SysRoleId"].ToString();
+            if (!UserData.RoleId.ToString().Equals(SysRoleId))//不是系统管理员的角色，只能返回自己的菜单
+            {
+                sql = RMS_MenusSet.SelectAll().Where(RMS_MenusSet.Id.In(RMS_RoleManusSet.Select(RMS_RoleManusSet.ManuId).Where(RMS_RoleManusSet.RoleId.Equal(UserData.RoleId))));
+            }
             List<RMS_Menus> list = RDBiz.GetOwnList<RMS_Menus>(sql);//所有的菜单集
             List<RMS_Buttons> listControlButtons = RDBiz.GetOwnList<RMS_Buttons>(RMS_ButtonsSet.SelectAll());//所有的按钮
             List<RMS_RoleManus> listRoleColumns = RDBiz.GetOwnList<RMS_RoleManus>(RMS_RoleManusSet.SelectAll().Where(RMS_RoleManusSet.RoleId.Equal(Id)));//这个角色已经添加的菜单
