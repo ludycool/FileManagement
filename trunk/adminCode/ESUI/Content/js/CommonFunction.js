@@ -38,63 +38,47 @@ function htmlDecode(str) {
 
     return _str;
 }
+//去掉所有的html标记
+function delHtmlTag(str, len) {
+    if (str != undefined) {
+        var title = str.replace(/<[^>]+>/g, "");//去掉所有的html标记
+        if (title.length > len) {
+            title = title.substring(0, len) + "...";
+        }
+        return title;
+    } else {
+        return "";
+    }
+
+}
 
 //字符串截取
-function StringSub(value, length) {
-    if (value != undefined) {
-        if (value.length > length) {
-            value = value.substring(0, length);
+function StringSub(str, len) {
+    if (str != undefined) {
+        if (str.length > len) {
+            str = str.substring(0, len) + "...";
         }
+        return str;
+    } else {
+        return "";
     }
-    return value;
-}
-// 将日期类型转换成字符串型格式yyyy-MM-dd hh:mm
-////////////////////////////////////////////////////////
-function ChangeTimeToString(DateIn) {
-    var Year = 0;
-    var Month = 0;
-    var Day = 0;
-    var Hour = 0;
-    var Minute = 0;
-    var CurrentDate = "";
-
-    //初始化时间
-    Year = DateIn.getYear();
-    Month = DateIn.getMonth() + 1;
-    Day = DateIn.getDate();
-    Hour = DateIn.getHours();
-    Minute = DateIn.getMinutes();
-
-
-    CurrentDate = Year + "-";
-    if (Month >= 10) {
-        CurrentDate = CurrentDate + Month + "-";
-    }
-    else {
-        CurrentDate = CurrentDate + "0" + Month + "-";
-    }
-    if (Day >= 10) {
-        CurrentDate = CurrentDate + Day;
-    }
-    else {
-        CurrentDate = CurrentDate + "0" + Day;
-    }
-
-    if (Hour >= 10) {
-        CurrentDate = CurrentDate + " " + Hour;
-    }
-    else {
-        CurrentDate = CurrentDate + " 0" + Hour;
-    }
-    if (Minute >= 10) {
-        CurrentDate = CurrentDate + ":" + Minute;
-    }
-    else {
-        CurrentDate = CurrentDate + ":0" + Minute;
-    }
-    return CurrentDate;
 }
 
+function clearNoNum(obj) {
+    //先把非数字的都替换掉，除了数字和. 
+    obj.value = obj.value.replace(/[^\d.]/g, "");
+    //必须保证第一个为数字而不是. 
+    obj.value = obj.value.replace(/^\./g, "");
+    //保证只有出现一个.而没有多个. 
+    obj.value = obj.value.replace(/\.{2,}/g, ".");
+    //保证.只出现一次，而不能出现两次以上
+    obj.value = obj.value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
+}
+
+function clearNoNumberContainDot(obj) {
+    //先把非数字的都替换掉，除了数字和. 
+    obj.value = obj.value.replace(/[^\d]/g, "");
+}
 function paramString2obj(serializedParams) {
 
     var obj = {};
@@ -166,10 +150,6 @@ function clearNoNum(obj) {
     //保证.只出现一次，而不能出现两次以上
     obj.value = obj.value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
 }
-function clearNoNumberContainDot(obj) {
-    //先把非数字的都替换掉
-    obj.value = obj.value.replace(/[^\d]/g, "");
-}
 var DataBaseFunction = {
     ClearForm: function (formId) {
         $("#" + formId).form("clear");
@@ -204,17 +184,10 @@ var DataBaseFunction = {
             if (dd != null) {
                 var ty = dd.attr("type");
                 if (ty != null && ty == "radio") {
-                   
-                    var _o = document.getElementsByName(items);
-                    for (i = 0; i < _o.length; i++) {
-                        if (_o[i].value == String(data[items]))
-                        { _o[i].checked = true; }
-                        else {
-                            _o[i].checked = false;
-                        }
-                    }
-                   // dd.removeAttr("CHECKED");
-                   //$("[name=" + items + "][value=" + data[items] + "]").attr("checked", true); ie9以上失效
+
+                    controlSet.RadioBindSelect(formId, items, data[items]);
+                    // dd.removeAttr("CHECKED");
+                    //$("[name=" + items + "][value=" + data[items] + "]").attr("checked", true); ie9以上失效
                 } else if (ty != null && ty == "checkbox") {
                     dd.removeAttr("CHECKED");
                     var strdata = data[items].split("%&");
@@ -240,7 +213,7 @@ var DataBaseFunction = {
             var ids = "";   //1,2,3,4,5
             for (var i = 0; i < rows.length; i++) {
                 //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
-                ids += "'" + rows[i][Idfield] + "',";
+                ids += rows[i][Idfield] + ",";
             }
             //最后去掉最后的那一个,
             ids = ids.substring(0, ids.length - 1);
@@ -324,67 +297,79 @@ var DataBaseFunction = {
     }
 
 }
-
-
-//设置宽高自适应w  h 宽高偏移量
-function PanelAutoResizeWH(PanelSelect, w, h) 
+function PanelAutoResizeWH(PanelSelect, w, h) //设置宽高自适应w  h 宽高偏移量
 {
-    var winWidth = GetwinWidth();
-    var winHeight = GetwinHeight();
-
+    var winWidth = 0;
+    var winHeight = 0;
+    //获取窗口宽度
+    if (window.innerWidth)
+        winWidth = window.innerWidth;
+    else if ((document.body) && (document.body.clientWidth))
+        winWidth = document.body.clientWidth;
+    //获取窗口高度
+    if (window.innerHeight)
+        winHeight = window.innerHeight;
+    else if ((document.body) && (document.body.clientHeight))
+        winHeight = document.body.clientHeight;
+    //通过深入Document内部对body进行检测，获取窗口大小
+    if (document.documentElement && document.documentElement.clientHeight && document.documentElement.clientWidth) {
+        winHeight = document.documentElement.clientHeight;
+        winWidth = document.documentElement.clientWidth;
+    }
     var ww = winWidth - w;
     var hh = winHeight - h;
-    $(PanelSelect).window('resize', {
+    $(PanelSelect).panel('resize', {
         width: ww,
         height: hh
     });
 
 
 }
-//设置宽高自适应w  h 宽高偏移量
-function AutoWH(PanelSelect, w, h) {
-    var winWidth = GetwinWidth();
-    var winHeight = GetwinHeight();
 
+function AutoWH(PanelSelect, w, h) //设置宽高自适应w  h 宽高偏移量
+{
+    var winWidth = 0;
+    var winHeight = 0;
+    //获取窗口宽度
+    if (window.innerWidth)
+        winWidth = window.innerWidth;
+    else if ((document.body) && (document.body.clientWidth))
+        winWidth = document.body.clientWidth;
+    //获取窗口高度
+    if (window.innerHeight)
+        winHeight = window.innerHeight;
+    else if ((document.body) && (document.body.clientHeight))
+        winHeight = document.body.clientHeight;
+    //通过深入Document内部对body进行检测，获取窗口大小
+    if (document.documentElement && document.documentElement.clientHeight && document.documentElement.clientWidth) {
+        winHeight = document.documentElement.clientHeight;
+        winWidth = document.documentElement.clientWidth;
+    }
     var ww = winWidth - w;
     var hh = winHeight - h;
     $(PanelSelect).width(ww);
     $(PanelSelect).height(hh);
 
 }
-//设置宽自适应w  宽偏移量
 function AutoW(PanelSelect, w) //设置宽自适应w宽高偏移量
 {
+    var winWidth = 0;
     //获取窗口宽度
-    var winWidth = GetwinWidth();
+    if (window.innerWidth)
+        winWidth = window.innerWidth;
+    else if ((document.body) && (document.body.clientWidth))
+        winWidth = document.body.clientWidth;
+
+    //通过深入Document内部对body进行检测，获取窗口大小
+    if (document.documentElement && document.documentElement.clientWidth) {
+        winWidth = document.documentElement.clientWidth;
+    }
     var ww = winWidth - w;
     $(PanelSelect).width(ww);
 }
-
-//设置高自适应 h 高偏移量
 function AutoH(PanelSelect, h) //设置高自适应 h 宽高偏移量
 {
 
-    var winHeight = GetwinHeight();
-   
-    var hh = winHeight - h;
-    $(PanelSelect).height(hh);
-}
-
-//当高度》（浏览器高度值减去偏移量），设置高自适应 ，h 宽高偏移量
-function AutoMaxH(PanelSelect, h) {
-    //获取窗口高度
-    var winHeight = GetwinHeight();
-    var hh = winHeight - h;
-    if ($(PanelSelect).height() > hh) {
-        $(PanelSelect).height(hh);
-    }
-}
-
-var winWidth = GetwinWidth();
-var winHeight = GetwinHeight();
-//获取窗口高度
-function GetwinHeight() {
     var winHeight = 0;
     //获取窗口高度
     if (window.innerHeight)
@@ -395,20 +380,81 @@ function GetwinHeight() {
     if (document.documentElement && document.documentElement.clientHeight) {
         winHeight = document.documentElement.clientHeight;
     }
-    return winHeight;
+    var hh = winHeight - h;
+    $(PanelSelect).height(hh);
 }
-//获取窗口宽度
-function GetwinWidth() {
-    var winWidth = 0;
-    //获取窗口宽度
-    if (window.innerWidth)
-        winWidth = window.innerWidth;
-    else if ((document.body) && (document.body.clientWidth))
-        winWidth = document.body.clientWidth;
-    //通过深入Document内部对body进行检测，获取窗口大小
-    if (document.documentElement && document.documentElement.clientWidth) {
-        winWidth = document.documentElement.clientWidth;
+
+//html 控件操作
+var controlSet = {
+    RadioSetSelect: function (formId, name, value) {//radio选中
+        var _o = document.forms[formId][name];
+        for (i = 0; i < _o.length; i++) {
+            if (_o[i].value == String(value))
+            { _o[i].checked = true; }
+            else {
+                _o[i].checked = false;
+            }
+        }
+    },
+    RadioBindSelect: function (formId, name, value) {//radio绑定控件
+        var _o = document.forms[formId][name];
+        for (i = 0; i < _o.length; i++) {
+            if (_o[i].value == String(value))
+            { _o[i].checked = true; }
+            else {
+                _o[i].checked = false;
+            }
+        }
+    },
+    RadioGetSelectValue: function (formId, name) {//radio获取选中值
+        var _o = document.forms[formId][name];
+        for (i = 0; i < _o.length; i++) {
+            if (_o[i].checked) {
+                return _o[i].value;
+                break;
+            }
+        }
     }
-    return winWidth;
+
+}
+
+//JS获取地址栏参数的方法（超级简单）
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+}
+
+
+var easyUIHelper = {
+    //只显示年月
+    dateboxShowMonth: function (dateboxSelector) {
+        $(dateboxSelector).datebox({
+            onShowPanel: function () {//显示日趋选择对象后再触发弹出月份层的事件，初始化时没有生成月份层
+                span.trigger('click'); //触发click事件弹出月份层
+                if (!tds) setTimeout(function () {//延时触发获取月份对象，因为上面的事件触发和对象生成有时间间隔
+                    tds = p.find('div.calendar-menu-month-inner td');
+                    tds.click(function (e) {
+                        e.stopPropagation(); //禁止冒泡执行easyui给月份绑定的事件
+                        var year = /\d{4}/.exec(span.html())[0]//得到年份
+                        , month = parseInt($(this).attr('abbr'), 10); //月份，这里不需要+1
+                        $(dateboxSelector).datebox('hidePanel')//隐藏日期对象
+                        .datebox('setValue', year + '-' + month); //设置日期的值
+                    });
+                }, 0)
+            },
+            parser: function (s) {
+                if (!s) return new Date();
+                var arr = s.split('-');
+                return new Date(parseInt(arr[0], 10), parseInt(arr[1], 10) - 1, 1);
+            },
+            formatter: function (d) { return d.getFullYear() + '-' + (d.getMonth() + 1);/*getMonth返回的是0开始的，忘记了。。已修正*/ }
+        });
+        var p = $(dateboxSelector).datebox('panel'), //日期选择对象
+            tds = false, //日期选择对象中月份
+            span = p.find('span.calendar-text'); //显示月份层的触发控件
+
+    }
+
 
 }
