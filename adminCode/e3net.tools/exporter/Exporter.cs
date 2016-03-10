@@ -48,6 +48,10 @@ namespace Zephyr.Core
         private string _fileName = string.Empty;
         private string _suffix = string.Empty; 
         private string _toptile = string.Empty;
+
+        private string _CategoryTableID = string.Empty;
+
+        private string _ChildCategoryTableID = string.Empty;
         public static string Path;
         public static Exporter Instance(string path)
         {
@@ -71,6 +75,49 @@ namespace Zephyr.Core
                 export.Compress(context.Request.Form["compressType"]);
  
             return export;
+        }
+        public static Exporter NewInstance(string path,DataTable dtTable)
+        {
+            var export = new Exporter();
+            var context = HttpContext.Current;
+            Path = path;
+            if (context.Request.Form["titles"] != null)
+                export.Title(JsonConvert.DeserializeObject<List<List<Column>>>(context.Request.Form["titles"]));
+            if (context.Request.Form["Title"] != null)
+                export.TopTitle(context.Request.Form["Title"]);
+
+            export.NewData(dtTable);
+            //if (context.Request.Form["dataGetter"] != null)
+            //    export.Data(context.Request.Form["dataGetter"]);
+
+            if (context.Request.Form["ChildCategoryTableID"] != null)
+                export.ChildCategoryTableID(context.Request.Form["ChildCategoryTableID"]);
+
+            if (context.Request.Form["CategoryTableID"] != null)
+                export.CategoryTableID(context.Request.Form["CategoryTableID"]);
+
+            if (context.Request.Form["fileType"] != null)
+                export.NewExport(context.Request.Form["fileType"]);
+
+
+
+
+            if (context.Request.Form["compressType"] != null)
+                export.Compress(context.Request.Form["compressType"]);
+
+            return export;
+        }
+
+        private Exporter CategoryTableID(string p)
+        {
+            _CategoryTableID = p;
+            return this;
+        }
+
+        private Exporter ChildCategoryTableID(string p)
+        {
+            _ChildCategoryTableID = p;
+            return this;
         }
 
         public Exporter TopTitle(string data)
@@ -97,6 +144,13 @@ namespace Zephyr.Core
            // _data = data;
             return this;
         }
+ public Exporter NewData(DataTable data)
+        {
+
+            _datatable = data;
+           // _data = data;
+            return this;
+        }
 
         public Exporter AddFormatter(string field,IFormatter formatter)
         {
@@ -120,6 +174,10 @@ namespace Zephyr.Core
         {
             var export = GetActor<IExport>(_export, DEFAULT_EXPORT, type);
             return Export(export);
+        }  public Exporter NewExport(string type)
+        {
+            var export = GetActor<IExport>(_export, DEFAULT_EXPORT, type);
+            return NewExport(export);
         }
 
         public Exporter Export(IExport export)
@@ -203,19 +261,22 @@ namespace Zephyr.Core
 //            });
             int cellIndex = 0;
             int cellnum = currentCell;
+            int h = 0;
             if (_datatable.Columns.Contains("ck"))
             {
                 cellnum++;
+                h++;
             }
             if (_datatable.Columns.Contains("ID"))
             {
                 cellnum++;
-                
+                h++;
+
             }
             foreach (DataRow row in _datatable.Rows)
             {
                 int k = 0;
-                for (int i =2; i <cellnum; i++)
+                for (int i =h; i <cellnum; i++)
                 {
 
 
@@ -234,7 +295,121 @@ namespace Zephyr.Core
             
             return this;
         }
+        public Exporter NewExport(IExport export)
+        {
+            if (_title == null)
+            {
+                _title = new List<List<Column>>();
+                _title.Add(new List<Column>());
+                EachHelper.EachListHeader(_data, (i, field, type) => _title[0].Add(new Column() { title = field, field = field, rowspan = 1, colspan = 1 }));
+            }
 
+            Dictionary<int, int> currentHeadRow = new Dictionary<int, int>();
+            Dictionary<string, List<int>> fieldIndex = new Dictionary<string, List<int>>();
+            Func<int, int> GetCurrentHeadRow = cell => currentHeadRow.ContainsKey(cell) ? currentHeadRow[cell] : 0;
+            // var currentRowindex = 2;
+            var currentRow = 2;
+            var currentCell = 0;
+
+            export.Init(_data);
+
+            //生成多行题头
+            for (var i = 0; i < _title.Count; i++)
+            {
+                currentCell = 0;
+
+                for (var j = 0; j < _title[i].Count; j++)
+                {
+                    var item = _title[i][j];
+                    if (item.hidden) continue;
+
+                    while (currentRow < GetCurrentHeadRow(currentCell) + 2)
+                        currentCell++;
+                    if (item.field != "ck")
+                    {
+
+
+                        export.FillData(currentCell, currentRow, "title_" + item.field, item.title);
+
+                        if (item.rowspan + item.colspan > 2)
+                            export.MergeCell(currentCell, currentRow, currentCell + item.colspan - 1, currentRow + item.rowspan - 1);
+
+                        if (!string.IsNullOrEmpty(item.field))
+                        {
+                            if (!fieldIndex.ContainsKey(item.field))
+                                fieldIndex[item.field] = new List<int>();
+                            fieldIndex[item.field].Add(currentCell);
+                        }
+
+                        for (var k = 0; k < item.colspan; k++)
+                            currentHeadRow[currentCell] = GetCurrentHeadRow(currentCell++) + item.rowspan;
+                    }
+                }
+                currentRow++;
+            }
+
+            export.FillTitleData(0, 0, "", _toptile);
+            export.MergeCell(0, 0, currentCell - 1, 1);
+            //设置题头样式
+            export.SetHeadStyle(0, 0, currentCell - 1, currentRow - 1);
+
+            //设置数据样式
+            var dataCount = 0;
+            dataCount = _datatable.Rows.Count;
+            //EachHelper.EachListRow(_data, (i, r) => dataCount++);
+            export.SetRowsStyle(0, currentRow, currentCell - 1, currentRow + dataCount - 1);
+
+            //填充数据
+            //            EachHelper.EachListRow(_data, (rowIndex, rowData) =>
+            //            {
+            //                EachHelper.EachObjectProperty(rowData, (i, name, value) =>
+            //                {
+            //                    if (fieldIndex.ContainsKey(name))
+            //                        foreach (int cellIndex in fieldIndex[name])
+            //                        {
+            //                            if (_fieldFormatter.ContainsKey(name))
+            //                                value = _fieldFormatter[name].Format(value);
+            //                            export.FillData(cellIndex, currentRow, name, value);
+            //                        }
+            //                });
+            //                currentRow++;
+            //            });
+            int cellIndex = 0;
+            int cellnum = currentCell;
+            int h = 0;
+            if (_datatable.Columns.Contains("ck"))
+            {
+                cellnum++;
+                h++;
+            }
+            if (_datatable.Columns.Contains("ID"))
+            {
+                cellnum++;
+                h++;
+
+            }
+            foreach (DataRow row in _datatable.Rows)
+            {
+                int k = 0;
+                for (int i = h; i < cellnum; i++)
+                {
+
+
+                    export.FillData(k, currentRow, "", row[i]);
+                    k++;
+                }
+
+
+                currentRow++;
+            }
+            export.SaveAsStream(Path);
+
+            //_suffix = export.suffix;
+            //if (string.IsNullOrEmpty(_fileName))
+            //    _fileName = DateTime.Now.ToString("yyyyMMddHHmmss");
+
+            return this;
+        }
         public Exporter Compress(string type)
         {
             var compress = GetActor<ICompress>(_compress, DEFAULT_COMPRESS, type);

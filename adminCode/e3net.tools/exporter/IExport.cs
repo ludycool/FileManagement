@@ -17,7 +17,8 @@ namespace Zephyr.Core
         string suffix { get;}
  
         void MergeCell(int x1,int y1,int x2,int y2);
-        void FillData(int x, int y,string field, object data);
+        void FillData(int x, int y,string field, object data);  
+//        void FillData(int x, int y,string field, object data,string );
 
         void Init(object data);
         void SaveAsStream(string path);
