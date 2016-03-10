@@ -60,10 +60,28 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
+        public String yuanfield
+        {
+            get { return GetPropertyValue<String>("yuanfield"); }
+            set { SetPropertyValue("yuanfield", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public String guanlian
         {
             get { return GetPropertyValue<String>("guanlian"); }
             set { SetPropertyValue("guanlian", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String guanfield
+        {
+            get { return GetPropertyValue<String>("guanfield"); }
+            set { SetPropertyValue("guanfield", value); }
         }
     }
 
@@ -111,7 +129,17 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
+        public static readonly FieldBase yuanfield = new FieldBase(DbType.SqlServer, "[VcorrelateColumns]", FieldType.Common, "[yuanfield]");
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly FieldBase guanlian = new FieldBase(DbType.SqlServer, "[VcorrelateColumns]", FieldType.Common, "[guanlian]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase guanfield = new FieldBase(DbType.SqlServer, "[VcorrelateColumns]", FieldType.Common, "[guanfield]");
     }
 
 }
