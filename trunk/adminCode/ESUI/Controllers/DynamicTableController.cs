@@ -1281,5 +1281,15 @@ namespace ESUI.Controllers
             }
         }
 
+        public JsonResult GetAllowExport(string ID)
+        {
+            //var sqlc2 = MainAssociationSet.SelectAll().Where(MainAssociationSet.CategoryTableID.Equal(ID));
+            //var d = Mabiz.GetEntities(sqlc2);
+
+            var df = OPBiz.ExecuteSqlToOwnList("select * from CategoryTable where ID in ( select ChildCategoryTableID from  MainAssociation where CategoryTableID='" + ID + "')");
+            return Json(df, JsonRequestBehavior.AllowGet);
+        }
+        
+
     }
 }
