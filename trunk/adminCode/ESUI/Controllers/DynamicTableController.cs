@@ -1126,14 +1126,14 @@ namespace ESUI.Controllers
             var sqlc2 = MainAssociationSet.SelectAll().Where(MainAssociationSet.CategoryTableID.Equal(Condition).And(MainAssociationSet.ChildCategoryTableID.Equal(ChildCategoryTableID)));
            var d= Mabiz.GetEntity(sqlc2);
             var dic = new List<ColumnCharts>();
-            if (d==null)
+            if (d == null & !string.IsNullOrEmpty(ChildCategoryTableID))
             {
-                var sqlc = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition));
+                var sqlc = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(ChildCategoryTableID).And(ColumnChartsSet.IsEnable.Equal(true)).And(ColumnChartsSet.MergeHeader.NotEqual(true))).OrderByASC(ColumnChartsSet.SortNo);
                  dic = CCBiz.GetEntities(sqlc);
             }
             else
             {
-                dic = CCBiz.ExecuteSqlToOwnList("select * from  ColumnCharts where ID not in ( select ChildColumnChartsID from CorrelateColumns where MainAssociationID='" + d.ID + "') and CategoryTableID='" + Condition + "'");
+                dic = CCBiz.ExecuteSqlToOwnList("select * from  ColumnCharts where ID not in ( select ChildColumnChartsID from CorrelateColumns where MainAssociationID='" + d.ID + "') and IsEnable=1 and MergeHeader<>1 and (title<>'ck')  and CategoryTableID='" + ChildCategoryTableID + "'  ORDER BY  SortNo");
             }
 
 

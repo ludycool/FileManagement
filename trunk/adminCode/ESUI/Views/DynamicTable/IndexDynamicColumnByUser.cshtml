@@ -52,10 +52,10 @@
                         a[i] = new Array(g[i].field, g[i].title, 's');
                     }
                     colFilter = a;
-               
+
                 }
-              });
-           
+            });
+
             var Column = $.ajax({
                 //获取列数据
                 url: BaseUrl + 'GetBtnColumn',
@@ -215,47 +215,46 @@
 
                                 exportToExcel();
                             }
-                        },'-', {
-                    id: 'btnchax',
-                    text: '查询',
-                    iconCls: '',
-                    handler: function() {
+                        }, '-', {
+                            id: 'btnchax',
+                            text: '查询',
+                            iconCls: '',
+                            handler: function() {
 
 
-                        //colFilter = jQuery.parseJSON(f);
-                        $('#DivEditor').dialog({
-                            title: '添加材料',
-                            //width: 400,
-                            //height: 200,
-                            closed: false,
-                            cache: false,
-                            // href: 'get_content.php',
-                            modal: true,
-                            top: 50,
-                            onClose: function() {
-                                //解决弹出窗口关闭后，验证消息还显示在最上面
+                                //colFilter = jQuery.parseJSON(f);
+                                $('#DivEditor').dialog({
+                                    title: '添加材料',
+                                    //width: 400,
+                                    //height: 200,
+                                    closed: false,
+                                    cache: false,
+                                    // href: 'get_content.php',
+                                    modal: true,
+                                    top: 50,
+                                    onClose: function() {
+                                        //解决弹出窗口关闭后，验证消息还显示在最上面
 
+                                    }
+                                });
                             }
-                        });
-                    }
-                }
-                        , '-', {
+                        }, '-', {
                             id: 'btnchax2',
                             text: '导出关联表数据',
                             iconCls: '',
-                            handler: function () {
+                            handler: function() {
 
 
                                 $('#language').combobox({
                                     url: "/DynamicTable/GetAllowExport?ID=" + '@ViewBag.RuteUrl',
 
-                                        onSelect: function (record) {
-                                            var peo = $('#language').combobox('getValue');
-                                            //bingbdinglist(peo);
-                                            //bingalreadybdinglist(peo);
-                                            loadhidColum(peo);
-                                        }
-                                    });
+                                    onSelect: function(record) {
+                                        var peo = $('#language').combobox('getValue');
+                                        //bingbdinglist(peo);
+                                        //bingalreadybdinglist(peo);
+                                        loadhidColum(peo);
+                                    }
+                                });
                                 $('#DivExport').dialog({
                                     title: '添加材料',
                                     //width: 400,
@@ -263,8 +262,9 @@
                                     closed: false,
                                     cache: false,
                                     // href: 'get_content.php',
-                                    modal: true, top: 50,
-                                    onClose: function () {
+                                    modal: true,
+                                    top: 50,
+                                    onClose: function() {
                                         //解决弹出窗口关闭后，验证消息还显示在最上面
 
                                     }
@@ -300,22 +300,22 @@
                     }
                 });
             }
+
             function loadhidColum(poe) {
-                
+
                 var Column2 = $.ajax({
                     //获取列数据
                     url: BaseUrl + 'GetBtnColumn',
                     cache: false,
                     data: { Condition: poe },
-                async: false
+                    async: false
                 }).responseText;
                 var Columndata2 = eval(Column2);
                 $('#dg3').datagrid({
                     //url: BaseUrl + 'GetalreadyBdlList',
                     columns: Columndata2,
-                   
 
-             
+
                     height: 340,
                     nowrap: true,
                     singleSelect: true,
@@ -323,9 +323,10 @@
                     collapsible: true,
                     width: 'auto',
                     rownumbers: true
-                      });
+                });
             }
-            //删除
+
+//删除
             function Del() {
                 //DataBaseFunction.deleteInfo("dg", "ID", "TrueName");
                 //得到按钮选择的数据的ID
@@ -524,7 +525,7 @@
             }
 
             function exportToExcel() {
-          
+
                 $("#exportToExcelForm").remove();
                 var form = $("<form>"); //定义一个form表单
                 form.attr("id", "exportToExcelForm");
@@ -580,6 +581,7 @@
                 return titles;
 
             }
+
             function getColumns3() {
                 var grid = $("#dg3").datagrid("options");
                 var titles = [[]], length = Math.max(grid.frozenColumns.length, grid.columns.length);
@@ -591,6 +593,7 @@
                 return titles;
 
             }
+
             function closeDiv() {
                 $('#DivEditor').dialog('close');
                 var queryParams = $('#dg2').datagrid('options').queryParams;
@@ -617,52 +620,57 @@
             }
 
 
-            
-
             function Saveexport() {
-          
-                 $("#exportToExcelForm").remove();
-                 var form = $("<form>"); //定义一个form表单
-                 form.attr("id", "exportToExcelForm");
-                 form.attr("style", "display:none");
-                 form.attr("target", "");
-                 form.attr("method", "post");
-                 form.attr("action", "/Excel/CommonExportNewport");
-                 var input1 = $("<input>");
-                 input1.attr("type", "hidden");
-                 input1.attr("name", "Title");
-                 input1.attr("value", '@ViewBag.ViewBag');
-                var input2 = $("<input>");
-                input2.attr("type", "hidden");
-                input2.attr("name", "titles");
-                input2.attr("value", JSON.stringify(getColumns3()));
-                var input4 = $("<input>");
-                input4.attr("type", "hidden");
-                input4.attr("name", "fileType");
-                input4.attr("value", 'xls');
+                var rows = $("#dg2").datagrid("getSelections");
+                //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
+                if (rows.length >= 1) {
+                    $("#exportToExcelForm").remove();
+                    var form = $("<form>"); //定义一个form表单
+                    form.attr("id", "exportToExcelForm");
+                    form.attr("style", "display:none");
+                    form.attr("target", "");
+                    form.attr("method", "post");
+                    form.attr("action", "/Excel/CommonExportNewport");
+                    var input1 = $("<input>");
+                    input1.attr("type", "hidden");
+                    input1.attr("name", "Title");
+                    input1.attr("value", '@ViewBag.ViewBag');
+                    var input2 = $("<input>");
+                    input2.attr("type", "hidden");
+                    input2.attr("name", "titles");
+                    input2.attr("value", JSON.stringify(getColumns3()));
+                    var input4 = $("<input>");
+                    input4.attr("type", "hidden");
+                    input4.attr("name", "fileType");
+                    input4.attr("value", 'xls');
 
-                var input5 = $("<input>");
-                input5.attr("type", "hidden");
-                input5.attr("name", "CategoryTableID");
-                input5.attr("value", '@ViewBag.RuteUrl');
-                var combvalue = $('#language').combobox('getValue');
-                var input6 = $("<input>");
-                input6.attr("type", "hidden");
-                input6.attr("name", "ChildCategoryTableID");
-                input6.attr("value", combvalue);
+                    var input5 = $("<input>");
+                    input5.attr("type", "hidden");
+                    input5.attr("name", "CategoryTableID");
+                    input5.attr("value", '@ViewBag.RuteUrl');
+                    var combvalue = $('#language').combobox('getValue');
+                    var input6 = $("<input>");
+                    input6.attr("type", "hidden");
+                    input6.attr("name", "ChildCategoryTableID");
+                    input6.attr("value", combvalue);
 
-                var input3 = $("<input>");
-                input3.attr("type", "hidden");
-                input3.attr("name", "dataGetter");
-                input3.attr("value", JSON.stringify(getData($('#dg2').datagrid("getSelections"))));
-                $("body").append(form); //将表单放置在web中
-                form.append(input1);
-                form.append(input2);
-                form.append(input3);
-                form.append(input4);  form.append(input5);form.append(input6);
-                form.submit(); //表单提交
+                    var input3 = $("<input>");
+                    input3.attr("type", "hidden");
+                    input3.attr("name", "dataGetter");
+                    input3.attr("value", JSON.stringify(getData($('#dg2').datagrid("getSelections"))));
+                    $("body").append(form); //将表单放置在web中
+                    form.append(input1);
+                    form.append(input2);
+                    form.append(input3);
+                    form.append(input4);
+                    form.append(input5);
+                    form.append(input6);
+                    form.submit(); //表单提交
 
-                $("#exportToExcelForm").remove();
+                    $("#exportToExcelForm").remove();
+                } else {
+                    alert("请选择你要关联的数据");
+                }
             }
         </script>
     }
@@ -674,13 +682,19 @@
         <table id="dg3"></table>
     </div>
     
-    <div id="DivExport" class="easyui-dialog" style="width: 300px;"
+    <div id="DivExport" class="easyui-dialog" style="width: 380px;"
      closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-
-        <input class="easyui-combobox" id="language" name="language"
-               data-options="valueField:'ID',textField:'ChineseName'">
+        <table>
+            <tr>
+                <td>选择关联导出表： <input class="easyui-combobox" id="language" name="language"
+                            data-options="valueField:'ID',textField:'ChineseName'"></td>
+                <td> 
          <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
-           onclick="javascript:Saveexport()">确定导出</a>
+           onclick="javascript:Saveexport()">确定导出</a></td>
+            </tr>
+
+        </table>
+      
 </div>
       <!------------------------弹出信息的弹出层---------------------------------->
     <div id="DivEditor" class="easyui-dialog" style="width: 700px;"

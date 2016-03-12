@@ -100,14 +100,23 @@
                             id: 'btncut',
                             text: '添加关联表字段',
                             iconCls: 'icon-cut',
-                            handler: function() {
-                                //实现修改的方法
-                                $('#DivSetRole').window({
-                                    title: '角色:' + ' --  权限分配',
-                                    modal: true,
-                                    top: 50
-                                });
-                                $('#DivSetRole').window('open');
+                            handler: function () {
+                                var rows = $("#dg").datagrid("getSelections");
+                                //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
+                                if (rows.length >= 1) {
+                                    //实现修改的方法
+                                    $('#DivSetRole').window({
+                                        title: '数据关联',
+                                        modal: true,
+                                        top: 50
+                                    });
+                                    $('#DivSetRole').window('open');
+                                }
+                                else {
+                                    alert("请选择你要关联的数据");
+                                }
+
+                               
                             }
                         }
                     ]
@@ -156,9 +165,9 @@
                         ]
                     ],
 
-                    title: "已存在的按钮",
+                    title: "待关联字段",
                     iconCls: 'icon-ok',
-                    queryParams: { Condition: id, ChildCategoryTableID: '@ViewBag.RuteUrl', T: Math.floor(Math.random() * 1000000) },
+                    queryParams: { Condition: '@ViewBag.RuteUrl', ChildCategoryTableID: id, T: Math.floor(Math.random() * 1000000) },
                     height: 340,
                     nowrap: true,
                     singleSelect: true,
@@ -180,9 +189,9 @@
                         ]
                     ],
 
-                    title: "已存在的按钮",
+                    title: "已关联字段",
                     iconCls: 'icon-ok',
-                    queryParams: { Condition: id, ChildCategoryTableID: '@ViewBag.RuteUrl', T: Math.floor(Math.random() * 1000000) },
+                    queryParams: { Condition: '@ViewBag.RuteUrl', ChildCategoryTableID: id, T: Math.floor(Math.random() * 1000000) },
                     height: 340,
                     nowrap: true,
                     singleSelect: true,
@@ -203,8 +212,8 @@
                 //$('#tbOut').datagrid('deleteRow', b);
                 //$('#tbOut').datagrid('selectRow', b - 1);
                 var dgrows = JSON.stringify($("#dg").datagrid('getSelected'));
-                var categoryTableID = $('#language').combobox('getValue');
-                var childCategoryTableID = '@ViewBag.RuteUrl';
+                var categoryTableID = '@ViewBag.RuteUrl' ;
+                var childCategoryTableID = $('#language').combobox('getValue');
 
                 $.ajax({
                     url: BaseUrl + 'EditconnectionRelation',
@@ -690,9 +699,9 @@
 <div id="DivSetRole" class="easyui-window" style="width: 510px; height: 440px;"
      closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
 
-    <input class="easyui-combobox" id="language" name="language"
+   选这关联表格 ：<input class="easyui-combobox" id="language" name="language"
            data-options="valueField:'ID',textField:'ChineseName'">
-
+    <div>
     <div style="display: block; width: 210px; float: left; height: 340px;">
         <table id="tbOut"></table>@*//未选择的*@
 
@@ -713,26 +722,9 @@
 
         <table id="tbIn"></table>@*已选择的*@
     </div>
-    <div style="display: block; width: 20px; float: right; height: 340px;">
-        <div style="height: 100px; height: 20px; padding-top: 130px;">
-            <span class=" icon icon-arrow_up" style="display: block; cursor: pointer" onclick="Upbtn()">&nbsp;</span>
-            <br/>
-            <span class=" icon icon-arrow_down" style="display: block; cursor: pointer" onclick="Downbtn()">&nbsp;</span>
-        </div>
-    </div>
+  
 
-    <div style="display: block; width: 480px; height: 20px; text-align: center; line-height: 20px;">
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'"
-           onclick="javascript:addbtnAll()">全选</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-delete'"
-           onclick="javascript:delbtnAll()">清除</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
-           onclick="javascript:SaveBtnSet()">应用</a>
-
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cross'"
-           onclick="javascript: $('#DivSetBtn').dialog('close');">关闭</a>
-
-    </div>
+</div>
 
 
 </div>
