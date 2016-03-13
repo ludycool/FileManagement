@@ -76,15 +76,15 @@ namespace Zephyr.Core
  
             return export;
         }
-        public static Exporter NewInstance(string path,DataTable dtTable)
+        public static Exporter NewInstance(string path,DataTable dtTable,string toptitle)
         {
             var export = new Exporter();
             var context = HttpContext.Current;
             Path = path;
             if (context.Request.Form["titles"] != null)
                 export.Title(JsonConvert.DeserializeObject<List<List<Column>>>(context.Request.Form["titles"]));
-            if (context.Request.Form["Title"] != null)
-                export.TopTitle(context.Request.Form["Title"]);
+//            if (context.Request.Form["Title"] != null)
+                export.TopTitle(toptitle);
 
             export.NewData(dtTable);
             //if (context.Request.Form["dataGetter"] != null)
