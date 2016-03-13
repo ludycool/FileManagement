@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using DefaultConnection;
 using e3net.BLL.DynamicTable;
+using e3net.Mode;
 using ESUI.Models;
 using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
@@ -27,7 +28,8 @@ namespace ESUI.Controllers
         public ColumnChartsBiz CCBiz { get; set; }
         //
         // GET: /Excel/
-
+        [Dependency]
+        public CategoryTableBiz OPBiz { get; set; }
         public ActionResult Index()
         {
             return View();
@@ -80,6 +82,8 @@ namespace ESUI.Controllers
             var sqlc = VcorrelateColumnsSet.SelectAll().Where(VcorrelateColumnsSet.MainAssociationID.Equal(newmodle.ID));
             var dic = Vcbiz.GetEntities(sqlc);
 
+            var ddsql = CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(ChildCategoryTableID));
+          var  CategoryTablemodle= OPBiz.GetEntity(ddsql);
 
             var list = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + ChildCategoryTableID + "'  and IsEnable=1 and MergeHeader<>1 and (title<>'ck')  ORDER BY  SortNo");
             DataTable dt2 = new DataTable();
@@ -90,7 +94,7 @@ namespace ESUI.Controllers
             }
             UniteDataTable(_datatable, dt2, dic);
             string filename = Guid.NewGuid().ToString() + ".xlsx";
-            var ff = Exporter.NewInstance(Server.MapPath("~/temp/" + filename), dt2).Download();
+            var ff = Exporter.NewInstance(Server.MapPath("~/temp/" + filename), dt2, CategoryTablemodle.ChineseName).Download();
             return File(Server.MapPath("~/temp/" + filename), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", string.Format("{0}.xls", Title));
             // return File(ff, "application/ms-excel", string.Format("{0}.xls", "czc"));
         }
