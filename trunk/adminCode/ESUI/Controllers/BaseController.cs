@@ -88,21 +88,46 @@ namespace ESUI.Controllers
             }
             return sql;
         }
- 
+
 
         static string GetOP(string name, string op, string values)
         {
+
+
+            #region  多字段 模糊查询  如： OwnerName|OwnerCode|BuildingCode|HouseCode_like
+            string[] names = name.Split('|');
+            if (names.Length > 1)
+            {
+                string sql = "(";
+                for (int i = 0; i < names.Length; i++)
+                {
+                    if (op.Equals("like"))
+                    {
+                        sql += names[i] + " like N'%" + values + "%' ";
+
+                        if (i != names.Length - 1)
+                        {
+                            sql += " or ";
+                        }
+                    }
+                }
+                sql += ")";
+                return sql;
+            }
+            #endregion
+
+
             switch (op)
             {
                 case "like"://all
 
-                    return name + " like '%" + values + "%' ";
+                    return name + " like N'%" + values + "%' ";
                 case "like1":// 前固定
 
-                    return name + " like '" + values + "%' ";
+                    return name + " like N'" + values + "%' ";
                 case "like2"://后固定
 
-                    return name + " like '%" + values + "' ";
+                    return name + " like N'%" + values + "' ";
 
                 case "eq":
 
