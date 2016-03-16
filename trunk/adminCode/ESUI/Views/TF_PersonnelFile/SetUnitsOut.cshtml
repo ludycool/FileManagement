@@ -19,8 +19,9 @@
          @Html.Raw(ViewBag.Script)
 
 
+            var winHeight;
             jQuery(document).ready(function () {
-               
+                winHeight = GetwinHeight()
                 DataGridSet();
                 DataGridSet2();
 
