@@ -216,17 +216,13 @@
 
           //发送异步请求到后台保存按钮数据
           $.post(BaseUrl + 'EditInfo', postData, function (data) {
-              if (data = "OK") {
-                  //添加成功  1.关闭弹出层，2.刷新DataGird
-                  alert("编辑成功");
+              alerts(data.Msg, 2);
+              if (data.Code > 0) {
                   $('#DivEditor').dialog('close');
                   $(".validatebox-tip").remove();
                   // $("#DivEditor").dialog("close");
                   $("#dg").datagrid("reload");
                   $("#ff").form("clear");
-              }
-              else {
-                  alert("编辑失败，请您检查");
               }
           });
 
