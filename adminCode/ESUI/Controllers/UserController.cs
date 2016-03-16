@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity;
 using System.Data;
+using e3net.Mode.HttpView;
 
 namespace ESUI.Controllers
 {
@@ -81,39 +82,57 @@ namespace ESUI.Controllers
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult EditInfo(RMS_User RMS_UserModle)
+        public JsonResult EditInfo(RMS_User EidModle)
         {
-
+            HttpReSultMode ReSultMode = new HttpReSultMode();
             bool IsAdd = false;
-            if (!(RMS_UserModle.Id != null && !RMS_UserModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+            if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
             {
                 IsAdd = true;
             }
             if (IsAdd)
             {
-                RMS_UserModle.Id = Guid.NewGuid();
-                RMS_UserModle.CreateTime = DateTime.Now;
-                RMS_UserModle.ModifyTime = DateTime.Now;
-                //rol.RoleDescription = RMS_UserModle.RoleDescription;
-                //rol.RoleOrder = RMS_UserModle.RoleOrder;
+                var mql2 = RMS_UserSet.LoginName.Equal(EidModle.LoginName);
+                long i = OPBiz.GetCount<RMS_UserSet>(mql2);
+                if (i > 0)
+                {
+                    ReSultMode.Code = -13;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "用户名已存在";
+                }
+                else
+                {
+                EidModle.Id = Guid.NewGuid();
+                EidModle.CreateTime = DateTime.Now;
+                EidModle.ModifyTime = DateTime.Now;
+                //rol.RoleDescription = EidModle.RoleDescription;
+                //rol.RoleOrder = EidModle.RoleOrder;
 
-                OPBiz.Add(RMS_UserModle);
-                return Json("ok", JsonRequestBehavior.AllowGet);
+                OPBiz.Add(EidModle);
+                ReSultMode.Code = 11;
+                ReSultMode.Data = EidModle.Id.ToString();
+                ReSultMode.Msg = "添加成功";
+                }
             }
             else
             {
 
-                RMS_UserModle.WhereExpression = RMS_UserSet.Id.Equal(RMS_UserModle.Id);
+                EidModle.WhereExpression = RMS_UserSet.Id.Equal(EidModle.Id);
                 //  spmodel.GroupId = GroupId;
-                if (OPBiz.Update(RMS_UserModle) > 0)
+                if (OPBiz.Update(EidModle) > 0)
                 {
-                    return Json("ok", JsonRequestBehavior.AllowGet);
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改成功";
                 }
                 else
                 {
-                    return Json("Nok", JsonRequestBehavior.AllowGet);
+                    ReSultMode.Code = -13;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改失败";
                 }
             }
+            return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
 
 
