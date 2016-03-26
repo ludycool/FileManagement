@@ -59,22 +59,23 @@
             function AddInfo() {
                 //弹出层
                 // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
-                $('#DivEditor').dialog({
-                    title: '转递单登记',
-                    //width: 400,
-                    //height: 200,
-                    closed: false,
-                    cache: false,
-                    // href: 'get_content.php',
-                    modal: true, top: 50,
-                    onClose: function () {
-                        //解决弹出窗口关闭后，验证消息还显示在最上面
+            //    $('#DivEditor').dialog({
+            //        title: '转递单登记',
+            //        //width: 400,
+            //        //height: 200,
+            //        closed: false,
+            //        cache: false,
+            //        // href: 'get_content.php',
+            //        modal: true, top: 50,
+            //        onClose: function () {
+            //            //解决弹出窗口关闭后，验证消息还显示在最上面
 
-                    }
-                });
-                $('#TransmittingTime').datetimebox('setValue', '9999');
-                $(".validatebox-tip").remove();//清除验证样式
-            }
+            //        }
+            //    });
+            //    $('#TransmittingTime').datetimebox('setValue', '9999');
+                //    $(".validatebox-tip").remove();//清除验证样式
+                window.parent.JumpP("登记转入记录", "TF_PersonnelFile_Transmitting_In/Add", "icon-rgb");
+          }
 
 
             //绑定修改显示详细信息的方法
@@ -162,7 +163,7 @@
                     collapsible: true,
                     width: 620,
                     height: 400,
-                    pageSize: 10,
+                    pageSize: 20,
                     pagination: true,
                     rownumbers: true,
                     sortName: 'CreateTime',
