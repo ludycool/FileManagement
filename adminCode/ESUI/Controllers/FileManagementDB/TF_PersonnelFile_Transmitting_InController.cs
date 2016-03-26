@@ -29,7 +29,15 @@ namespace ESUI.Controllers
             ViewBag.toolbar = toolbar();
             return View();
         }
-
+        /// <summary>
+        /// 登记页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Add()
+        {
+            ViewBag.RuteUrl = RuteUrl();
+            return View();
+        }
         [HttpPost]
         public JsonResult Search()
         {
@@ -159,7 +167,8 @@ namespace ESUI.Controllers
         {
             int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
             int pageSize = Request["rows"] == null ? 1000 : int.Parse(Request["rows"]);
-          string  Where = "  (isDeleted=0) ";
+            string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
+            Where += "  and (isDeleted=0) ";
           string table = "TF_PersonnelFile";
             if (UserData.UserTypes != 1)
             {

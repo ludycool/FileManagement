@@ -1,0 +1,337 @@
+﻿<!DOCTYPE html>
+@{
+    ViewBag.TName = "Index";
+}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+
+
+    <style>
+        /*表单样式 start*/
+        .tableStyle {
+            border: solid #E1E1E1;
+            border-width: 1px 0px 0px 1px;
+        }
+
+        .trStyle {
+            height: 20px;
+            line-height: 20px;
+            background: #E1E1E1;
+        }
+
+        .tdStyle {
+            height: 20px;
+            line-height: 20px;
+            background: #FFF;
+            vertical-align: middle;
+            border: solid #E1E1E1;
+            border-width: 0px 1px 1px 0px;
+            padding: 5px 10px;
+        }
+        /* css注释：默认css背景被白色 */
+
+
+        .altTd {
+            background: #F9F9F9;
+        }
+        /* css 注释：默认隔行背景颜色 */
+        .overTd {
+            background: #EFF4F7;
+        }
+        /* css注释：鼠标经过时候背景颜色 */
+    </style>
+
+
+    <!--步骤条 star-->
+    <link href="~/Content/jquery-step/css/jquery.step.css" rel="stylesheet" />
+    <script src="~/Content/jquery-step/js/jquery.step.js"></script>
+    <!--步骤条 end-->
+
+    @* ReSharper disable once NotAllPathsReturnValue *@
+
+
+    @section Jsprepare{
+
+        <script type="text/javascript">
+            @Html.Raw(ViewBag.RuteUrl)
+         @Html.Raw(ViewBag.toolbar)
+
+            var CurrentList;
+            var step;
+            jQuery(document).ready(function () {
+               
+                CurrentList=  new Array();//当前选择的
+
+                step = $("#myStep").step({
+                    animate: true,
+                    initStep: 1,
+                    speed: 1000
+                });
+              
+                PersonnelFile_Units();
+
+                $("#preBtn").click(function (event) {
+                    var yes = step.preStep();
+
+                });
+                $("#applyBtn").click(function (event) {
+                    var yes = step.nextStep();
+
+                });
+                $("#submitBtn").click(function (event) {
+                    var yes = step.nextStep();
+
+
+                });
+                $("#goBtn").click(function (event) {
+                    var yes = step.goStep(3);
+
+                });
+            })
+
+            //easyUI 弹出添加的对话框
+            function AddInfo() {
+                //弹出层
+                // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
+                $('#DivEditor').dialog({
+                    title: '转递单登记',
+                    //width: 400,
+                    //height: 200,
+                    closed: false,
+                    cache: false,
+                    // href: 'get_content.php',
+                    modal: true, top: 50,
+                    onClose: function () {
+                        //解决弹出窗口关闭后，验证消息还显示在最上面
+
+                    }
+                });
+                $('#TransmittingTime').datetimebox('setValue', '9999');
+                $(".validatebox-tip").remove();//清除验证样式
+            }
+
+
+            //绑定修改显示详细信息的方法
+            function EditInfo() {
+
+                var rows = $("#dg").datagrid('getSelected');
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.Series + "字" + rows.Nos + "号").window('resize', { top: 50 });
+                $(".validatebox-tip").remove();//清除验证样式
+                var ID = rows.Id;  //获取到了用选择的ID
+                $.ajax({
+                    url: BaseUrl + 'GetInfo',
+                    type: 'POST',
+                    data: { ID: ID },
+                    cache: false,
+                    error: function () { alert('Error $.ajax'); },
+                    success: function (data) {
+                        //var result = eval('(' + data + ')');
+                        DataBaseFunction.BindForm("ff", data);
+                        $('#TransmittingTime').datetimebox('setValue', data.TransmittingTime);
+                    }
+                });
+
+            }
+
+            //实现的编辑，包括增查改
+            function SaveInfo() {
+
+                //判断的信息是否通过验证
+                var validate = $("#ff").form('validate');
+                if (validate == false) {
+                    return false;
+                }
+                //获取需要传递的参数传递给前台
+                var data = DataBaseFunction.GetFormData("ff")
+                //发送异步请求到后台保存数据
+                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                    alerts(data.Msg, 2);
+                    if (data.Code > 0) {
+                        $('#DivEditor').dialog('close');
+                        $(".validatebox-tip").remove();
+                        $("#dg").datagrid("reload");
+
+                    }
+                });
+
+            }
+
+
+            //搜索
+            function Search() {
+                DataBaseFunction.Search("ftblist", "tblist");
+            }
+
+            function PersonnelFile_Units() {
+                $('#tblist').datagrid({
+                    url: BaseUrl + 'PersonnelFile_Units',
+                    columns: [[
+                          { field: 'ck', checkbox: true },
+                { field: 'RealName', title: '姓名', width: 100, sortable: true },
+              //{ field: 'Category', title: '类别', width: 100, sortable: true },
+              { field: 'Units', title: '单位', width: 100, sortable: true },
+              { field: 'Duties', title: '职务', width: 100, sortable: true },
+              { field: 'Summary', title: '摘要', width: 100, sortable: true }
+                    ]],
+                    iconCls: 'icon-save',
+                    title: '可用的档案',
+                    nowrap: true,
+                    fitColumns: true,
+                    //singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    width: 720,
+                    height: 580,
+                    pageSize: 10,
+                    pagination: true,
+                    rownumbers: true,
+                    sortName: 'CreateTime',
+                    sortOrder: 'desc',
+                    idField: 'Id',
+                    view: fileview ,
+                    onCheck:  DataGridCheck.addcheckItem,//选中事件
+                    onCheckAll: DataGridCheck.addcheckItem,//选择当前页全部
+                    onUncheck: DataGridCheck.removeSingleItem,//取消选择事件
+                    onUncheckAll: DataGridCheck.removeAllItem,//取消当前页选择事件
+                    toolbar: [{
+                        id: 'btnadd',
+                        text: '选择',
+                        iconCls: 'icon-add',
+                        handler: function () {
+                            CurrentList = DataGridCheck.addcheckItem;
+                        }
+                    }]
+                });
+                var fileview = $.extend({}, $.fn.datagrid.defaults.view, { onAfterRender: function (target) { DataGridCheck.SetcheckItem(); } });
+            }
+            var DataGridCheck = {//DataGrid选择操作
+                Idfield: 'Id',//Id列名
+                dataGridSelecttor: '#tblist',//datagrid选择器
+                checkedItems:[],//选择的数据
+                addcheckItem: function () {//添加项
+                    var row = $(DataGridCheck.dataGridSelecttor).datagrid('getChecked');
+                    for (var i = 0; i < row.length; i++) {
+                        if (DataGridCheck.findCheckedItem(row[i][DataGridCheck.Idfield]) == -1) {
+                            DataGridCheck.checkedItems.push(row[i]);
+                        }
+                    }
+                }, removeSingleItem: function (rowIndex, rowData) {//移除单项
+                    var k = DataGridCheck.findCheckedItem(rowData[DataGridCheck.Idfield]);
+                    if (k != -1) {
+                        DataGridCheck.checkedItems.splice(k, 1);
+                    }
+                },
+                removeAllItem: function (row) {//移除所有
+                    for (var i = 0; i < row.length; i++) {
+                        var k = DataGridCheck.findCheckedItem(row[i][DataGridCheck.Idfield]);
+                        if (k != -1) {
+                            DataGridCheck.checkedItems.splice(k, 1);
+                        }
+                    }
+                },
+                SetcheckItem: function (dataGridSelecttor, Idfield) {//设置选中
+                    for (var i = 0; i < DataGridCheck.checkedItems.length; i++) {
+                        $(DataGridCheck.dataGridSelecttor).datagrid('selectRecord', DataGridCheck.checkedItems[i][DataGridCheck.Idfield]); //根据id选中行 
+                    }
+                },
+                findCheckedItem: function (IdValue) {//是否存在
+                    for (var i = 0; i < DataGridCheck.checkedItems.length; i++) {
+                        if (DataGridCheck.checkedItems[i][DataGridCheck.Idfield] == IdValue) return i;
+                    }
+                    return -1;
+                }
+
+            };
+
+
+        
+            
+
+
+            function selectItem() {
+                var rows = $("#tblist").datagrid('getSelections');
+
+                $.each(rows, function (j, o) {
+                    var ishave = false;
+                    if (CurrentList.length > 0) {
+
+                        $.each(CurrentList, function (k, m) {
+                            if (m.Id == o.Id) {
+                                ishave = true;
+                                return false;
+                            }
+                        });
+                    }
+                    if (!ishave) {
+                        CurrentList.push(rows);
+                    }
+                });
+
+
+            }
+        </script>
+    }
+
+</head>
+<body>
+    <div class="step-body" id="myStep">
+        <div class="step-header" style="width: 80%">
+            <ul>
+                <li>
+                    <p>选择档案</p>
+                </li>
+                <li>
+                    <p>登记</p>
+                </li>
+            </ul>
+        </div>
+        <div class="step-content">
+            <div class="step-list">
+
+                <form id="ftblist">
+                    <table class="tableStyle" style="table-layout: fixed; margin: 0 auto;" border="0" cellspacing="0" cellpadding="0">
+                        <tr class="trStyle">
+                            <td class="tdStyle altTd"><span>关键词:</span>
+                                <input class="easyui-validatebox textbox" type="text" name="RealName|Units|Duties_like" />
+                                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-search" onclick="Search();">搜索</a></td>
+
+                        </tr>
+                        <tr class="trStyle">
+                            <td class="tdStyle">
+                                <table id="tblist"></table>
+                            </td>
+                        </tr>
+                        <tr class="trStyle">
+                            <td class="tdStyle" style="text-align: center">
+
+                                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-arrow_right" onclick="step.nextStep();">下一步</a>
+
+                            </td>
+                        </tr>
+
+                    </table>
+                </form>
+            </div>
+            <div class="step-list">
+                <div class="footer-btn">
+                    <div class="common-btn">
+                        <a href="javascript:void(0);" id="preBtn">返回</a>
+                        <a href="javascript:void(0);" id="submitBtn">提交</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

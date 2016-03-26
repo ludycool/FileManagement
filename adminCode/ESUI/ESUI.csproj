@@ -284,8 +284,15 @@
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\mheader.png" />
     <Content Include="Content\Images\start-here-centos.png" />
+    <Content Include="Content\jquery-step\css\jquery.step.css" />
+    <Content Include="Content\jquery-step\images\bar-bg-active.png" />
+    <Content Include="Content\jquery-step\images\bar-bg.png" />
+    <Content Include="Content\jquery-step\images\cell-active.png" />
+    <Content Include="Content\jquery-step\images\cell.png" />
+    <Content Include="Content\jquery-step\js\jquery.step.js" />
     <Content Include="Content\JqueryEasyUI\index.html" />
     <Content Include="Content\JqueryEasyUI\jquery.easyui133.min.js" />
+    <Content Include="Content\JqueryEasyUI\DataGridCheck.js" />
     <Content Include="Content\JqueryEasyUI\jquery1.9.min.js" />
     <Content Include="Content\JqueryEasyUI\locale\easyui-lang-en.js" />
     <Content Include="Content\JqueryEasyUI\locale\easyui-lang-zh_CN.js" />
@@ -3487,6 +3494,7 @@
     <Content Include="Views\TF_PersonnelFile_Transmitting_In\Index.cshtml" />
     <Content Include="Views\DynamicTable\BaschartypeResult.cshtml" />
     <Content Include="Views\DynamicTable\BascharvalueResult.cshtml" />
+    <Content Include="Views\TF_PersonnelFile_Transmitting_In\Add.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="temp\" />
