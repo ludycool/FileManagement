@@ -623,6 +623,13 @@
 
             function Saveexport() {
                 var rows = $("#dg2").datagrid("getSelections");
+                var combvalue = $('#language').combobox('getValue');
+                if (typeof (combvalue) == "undefined" || combvalue == "") {
+                    alert("请选择导出关联表");
+                } else {
+                    
+
+                
                 //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
                 if (rows.length >= 1) {
                     $("#exportToExcelForm").remove();
@@ -649,7 +656,7 @@
                     input5.attr("type", "hidden");
                     input5.attr("name", "CategoryTableID");
                     input5.attr("value", '@ViewBag.RuteUrl');
-                    var combvalue = $('#language').combobox('getValue');
+                 
                     var input6 = $("<input>");
                     input6.attr("type", "hidden");
                     input6.attr("name", "ChildCategoryTableID");
@@ -671,6 +678,7 @@
                     $("#exportToExcelForm").remove();
                 } else {
                     alert("请选择你要关联的数据");
+                }
                 }
             }
         </script>
