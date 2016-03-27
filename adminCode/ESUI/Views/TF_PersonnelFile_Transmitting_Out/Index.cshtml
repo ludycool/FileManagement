@@ -51,7 +51,7 @@
               { field: 'TransmittingTime', title: '转递时间', width: 100, sortable: true }
                     ]],
                     iconCls: 'icon-save',
-                    title: '转入记录',
+                    title: '转出记录',
                     nowrap: true,
                     fit: true,
                     fitColumns: true,
@@ -85,11 +85,11 @@
                 //    });
                 //    $('#TransmittingTime').datetimebox('setValue', '9999');
                 //    $(".validatebox-tip").remove();//清除验证样式
-                window.parent.JumpP("登记转入记录", "TF_PersonnelFile_Transmitting_In/Add", "icon-rgb");
+                window.parent.JumpP("登记转出记录", "TF_PersonnelFile_Transmitting_Out/Add", "icon-rgb");
             }
 
 
- 
+
             //查看
             function ShowDetails() {
                 var rows = $("#dg").datagrid('getSelected');
@@ -221,6 +221,7 @@
             <a href="javascript:void(0)" class="easyui-linkbutton" style="float: right;" iconcls="icon-cancel" onclick="$('#Div_Searh').dialog('close')">关闭</a>
         </div>
     </div>
+  
 
 
     <!------------------------弹出查看层---------------------------------->

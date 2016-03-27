@@ -19,15 +19,15 @@ using TZHSWEET.Common;
 namespace ESUI.Controllers
 {
     //[Export]
-    public class TF_PersonnelFile_Transmitting_InController : JsonNetController
+    public class TF_PersonnelFile_Transmitting_OutController : JsonNetController
     {
 
         [Dependency]
-        public TF_PersonnelFile_Transmitting_InBiz OPBiz { get; set; }
+        public TF_PersonnelFile_Transmitting_OutBiz OPBiz { get; set; }
 
 
          [Dependency]
-        public TF_PersonnelFile_Transmitting_In_ItemBiz OPItemBiz { get; set; }
+        public TF_PersonnelFile_Transmitting_Out_ItemBiz OPItemBiz { get; set; }
         public ActionResult Index()
         {
             ViewBag.RuteUrl = RuteUrl();
@@ -61,20 +61,20 @@ namespace ESUI.Controllers
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "v_TF_PersonnelFile_Transmitting_In";
+            pc.sys_Table = "v_TF_PersonnelFile_Transmitting_Out";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
             DataSet ds = OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
 
-            // var mql = TF_PersonnelFile_Transmitting_InSet.Id.NotEqual("");
+            // var mql = TF_PersonnelFile_Transmitting_OutSet.Id.NotEqual("");
             dic.Add("rows", ds.Tables[0]);
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult EditInfo(TF_PersonnelFile_Transmitting_In EidModle)
+        public JsonResult EditInfo(TF_PersonnelFile_Transmitting_Out EidModle)
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
             bool IsAdd = false;
@@ -93,7 +93,7 @@ namespace ESUI.Controllers
                     EidModle.States = 0;
                     try
                     {
-                        List<TF_PersonnelFile_Transmitting_In_Item> listItem=JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_In_Item>(EidModle.FistName);
+                        List<TF_PersonnelFile_Transmitting_Out_Item> listItem=JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_Out_Item>(EidModle.FistName);
                         int OriginalCount=0;
                           int DuplicateCount=0;
                           int MaterialCount=0;
@@ -139,7 +139,7 @@ namespace ESUI.Controllers
                 }
                 else
                 {
-                    EidModle.WhereExpression = TF_PersonnelFile_Transmitting_InSet.Id.Equal(EidModle.Id);
+                    EidModle.WhereExpression = TF_PersonnelFile_Transmitting_OutSet.Id.Equal(EidModle.Id);
                     // EidModle.ChangedMap.Remove("id");//移除主键值
                     if (OPBiz.Update(EidModle) > 0)
                     {
@@ -161,8 +161,8 @@ namespace ESUI.Controllers
         }
         public JsonResult GetInfo(string ID)
         {
-            var mql2 = TF_PersonnelFile_Transmitting_InSet.SelectAll().Where(TF_PersonnelFile_Transmitting_InSet.Id.Equal(ID));
-            TF_PersonnelFile_Transmitting_In Rmodel = OPBiz.GetEntity(mql2);
+            var mql2 = TF_PersonnelFile_Transmitting_OutSet.SelectAll().Where(TF_PersonnelFile_Transmitting_OutSet.Id.Equal(ID));
+            TF_PersonnelFile_Transmitting_Out Rmodel = OPBiz.GetEntity(mql2);
             //  groupsBiz.Add(rol);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
@@ -173,8 +173,8 @@ namespace ESUI.Controllers
         /// <returns></returns>
         public JsonResult GetListItems(string ID)
         {
-            var mql2 = TF_PersonnelFile_Transmitting_In_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_In_ItemSet.OwnerId.Equal(ID));
-           List<TF_PersonnelFile_Transmitting_In_Item> listItem = OPBiz.GetOwnList<TF_PersonnelFile_Transmitting_In_Item>(mql2);
+            var mql2 = TF_PersonnelFile_Transmitting_Out_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_Out_ItemSet.OwnerId.Equal(ID));
+           List<TF_PersonnelFile_Transmitting_Out_Item> listItem = OPBiz.GetOwnList<TF_PersonnelFile_Transmitting_Out_Item>(mql2);
             //  groupsBiz.Add(rol);
            return Json(listItem, JsonRequestBehavior.AllowGet);
         }
@@ -218,7 +218,7 @@ namespace ESUI.Controllers
             if (UserData.UserTypes != 1)
             {
                 Where += " and ( UnitsId='" + UserData.DepartmentId + "')";
-                table = "v_TF_PersonnelFile_Units_In";
+                table = "v_TF_PersonnelFile_Units_Out";
             }
             ////字段排序
             String sortField = Request["sort"];

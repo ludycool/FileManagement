@@ -89,11 +89,12 @@
                 });
                 $('#TransmittingTime').datetimebox('setValue', '9999');
                 $(".validatebox-tip").remove();//清除验证样式
-                PersonnelFile_Units();
+                PersonnelFile();
 
             })
 
-   
+     
+ 
 
             //实现的编辑，包括增查改
             function SaveInfo() {
@@ -108,25 +109,17 @@
                 if (validate2 == false) {
                     return false;
                 }
-
-                var data = DataBaseFunction.GetFormData("f1");
-                var data2 = DataBaseFunction.GetFormData("f2");
-                for (var i = 0; i < data2.length; i++) {
-
-                    data.push(data2[i]);
-                }
                
                 var ItemList=getTableData();//项
-             
                 var jsonstr = JSON.stringify(ItemList);
-                var FistName = {
-                    name: "FistName",
+                var listAll = [{
+                    name: "listAll",
                     value: jsonstr
 
-                }
-                data.push(FistName);
+                }]
+  
               //  发送异步请求到后台保存数据
-                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                $.post(BaseUrl + 'AddList', listAll, function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
 
@@ -142,9 +135,9 @@
                 DataBaseFunction.Search("ftblist", "tblist");
             }
 
-            function PersonnelFile_Units() {
+            function PersonnelFile() {
                 $('#tblist').datagrid({
-                    url: BaseUrl + 'PersonnelFile_Units',
+                    url: BaseUrl + 'PersonnelFile',
                     columns: [[
                           { field: 'ck', checkbox: true },
                 { field: 'RealName', title: '姓名', width: 100, sortable: true },
@@ -188,16 +181,15 @@
 
                 $("#SelectList").empty();
 
-                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                var result = ' <tr> <td style="width: 100px;">档案姓名</td><td style="width: 120px;">查阅人单位</td><td style="width: 50px;">查阅人姓名</td><td style="width: 200px;">查阅内容</td><td style="width: 50px;">查阅时间</td><td style="width: 50px;">备注</td></</tr>';
                 for (var i = 0; i < datas.length; i++) {
                     result += '<tr id="' + datas[i].Id + '" >'
                     result += "<td>" + datas[i].RealName + "</td>";
-                    result += "<td>" + datas[i].Units + "</td>";
-                    result += "<td>" + datas[i].Duties + "</td>";
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Reasons" /></td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="OriginalCount" /></td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="DuplicateCount" /></td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="MaterialCount" /></td>';
+                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Units" /></td>';
+                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="ConsultMan" /></td>';
+                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="ConsultDetail" /></td>';
+                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="ConsultTime" /> </td>';
+                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Remarks" /></td>';
 
                     result += "</tr>"
                 }
@@ -214,13 +206,12 @@
                     items.PersonnelFileId = trList.eq(i).attr("id");
 
                     var tdArr = trList.eq(i).find("td");
-                    items.RealName = tdArr.eq(0).html();//名称
-                    items.Units = tdArr.eq(1).html();//单位
-                    items.Duties = tdArr.eq(2).html();//职位
-                    items.Reasons = tdArr.eq(3).find("input").val();//
-                    items.OriginalCount = tdArr.eq(4).find("input").val();//    
-                    items.DuplicateCount = tdArr.eq(5).find("input").val();//    
-                    items.MaterialCount = tdArr.eq(6).find("input").val();//    
+                    items.PersonnelFile = tdArr.eq(0).html();//名称
+                    items.Units = tdArr.eq(1).find("input").val();//
+                    items.ConsultMan = tdArr.eq(2).find("input").val();//
+                    items.ConsultDetail = tdArr.eq(3).find("input").val();//
+                    items.ConsultTime = tdArr.eq(4).find("input").val();//    
+                    items.Remarks = tdArr.eq(5).find("input").val();//     
 
                     data.push(items);
                 }
@@ -272,32 +263,13 @@
             </div>
             <div class="step-list">
                 <div class="footer-btn">
-                    <table style="table-layout: fixed; margin: 0 auto; width: 720px;" border="0" cellspacing="0" cellpadding="0">
-                        <tr>
-                            <td > 
-                                 <form id="f1">
-                                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <td style="width:20px;">
-                                                <label>字：</label></td>
-                                            <td style="width:120px;">
-                                                <input class="easyui-validatebox textbox" style="width:100px;" data-options="required:true"  type="text" name="Series" /></td>
-                                            <td style="width:20px;">
-                                                <label>号：</label></td>
-                                            <td style="width:660px;">
-                                                <input class="easyui-validatebox textbox" style="width:100px;" data-options="required:true"  type="text" name="Nos" /></td>
-                                        </tr>
-                                </table>
-                                </form>
-                                </td>
-                        </tr>
-                          <tr>
-                            <td style="height:20px;"></td>
-                        </tr>
+                    <table style="table-layout: fixed; margin: 0 auto; width: 1300px;" border="0" cellspacing="0" cellpadding="0">
+                   
+                     
                         <tr>
                             <td>
 
-                                <table class="border-table" id="SelectList" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 720px;">
+                                <table class="border-table" id="SelectList" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 1300px; margin-top:10px;">
 
 
                                     <tr>
@@ -310,29 +282,7 @@
 
                             </td>
                         </tr>
-                        <tr>
-                            <td style="height:20px;"></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <form id="f2" method="post" enctype="multipart/form-data">
-
-                                    <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <td style="width: 80px;">
-                                                <label>转递人：</label></td>
-                                            <td style="width: 220px;">
-                                                <input class="easyui-validatebox textbox" type="text" name="TransmittingMan" data-options="required:true" /></td>
-                                       
-                                            <td style="width: 80px;">
-                                                <label>转递时间：</label></td>
-                                            <td style="width: 340px;">
-                                                <input class="easyui-datetimebox" name="TransmittingTime" id="TransmittingTime" data-options="required:true,showSeconds:false" style="width: 200px"></td>
-                                        </tr>
-                                    </table>
-                                </form>
-                            </td>
-                        </tr>
+               
 
                         <tr>
                             <td>

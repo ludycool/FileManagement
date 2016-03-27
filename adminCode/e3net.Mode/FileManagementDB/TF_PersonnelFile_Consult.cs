@@ -96,9 +96,9 @@ namespace e3net.Mode.FileManagementDB
         /// <summary>
         /// 查阅时间
         /// </summary>
-        public DateTime? ConsultTime
+        public String ConsultTime
         {
-            get { return GetPropertyValue<DateTime?>("ConsultTime"); }
+            get { return GetPropertyValue<String>("ConsultTime"); }
             set { SetPropertyValue("ConsultTime", value); }
         }
 

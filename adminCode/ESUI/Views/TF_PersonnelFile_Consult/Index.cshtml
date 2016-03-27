@@ -12,8 +12,7 @@
     @* ReSharper disable once NotAllPathsReturnValue *@
 
     <style>
-
-            /*table细边框 end*/
+        /*table细边框 end*/
         .border-table {
             border-collapse: collapse;
             border: none;
@@ -24,7 +23,6 @@
                 padding: 5px 15px;
             }
         /*table细边框 end*/
-
     </style>
     @section Jsprepare{
 
@@ -39,19 +37,16 @@
                 $('#dg').datagrid({
                     url: BaseUrl + 'Search',
                     columns: [[
-                        { field: 'ck', checkbox: true },
-           { field: 'TransmittingMan', title: '转递人', width: 100, sortable: true },
-              { field: 'Series', title: '字', width: 100, sortable: true },
-              { field: 'Nos', title: '号', width: 100, sortable: true },
-              { field: 'OriginalCount', title: '正本（卷）', width: 100, sortable: true },
-              { field: 'DuplicateCount', title: '副本（卷）', width: 100, sortable: true },
-              { field: 'MaterialCount', title: '材料（份）', width: 100, sortable: true },
-              { field: 'CreateMan', title: '创建人', width: 100, sortable: true },
-              { field: 'StatesName', title: '状态', width: 100, sortable: true },
-              { field: 'TransmittingTime', title: '转递时间', width: 100, sortable: true }
+                 { field: 'ck', checkbox: true },
+               { field: 'PersonnelFile', title: '档案姓名', width: 100, sortable: true },
+              { field: 'Units', title: '查阅人单位', width: 100, sortable: true },
+               { field: 'ConsultMan', title: '查阅人姓名', width: 100, sortable: true },
+              { field: 'ConsultDetail', title: '查阅内容', width: 100, sortable: true },
+               { field: 'ConsultTime', title: '查阅时间', width: 100, sortable: true },
+              { field: 'Remarks', title: '备注', width: 100, sortable: true }
                     ]],
                     iconCls: 'icon-save',
-                    title: '转入记录',
+                    title: '查阅干部人事档案记录',
                     nowrap: true,
                     fit: true,
                     fitColumns: true,
@@ -85,11 +80,11 @@
                 //    });
                 //    $('#TransmittingTime').datetimebox('setValue', '9999');
                 //    $(".validatebox-tip").remove();//清除验证样式
-                window.parent.JumpP("登记转入记录", "TF_PersonnelFile_Transmitting_In/Add", "icon-rgb");
+                window.parent.JumpP("查阅档案登记", "TF_PersonnelFile_Consult/Add", "icon-rgb");
             }
 
 
- 
+
             //查看
             function ShowDetails() {
                 var rows = $("#dg").datagrid('getSelected');
@@ -98,21 +93,8 @@
                     // $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                $("#DivShow").dialog('open').dialog('setTitle', '查看-' + rows.Series + "字" + rows.Nos + "号").window('resize', { top: 20 });
-                DataBaseFunction.BindForm("f1", rows);
-                DataBaseFunction.BindForm("f2", rows);
-                var ID = rows.Id;  //获取项
-                $.ajax({
-                    url: BaseUrl + 'GetListItems',
-                    type: 'POST',
-                    data: { ID: ID },
-                    cache: false,
-                    error: function () { alert('Error $.ajax'); },
-                    success: function (data) {
-                        createList(data)
-                    }
-                });
-
+                $("#DivShow").dialog('open').dialog('setTitle', '查看-查阅-' + rows.PersonnelFile).window('resize', { top: 20 });
+                DataBaseFunction.BindForm("fshow", rows);
             }
 
 
@@ -154,25 +136,7 @@
             }
             //删除
             function Del() {
-                DataBaseFunction.deleteInfo("dg", "Id", "TransmittingMan");
-            }
-            function createList(datas) {
-
-                $("#SelectList").empty();
-                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
-                for (var i = 0; i < datas.length; i++) {
-                    result += '<tr id="' + datas[i].Id + '" >'
-                    result += "<td>" + datas[i].RealName + "</td>";
-                    result += "<td>" + datas[i].Units + "</td>";
-                    result += "<td>" + datas[i].Duties + "</td>";
-                    result += "<td>" + datas[i].Reasons + "</td>";
-                    result += "<td>" + datas[i].OriginalCount + "</td>";
-                    result += "<td>" + datas[i].DuplicateCount + "</td>";
-                    result += "<td>" + datas[i].MaterialCount + "</td>";
-                    result += "</tr>"
-                }
-                $("#SelectList").append(result);
-
+                DataBaseFunction.deleteInfo("dg", "Id", "PersonnelFile");
             }
 
         </script>
@@ -192,24 +156,24 @@
             <table class="stripes" style="table-layout: fixed; margin: 0 auto; width: 320px;" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td style="width: 60px;">
-                        <label>转递人：</label></td>
+                        <label>档案姓名：</label></td>
                     <td>
-                        <input type="text" class="textbox" name="TransmittingMan_like" style="width: 200px;" />
+                        <input type="text" class="textbox" name="PersonnelFile_like" style="width: 200px;" />
                     </td>
 
                 </tr>
                 <tr>
                     <td>
-                        <label>字：</label></td>
+                        <label>查阅人单位：</label></td>
                     <td>
-                        <input type="text" class="textbox" name="Series_like" style="width: 200px;" />
+                        <input type="text" class="textbox" name="Units_like" style="width: 200px;" />
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label>号：</label></td>
+                        <label>查阅人姓名：</label></td>
                     <td>
-                        <input type="text" class="textbox" name="Nos_like" style="width: 200px;" />
+                        <input type="text" class="textbox" name="ConsultMan_like" style="width: 200px;" />
                     </td>
                 </tr>
             </table>
@@ -223,68 +187,53 @@
     </div>
 
 
+
     <!------------------------弹出查看层---------------------------------->
-    <div id="DivShow" class="easyui-dialog" style="width: 750px;"
+    <div id="DivShow" class="easyui-dialog" style="width: 620px;"
         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <div class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:300,width:730,border:false">
-           
+        <div class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:300,width:600,border:false">
+            <form id="fshow" method="post" enctype="multipart/form-data">
 
-                <table style="table-layout: fixed; margin: 0 auto; width: 720px;" border="0" cellspacing="0" cellpadding="0">
+                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+
                     <tr>
                         <td>
-                            <form id="f1">
-                                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
-                                    <tr>
-                                        <td style="width: 20px;">
-                                            <label>字：</label></td>
-                                        <td style="width: 120px;">
-                                            <span name="Series"></span></td>
-                                        <td style="width: 20px;">
-                                            <label>号：</label></td>
-                                        <td style="width: 660px;">
-                                            <span name="Nos"></span></td>
-                                    </tr>
-                                </table>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="height: 10px;"></td>
+                            <label>档案姓名：</label></td>
+                        <td><span name="PersonnelFile"></span></td>
                     </tr>
                     <tr>
                         <td>
-
-                            <table class="border-table" id="SelectList" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 720px;">
-                            </table>
-
-                        </td>
+                            <label>查阅人单位：</label></td>
+                        <td><span name="Units"></span></td>
                     </tr>
                     <tr>
-                        <td style="height: 20px;"></td>
+                        <td style="width: 120px;">
+                            <label>查阅人姓名：</label></td>
+                        <td style="width: 480px;"><span name="ConsultMan"></span></td>
                     </tr>
                     <tr>
                         <td>
-                            <form id="f2" method="post" enctype="multipart/form-data">
+                            <label>查阅时间：</label></td>
+                        <td><span name="ConsultTime"></span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>查阅内容：</label></td>
+                        <td><span name="ConsultDetail"></span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>备注：</label></td>
+                        <td><span name="Remarks"></span></td>
+                    </tr>
 
-                                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
-                                    <tr>
-                                        <td style="width: 80px;">
-                                            <label>转递人：</label></td>
-                                        <td style="width: 220px;">
-                                            <span name="TransmittingMan"></span></td>
-
-                                        <td style="width: 80px;">
-                                            <label>转递时间：</label></td>
-                                        <td style="width: 340px;">
-                                            <span name="TransmittingTime"></span></td>
-                                    </tr>
-                                </table>
-                            </form>
-                        </td>
+                    <tr>
+                        <td>
+                            <label>添加时间：</label></td>
+                        <td><span name="CreateTime"></span></td>
                     </tr>
                 </table>
-
-            
+            </form>
         </div>
 
         <div style="text-align: center; width: 100%; margin-bottom: 5px;">
