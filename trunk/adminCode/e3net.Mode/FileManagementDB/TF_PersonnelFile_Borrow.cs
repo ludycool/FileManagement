@@ -96,18 +96,18 @@ namespace e3net.Mode.FileManagementDB
         /// <summary>
         /// 借用时间
         /// </summary>
-        public DateTime? BorrowTime
+        public String BorrowTime
         {
-            get { return GetPropertyValue<DateTime?>("BorrowTime"); }
+            get { return GetPropertyValue<String>("BorrowTime"); }
             set { SetPropertyValue("BorrowTime", value); }
         }
 
         /// <summary>
         /// 归还时间
         /// </summary>
-        public DateTime? ReturnTime
+        public String ReturnTime
         {
-            get { return GetPropertyValue<DateTime?>("ReturnTime"); }
+            get { return GetPropertyValue<String>("ReturnTime"); }
             set { SetPropertyValue("ReturnTime", value); }
         }
 
