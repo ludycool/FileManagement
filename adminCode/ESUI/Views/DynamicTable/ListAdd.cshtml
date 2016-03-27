@@ -70,7 +70,7 @@
                     ],
                     queryParams: { Condition: '@ViewBag.RuteUrl' },
                     iconCls: 'icon-save',
-                    title: '按钮编辑',
+                    title: '表格内容管理',
                     nowrap: true,
                     singleSelect: true,
                     striped: true,
@@ -568,13 +568,7 @@
                                 <option value="">不编辑</option>
                                 <option value="type: 'text', options: { }">可输入的文本框</option>
 
-                                <option value="type: 'combobox', options:{
-								valueField:'CharName',
-								textField:'CharName',
-								method:'get',
-								url:'/DynamicTable/GetBascharvalueS?ID=Dic',
-								required:true
-							}">下拉选择控件</option>
+                                <option value="type: 'combobox', options:{valueField:'CharName',textField:'CharName',method:'get',url:'/DynamicTable/GetBascharvalueS?ID=Dic',required:true}">下拉选择控件</option>
 
                             </select>
                         </td>
