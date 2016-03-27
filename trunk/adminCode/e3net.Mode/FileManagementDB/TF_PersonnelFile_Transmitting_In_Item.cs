@@ -78,27 +78,27 @@ namespace e3net.Mode.FileManagementDB
         /// <summary>
         /// 正本（卷）
         /// </summary>
-        public Int32? OriginalCount
+        public Int32 OriginalCount
         {
-            get { return GetPropertyValue<Int32?>("OriginalCount"); }
+            get { return GetPropertyValue<Int32>("OriginalCount"); }
             set { SetPropertyValue("OriginalCount", value); }
         }
 
         /// <summary>
         /// 副本（卷）
         /// </summary>
-        public Int32? DuplicateCount
+        public Int32 DuplicateCount
         {
-            get { return GetPropertyValue<Int32?>("DuplicateCount"); }
+            get { return GetPropertyValue<Int32>("DuplicateCount"); }
             set { SetPropertyValue("DuplicateCount", value); }
         }
 
         /// <summary>
         /// 材料（份）
         /// </summary>
-        public Int32? MaterialCount
+        public Int32 MaterialCount
         {
-            get { return GetPropertyValue<Int32?>("MaterialCount"); }
+            get { return GetPropertyValue<Int32>("MaterialCount"); }
             set { SetPropertyValue("MaterialCount", value); }
         }
     }

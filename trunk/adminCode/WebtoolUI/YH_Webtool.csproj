@@ -63,6 +63,7 @@
     <Content Include="PIE.htc" />
     <Content Include="PIE.js" />
     <Content Include="sqlGenerate.aspx" />
+    <Content Include="table2.html" />
     <Content Include="textbox.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

@@ -14,6 +14,7 @@ using e3net.Mode.FileManagementDB;
 using e3net.Mode.HttpView;
 using e3net.BLL;
 using System.Data;
+using TZHSWEET.Common;
 
 namespace ESUI.Controllers
 {
@@ -23,6 +24,10 @@ namespace ESUI.Controllers
 
         [Dependency]
         public TF_PersonnelFile_Transmitting_InBiz OPBiz { get; set; }
+
+
+         [Dependency]
+        public TF_PersonnelFile_Transmitting_In_ItemBiz OPItemBiz { get; set; }
         public ActionResult Index()
         {
             ViewBag.RuteUrl = RuteUrl();
@@ -59,7 +64,7 @@ namespace ESUI.Controllers
             pc.sys_Table = "v_TF_PersonnelFile_Transmitting_In";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
-            DataSet ds= OPBiz.GetPagingDataP(pc);
+            DataSet ds = OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
 
@@ -88,6 +93,35 @@ namespace ESUI.Controllers
                     EidModle.States = 0;
                     try
                     {
+                        List<TF_PersonnelFile_Transmitting_In_Item> listItem=JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_In_Item>(EidModle.FistName);
+                        int OriginalCount=0;
+                          int DuplicateCount=0;
+                          int MaterialCount=0;
+
+
+                        if(listItem!=null&&listItem.Count>0)
+                        {
+                            EidModle.FistName=listItem[0].RealName;
+
+                            for(int i=0;i<listItem.Count;i++)
+                            {
+                            OriginalCount+=listItem[i].OriginalCount;
+                            DuplicateCount+=listItem[i].DuplicateCount;
+                            MaterialCount+=listItem[i].MaterialCount;//统计数
+                            listItem[i].Id = Guid.NewGuid();;
+                            listItem[i].OwnerId=EidModle.Id ;
+                           OPItemBiz.Add(listItem[i]);//添加项
+
+                            }
+                            EidModle.OriginalCount=OriginalCount;
+                            EidModle.DuplicateCount=DuplicateCount;
+                            EidModle.MaterialCount=MaterialCount;
+                            EidModle.NumberS=listItem.Count;
+
+                        }
+
+
+
                         OPBiz.Add(EidModle);
 
                         ReSultMode.Code = 11;
@@ -156,7 +190,7 @@ namespace ESUI.Controllers
         }
 
 
-      
+
         /// <summary>
         /// 单位可用
         /// </summary>
@@ -169,11 +203,11 @@ namespace ESUI.Controllers
             int pageSize = Request["rows"] == null ? 1000 : int.Parse(Request["rows"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
             Where += "  and (isDeleted=0) ";
-          string table = "TF_PersonnelFile";
+            string table = "TF_PersonnelFile";
             if (UserData.UserTypes != 1)
             {
-                 Where += " and ( UnitsId='" + UserData.DepartmentId + "')";
-                 table = "v_TF_PersonnelFile_Units_In";
+                Where += " and ( UnitsId='" + UserData.DepartmentId + "')";
+                table = "v_TF_PersonnelFile_Units_In";
             }
             ////字段排序
             String sortField = Request["sort"];
