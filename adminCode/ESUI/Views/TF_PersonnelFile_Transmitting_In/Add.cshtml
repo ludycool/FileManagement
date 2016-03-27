@@ -8,7 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
-
+    <script src="~/Content/js/json2.js"></script>
 
     <style>
         /*表单样式 start*/
@@ -23,6 +23,7 @@
             background: #E1E1E1;
         }
 
+        /* css注释：默认css背景被白色 */
         .tdStyle {
             height: 20px;
             line-height: 20px;
@@ -32,17 +33,32 @@
             border-width: 0px 1px 1px 0px;
             padding: 5px 10px;
         }
-        /* css注释：默认css背景被白色 */
 
 
+        /* css 注释：默认隔行背景颜色 */
         .altTd {
             background: #F9F9F9;
         }
-        /* css 注释：默认隔行背景颜色 */
+
+        /* css注释：鼠标经过时候背景颜色 */
         .overTd {
             background: #EFF4F7;
         }
-        /* css注释：鼠标经过时候背景颜色 */
+
+        /*表单样式 end*/
+
+
+        /*table细边框 end*/
+        .border-table {
+            border-collapse: collapse;
+            border: none;
+        }
+
+            .border-table td {
+                border: solid #000 1px;
+                padding: 5px 15px;
+            }
+        /*table细边框 end*/
     </style>
 
 
@@ -63,34 +79,17 @@
             var CurrentList;
             var step;
             jQuery(document).ready(function () {
-               
-                CurrentList=  new Array();//当前选择的
 
+                CurrentList = new Array();//当前选择的
+                DataGridCheck.dataGridSelecttor = '#tblist';
                 step = $("#myStep").step({
                     animate: true,
                     initStep: 1,
                     speed: 1000
                 });
-              
+
                 PersonnelFile_Units();
 
-                $("#preBtn").click(function (event) {
-                    var yes = step.preStep();
-
-                });
-                $("#applyBtn").click(function (event) {
-                    var yes = step.nextStep();
-
-                });
-                $("#submitBtn").click(function (event) {
-                    var yes = step.nextStep();
-
-
-                });
-                $("#goBtn").click(function (event) {
-                    var yes = step.goStep(3);
-
-                });
             })
 
             //easyUI 弹出添加的对话框
@@ -150,16 +149,27 @@
                 if (validate == false) {
                     return false;
                 }
-                //获取需要传递的参数传递给前台
-                var data = DataBaseFunction.GetFormData("ff")
-                //发送异步请求到后台保存数据
+                var data = DataBaseFunction.GetFormData("f1");
+                var data2 = DataBaseFunction.GetFormData("f2");
+                for (var i = 0; i < data2.length; i++) {
+
+                    data.push(data2[i]);
+                }
+               
+                var ItemList=getTableData();//项
+             
+                var jsonstr = JSON.stringify(ItemList);
+                var FistName = {
+                    name: "FistName",
+                    value: jsonstr
+
+                }
+                data.push(FistName);
+              //  发送异步请求到后台保存数据
                 $.post(BaseUrl + 'EditInfo', data, function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
-                        $('#DivEditor').dialog('close');
-                        $(".validatebox-tip").remove();
-                        $("#dg").datagrid("reload");
-
+                        window.parent.closeC();//关闭当前页面
                     }
                 });
 
@@ -197,86 +207,64 @@
                     sortName: 'CreateTime',
                     sortOrder: 'desc',
                     idField: 'Id',
-                    view: fileview ,
-                    onCheck:  DataGridCheck.addcheckItem,//选中事件
+                    view: fileview,
+                    onCheck: DataGridCheck.addcheckItem,//选中事件
                     onCheckAll: DataGridCheck.addcheckItem,//选择当前页全部
                     onUncheck: DataGridCheck.removeSingleItem,//取消选择事件
-                    onUncheckAll: DataGridCheck.removeAllItem,//取消当前页选择事件
-                    toolbar: [{
-                        id: 'btnadd',
-                        text: '选择',
-                        iconCls: 'icon-add',
-                        handler: function () {
-                            CurrentList = DataGridCheck.addcheckItem;
-                        }
-                    }]
+                    onUncheckAll: DataGridCheck.removeAllItem//取消当前页选择事件
                 });
                 var fileview = $.extend({}, $.fn.datagrid.defaults.view, { onAfterRender: function (target) { DataGridCheck.SetcheckItem(); } });
             }
-            var DataGridCheck = {//DataGrid选择操作
-                Idfield: 'Id',//Id列名
-                dataGridSelecttor: '#tblist',//datagrid选择器
-                checkedItems:[],//选择的数据
-                addcheckItem: function () {//添加项
-                    var row = $(DataGridCheck.dataGridSelecttor).datagrid('getChecked');
-                    for (var i = 0; i < row.length; i++) {
-                        if (DataGridCheck.findCheckedItem(row[i][DataGridCheck.Idfield]) == -1) {
-                            DataGridCheck.checkedItems.push(row[i]);
-                        }
-                    }
-                }, removeSingleItem: function (rowIndex, rowData) {//移除单项
-                    var k = DataGridCheck.findCheckedItem(rowData[DataGridCheck.Idfield]);
-                    if (k != -1) {
-                        DataGridCheck.checkedItems.splice(k, 1);
-                    }
-                },
-                removeAllItem: function (row) {//移除所有
-                    for (var i = 0; i < row.length; i++) {
-                        var k = DataGridCheck.findCheckedItem(row[i][DataGridCheck.Idfield]);
-                        if (k != -1) {
-                            DataGridCheck.checkedItems.splice(k, 1);
-                        }
-                    }
-                },
-                SetcheckItem: function (dataGridSelecttor, Idfield) {//设置选中
-                    for (var i = 0; i < DataGridCheck.checkedItems.length; i++) {
-                        $(DataGridCheck.dataGridSelecttor).datagrid('selectRecord', DataGridCheck.checkedItems[i][DataGridCheck.Idfield]); //根据id选中行 
-                    }
-                },
-                findCheckedItem: function (IdValue) {//是否存在
-                    for (var i = 0; i < DataGridCheck.checkedItems.length; i++) {
-                        if (DataGridCheck.checkedItems[i][DataGridCheck.Idfield] == IdValue) return i;
-                    }
-                    return -1;
+
+
+            function nextGo() {
+                step.nextStep();
+                createList(DataGridCheck.checkedItems);
+
+            }
+
+            function createList(datas) {
+
+                $("#SelectList").empty();
+
+                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                for (var i = 0; i < datas.length; i++) {
+                    result += '<tr id="' + datas[i].Id + '" >'
+                    result += "<td>" + datas[i].RealName + "</td>";
+                    result += "<td>" + datas[i].Units + "</td>";
+                    result += "<td>" + datas[i].Duties + "</td>";
+                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Reasons" /></td>';
+                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="OriginalCount" /></td>';
+                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="DuplicateCount" /></td>';
+                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="MaterialCount" /></td>';
+
+                    result += "</tr>"
+                }
+                $("#SelectList").append(result);
+
+            }
+
+            function getTableData()
+            {
+                var data = new Array();//当前选择的
+                var trList = $("#SelectList").children("tr")
+                for (var i = 1; i < trList.length; i++) {//第二项开始
+                    var items = new Object();;
+                    items.PersonnelFileId = trList.eq(i).attr("id");
+
+                    var tdArr = trList.eq(i).find("td");
+                    items.RealName = tdArr.eq(0).html();//名称
+                    items.Units = tdArr.eq(1).html();//单位
+                    items.Duties = tdArr.eq(2).html();//职位
+                    items.Reasons = tdArr.eq(3).find("input").val();//
+                    items.OriginalCount = tdArr.eq(4).find("input").val();//    
+                    items.DuplicateCount = tdArr.eq(5).find("input").val();//    
+                    items.MaterialCount = tdArr.eq(6).find("input").val();//    
+
+                    data.push(items);
                 }
 
-            };
-
-
-        
-            
-
-
-            function selectItem() {
-                var rows = $("#tblist").datagrid('getSelections');
-
-                $.each(rows, function (j, o) {
-                    var ishave = false;
-                    if (CurrentList.length > 0) {
-
-                        $.each(CurrentList, function (k, m) {
-                            if (m.Id == o.Id) {
-                                ishave = true;
-                                return false;
-                            }
-                        });
-                    }
-                    if (!ishave) {
-                        CurrentList.push(rows);
-                    }
-                });
-
-
+                return data;
             }
         </script>
     }
@@ -298,7 +286,7 @@
             <div class="step-list">
 
                 <form id="ftblist">
-                    <table class="tableStyle" style="table-layout: fixed; margin: 0 auto;" border="0" cellspacing="0" cellpadding="0">
+                    <table class="tableStyle" style="table-layout: fixed; margin: 0 auto; width: 740px;" border="0" cellspacing="0" cellpadding="0">
                         <tr class="trStyle">
                             <td class="tdStyle altTd"><span>关键词:</span>
                                 <input class="easyui-validatebox textbox" type="text" name="RealName|Units|Duties_like" />
@@ -313,7 +301,7 @@
                         <tr class="trStyle">
                             <td class="tdStyle" style="text-align: center">
 
-                                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-arrow_right" onclick="step.nextStep();">下一步</a>
+                                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-arrow_right" onclick="nextGo()">下一步</a>
 
                             </td>
                         </tr>
@@ -323,10 +311,83 @@
             </div>
             <div class="step-list">
                 <div class="footer-btn">
-                    <div class="common-btn">
-                        <a href="javascript:void(0);" id="preBtn">返回</a>
-                        <a href="javascript:void(0);" id="submitBtn">提交</a>
-                    </div>
+                    <table style="table-layout: fixed; margin: 0 auto; width: 720px;" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td > 
+                                 <form id="f1">
+                                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td style="width:20px;">
+                                                <label>字：</label></td>
+                                            <td style="width:120px;">
+                                                <input class="easyui-validatebox textbox" style="width:100px;" type="text" name="Series" /></td>
+                                            <td style="width:20px;">
+                                                <label>号：</label></td>
+                                            <td style="width:660px;">
+                                                <input class="easyui-validatebox textbox" style="width:100px;" type="text" name="Nos" /></td>
+                                        </tr>
+                                </table>
+                                </form>
+                                </td>
+                        </tr>
+                          <tr>
+                            <td style="height:20px;"></td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                <table class="border-table" id="SelectList" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 720px;">
+
+
+                                    <tr>
+                                        <td>1</td>
+                                        <td><a href="http://www.divcss5.com/">CSS教程网</a></td>
+                                        <td w><a href="http://www.divcss5.com/">www.divcss5.com</a></td>
+                                    </tr>
+
+                                </table>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="height:20px;"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <form id="f2" method="post" enctype="multipart/form-data">
+
+                                    <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td style="width: 80px;">
+                                                <label>转递人：</label></td>
+                                            <td style="width: 220px;">
+                                                <input class="easyui-validatebox textbox" type="text" name="TransmittingMan" /></td>
+                                       
+                                            <td style="width: 80px;">
+                                                <label>转递时间：</label></td>
+                                            <td style="width: 340px;">
+                                                <input class="easyui-datetimebox" name="TransmittingTime" id="TransmittingTime" data-options="required:true,showSeconds:false" style="width: 200px"></td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div style="text-align: center; width: 100%; margin-bottom: 5px; margin-top: 10px;">
+                                    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-arrow_left" onclick="step.preStep();">返回</a>
+                                    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
+
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+
+
+
+
                 </div>
 
             </div>

@@ -87,7 +87,7 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.RealName).window('resize', { top: 50 });
+                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.RealName).window('resize', { top:20 });
                 $(".validatebox-tip").remove();//清除验证样式
                 var ID = rows.Id;  //获取到了用选择的ID
                 $.ajax({

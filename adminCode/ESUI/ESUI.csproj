@@ -292,7 +292,6 @@
     <Content Include="Content\jquery-step\js\jquery.step.js" />
     <Content Include="Content\JqueryEasyUI\index.html" />
     <Content Include="Content\JqueryEasyUI\jquery.easyui133.min.js" />
-    <Content Include="Content\JqueryEasyUI\DataGridCheck.js" />
     <Content Include="Content\JqueryEasyUI\jquery1.9.min.js" />
     <Content Include="Content\JqueryEasyUI\locale\easyui-lang-en.js" />
     <Content Include="Content\JqueryEasyUI\locale\easyui-lang-zh_CN.js" />
@@ -489,6 +488,7 @@
     <Content Include="Content\jQueryload\fakeloader.css" />
     <Content Include="Content\jQueryload\fakeloader.js" />
     <Content Include="Content\js\area.js" />
+    <Content Include="Content\js\json2.js" />
     <Content Include="Content\js\publicMethod.js" />
     <Content Include="Content\Login\wuye\base.css" />
     <Content Include="Content\Login\wuye\bc_bg.gif" />
