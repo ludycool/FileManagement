@@ -204,15 +204,18 @@
 
 //处理关联功能添加
             function addbtn() {
-                var tbOutrow = JSON.stringify($('#tbOut').datagrid('getSelected'));
-                //if (row != null) {
-                //    $("#tbIn").datagrid("appendRow", row);
-                //}
-                //var b = $('#tbOut').datagrid('getRowIndex', row);
-                //$('#tbOut').datagrid('deleteRow', b);
-                //$('#tbOut').datagrid('selectRow', b - 1);
-                var dgrows = JSON.stringify($("#dg").datagrid('getSelected'));
-                var categoryTableID = '@ViewBag.RuteUrl' ;
+                var tbOutrow = $('#tbOut').datagrid('getSelected');
+                if (tbOutrow != null) {
+                     tbOutrow = JSON.stringify($('#tbOut').datagrid('getSelected'));
+
+                    //if (row != null) {
+                    //    $("#tbIn").datagrid("appendRow", row);
+                    //}
+                    //var b = $('#tbOut').datagrid('getRowIndex', row);
+                    //$('#tbOut').datagrid('deleteRow', b);
+                    //$('#tbOut').datagrid('selectRow', b - 1);
+                    var dgrows = JSON.stringify($("#dg").datagrid('getSelected'));
+                    var categoryTableID = '@ViewBag.RuteUrl' ;
                 var childCategoryTableID = $('#language').combobox('getValue');
 
                 $.ajax({
@@ -232,26 +235,29 @@
                         //$('#field').attr('readonly', true);
                     }
                 });
+} else {
+                    alert("请选择你要添加的数据");
+                }
 
             }
 
 
             function Delbtn2() {
                 var rows = $('#tbIn').datagrid('getSelected');
-                if (rows.length > 0) {
+                if (rows!=null) {
 
 
                     var ids = ""; //1,2,3,4,5
-                    for (var i = 0; i < rows.length; i++) {
-                        //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
-                        ids += "'" + rows[i]["ID"] + "',";
+                    //for (var i = 0; i < rows.length; i++) {
+                    //    //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
+                        ids += "'" + rows["ID"] + "',";
 
-                    }
+                   // }
                     //最后去掉最后的那一个,
                     ids = ids.substring(0, ids.length - 1);
                   
-                    var postData = "";
-
+                    //var postData = "";
+                    //alert(ids);
                     postData = {
                         IDSet: ids
 
@@ -271,7 +277,7 @@
                         }
                     });
                 } else {
-                    alert("请选择你要删除的数据");
+                    alert("请选择你要移除的数据");
                 }
 
     }

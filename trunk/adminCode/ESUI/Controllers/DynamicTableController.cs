@@ -1131,9 +1131,13 @@ namespace ESUI.Controllers
                 var sqlc = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(ChildCategoryTableID).And(ColumnChartsSet.IsEnable.Equal(true)).And(ColumnChartsSet.MergeHeader.NotEqual(true))).OrderByASC(ColumnChartsSet.SortNo);
                  dic = CCBiz.GetEntities(sqlc);
             }
-            else
-            {
-                dic = CCBiz.ExecuteSqlToOwnList("select * from  ColumnCharts where ID not in ( select ChildColumnChartsID from CorrelateColumns where MainAssociationID='" + d.ID + "') and IsEnable=1 and MergeHeader<>1 and (title<>'ck')  and CategoryTableID='" + ChildCategoryTableID + "'  ORDER BY  SortNo");
+            else{
+
+                if (d != null)
+                {
+                    dic = CCBiz.ExecuteSqlToOwnList("select * from  ColumnCharts where ID not in ( select ChildColumnChartsID from CorrelateColumns where MainAssociationID='" + d.ID + "') and IsEnable=1 and MergeHeader<>1 and (title<>'ck')  and CategoryTableID='" + ChildCategoryTableID + "'  ORDER BY  SortNo");
+
+                }
             }
 
 
@@ -1203,53 +1207,7 @@ namespace ESUI.Controllers
                         ReSultMode.Data = "";
                         ReSultMode.Msg = "更新失败";
             }
-            //else
-            //{
-                
-            //}
-            //if (categoryTable != null && string.IsNullOrEmpty(categoryTable.CharId))//id为空，是添加
-            //{
-            //    IsAdd = true;
-            //}
-            ////if (OPBiz.GetCount<CategoryTableSet>(CategoryTableSet.UserTableName.Equal(categoryTable.UserTableName)) > 0.0)
-            ////{
-            ////    return Json("Nok", JsonRequestBehavior.AllowGet);
-            ////}
-
-            //if (IsAdd)
-            //{
-            //    categoryTable.CharId = Guid.NewGuid().ToString();
-            //    //categoryTable.TableName_ = DateTime.Now;
-            //    //categoryTable.TableProperties = DateTime.Now;
-            //    //rol.RoleDescription = RMS_ButtonsModle.RoleDescription;
-            //    //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
-
-            //    Bcviz.Add(categoryTable);
-            //    ReSultMode.Code = 11;
-            //    ReSultMode.Data = "";
-            //    ReSultMode.Msg = "添加成功";
-            //    //                OPBiz.ExecuteSqlWithNonQuery("create table [" + categoryTable.UserTableName + "]  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null,ck nvarchar(100) null) ");
-            //    //                OPBiz.ExecuteSqlWithNonQuery("INSERT INTO [ColumnCharts]      ([ID],[CategoryTableID],[field],[title],[rowspan],[width],[IsEnable]) VALUES('" + Guid.NewGuid().ToString() + "','" + categoryTable.ID + "','ck','ck',1,100,1) ");
-            //    //return Json("ok", JsonRequestBehavior.AllowGet);
-            //}
-            //else
-            //{
-
-            //    categoryTable.WhereExpression = BascharvalueSet.CharId.Equal(categoryTable.CharId);
-            //    //  spmodel.GroupId = GroupId;
-            //    if (Bcviz.Update(categoryTable) > 0)
-            //    {
-            //        ReSultMode.Code = 11;
-            //        ReSultMode.Data = "";
-            //        ReSultMode.Msg = "更新成功";
-            //    }
-            //    else
-            //    {
-            //        ReSultMode.Code = -11;
-            //        ReSultMode.Data = "";
-            //        ReSultMode.Msg = "更新失败";
-            //    }
-            //}
+      
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
 
@@ -1260,13 +1218,28 @@ namespace ESUI.Controllers
         {
             //int f
             //=0;
+//           var ccsql=CorrelateColumnsSet.SelectAll(CorrelateColumnsSet.ID.In())
+            var newmodle = Correlatecbiz.ExecuteSqlToOwnList("select * from CorrelateColumns where ID=" + IDSet);
 
-            //var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(CategoryTableID)));
+
+            
+            //var catmccsodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(CategoryTableID)));
             string sql = "DELETE FROM  [CorrelateColumns] where  ID  in(" + IDSet + ")";
-            int f = OPBiz.ExecuteSqlWithNonQuery(sql); ;
+            int f = Correlatecbiz.ExecuteSqlWithNonQuery(sql); ;
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
             {
+                var d = Correlatecbiz.GetCountSQL("CorrelateColumns", "ID='"+newmodle[0].MainAssociationID+"'");
+                if (d==0)
+                {
+
+
+                    var newmodle2 = Mabiz.ExecuteSqlWithNonQuery("DELETE FROM [MainAssociation] where ID='"+newmodle[0].MainAssociationID+"'");
+                }
+             
+
+
+
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "成功删除" + f + "条数据！";
