@@ -210,7 +210,7 @@
                         //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
                         ids +=  + ",";
                     }
-                    addTab('录入列', BaseUrl + 'ListAdd?ID=' + rows[0].ID, '');
+                    addTab(rows[0].ChineseName+'录入列', BaseUrl + 'ListAdd?ID=' + rows[0].ID + '&T=' + Math.floor(Math.random() * 1000000), '');
                
                 }
                
