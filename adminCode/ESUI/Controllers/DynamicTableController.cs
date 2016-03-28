@@ -1229,13 +1229,13 @@ namespace ESUI.Controllers
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
             {
-                var d = Correlatecbiz.GetCountSQL("CorrelateColumns", "ID='"+newmodle[0].MainAssociationID+"'");
-                if (d==0)
-                {
+                //var d = Correlatecbiz.GetCountSQL("CorrelateColumns", "MainAssociationID='" + newmodle[0].MainAssociationID + "'");
+                //if (d == 0)
+                //{
 
 
-                    var newmodle2 = Mabiz.ExecuteSqlWithNonQuery("DELETE FROM [MainAssociation] where ID='"+newmodle[0].MainAssociationID+"'");
-                }
+                //    var newmodle2 = Mabiz.ExecuteSqlWithNonQuery("DELETE FROM [MainAssociation] where ID='" + newmodle[0].MainAssociationID + "'");
+                //}
              
 
 
