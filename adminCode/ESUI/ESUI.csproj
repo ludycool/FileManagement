@@ -250,6 +250,7 @@
     <Compile Include="Controllers\FileManagementDB\TF_UnitsController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_Transmitting_InController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_Transmitting_OutController.cs" />
+    <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_AetUnitsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManuController.cs" />
@@ -3502,6 +3503,9 @@
     <Content Include="Views\TF_PersonnelFile_Consult\Index.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Borrow\Add.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Borrow\Index.cshtml" />
+    <Content Include="Views\TF_PersonnelFile_AetUnits\Index.cshtml" />
+    <Content Include="Views\TF_PersonnelFile_AetUnits\SetUnitsIn.cshtml" />
+    <Content Include="Views\TF_PersonnelFile_AetUnits\SetUnitsOut.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="temp\" />

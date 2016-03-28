@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+@{
+    ViewBag.TName = "Index";
+}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+
+    @* ReSharper disable once NotAllPathsReturnValue *@
+
+
+    @section Jsprepare{
+
+        <script type="text/javascript">
+            @Html.Raw(ViewBag.RuteUrl)
+         @Html.Raw(ViewBag.toolbar)
+
+
+            jQuery(document).ready(function () {
+               
+                DataGridSet();
+                //GetSonDictionaryNo("Category", "0101");
+            })
+            function DataGridSet() {
+                $('#dg').datagrid({
+                    url: BaseUrl + 'Search',
+                    columns: [[
+                        { field: 'ck', checkbox: true },
+                      { field: 'TName', title: '名称', width: 100, sortable: true },
+              //{ field: 'Category', title: '类别', width: 100, sortable: true },
+              { field: 'TCode', title: '编号', width: 100, sortable: true },
+              { field: 'remarks', title: '备注', width: 100, sortable: true },
+              { field: 'CreateMan', title: '创建人', width: 100, sortable: true },
+              { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
+              { field: 'UpdateTime', title: '修改时间', width: 100, sortable: true }
+                    ]],
+                    iconCls: 'icon-save',
+                    title: '单位',
+                    nowrap: true,
+                    fit: true,
+                    fitColumns: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    pageSize: 20,
+                    pagination: true,
+                    rownumbers: true,
+                    sortName: 'CreateTime,TName',
+                    sortOrder: 'desc',
+                    toolbar: [
+                    {
+                        id: 'btnadd',
+                        text: '设置单位可转入的档案',
+                        iconCls: 'icon-arrow_in_longer',
+                        handler: function () {
+                            Transmitting_InOp();
+                        }
+                    }, '-', {
+                        id: 'btncut',
+                        text: '设置单位可转出的档案',
+                        iconCls: 'icon-arrow_out_longer',
+                        handler: function () {
+                            Transmitting_OutOP();
+                        }
+                    }]
+                });
+            }
+
+
+            //搜索
+            function SearchGo() {
+                DataBaseFunction.Search("fSearh", "dg");
+                $("#Div_Searh").dialog('close');
+            }
+            //搜索
+            function Search() {
+                // $("#fSearh").form("clear");
+                $("#Div_Searh").dialog('open').dialog('setTitle', '搜索').window('resize', { top: 100, left: 100 });
+            }
+
+            //设置转入的单位
+           function Transmitting_InOp()
+            {
+               var rows = $("#dg").datagrid('getSelected');
+               //首先取出来值判断只能选择一个
+               if (rows == null) {
+                   $.messager.alert("友情提示", "请选择", "error");
+                   return;
+               }
+               window.parent.JumpP(rows.TName + "-设置可转入的档案", "TF_PersonnelFile_AetUnits/SetUnitsIn?Id=" + rows.Id, "icon-rgb");
+           }
+
+           //设置转出的单位
+           function Transmitting_OutOP() {
+               var rows = $("#dg").datagrid('getSelected');
+               //首先取出来值判断只能选择一个
+               if (rows == null) {
+                   $.messager.alert("友情提示", "请选择", "error");
+                   return;
+               }
+               window.parent.JumpP(rows.TName + "-设置可转出的档案", "TF_PersonnelFile_AetUnits/SetUnitsOut?Id=" + rows.Id, "icon-rgb");
+           }
+        </script>
+    }
+
+</head>
+<body style="overflow-y: hidden">
+
+ 
+        <table id="dg"></table>
+
+  
+    <!------------------------搜索弹出层---------------------------------->
+    <div id="Div_Searh" class="easyui-dialog" style="width: 380px; padding: 10px 20px;"
+        closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+        <form id="fSearh">
+
+            <table class="stripes" style="table-layout: fixed; margin: 0 auto; width: 320px;" border="0" cellspacing="0" cellpadding="0">
+               <tr>
+                    <td style="width: 60px;">
+                        <label>名称：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="TName_like" style="width: 200px;" />
+                    </td>
+
+                </tr>
+            </table>
+
+        </form>
+        <div style="text-align: center; width: 100%; margin: 5px 0px; display: block;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-undo" style="float: left;" onclick=" DataBaseFunction.ClearForm('fSearh');">清除</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" style="float: right;" iconcls="icon-search" onclick="SearchGo();">搜索</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" style="float: right;" iconcls="icon-cancel" onclick="$('#Div_Searh').dialog('close')">关闭</a>
+        </div>
+    </div>
+  
+</body>
+</html>

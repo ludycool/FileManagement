@@ -17,8 +17,10 @@ using System.Data;
 
 namespace ESUI.Controllers
 {
-    //[Export]
-    public class TF_PersonnelFileController : JsonNetController
+   /// <summary>
+   /// 单位 设置 可转入，转出的材料
+   /// </summary>
+    public class TF_PersonnelFile_AetUnitsController : JsonNetController
     {
         [Dependency]
         public TF_PersonnelFileBiz OPBiz { get; set; }
@@ -51,109 +53,19 @@ namespace ESUI.Controllers
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "TF_PersonnelFile";
+            pc.sys_Table = "TF_Units";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
-            DataSet ds= OPBiz.GetPagingDataP(pc);
+            //List<TF_Units> list2 = OPBiz.GetPagingData<TF_Units>(pc);
+            DataSet ds = OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
 
-            // var mql = TF_PersonnelFileSet.Id.NotEqual("");
+            // var mql = TF_UnitsSet.Id.NotEqual("");
             dic.Add("rows", ds.Tables[0]);
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
-
-
-
-
-        public JsonResult EditInfo(TF_PersonnelFile EidModle)
-        {
-            HttpReSultMode ReSultMode = new HttpReSultMode();
-            bool IsAdd = false;
-           
-                EidModle.UpdateTime = DateTime.Now;
-                if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
-                {
-                    IsAdd = true;
-                }
-                if (IsAdd)
-                {
-                    EidModle.Id = Guid.NewGuid();
-                    EidModle.CreateMan = UserData.UserName;
-                    EidModle.CreateTime = DateTime.Now;
-                    EidModle.isValid = true;
-                    EidModle.isDeleted = false;
-                    try
-                    {
-                        OPBiz.Add(EidModle);
-
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = EidModle.Id.ToString();
-                        ReSultMode.Msg = "添加成功";
-                    }
-                    catch (Exception e)
-                    {
-
-                        ReSultMode.Code = -11;
-                        ReSultMode.Data = e.ToString();
-                        ReSultMode.Msg = "添加失败";
-                    }
-
-                }
-                else
-                {
-                    EidModle.WhereExpression = TF_PersonnelFileSet.Id.Equal(EidModle.Id);
-                    // EidModle.ChangedMap.Remove("id");//移除主键值
-                    if (OPBiz.Update(EidModle) > 0)
-                    {
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "修改成功";
-                    }
-                    else
-                    {
-                        ReSultMode.Code = -13;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "修改失败";
-                    }
-                }
-            
-
-            return Json(ReSultMode, JsonRequestBehavior.AllowGet);
-
-        }
-        public JsonResult GetInfo(string ID)
-        {
-            var mql2 = TF_PersonnelFileSet.SelectAll().Where(TF_PersonnelFileSet.Id.Equal(ID));
-            TF_PersonnelFile Rmodel = OPBiz.GetEntity(mql2);
-            //  groupsBiz.Add(rol);
-            return Json(Rmodel, JsonRequestBehavior.AllowGet);
-        }
-
-
-        public JsonResult Del(string IDSet)
-        {
-
-            int f = OPBiz.DelForSetDelete("Id", IDSet);
-            HttpReSultMode ReSultMode = new HttpReSultMode();
-            if (f > 0)
-            {
-                ReSultMode.Code = 11;
-                ReSultMode.Data = f.ToString();
-                ReSultMode.Msg = "成功删除" + f + "条数据！";
-                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                ReSultMode.Code = -13;
-                ReSultMode.Data = "0";
-                ReSultMode.Msg = "删除失败！";
-                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-
         #region  档案设置 单位转入
         public ActionResult SetUnitsIn(Guid Id)
         {
@@ -172,7 +84,7 @@ namespace ESUI.Controllers
         {
             int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
             int pageSize = Request["rows"] == null ? 1000 : int.Parse(Request["rows"]);
-            string Where = " Id in(select UnitsId from TF_PersonnelFile_Units_In where PersonnelFileId='" + Id + "')";
+            string Where = "  UnitsId='" + Id + "'";
 
             Where += " and (isDeleted=0) ";
             ////字段排序
@@ -183,7 +95,7 @@ namespace ESUI.Controllers
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "TF_Units";
+            pc.sys_Table = "v_TF_PersonnelFile_Units_In";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
             DataSet ds = OPBiz.GetPagingDataP(pc);
@@ -204,7 +116,7 @@ namespace ESUI.Controllers
         {
             int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
             int pageSize = Request["rows"] == null ? 1000 : int.Parse(Request["rows"]);
-            string Where = " Id not in(select UnitsId from TF_PersonnelFile_Units_In where PersonnelFileId='" + Id + "')";
+            string Where = " Id not in(select PersonnelFileId from TF_PersonnelFile_Units_In where UnitsId='" + Id + "')";
 
             Where += " and (isDeleted=0) ";
             ////字段排序
@@ -215,7 +127,7 @@ namespace ESUI.Controllers
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "TF_Units";
+            pc.sys_Table = "TF_PersonnelFile";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
             DataSet ds = OPBiz.GetPagingDataP(pc);
@@ -262,11 +174,11 @@ namespace ESUI.Controllers
         /// <param name="btnId"></param>
         /// <param name="ManuId"></param>
         /// <returns></returns>
-        public JsonResult DelUnitsIn(string IdSet, string PersonnelFileId)
+        public JsonResult DelUnitsIn(string IdSet, string UnitsId)
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
             string[] ids = IdSet.Split(',');
-            var mql2 = TF_PersonnelFile_Units_InSet.UnitsId.In(ids).And(TF_PersonnelFile_Units_InSet.PersonnelFileId.Equal(PersonnelFileId));
+            var mql2 = TF_PersonnelFile_Units_InSet.PersonnelFileId.In(ids).And(TF_PersonnelFile_Units_InSet.UnitsId.Equal(UnitsId));
             int f = inOPBiz.Remove<TF_PersonnelFile_Units_InSet>(mql2);
             ReSultMode.Code = 11;
             ReSultMode.Data = f.ToString();
@@ -294,7 +206,7 @@ namespace ESUI.Controllers
         {
             int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
             int pageSize = Request["rows"] == null ? 1000 : int.Parse(Request["rows"]);
-            string Where = " Id in(select UnitsId from TF_PersonnelFile_Units_Out where PersonnelFileId='" + Id + "')";
+            string Where = "  UnitsId='" + Id + "'";
 
             Where += " and (isDeleted=0) ";
             ////字段排序
@@ -305,7 +217,7 @@ namespace ESUI.Controllers
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "TF_Units";
+            pc.sys_Table = "v_TF_PersonnelFile_Units_Out";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
             DataSet ds = OPBiz.GetPagingDataP(pc);
@@ -326,7 +238,7 @@ namespace ESUI.Controllers
         {
             int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
             int pageSize = Request["rows"] == null ? 1000 : int.Parse(Request["rows"]);
-            string Where = " Id not in(select UnitsId from TF_PersonnelFile_Units_Out where PersonnelFileId='" + Id + "')";
+            string Where = " Id not in(select PersonnelFileId from TF_PersonnelFile_Units_Out where UnitsId='" + Id + "')";
 
             Where += " and (isDeleted=0) ";
             ////字段排序
@@ -337,7 +249,7 @@ namespace ESUI.Controllers
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "TF_Units";
+            pc.sys_Table = "TF_PersonnelFile";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
             DataSet ds = OPBiz.GetPagingDataP(pc);
@@ -384,11 +296,11 @@ namespace ESUI.Controllers
         /// <param name="btnId"></param>
         /// <param name="ManuId"></param>
         /// <returns></returns>
-        public JsonResult DelUnitsOut(string IdSet, string PersonnelFileId)
+        public JsonResult DelUnitsOut(string IdSet, string UnitsId)
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
             string[] ids = IdSet.Split(',');
-            var mql2 = TF_PersonnelFile_Units_OutSet.UnitsId.In(ids).And(TF_PersonnelFile_Units_OutSet.PersonnelFileId.Equal(PersonnelFileId));
+            var mql2 = TF_PersonnelFile_Units_OutSet.PersonnelFileId.In(ids).And(TF_PersonnelFile_Units_OutSet.UnitsId.Equal(UnitsId));
             int f = outOPBiz.Remove<TF_PersonnelFile_Units_OutSet>(mql2);
             ReSultMode.Code = 11;
             ReSultMode.Data = f.ToString();

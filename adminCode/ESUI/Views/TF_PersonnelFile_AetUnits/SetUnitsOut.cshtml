@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+@{
+    ViewBag.TName = "Index";
+}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+
+    @* ReSharper disable once NotAllPathsReturnValue *@
+
+
+    @section Jsprepare{
+
+        <script type="text/javascript">
+            @Html.Raw(ViewBag.RuteUrl)
+         @Html.Raw(ViewBag.Script)
+
+
+            var winHeight;
+            jQuery(document).ready(function () {
+                winHeight = GetwinHeight()
+                DataGridSet();
+                DataGridSet2();
+
+            })
+            function DataGridSet() {
+                $('#tbIn').datagrid({
+                    url: BaseUrl + 'GetUnitsOut?Id=' + Id,
+                    columns: [[
+     { field: 'RealName', title: '姓名', width: 100, sortable: true },
+              //{ field: 'Category', title: '类别', width: 100, sortable: true },
+              { field: 'Units', title: '单位', width: 100, sortable: true },
+              { field: 'Duties', title: '职务', width: 100, sortable: true }
+                    ]],
+                    iconCls: 'icon-save',
+                    title: '已添加的档案',
+                    nowrap: true,
+                    fitColumns: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    width: 300,
+                    height: winHeight - 100,
+                    rownumbers: true,
+                    sortName: 'CreateTime',
+                    sortOrder: 'desc',
+                    toolbar: [{
+                        id: 'btnadd',
+                        text: '全部移除',
+                        iconCls: 'icon-delete',
+                        handler: function () {
+                            delbtnAll();
+                        }
+                    }], onDblClickRow: function (index, row) {
+                        //AddManuBtn(row.Id, id)//添加单按钮
+                        Delbtn();
+                    },
+                });
+            }
+            function DataGridSet2() {
+                $('#tbOut').datagrid({
+                    url: BaseUrl + 'GetUnitsNotOut?Id=' + Id,
+                    columns: [[
+            { field: 'RealName', title: '姓名', width: 100, sortable: true },
+              //{ field: 'Category', title: '类别', width: 100, sortable: true },
+              { field: 'Units', title: '单位', width: 100, sortable: true },
+              { field: 'Duties', title: '职务', width: 100, sortable: true }
+                    ]],
+                    iconCls: 'icon-add',
+                    title: '未允许的档案',
+                    nowrap: true,
+                    fitColumns: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    width: 300,
+                    height: winHeight - 100,
+                    rownumbers: true,
+                    sortName: 'CreateTime',
+                    sortOrder: 'desc',
+                    toolbar: [{
+                        id: 'btnadd',
+                        text: '全部添加',
+                        iconCls: 'icon-add',
+                        handler: function () {
+                            addbtnAll();
+                        }
+                    }],onDblClickRow: function (index, row) {
+                        addbtn();
+                        //  DelManuBtn(row.Id, id)//删菜单按钮
+                },
+                });
+            }
+            function SaveSet() {
+                var postData = "";
+                var rows = $("#tbOut").datagrid('getRows');
+                if (rows.length > 0) {//删除存在的
+                    res = -1;
+                    var DelId = "";
+                    for (var i = 0; i < rows.length; i++) {
+
+                        DelId += rows[i].Id + ",";
+                    }
+
+                    DelId = DelId.substring(0, DelId.length - 1);
+                    postData = {
+                        IdSet: DelId,
+                        UnitsId: Id
+                    };
+                    //发送异步请求到后台
+                    $.post(BaseUrl + 'DelUnitsOut', postData, function (data) {
+                        if (data.Code>0) {
+
+
+                        }
+                        else {
+                            alert(data.Msg);
+                        }
+                    });
+                }
+                var rows = $("#tbIn").datagrid('getRows');
+                if (rows.length > 0) {//添加或者更新
+
+
+                    for (var i = 0; i < rows.length; i++) {
+
+                        postData = {
+                            PersonnelFileId : rows[i].Id,
+                            UnitsId: Id,
+                            OrderNo: $('#tbIn').datagrid('getRowIndex', rows[i])
+                        };
+                        //发送异步请求到后台
+                        $.post(BaseUrl + 'AddUnitsOut', postData, function (data) {
+                            if (data.Code > 0) {
+
+
+                            }
+                            else {
+                                alert(data.Msg);
+                            }
+                        });
+                    }
+
+
+
+                }
+                alerts("设置成功",3);
+                $('#DivSetBtn').dialog('close');
+            }
+
+
+            function addbtn() {
+                var row = $('#tbOut').datagrid('getSelected');
+                if (row != null) {
+                    $("#tbIn").datagrid("appendRow", row);
+                }
+                var b = $('#tbOut').datagrid('getRowIndex', row);
+                $('#tbOut').datagrid('deleteRow', b);
+                $('#tbOut').datagrid('selectRow', b - 1);
+
+            }
+            function addbtnAll() {
+                var rows = $("#tbOut").datagrid('getRows');
+                var dd = rows.length;
+                for (var i = 0; i < dd; i++) {
+                    $("#tbIn").datagrid("appendRow", rows[0]);
+                    $('#tbOut').datagrid('deleteRow', 0);
+
+                }
+            }
+            function delbtnAll() {
+                var rows = $("#tbIn").datagrid('getRows');
+                var dd = rows.length;
+                for (var i = 0; i < dd; i++) {
+                    $("#tbOut").datagrid("appendRow", rows[0]);
+                    $('#tbIn').datagrid('deleteRow', 0);
+
+                }
+            }
+
+            function Delbtn() {
+                var row = $('#tbIn').datagrid('getSelected');
+                if (row != null) {
+                    $("#tbOut").datagrid("appendRow", row);
+                }
+                var b = $('#tbIn').datagrid('getRowIndex', row);
+                $('#tbIn').datagrid('deleteRow', b);
+
+                $('#tbIn').datagrid('selectRow', b - 1);
+
+
+            }
+
+        </script>
+    }
+
+</head>
+<body style="overflow-y: hidden">
+
+   
+     
+        <table class="stripes" style="table-layout: fixed; width:800px;" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td style="width: 400px;">
+                    <table id="tbIn"></table>
+                </td>
+                <td>
+                    <table id="tbOut"></table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <br />
+                    <div style="text-align: center; width: 100%; margin-bottom: 5px; display: block;">
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveSet();">确定</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="window.parent.closeC();">关闭</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+         
+   
+</body>
+</html>
