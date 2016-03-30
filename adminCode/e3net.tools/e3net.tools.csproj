@@ -137,6 +137,7 @@
     <Compile Include="JsonHelper\AjaxResult.cs" />
     <Compile Include="JsonHelper\FormatToJson.cs" />
     <Compile Include="JsonHelper\JsonHelper.cs" />
+    <Compile Include="JsonHelper\JsonSplit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryControlEntity.cs" />
     <Compile Include="Reflection\EachHelper.cs" />
