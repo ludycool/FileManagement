@@ -1262,6 +1262,21 @@ namespace ESUI.Controllers
             var df = OPBiz.ExecuteSqlToOwnList("select * from CategoryTable where ID in ( select ChildCategoryTableID from  MainAssociation where CategoryTableID='" + ID + "')");
             return Json(df, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public JsonResult GetexistingList(string Condition, string seachsql, string ChildCategoryTableID)
+        {
+          
+            var dic = new List<ColumnCharts>();
+
+            var sqlc = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition) ).OrderByASC(ColumnChartsSet.SortNo);
+                dic = CCBiz.GetEntities(sqlc);
+             
+          
+
+
+            return Json(dic);
+        }
         
 
     }

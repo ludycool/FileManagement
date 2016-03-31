@@ -30,12 +30,14 @@
                         var peo = $('#language').combobox('getValue');
                         bingbdinglist(peo);
                         bingalreadybdinglist(peo);
+                        bingcurrentlisting();
 
                     }
                 });
                 var peo2 = $('#language').combobox('getValue');
                 bingbdinglist(peo2);
                 bingalreadybdinglist(peo2);
+                bingcurrentlisting();
             });
 
             function DataGridSet() {
@@ -101,9 +103,9 @@
                             text: '添加关联表字段',
                             iconCls: 'icon-cut',
                             handler: function () {
-                                var rows = $("#dg").datagrid("getSelections");
+//                                var rows = $("#dg").datagrid("getSelections");
                                 //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
-                                if (rows.length >= 1) {
+//                                if (rows.length >= 1) {
                                     //实现修改的方法
                                     $('#DivSetRole').window({
                                         title: '数据关联',
@@ -111,10 +113,10 @@
                                         top: 50
                                     });
                                     $('#DivSetRole').window('open');
-                                }
-                                else {
-                                    alert("请选择你要关联的数据");
-                                }
+//                                }
+//                                else {
+//                                    alert("请选择你要关联的数据");
+//                                }
 
                                
                             }
@@ -153,7 +155,6 @@
                 });
 
             }
-
             function bingbdinglist(id) {
 
                 $('#tbOut').datagrid({
@@ -168,6 +169,29 @@
                     title: "待关联字段",
                     iconCls: 'icon-ok',
                     queryParams: { Condition: '@ViewBag.RuteUrl', ChildCategoryTableID: id, T: Math.floor(Math.random() * 1000000) },
+                    height: 340,
+                    nowrap: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    width: 'auto',
+                    rownumbers: true
+                });
+            }
+            function bingcurrentlisting(id) {
+
+                $('#tbRit').datagrid({
+                    url: BaseUrl + 'GetexistingList',
+                    columns: [
+                        [
+                            { field: 'title', title: '中文名称', width: 60, align: 'right' },
+                            { field: 'field', title: '英文名称', width: 60, align: 'right' }
+                        ]
+                    ],
+
+                    title: "所选模板",
+                    iconCls: 'icon-ok',
+                    queryParams: { Condition: '@ViewBag.RuteUrl'  },
                     height: 340,
                     nowrap: true,
                     singleSelect: true,
@@ -214,7 +238,7 @@
                     //var b = $('#tbOut').datagrid('getRowIndex', row);
                     //$('#tbOut').datagrid('deleteRow', b);
                     //$('#tbOut').datagrid('selectRow', b - 1);
-                    var dgrows = JSON.stringify($("#dg").datagrid('getSelected'));
+                     var dgrows = JSON.stringify($("#tbRit").datagrid('getSelected'));
                     var categoryTableID = '@ViewBag.RuteUrl' ;
                 var childCategoryTableID = $('#language').combobox('getValue');
 
@@ -436,6 +460,14 @@
                 $('input:radio[name=IsNumber]')[1].checked = true;
                 $('input:radio[name=MergeHeader]')[1].checked = true;
                 $('#field').attr('readonly', false);
+
+                $("#rowspan").val('1');
+                $("#colspan").val('1');
+                $("#width").val('100');
+                var data = $('#align').combobox('getData');
+                if (data.length > 0) {
+                    $('#align').combobox('select', data[2].value);
+                }
             }
 
 
@@ -523,7 +555,7 @@
                         <td style="width: 100px;">
                             <label>表格名称：</label></td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" id="title" name="title" data-options="required:true,validType:'length[1,32]'" />
+                            <input class="easyui-validatebox textbox" type="text" id="title" name="title" data-options="required:true,validType:'length[1,32]'"  />
                         </td>
 
                     </tr>
@@ -539,7 +571,7 @@
                         <td>
                             <label>行合并数：</label></td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" onkeyup="clearNoNumberContainDot(this);" name="rowspan" data-options="required:true" />
+                            <input class="easyui-validatebox textbox" type="text" onkeyup="clearNoNumberContainDot(this);" name="rowspan"  id="rowspan" data-options="required:true" value="1"/>
                         </td>
 
                     </tr>
@@ -547,7 +579,7 @@
                         <td>
                             <label>列合并数：</label></td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" onkeyup="clearNoNumberContainDot(this);" name="colspan" data-options="required:true" />
+                            <input class="easyui-validatebox textbox" type="text" onkeyup="clearNoNumberContainDot(this);" name="colspan"  id="colspan" data-options="required:true" value="1" />
                         </td>
 
                     </tr>
@@ -555,7 +587,7 @@
                         <td>
                             <label>宽度：</label></td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" onkeyup="clearNoNumberContainDot(this);" name="width" data-options="required:true" />
+                            <input class="easyui-validatebox textbox" type="text" onkeyup="clearNoNumberContainDot(this);" name="width" id="width" data-options="required:true" value="100"/>
                         </td>
 
                     </tr>
@@ -581,7 +613,7 @@
                             <label>对齐方向：</label></td>
                         <td>
 
-                            <select id="align" class="easyui-combobox" data-options="required:true" name="align" style="width: 200px;" vlaue="0">
+                            <select id="align" class="easyui-combobox" data-options="required:true" name="align" style="width: 200px;" >
                                 <option value="left">靠左</option>
                                 <option value="right">靠右</option>
                                 <option value="center">居中</option>
@@ -696,35 +728,54 @@
             <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>
         </div>
     </div>
-<div id="DivSetRole" class="easyui-window" style="width: 510px; height: 440px;"
+<div id="DivSetRole" class="easyui-window" style="width: 730px; height: 440px;"
      closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-
-   选这关联表格 ：<input class="easyui-combobox" id="language" name="language"
+    <div style="text-align:center; padding: 10px 10px 10px 10px;">
+           选这关联表格 ：<input class="easyui-combobox" id="language" name="language"
            data-options="valueField:'ID',textField:'ChineseName'">
-    <div>
-    <div style="display: block; width: 210px; float: left; height: 340px;">
-        <table id="tbOut"></table>@*//未选择的*@
-
     </div>
-    <div style="display: block; width: 30px; float: left; height: 340px;">
 
-        <div id="divSelect" style="height: 100px; height: 30px; padding-top: 130px; padding-left: 5px;">
+    <div>
+
+        <div style="display: block; width: 210px; float: left; height: 340px; padding-left: 20px">
+            <table id="tbRit"></table>@*//未选择的*@
+
+        </div>
+            <div style="display: block; width: 30px; float: left; height: 340px;">
+
+            <div id="divSelect" style="height: 100px; height: 30px; padding-top: 130px; padding-left: 5px;">
 
 
-            <span class=" icon icon-arrow_right" style="display: block; cursor: pointer" onclick="addbtn();">&nbsp;</span>
-            <br/>
-            <span class=" icon icon-arrow_left" style="display: block; cursor: pointer" onclick="Delbtn2();">&nbsp;</span>
+                <span class=" icon icon-arrow_right" style="display: block; cursor: pointer" onclick="addbtn();">&nbsp;</span>
+                <br/>
+                <span class=" icon icon-arrow_left" style="display: block; cursor: pointer" onclick="Delbtn2();">&nbsp;</span>
+            </div>
+
+
+        </div>
+        <div style="display: block; width: 210px; float: left; height: 340px;">
+            <table id="tbOut"></table>@*//未选择的*@
+
+        </div>
+        <div style="display: block; width: 30px; float: left; height: 340px;">
+
+@*            <div id="divSelect" style="height: 100px; height: 30px; padding-top: 130px; padding-left: 5px;">*@
+@**@
+@**@
+@*                <span class=" icon icon-arrow_right" style="display: block; cursor: pointer" onclick="addbtn();">&nbsp;</span>*@
+@*                <br/>*@
+@*                <span class=" icon icon-arrow_left" style="display: block; cursor: pointer" onclick="Delbtn2();">&nbsp;</span>*@
+@*            </div>*@
+
+
+        </div>
+        <div style="display: block; width: 210px; float: left; height: 340px;">
+
+            <table id="tbIn"></table>@*已选择的*@
         </div>
 
 
     </div>
-    <div style="display: block; width: 210px; float: left; height: 340px;">
-
-        <table id="tbIn"></table>@*已选择的*@
-    </div>
-  
-
-</div>
 
 
 </div>
