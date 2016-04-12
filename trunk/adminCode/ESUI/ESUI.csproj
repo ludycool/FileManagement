@@ -3506,6 +3506,7 @@
     <Content Include="Views\TF_PersonnelFile_AetUnits\Index.cshtml" />
     <Content Include="Views\TF_PersonnelFile_AetUnits\SetUnitsIn.cshtml" />
     <Content Include="Views\TF_PersonnelFile_AetUnits\SetUnitsOut.cshtml" />
+    <Content Include="Views\DynamicTable\EntryRecordFormIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="temp\" />

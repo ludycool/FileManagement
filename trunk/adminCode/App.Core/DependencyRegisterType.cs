@@ -52,6 +52,7 @@ namespace App.Core
 
              container.RegisterType<IMainAssociationDao, MainAssociationBiz>(); 
             container.RegisterType<IVcorrelateColumnsDao, VcorrelateColumnsBiz>();
+            container.RegisterType<IEntryRecordFormDao, EntryRecordFormBiz>(); container.RegisterType<IVEntryRecordFormDao, VEntryRecordFormBiz>();
             #endregion
               
 
