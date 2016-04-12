@@ -58,12 +58,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DynamicTable\ICorrelateColumnsDao.cs" />
+    <Compile Include="DynamicTable\IEntryRecordFormDao.cs" />
     <Compile Include="DynamicTable\IMainAssociationDao.cs" />
     <Compile Include="DynamicTable\ICategoryTableDao.cs" />
     <Compile Include="DynamicTable\IBaschartypeDao.cs" />
     <Compile Include="DynamicTable\IColumnChartsDao.cs" />
     <Compile Include="DynamicTable\IBascharvalueDao.cs" />
     <Compile Include="DynamicTable\IVcorrelateColumnsDao.cs" />
+    <Compile Include="DynamicTable\IVEntryRecordFormDao.cs" />
     <Compile Include="FileManagementDB\ITF_PaperFileDao.cs" />
     <Compile Include="FileManagementDB\ITF_LifeCommentsDao.cs" />
     <Compile Include="FileManagementDB\ITF_ElectronicFileDao.cs" />

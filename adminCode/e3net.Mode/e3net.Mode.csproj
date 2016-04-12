@@ -62,6 +62,7 @@
     <Compile Include="CategoryTable.cs" />
     <Compile Include="ColumnCharts.cs" />
     <Compile Include="CorrelateColumns.cs" />
+    <Compile Include="EntryRecordForm.cs" />
     <Compile Include="FileManagementDB\TF_ElectronicFile.cs" />
     <Compile Include="FileManagementDB\TF_LifeComments.cs" />
     <Compile Include="FileManagementDB\TF_PaperFile.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="SysItem.cs" />
     <Compile Include="Sys_CityArea.cs" />
     <Compile Include="VcorrelateColumns.cs" />
+    <Compile Include="VEntryRecordForm.cs" />
     <Compile Include="V_mode\AdminUserInfo.cs" />
     <Compile Include="V_mode\v_Sys_Advertising.cs" />
     <Compile Include="V_mode\v_Sys_AppVerSion.cs" />
