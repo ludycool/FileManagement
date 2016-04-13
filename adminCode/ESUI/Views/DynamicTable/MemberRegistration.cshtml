@@ -36,48 +36,56 @@
             jQuery(document).ready(function() {
 
                 AutoWH("#body", 100, 100); //自适应宽度
-                
-                $("#EntryRecordFormID").val('@ViewBag.ERFID');
-               // alert(  $("#EntryRecordFormID").val());
+
+                // loadColum();
+                $('#CategoryTableList').combobox({
+                    url: "/DynamicTable/GetAllCategoryTable",
+
+                    //onSelect: function (record) {
+                    //    var peo = $('#language').combobox('getValue');
+                    //    //bingbdinglist(peo);
+                    //    //bingalreadybdinglist(peo);
+                     
+                    //}
+                });
                 loadColum();
 
             });
-            $.ajax({
-                url: BaseUrl + 'GetSeachJson',
-                type: 'POST',
-                data: { Condition: '@ViewBag.RuteUrl' },
-                cache: false,
-                error: function() { alert('Error loading PHP document'); },
-                success: function(data) {
-                    var g = data;
-                    var a = new Array();
-                    for (var i = 0; i < g.length; i++) {
-                        a[i] = new Array(g[i].field, g[i].title, 's');
-                    }
-                    colFilter = a;
+//            $.ajax({
+//                url: BaseUrl + 'GetSeachJson',
+//                type: 'POST',
+//                data: { Condition: '@ViewBag.RuteUrl' },
+//                cache: false,
+//                error: function() { alert('Error loading PHP document'); },
+//                success: function(data) {
+//                    var g = data;
+//                    var a = new Array();
+//                    for (var i = 0; i < g.length; i++) {
+//                        a[i] = new Array(g[i].field, g[i].title, 's');
+//                    }
+//                    colFilter = a;
+//
+//                }
+//            });
 
-                }
-            });
 
-            var Column = $.ajax({
-                //获取列数据
-                url: BaseUrl + 'GetBtnColumn',
-                cache: false,
-                data: { Condition: '@ViewBag.RuteUrl' },
-                async: false
-            }).responseText;
-
-            function loadColum() {
-
+            function loadColum(id) {
+                var Column = $.ajax({
+                    //获取列数据
+                    url: BaseUrl + 'GetBtnColumn',
+                    cache: false,
+                    data: { Condition: id },
+                    async: false
+                }).responseText;
                 var Columndata = eval(Column);
                 var erfiid = $("#EntryRecordFormID").val();
                 $('#dg2').datagrid({
                     url: BaseUrl + 'GetJsonResultListByUserNew',
                     columns: Columndata,
-                    queryParams: { Condition: '@ViewBag.RuteUrl', EntryRecordFormID: erfiid },
+                    queryParams: { Condition: id ,EntryRecordFormID:erfiid},
                     height: 450,
                     //iconCls: 'icon-save',
-                    title: '@ViewBag.ViewBag',
+                    //  title: '@ViewBag.ViewBag',
                     // onClickCell: onClickCell,
                     nowrap: true,
                     //singleSelect: true,
@@ -101,12 +109,12 @@
                                 }
 
                                 if (editIndex == undefined) {
-
+                                    var ctid = $('#CategoryTableList').combobox('getValue');
                                     var t = $.ajax({
                                         //获取列数据
                                         url: BaseUrl + 'GetNumberColumn',
                                         cache: false,
-                                        data: { Condition: '@ViewBag.RuteUrl' },
+                                        data: { Condition: ctid },
                                         async: false
                                     }).responseText;
                                     var f = jQuery.parseJSON(t);
@@ -161,6 +169,7 @@
                                 //实现修改的方法
                                 //if (endEditing()) {
                                 //alert(editIndex);
+                                var ctid = $('#CategoryTableList').combobox('getValue');
                                 $("#dg2").datagrid('endEdit', editIndex);
                                 var rows = $("#dg2").datagrid('getChanges');
 
@@ -172,19 +181,21 @@
                                     $.ajax({
                                         url: BaseUrl + 'ColumnSave',
                                         type: 'POST',
-                                        data: { categoryTable: rowstr, CategoryTableID: '@ViewBag.RuteUrl', EntryRecordFormID: erfid },
+                                        data: { categoryTable: rowstr, CategoryTableID: ctid, EntryRecordFormID: erfid },
                                         cache: false,
                                         error: function() { alert('Error loading PHP document'); },
                                         success: function(data) {
 
                                             alerts(data.Msg, 2);
                                             if (data.Code > 0) {
-//                                                $('#DivEditor').dialog('close');
-//                                                $(".validatebox-tip").remove();
-//                                                $("#dg").datagrid("reload");
-//                                                loadColum();
-                                                //                                                bindconbox();
+                                     
                                                 $("#EntryRecordFormID").val(data.Data);
+
+                                                var queryParams = $('#dg2').datagrid('options').queryParams;
+
+                                                queryParams.EntryRecordFormID = data.Data;
+
+                                                $('#dg2').datagrid('options').queryParams = queryParams;
                                                 $("#dg2").datagrid("reload");
                                             } else {
                                                 editIndex = undefined;
@@ -192,12 +203,10 @@
                                                 $("#dg2").datagrid('rejectChanges');
 
                                                 $("#dg2").datagrid('unselectAll');
-//                                                alert("保存失败，请您检查");
+                                                //                                                alert("保存失败，请您检查");
                                             }
 
 
-
-                                          
                                         }
                                     });
                                 }
@@ -221,41 +230,15 @@
 
                                 exportToExcel();
                             }
-                        }, '-'
-                        ,
-//                        {
-//                            id: 'btnchax',
-//                            text: '查询',
-//                            iconCls: '',
-//                            handler: function() {
-//
-//
-//                                //colFilter = jQuery.parseJSON(f);
-//                                $('#DivEditor').dialog({
-//                                    title: '综合查询',
-//                                    //width: 400,
-//                                    //height: 200,
-//                                    closed: false,
-//                                    cache: false,
-//                                    // href: 'get_content.php',
-//                                    modal: true,
-//                                    top: 50,
-//                                    onClose: function() {
-//                                        //解决弹出窗口关闭后，验证消息还显示在最上面
-//
-//                                    }
-//                                });
-//                            }
-//                        },
-                        '-', {
+                        }, '-',{
                             id: 'btnchax2',
                             text: '导出关联表数据',
                             iconCls: '',
                             handler: function() {
 
-
+                                var ctid = $('#CategoryTableList').combobox('getValue');
                                 $('#language').combobox({
-                                    url: "/DynamicTable/GetAllowExport?ID=" + '@ViewBag.RuteUrl',
+                                    url: "/DynamicTable/GetAllowExport?ID=" + ctid,
 
                                     onSelect: function(record) {
                                         var peo = $('#language').combobox('getValue');
@@ -311,7 +294,8 @@
             }
 
             function loadhidColum(poe) {
-//                $("#dataGrid").datagrid("getRows")获取所有行
+                //                $("#dataGrid").datagrid("getRows")获取所有行
+                var ctid = $('#CategoryTableList').combobox('getValue');
                 var Column2 = $.ajax({
                     //获取列数据
                     url: BaseUrl + 'GetBtnColumn',
@@ -323,7 +307,7 @@
                 $('#dg3').datagrid({
                     url: BaseUrl + 'LoadExeclData',
                     columns: Columndata2,
-                    queryParams: { CategoryTableID: '@ViewBag.RuteUrl', ChildCategoryTableID: poe, dataGetter: JSON.stringify(getData($('#dg2').datagrid("getSelections"))) },
+                    queryParams: { CategoryTableID: ctid, ChildCategoryTableID: poe, dataGetter: JSON.stringify(getData($('#dg2').datagrid("getSelections"))) },
 
                     height: 340,
                     nowrap: true,
@@ -335,7 +319,7 @@
                 });
             }
 
-//删除
+            //删除
             function Del() {
                 //DataBaseFunction.deleteInfo("dg", "ID", "TrueName");
                 //得到按钮选择的数据的ID
@@ -635,110 +619,123 @@
                 if (typeof (combvalue) == "undefined" || combvalue == "") {
                     alert("请选择导出关联表");
                 } else {
-                    
 
-                
-                //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
-                if (rows.length >= 1) {
-                    $("#exportToExcelForm").remove();
-                    var form = $("<form>"); //定义一个form表单
-                    form.attr("id", "exportToExcelForm");
-                    form.attr("style", "display:none");
-                    form.attr("target", "");
-                    form.attr("method", "post");
-                    form.attr("action", "/Excel/CommonExportNewport");
-                    var input1 = $("<input>");
-                    input1.attr("type", "hidden");
-                    input1.attr("name", "Title");
-                    input1.attr("value", '@ViewBag.ViewBag');
-                    var input2 = $("<input>");
-                    input2.attr("type", "hidden");
-                    input2.attr("name", "titles");
-                    input2.attr("value", JSON.stringify(getColumns3()));
-                    var input4 = $("<input>");
-                    input4.attr("type", "hidden");
-                    input4.attr("name", "fileType");
-                    input4.attr("value", 'xls');
 
-                    var input5 = $("<input>");
-                    input5.attr("type", "hidden");
-                    input5.attr("name", "CategoryTableID");
-                    input5.attr("value", '@ViewBag.RuteUrl');
-                 
-                    var input6 = $("<input>");
-                    input6.attr("type", "hidden");
-                    input6.attr("name", "ChildCategoryTableID");
-                    input6.attr("value", combvalue);
+//首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
+                    if (rows.length >= 1) {
+                        $("#exportToExcelForm").remove();
+                        var form = $("<form>"); //定义一个form表单
+                        form.attr("id", "exportToExcelForm");
+                        form.attr("style", "display:none");
+                        form.attr("target", "");
+                        form.attr("method", "post");
+                        form.attr("action", "/Excel/CommonExportNewport");
+                        var input1 = $("<input>");
+                        input1.attr("type", "hidden");
+                        input1.attr("name", "Title");
+                        input1.attr("value", '@ViewBag.ViewBag');
+                        var input2 = $("<input>");
+                        input2.attr("type", "hidden");
+                        input2.attr("name", "titles");
+                        input2.attr("value", JSON.stringify(getColumns3()));
+                        var input4 = $("<input>");
+                        input4.attr("type", "hidden");
+                        input4.attr("name", "fileType");
+                        input4.attr("value", 'xls');
 
-                    var input3 = $("<input>");
-                    input3.attr("type", "hidden");
-                    input3.attr("name", "dataGetter");
-                    input3.attr("value", JSON.stringify(getData($('#dg2').datagrid("getSelections"))));
-                    $("body").append(form); //将表单放置在web中
-                    form.append(input1);
-                    form.append(input2);
-                    form.append(input3);
-                    form.append(input4);
-                    form.append(input5);
-                    form.append(input6);
-                    form.submit(); //表单提交
+                        var input5 = $("<input>");
+                        input5.attr("type", "hidden");
+                        input5.attr("name", "CategoryTableID");
+                        input5.attr("value", '@ViewBag.RuteUrl');
 
-                    $("#exportToExcelForm").remove();
-                } else {
-                    alert("请选择你要关联的数据");
-                }
+                        var input6 = $("<input>");
+                        input6.attr("type", "hidden");
+                        input6.attr("name", "ChildCategoryTableID");
+                        input6.attr("value", combvalue);
+
+                        var input3 = $("<input>");
+                        input3.attr("type", "hidden");
+                        input3.attr("name", "dataGetter");
+                        input3.attr("value", JSON.stringify(getData($('#dg2').datagrid("getSelections"))));
+                        $("body").append(form); //将表单放置在web中
+                        form.append(input1);
+                        form.append(input2);
+                        form.append(input3);
+                        form.append(input4);
+                        form.append(input5);
+                        form.append(input6);
+                        form.submit(); //表单提交
+
+                        $("#exportToExcelForm").remove();
+                    } else {
+                        alert("请选择你要关联的数据");
+                    }
                 }
             }
+
+            function Entering() {
+                var peo = $('#CategoryTableList').combobox('getValue');
+                    //bingbdinglist(peo);
+                    //bingalreadybdinglist(peo);
+                    loadColum(peo);
+            }
+
         </script>
     }
 </head>
 <body>
-    <div id="body">
-        <table id="dg2"></table>
-        
-@*        <table id="dg3"></table>*@
+  <div style="text-align:left; padding: 10px 10px 10px 10px;">
+      模板选择 ：<input class="easyui-combobox" id="CategoryTableList" name="CategoryTableList"
+                   data-options="valueField:'ID',textField:'ChineseName'">
+       <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
+                   onclick="javascript:Entering()">录入</a> 
     </div>
-     <input type="hidden" id="EntryRecordFormID"   />
-    <div id="DivExport" class="easyui-dialog" style="width: 700px;height:550px"
-     closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <table>
-            <tr>
-                <td>选择关联导出表： <input class="easyui-combobox" id="language" name="language"
-                            data-options="valueField:'ID',textField:'ChineseName'"></td>
-                <td> 
-         <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
-           onclick="javascript:Saveexport()">确定导出</a></td>
-            </tr>
+<div id="body">
+    <table id="dg2"></table>
 
-        </table>
-      <table id="dg3"></table>
+    @*        <table id="dg3"></table>*@
 </div>
-      <!------------------------弹出信息的弹出层---------------------------------->
-    <div id="DivEditor" class="easyui-dialog" style="width: 700px;"
-        closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:440,width:680,border:false">
-        <div id="filter" >
-			<div id="filterTitle" style=""><!--高级检索-->
-				<a id="find" href="#" class="easyui-linkbutton" onclick="findData2()">开始检索</a>
-				<a id="add" href="#" class="easyui-linkbutton" onclick="addFilter()">增加</a>
-				<a id="del" href="#" class="easyui-linkbutton" onclick="delFilter()">删除</a>
-			 
-				<a id="clear" href="#" class="easyui-linkbutton" onclick="clearFilter()">清除</a>
-				<a id="closewin" href="#" class="easyui-linkbutton" onclick="closeD()">关闭高级检索</a>
-			</div>
+<input type="hidden" id="EntryRecordFormID"/>
+<div id="DivExport" class="easyui-dialog" style="width: 700px; height: 550px"
+     closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+    <table>
+        <tr>
+            <td>选择关联导出表： <input class="easyui-combobox" id="language" name="language"
+                                data-options="valueField:'ID',textField:'ChineseName'"></td>
+            <td>
+                <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
+                   onclick="javascript:Saveexport()">确定导出</a></td>
+        </tr>
 
-                <table class="stripes" style="table-layout: fixed; width: 100%" border="0" id="filterContent" cellspacing="0" cellpadding="0">
-            
-                </table>
-          
+    </table>
+    <table id="dg3"></table>
+</div>
+<!------------------------弹出信息的弹出层---------------------------------->
+<div id="DivEditor" class="easyui-dialog" style="width: 700px;"
+     closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+    <div id="Div_form" class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:440,width:680,border:false">
+        <div id="filter">
+            <div id="filterTitle" style=""><!--高级检索-->
+                <a id="find" href="#" class="easyui-linkbutton" onclick="findData2()">开始检索</a>
+                <a id="add" href="#" class="easyui-linkbutton" onclick="addFilter()">增加</a>
+                <a id="del" href="#" class="easyui-linkbutton" onclick="delFilter()">删除</a>
+
+                <a id="clear" href="#" class="easyui-linkbutton" onclick="clearFilter()">清除</a>
+                <a id="closewin" href="#" class="easyui-linkbutton" onclick="closeD()">关闭高级检索</a>
+            </div>
+
+            <table class="stripes" style="table-layout: fixed; width: 100%" border="0" id="filterContent" cellspacing="0" cellpadding="0">
+
+            </table>
+
 
 
         </div>
 
     </div>
 
-    </div>  
+</div>
 
-    
+
 </body>
 </html>

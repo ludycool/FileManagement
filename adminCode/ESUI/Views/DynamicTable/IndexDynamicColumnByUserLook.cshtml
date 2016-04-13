@@ -33,12 +33,12 @@
             var BaseUrl = '/DynamicTable/';
             var editIndex = undefined;
 
-            jQuery(document).ready(function() {
+            jQuery(document).ready(function () {
 
                 AutoWH("#body", 100, 100); //自适应宽度
-                
+
                 $("#EntryRecordFormID").val('@ViewBag.ERFID');
-               // alert(  $("#EntryRecordFormID").val());
+                // alert(  $("#EntryRecordFormID").val());
                 loadColum();
 
             });
@@ -47,8 +47,8 @@
                 type: 'POST',
                 data: { Condition: '@ViewBag.RuteUrl' },
                 cache: false,
-                error: function() { alert('Error loading PHP document'); },
-                success: function(data) {
+                error: function () { alert('Error loading PHP document'); },
+                success: function (data) {
                     var g = data;
                     var a = new Array();
                     for (var i = 0; i < g.length; i++) {
@@ -88,207 +88,25 @@
                     // fitColumns: true,
                     rownumbers: true,
                     toolbar: [
-                        {
-                            id: 'btnadd',
-                            text: '添加',
-                            iconCls: 'icon-add',
-                            handler: function() {
-                                //实现弹出注册信息的页面
-                                if (editIndex != undefined) {
-
-                                    $("#dg2").datagrid('endEdit', editIndex);
-
-                                }
-
-                                if (editIndex == undefined) {
-
-                                    var t = $.ajax({
-                                        //获取列数据
-                                        url: BaseUrl + 'GetNumberColumn',
-                                        cache: false,
-                                        data: { Condition: '@ViewBag.RuteUrl' },
-                                        async: false
-                                    }).responseText;
-                                    var f = jQuery.parseJSON(t);
-                                    if (t != 2) {
-
-                                        $("#dg2").datagrid('insertRow', {
-                                            index: 0,
-
-                                            row: f[0]
-
-
-                                        });
-                                    } else {
-                                        //alert(eval(newRow));
-                                        $("#dg2").datagrid('insertRow', {
-                                            index: 0,
-
-                                            row: {}
-
-
-                                        });
-                                    }
-
-
-                                    $("#dg2").datagrid('beginEdit', 0);
-
-                                    editIndex = 0;
-
-                                }
-
-
-                            }
-                        },
-                        '-', {
-                            text: '撤销',
-                            iconCls: 'icon-redo',
-                            handler: function() {
-
-                                editIndex = undefined;
-
-                                $("#dg2").datagrid('rejectChanges');
-
-                                $("#dg2").datagrid('unselectAll');
-
-                            }
-
-                        }, '-', {
-                            id: 'btnAccept',
-                            text: '保存',
-                            iconCls: 'icon-save',
-                            handler: function() {
-                                //实现修改的方法
-                                //if (endEditing()) {
-                                //alert(editIndex);
-                                $("#dg2").datagrid('endEdit', editIndex);
-                                var rows = $("#dg2").datagrid('getChanges');
-
-
-                                if (rows.length > 0) {
-                                    var erfid = $("#EntryRecordFormID").val();
-                                    var rowstr = JSON.stringify(rows);
-                                    // alert(rowstr);
-                                    $.ajax({
-                                        url: BaseUrl + 'ColumnSave',
-                                        type: 'POST',
-                                        data: { categoryTable: rowstr, CategoryTableID: '@ViewBag.RuteUrl', EntryRecordFormID: erfid },
-                                        cache: false,
-                                        error: function() { alert('Error loading PHP document'); },
-                                        success: function(data) {
-
-                                            alerts(data.Msg, 2);
-                                            if (data.Code > 0) {
-//                                                $('#DivEditor').dialog('close');
-//                                                $(".validatebox-tip").remove();
-//                                                $("#dg").datagrid("reload");
-//                                                loadColum();
-                                                //                                                bindconbox();
-                                                $("#EntryRecordFormID").val(data.Data);
-                                                $("#dg2").datagrid("reload");
-                                            } else {
-                                                editIndex = undefined;
-
-                                                $("#dg2").datagrid('rejectChanges');
-
-                                                $("#dg2").datagrid('unselectAll');
-//                                                alert("保存失败，请您检查");
-                                            }
-
-
-
-                                          
-                                        }
-                                    });
-                                }
-                                $('#dg2').datagrid('acceptChanges');
-
-                            }
-
-                        }, '-', {
-                            id: 'btnAccept',
-                            text: '删除',
-                            iconCls: 'icon-remove',
-                            handler: function() {
-
-                                Del();
-                            }
-                        }, '-', {
+                           {
                             id: 'btnAccept',
                             text: '导出',
                             iconCls: 'icon-remove',
-                            handler: function() {
+                            handler: function () {
 
                                 exportToExcel();
                             }
-                        }, '-'
-                        ,
-//                        {
-//                            id: 'btnchax',
-//                            text: '查询',
-//                            iconCls: '',
-//                            handler: function() {
-//
-//
-//                                //colFilter = jQuery.parseJSON(f);
-//                                $('#DivEditor').dialog({
-//                                    title: '综合查询',
-//                                    //width: 400,
-//                                    //height: 200,
-//                                    closed: false,
-//                                    cache: false,
-//                                    // href: 'get_content.php',
-//                                    modal: true,
-//                                    top: 50,
-//                                    onClose: function() {
-//                                        //解决弹出窗口关闭后，验证消息还显示在最上面
-//
-//                                    }
-//                                });
-//                            }
-//                        },
-                        '-', {
-                            id: 'btnchax2',
-                            text: '导出关联表数据',
-                            iconCls: '',
-                            handler: function() {
-
-
-                                $('#language').combobox({
-                                    url: "/DynamicTable/GetAllowExport?ID=" + '@ViewBag.RuteUrl',
-
-                                    onSelect: function(record) {
-                                        var peo = $('#language').combobox('getValue');
-                                        //bingbdinglist(peo);
-                                        //bingalreadybdinglist(peo);
-                                        loadhidColum(peo);
-                                    }
-                                });
-                                $('#DivExport').dialog({
-                                    title: '导出关联表数据',
-                                    //width: 400,
-                                    //height: 200,
-                                    closed: false,
-                                    cache: false,
-                                    // href: 'get_content.php',
-                                    modal: true,
-                                    top: 50,
-                                    onClose: function() {
-                                        //解决弹出窗口关闭后，验证消息还显示在最上面
-
-                                    }
-                                });
-                            }
-                        }
+                        } 
+                   
                     ],
 
-                    onAfterEdit: function(rowIndex, rowData, changes) {
+                    onAfterEdit: function (rowIndex, rowData, changes) {
 
                         editIndex = undefined;
 
                     },
 
-                    onDblClickRow: function(rowIndex, rowData) {
+                    onDblClickRow: function (rowIndex, rowData) {
 
                         if (editIndex != undefined) {
 
@@ -308,22 +126,22 @@
 
                     }
                 });
-            }
+                }
 
-            function loadhidColum(poe) {
-//                $("#dataGrid").datagrid("getRows")获取所有行
-                var Column2 = $.ajax({
-                    //获取列数据
-                    url: BaseUrl + 'GetBtnColumn',
-                    cache: false,
-                    data: { Condition: poe },
-                    async: false
-                }).responseText;
-                var Columndata2 = eval(Column2);
-                $('#dg3').datagrid({
-                    url: BaseUrl + 'LoadExeclData',
-                    columns: Columndata2,
-                    queryParams: { CategoryTableID: '@ViewBag.RuteUrl', ChildCategoryTableID: poe, dataGetter: JSON.stringify(getData($('#dg2').datagrid("getSelections"))) },
+                function loadhidColum(poe) {
+                    //                $("#dataGrid").datagrid("getRows")获取所有行
+                    var Column2 = $.ajax({
+                        //获取列数据
+                        url: BaseUrl + 'GetBtnColumn',
+                        cache: false,
+                        data: { Condition: poe },
+                        async: false
+                    }).responseText;
+                    var Columndata2 = eval(Column2);
+                    $('#dg3').datagrid({
+                        url: BaseUrl + 'LoadExeclData',
+                        columns: Columndata2,
+                        queryParams: { CategoryTableID: '@ViewBag.RuteUrl', ChildCategoryTableID: poe, dataGetter: JSON.stringify(getData($('#dg2').datagrid("getSelections"))) },
 
                     height: 340,
                     nowrap: true,
@@ -335,7 +153,7 @@
                 });
             }
 
-//删除
+            //删除
             function Del() {
                 //DataBaseFunction.deleteInfo("dg", "ID", "TrueName");
                 //得到按钮选择的数据的ID
@@ -371,9 +189,9 @@
                     //    }
                     //}
                     //然后确认发送异步请求的信息到后台删除数据
-                    $.messager.confirm("删除信息", "您确认删除<font color='red' size='3'>" + "" + "</font>吗？", function(Delete) {
+                    $.messager.confirm("删除信息", "您确认删除<font color='red' size='3'>" + "" + "</font>吗？", function (Delete) {
                         if (Delete) {
-                            $.get(BaseUrl + "Del", postData, function(data) {
+                            $.get(BaseUrl + "Del", postData, function (data) {
                                 alerts(data.Msg, 2);
                                 if (data.Code > 0) {
                                     $("#dg2").datagrid("reload");
@@ -402,7 +220,7 @@
 
                         editIndex = index;
                     } else {
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $('#dg2').datagrid('selectRow', editIndex);
                         }, 0);
                     }
@@ -422,9 +240,9 @@
                 }
             }
 
-            serializeObject = function(form) { /*将form 表单元素的值序列化*/
+            serializeObject = function (form) { /*将form 表单元素的值序列化*/
                 var obj = {};
-                $.each(form.serializeArray(), function(index) {
+                $.each(form.serializeArray(), function (index) {
                     if (obj[this['name']]) {
                         obj[this['name']] = obj[this['name']] + "," + this['value'];
                     } else {
@@ -472,7 +290,7 @@
                 //});
 
                 //发送异步请求到后台保存按钮数据
-                $.post(BaseUrl + 'ColumnEditInfo', postData, function(data) {
+                $.post(BaseUrl + 'ColumnEditInfo', postData, function (data) {
                     if (data = "OK") {
                         //添加成功  1.关闭弹出层，2.刷新DataGird
                         alert("编辑成功");
@@ -520,8 +338,8 @@
                     type: 'POST',
                     data: { ID: ID },
                     cache: false,
-                    error: function() { alert('Error loading PHP document'); },
-                    success: function(result) {
+                    error: function () { alert('Error loading PHP document'); },
+                    success: function (result) {
 
                         for (items in result) {
                             $("#" + items).val(result[items]);
@@ -570,7 +388,7 @@
 
             function getData(Data) {
                 var allColsTitle = $("#dg2").datagrid("options").columns;
-                return Enumerable.From(Data).Select(function(c) {
+                return Enumerable.From(Data).Select(function (c) {
                     var obj = {};
                     for (var i in allColsTitle[0]) {
                         obj[allColsTitle[0][i].field] = c[allColsTitle[0][i].field];
@@ -635,22 +453,22 @@
                 if (typeof (combvalue) == "undefined" || combvalue == "") {
                     alert("请选择导出关联表");
                 } else {
-                    
 
-                
-                //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
-                if (rows.length >= 1) {
-                    $("#exportToExcelForm").remove();
-                    var form = $("<form>"); //定义一个form表单
-                    form.attr("id", "exportToExcelForm");
-                    form.attr("style", "display:none");
-                    form.attr("target", "");
-                    form.attr("method", "post");
-                    form.attr("action", "/Excel/CommonExportNewport");
-                    var input1 = $("<input>");
-                    input1.attr("type", "hidden");
-                    input1.attr("name", "Title");
-                    input1.attr("value", '@ViewBag.ViewBag');
+
+
+                    //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
+                    if (rows.length >= 1) {
+                        $("#exportToExcelForm").remove();
+                        var form = $("<form>"); //定义一个form表单
+                        form.attr("id", "exportToExcelForm");
+                        form.attr("style", "display:none");
+                        form.attr("target", "");
+                        form.attr("method", "post");
+                        form.attr("action", "/Excel/CommonExportNewport");
+                        var input1 = $("<input>");
+                        input1.attr("type", "hidden");
+                        input1.attr("name", "Title");
+                        input1.attr("value", '@ViewBag.ViewBag');
                     var input2 = $("<input>");
                     input2.attr("type", "hidden");
                     input2.attr("name", "titles");
@@ -664,7 +482,7 @@
                     input5.attr("type", "hidden");
                     input5.attr("name", "CategoryTableID");
                     input5.attr("value", '@ViewBag.RuteUrl');
-                 
+
                     var input6 = $("<input>");
                     input6.attr("type", "hidden");
                     input6.attr("name", "ChildCategoryTableID");
@@ -687,8 +505,8 @@
                 } else {
                     alert("请选择你要关联的数据");
                 }
-                }
             }
+        }
         </script>
     }
 </head>

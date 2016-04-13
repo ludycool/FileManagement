@@ -669,7 +669,8 @@ namespace ESUI.Controllers
             ViewBag.RuteUrl = id;
             var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(id)));
             ViewBag.ViewBag = catmodle.ChineseName + catmodle.TableProperties;
-            ViewBag.ERFID = "";
+            string EntryRecordFormID = Request.QueryString["EntryRecordFormID"];
+            ViewBag.ERFID = EntryRecordFormID;
             return View();
         }
         /// <summary>
@@ -1381,6 +1382,7 @@ namespace ESUI.Controllers
 
             int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
             int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
+            string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
             ////字段排序
             //String sortField = Request["sortField"];
             //String sortOrder = Request["sortOrder"];
@@ -1390,8 +1392,40 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = "VEntryRecordForm";
-            pc.sys_Where = GetNewSql(seachsql) + "and [name]='" + UserData.UserName + "'";
-            pc.sys_Order = "ID";
+            pc.sys_Where = Where + "and [name]='" + UserData.UserName + "'";
+            pc.sys_Order = "CreateDate desc";
+
+            var list2 = Verfbiz.ExecuteProToDataSetNew("sp_PaginationEx", pc);
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+
+            // var mql = RMS_ButtonsSet.Id.NotEqual("");
+            dic.Add("rows", list2.Tables[0]);
+            dic.Add("total", pc.RCount);
+
+            return Json(dic);
+        }
+     [HttpPost]
+        public JsonResult GetJsonResulVEntryRecordFormAdmin(string Condition, string seachsql)
+        {
+
+           // var modle = Verfbiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
+
+            int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
+
+            string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
+            ////字段排序
+            //String sortField = Request["sortField"];
+            //String sortOrder = Request["sortOrder"];
+            PageClass pc = new PageClass();
+            pc.sys_Fields = "*";
+            pc.sys_Key = "ID";
+            pc.sys_PageIndex = pageIndex;
+            pc.sys_PageSize = pageSize;
+            pc.sys_Table = "VEntryRecordForm";
+            pc.sys_Where = Where;
+            pc.sys_Order = "CreateDate desc";
 
             var list2 = Verfbiz.ExecuteProToDataSetNew("sp_PaginationEx", pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
@@ -1407,6 +1441,75 @@ namespace ESUI.Controllers
         public ActionResult EntryRecordFormIndex()
         {
             return View();
+        }  public ActionResult EntryRecordFormIndexByUser()
+        {
+            return View();
         }
+        public ActionResult IndexDynamicColumnByUserLook()
+        {
+            string id = Request.QueryString["ID"];
+            ViewBag.RuteUrl = id;
+            var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(id)));
+            ViewBag.ViewBag = catmodle.ChineseName + catmodle.TableProperties;
+            string EntryRecordFormID = Request.QueryString["EntryRecordFormID"];
+            ViewBag.ERFID = EntryRecordFormID;
+            return View();
+        }
+
+        public ActionResult MemberRegistration()
+        {
+            //string id = Request.QueryString["ID"];
+            //ViewBag.RuteUrl = id;
+            return View();
+            
+        }     
+
+
+        public JsonResult GetAllCategoryTable()
+        {
+            //var sqlc2 = MainAssociationSet.SelectAll().Where(MainAssociationSet.CategoryTableID.Equal(ID));
+            //var d = Mabiz.GetEntities(sqlc2);
+            var f = CategoryTableSet.SelectAll();
+            var df = OPBiz.GetEntities(f);
+            return Json(df, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 查询动态表格内容根据登录人
+        /// </summary>
+        /// <param name="Condition"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult GetJsonResultListByUserNew(string Condition, string seachsql, string EntryRecordFormID)
+        {
+
+            var modle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
+
+            int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
+            ////字段排序
+            //String sortField = Request["sortField"];
+            //String sortOrder = Request["sortOrder"];
+
+            PageClass pc = new PageClass();
+            pc.sys_Fields = "*";
+            pc.sys_Key = "ID";
+            pc.sys_PageIndex = pageIndex;
+            pc.sys_PageSize = pageSize;
+            pc.sys_Table = modle.UserTableName;
+            pc.sys_Where = GetNewSql(seachsql) + "and EntryRecordFormID='" + EntryRecordFormID + "'";
+            pc.sys_Order = "ID";
+
+            var list2 = OPBiz.ExecuteProToDataSetNew("sp_PaginationEx", pc);
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+
+            // var mql = RMS_ButtonsSet.Id.NotEqual("");
+            dic.Add("rows", list2.Tables[0]);
+            dic.Add("total", pc.RCount);
+
+            return Json(dic);
+        }
+
+       
     }
 }
