@@ -50,7 +50,7 @@ namespace ESUI.Controllers
             //return File(fileStream, "application/ms-excel", string.Format("{0}.xls", Title));
             string filename = Guid.NewGuid().ToString() + ".xlsx";
             var ff = Exporter.Instance(Server.MapPath("~/temp/" + filename)).Download();
-            return File(Server.MapPath("~/temp/" + filename), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", string.Format("{0}.xls", Title));
+            return File(Server.MapPath("~/temp/" + filename), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", string.Format("{0}.xlsx", Title));
             // return File(ff, "application/ms-excel", string.Format("{0}.xls", "czc"));
         }
         [HttpPost]
@@ -95,7 +95,7 @@ namespace ESUI.Controllers
             UniteDataTable(_datatable, dt2, dic);
             string filename = Guid.NewGuid().ToString() + ".xlsx";
             var ff = Exporter.NewInstance(Server.MapPath("~/temp/" + filename), dt2, CategoryTablemodle.ChineseName).Download();
-            return File(Server.MapPath("~/temp/" + filename), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", string.Format("{0}.xls", Title));
+            return File(Server.MapPath("~/temp/" + filename), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", string.Format("{0}.xlsx", Title));
             // return File(ff, "application/ms-excel", string.Format("{0}.xls", "czc"));
         }
         //两个结构不同的DT合并
