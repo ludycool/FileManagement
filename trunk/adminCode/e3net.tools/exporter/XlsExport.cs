@@ -35,7 +35,7 @@ namespace Zephyr.Core
              workbook = new XSSFWorkbook();
              sheet = workbook.CreateSheet("sheet1") as XSSFSheet;
             //sheet =(HSSFSheet)workbook.CreateSheet("sheet1");
-            sheet.DefaultRowHeight = 200 * 20;
+//            sheet.DefaultRowHeight = 200 * 20;
         }
 
         public void MergeCell(int x1,int y1,int x2,int y2)
