@@ -48,7 +48,7 @@
                      
                     //}
                 });
-                loadColum();
+               // loadColum();
 
             });
 //            $.ajax({
@@ -221,46 +221,6 @@
                             handler: function() {
 
                                 Del();
-                            }
-                        }, '-', {
-                            id: 'btnAccept',
-                            text: '导出',
-                            iconCls: 'icon-remove',
-                            handler: function() {
-
-                                exportToExcel();
-                            }
-                        }, '-',{
-                            id: 'btnchax2',
-                            text: '导出关联表数据',
-                            iconCls: '',
-                            handler: function() {
-
-                                var ctid = $('#CategoryTableList').combobox('getValue');
-                                $('#language').combobox({
-                                    url: "/DynamicTable/GetAllowExport?ID=" + ctid,
-
-                                    onSelect: function(record) {
-                                        var peo = $('#language').combobox('getValue');
-                                        //bingbdinglist(peo);
-                                        //bingalreadybdinglist(peo);
-                                        loadhidColum(peo);
-                                    }
-                                });
-                                $('#DivExport').dialog({
-                                    title: '导出关联表数据',
-                                    //width: 400,
-                                    //height: 200,
-                                    closed: false,
-                                    cache: false,
-                                    // href: 'get_content.php',
-                                    modal: true,
-                                    top: 50,
-                                    onClose: function() {
-                                        //解决弹出窗口关闭后，验证消息还显示在最上面
-
-                                    }
-                                });
                             }
                         }
                     ],
