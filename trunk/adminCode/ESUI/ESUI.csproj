@@ -251,6 +251,7 @@
     <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_Transmitting_InController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_Transmitting_OutController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_AetUnitsController.cs" />
+    <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManuController.cs" />
@@ -3391,6 +3392,15 @@
     <Content Include="Content\umditor\umeditor.config.js" />
     <Content Include="Content\umditor\umeditor.js" />
     <Content Include="Content\umditor\umeditor.min.js" />
+    <Content Include="Content\uploadify\Change Log.txt" />
+    <Content Include="Content\uploadify\jquery.uploadify.js" />
+    <Content Include="Content\uploadify\jquery.uploadify.min.js" />
+    <Content Include="Content\uploadify\license.txt" />
+    <Content Include="Content\uploadify\uploadify-cancel.png" />
+    <Content Include="Content\uploadify\uploadify.css" />
+    <Content Include="Content\uploadify\uploadify.swf" />
+    <Content Include="Content\uploadify\__MACOSX\._Change Log.txt" />
+    <Content Include="Content\uploadify\__MACOSX\._uploadify.swf" />
     <Content Include="Global.asax" />
     <Content Include="Content\JqueryEasyUI\index.html.bak" />
     <Content Include="Content\JqueryEasyUI\themes\black\images\Thumbs.db" />
@@ -3437,6 +3447,9 @@
     <Content Include="httpHandle\DictionaryHandler.ashx" />
     <Content Include="Login.aspx" />
     <Content Include="httpHandle\ImageHandler.ashx" />
+    <Content Include="Content\uploadify\check-exists.php" />
+    <Content Include="Content\uploadify\index.php" />
+    <Content Include="Content\uploadify\uploadify.php" />
     <None Include="Properties\PublishProfiles\ESUIConfig.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
@@ -3510,9 +3523,12 @@
     <Content Include="Views\DynamicTable\MemberRegistration.cshtml" />
     <Content Include="Views\DynamicTable\EntryRecordFormIndexByUser.cshtml" />
     <Content Include="Views\DynamicTable\IndexDynamicColumnByUserLook.cshtml" />
+    <Content Include="Views\DynamicTable\Importview.cshtml" />
+    <Content Include="Views\FileUpload\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="temp\" />
+    <Folder Include="UploadFiles\" />
     <Folder Include="upload\image\20150319\" />
   </ItemGroup>
   <ItemGroup>

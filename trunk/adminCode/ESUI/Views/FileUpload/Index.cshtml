@@ -1,0 +1,589 @@
+﻿ 
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ 
+ 
+    <script src="~/Content/uploadify/jquery.uploadify.js"></script>
+
+    <link href="~/Content/uploadify/uploadify.css" rel="stylesheet" />
+
+    @section Jsprepare
+    {
+
+        <script type="text/javascript">
+            var BaseUrl = '/DynamicTable/';
+            var editIndex = undefined;
+
+
+            jQuery(document).ready(function () {
+
+                //                DataGridSet();
+                //
+                //                $('#language').combobox({
+                //                    url: "/DynamicTable/GetCategoryTable?ID=" + '@ViewBag.RuteUrl',
+                //
+                //                    onSelect: function (record) {
+                //                        var peo = $('#language').combobox('getValue');
+                //                        bingbdinglist(peo);
+                //                        bingalreadybdinglist(peo);
+                //                        bingcurrentlisting();
+                //
+                //                    }
+                //                });
+                //                var peo2 = $('#language').combobox('getValue');
+                //                bingbdinglist(peo2);
+                //                bingalreadybdinglist(peo2);
+                //                bingcurrentlisting();
+             
+            });
+
+            function DataGridSet() {
+                $('#dg').datagrid({
+                    url: BaseUrl + 'ColumnGetList',
+                    height: 450,
+                    columns: [
+                        [
+                            { field: 'ck', checkbox: true },
+                            { field: 'title', title: '中文名称', width: 100 },
+                            { field: 'field', title: '英文名称', width: 100 },
+                            { field: 'width', title: '宽度', width: 100 },
+                            { field: 'colspan', title: '列合并数', width: 100 },
+                            { field: 'rowspan', title: '行合并数', width: 100 },
+                            { field: 'IsEnable', title: '是否启用', width: 100 },
+                            { field: 'SortNo', title: '排序号', width: 100 }
+
+                            //{ field: 'ValueName', title: '值', width: 100 },
+                            //      {
+                            //          field: 'Icon', title: '图标', width: 120, align: 'right',
+                            //          formatter: function (value) {
+                            //              if (value) {
+                            //                  var s = '<span class=" icon  ' + value + ' " style=" display:block">' + '&nbsp;</span>';
+                            //                  return s;
+                            //              } else {
+                            //                  return '';
+                            //              }
+                            //          }
+                            //      },
+                            // { field: 'Remarks', title: '备注', width: 300 }
+                        ]
+                    ],
+                    queryParams: { Condition: '@ViewBag.RuteUrl' },
+                    iconCls: 'icon-save',
+                    title: '表格内容管理',
+                    nowrap: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    pagination: true,
+                    fit: true,
+                    fitColumns: true,
+                    rownumbers: true,
+                    toolbar: [
+                        {
+                            id: 'btnadd',
+                            text: '添加',
+                            iconCls: 'icon-add',
+                            handler: function () {
+                                AddInfo();
+
+                            }
+                        }, '-', {
+                            id: 'btncut',
+                            text: '修改',
+                            iconCls: 'icon-cut',
+                            handler: function () {
+                                //实现修改的方法
+                                EditInfo();
+                            }
+                        }, '-', {
+                            id: 'btncut',
+                            text: '添加关联表字段',
+                            iconCls: 'icon-cut',
+                            handler: function () {
+                                //                                var rows = $("#dg").datagrid("getSelections");
+                                //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
+                                //                                if (rows.length >= 1) {
+                                //实现修改的方法
+                                $('#DivSetRole').window({
+                                    title: '数据关联',
+                                    modal: true,
+                                    top: 50
+                                });
+                                $('#DivSetRole').window('open');
+                                //                                }
+                                //                                else {
+                                //                                    alert("请选择你要关联的数据");
+                                //                                }
+
+
+                            }
+                        }
+                    ]
+                });
+                loadColum();
+                bindconbox();
+            }
+
+            function Processeddata() {
+
+
+                $('#tbIn').datagrid({
+                    url: BaseUrl + 'GetBdlList',
+                    columns: [
+                        [
+                            { field: 'title', title: '中文名称', width: 60, align: 'right' },
+                            { field: 'field', title: '英文名称', width: 60, align: 'right' }
+                        ]
+                    ],
+                    onDblClickRow: function (index, row) {
+                        //                        Delbtn();
+                        //  DelManuBtn(row.Id, id)//删菜单按钮
+                    },
+                    title: "已存在的按钮",
+                    iconCls: 'icon-ok',
+                    queryParams: { Condition: id, T: Math.floor(Math.random() * 1000000) },
+                    height: 340,
+                    nowrap: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    width: 'auto',
+                    rownumbers: true
+                });
+
+            }
+            function bingbdinglist(id) {
+
+                $('#tbOut').datagrid({
+                    url: BaseUrl + 'GetBdlList',
+                    columns: [
+                        [
+                            { field: 'title', title: '中文名称', width: 60, align: 'right' },
+                            { field: 'field', title: '英文名称', width: 60, align: 'right' }
+                        ]
+                    ],
+
+                    title: "待关联字段",
+                    iconCls: 'icon-ok',
+                    queryParams: { Condition: '@ViewBag.RuteUrl', ChildCategoryTableID: id, T: Math.floor(Math.random() * 1000000) },
+                    height: 340,
+                    nowrap: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    width: 'auto',
+                    rownumbers: true
+                });
+            }
+            function bingcurrentlisting(id) {
+
+                $('#tbRit').datagrid({
+                    url: BaseUrl + 'GetexistingList',
+                    columns: [
+                        [
+                            { field: 'title', title: '中文名称', width: 60, align: 'right' },
+                            { field: 'field', title: '英文名称', width: 60, align: 'right' }
+                        ]
+                    ],
+
+                    title: "所选模板",
+                    iconCls: 'icon-ok',
+                    queryParams: { Condition: '@ViewBag.RuteUrl' },
+                    height: 340,
+                    nowrap: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    width: 'auto',
+                    rownumbers: true
+                });
+            }
+
+            function bingalreadybdinglist(id) {
+
+                $('#tbIn').datagrid({
+                    url: BaseUrl + 'GetalreadyBdlList',
+                    columns: [
+                        [
+                            { field: 'yuanlai', title: '中文名称', width: 60, align: 'right' },
+                            { field: 'guanlian', title: '英文名称', width: 60, align: 'right' }
+                        ]
+                    ],
+
+                    title: "已关联字段",
+                    iconCls: 'icon-ok',
+                    queryParams: { Condition: '@ViewBag.RuteUrl', ChildCategoryTableID: id, T: Math.floor(Math.random() * 1000000) },
+                    height: 340,
+                    nowrap: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    width: 'auto',
+                    rownumbers: true
+                });
+            }
+
+            //处理关联功能添加
+            function addbtn() {
+                var tbOutrow = $('#tbOut').datagrid('getSelected');
+                if (tbOutrow != null) {
+                    tbOutrow = JSON.stringify($('#tbOut').datagrid('getSelected'));
+
+                    //if (row != null) {
+                    //    $("#tbIn").datagrid("appendRow", row);
+                    //}
+                    //var b = $('#tbOut').datagrid('getRowIndex', row);
+                    //$('#tbOut').datagrid('deleteRow', b);
+                    //$('#tbOut').datagrid('selectRow', b - 1);
+                    var dgrows = JSON.stringify($("#tbRit").datagrid('getSelected'));
+                    var categoryTableID = '@ViewBag.RuteUrl';
+                    var childCategoryTableID = $('#language').combobox('getValue');
+
+                    $.ajax({
+                        url: BaseUrl + 'EditconnectionRelation',
+                        type: 'POST',
+                        data: { CategoryTableID: categoryTableID, ChildCategoryTableID: childCategoryTableID, tbOutrow: tbOutrow, dgrows: dgrows },
+                        cache: false,
+                        error: function () { alert('Error $.ajax'); },
+                        success: function (data) {
+                            $("#tbOut").datagrid("reload");
+                            $("#tbIn").datagrid("reload");
+                            //var result = eval('(' + data + ')');
+                            //DataBaseFunction.BindForm("ff", data);
+                            //$('#cc').combobox('setValue', data['editor']);
+                            //$('#align').combobox('setValue', data['align']);
+                            //$('#ParentId').combobox('setValue', data['ParentId']);
+                            //$('#field').attr('readonly', true);
+                        }
+                    });
+                } else {
+                    alert("请选择你要添加的数据");
+                }
+
+            }
+
+
+            function Delbtn2() {
+                var rows = $('#tbIn').datagrid('getSelected');
+                if (rows != null) {
+
+
+                    var ids = ""; //1,2,3,4,5
+                    //for (var i = 0; i < rows.length; i++) {
+                    //    //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
+                    ids += "'" + rows["ID"] + "',";
+
+                    // }
+                    //最后去掉最后的那一个,
+                    ids = ids.substring(0, ids.length - 1);
+
+                    //var postData = "";
+                    //alert(ids);
+                    postData = {
+                        IDSet: ids
+
+                    };
+
+                    //然后确认发送异步请求的信息到后台删除数据
+                    $.messager.confirm("删除信息", "您确认删除<font color='red' size='3'>" + "" + "</font>吗？", function (Delete) {
+                        if (Delete) {
+                            $.get(BaseUrl + "DelconnectionRelation", postData, function (data) {
+                                alerts(data.Msg, 2);
+                                if (data.Code > 0) {
+                                    $("#tbIn").datagrid("reload");
+                                    $("#tbOut").datagrid("reload");
+                                }
+
+                            });
+                        }
+                    });
+                } else {
+                    alert("请选择你要移除的数据");
+                }
+
+            }
+
+
+
+            function bindconbox() {
+
+                $('#ParentId').combobox({
+                    url: BaseUrl + 'GetInfoParent?ID=' + '@ViewBag.RuteUrl',
+                     valueField: 'id',
+                     textField: 'text'
+                 });
+
+             }
+
+             function loadColum() {
+                 var Column = $.ajax({
+                     //获取列数据
+                     url: BaseUrl + 'GetBtnColumn',
+                     cache: false,
+                     data: { Condition: '@ViewBag.RuteUrl' },
+                    async: false
+                }).responseText;
+                var Columndata = eval(Column);
+
+                $('#dg2').datagrid({
+                    //url: BaseUrl + 'GetAllJsonResultList',
+                    columns: Columndata,
+                 @*   queryParams: { Condition: '@ViewBag.RuteUrl' },*@
+                    height: 450,
+                    iconCls: 'icon-save',
+                    title: '按钮编辑',
+                    nowrap: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    pagination: true,
+                    fit: true,
+                    fitColumns: true,
+                    rownumbers: true,
+                    toolbar: [
+                        {
+                            id: 'btnadd',
+                            text: '添加',
+                            iconCls: 'icon-add',
+                            handler: function () {
+                                //实现弹出注册信息的页面
+                                if (editIndex != undefined) {
+
+                                    $("#dg2").datagrid('endEdit', editIndex);
+
+                                }
+
+                                if (editIndex == undefined) {
+
+                                    $("#dg2").datagrid('insertRow', {
+
+                                        index: 0,
+
+                                        row: {}
+
+                                    });
+
+
+
+                                    $("#dg2").datagrid('beginEdit', 0);
+
+                                    editIndex = 0;
+
+                                }
+
+
+                            }
+                        }, '-', {
+                            id: 'btncut',
+                            text: '修改',
+                            iconCls: 'icon-cut',
+                            handler: function () {
+                                //实现修改的方法
+                                ShowUpdateInfo();
+                            }
+
+                        }, '-', {
+                            id: 'btnAccept',
+                            text: '保存',
+                            iconCls: 'icon-save',
+                            handler: function () {
+                                //实现修改的方法
+                                //if (endEditing()) {
+                                $("#dg2").datagrid('endEdit', editIndex);
+                                var rows = $("#dg2").datagrid('getChanges');
+
+
+
+                                var rowstr = JSON.stringify(rows);
+
+                                $.post('/Home/Create', rowstr, function (data) {
+
+
+
+                                });
+
+                            }
+
+                        }
+                    ], onAfterEdit: function (rowIndex, rowData, changes) {//在添加完毕endEdit，保存时触发
+                        console.info(rowData);//在火狐浏览器的控制台下可看到传递到后台的数据，这里我们就可以利用这些数据异步到后台添加，添加完成后，刷新datagrid
+                        editIndex = undefined;//重置
+                    }, onDblClickCell: function (rowIndex, field, value) {//双击该行修改内容
+                        if (editIndex != undefined) {
+                            $("#dg").datagrid('endEdit', editIndex);//结束编辑，传入之前编辑的行
+                        }
+                        if (editIndex == undefined) {
+                            $("#dg").datagrid('beginEdit', rowIndex);//开启编辑并传入要编辑的行
+                            editIndex = rowIndex;
+                        }
+                    }
+
+                });
+            }
+            function endEditing() {
+                if (editIndex == undefined) { return true }
+                if ($('#dg2').datagrid('validateRow', editIndex)) {
+                    $('#dg2').datagrid('endEdit', editIndex);
+                    editIndex = undefined;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            //easyUI 弹出添加的对话框
+            function AddInfo() {
+                //弹出层
+                // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
+                $('#DivEditor').dialog({
+                    title: '添加材料',
+                    //width: 400,
+                    //height: 200,
+                    closed: false,
+                    cache: false,
+                    // href: 'get_content.php',
+                    modal: true, top: 50,
+                    onClose: function () {
+                        //解决弹出窗口关闭后，验证消息还显示在最上面
+
+                    }
+                });
+                $(".validatebox-tip").remove();//清除验证样式
+                DataBaseFunction.ClearForm("ff");
+                $("#CategoryTableID").val('@ViewBag.RuteUrl');
+                $('input:radio[name=IsEnable]')[0].checked = true;
+                $('input:radio[name=ISLogpeople]')[1].checked = true;
+                $('input:radio[name=ISLoginsector]')[1].checked = true;
+                $('input:radio[name=IsNumber]')[1].checked = true;
+                $('input:radio[name=MergeHeader]')[1].checked = true;
+                $('#field').attr('readonly', false);
+
+                $("#rowspan").val('1');
+                $("#colspan").val('1');
+                $("#width").val('100');
+                var data = $('#align').combobox('getData');
+                if (data.length > 0) {
+                    $('#align').combobox('select', data[2].value);
+                }
+            }
+
+
+            //绑定修改显示详细信息的方法
+            function EditInfo() {
+
+                var rows = $("#dg").datagrid('getSelected');
+
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.title).window('resize', { top: 50 });
+                $(".validatebox-tip").remove();//清除验证样式
+                var ID = rows.ID;  //获取到了用选择的ID
+                $.ajax({
+                    url: BaseUrl + 'GetColumnInfo',
+                    type: 'POST',
+                    data: { ID: ID },
+                    cache: false,
+                    error: function () { alert('Error $.ajax'); },
+                    success: function (data) {
+                        //var result = eval('(' + data + ')');
+                        DataBaseFunction.BindForm("ff", data);
+                        $('#cc').combobox('setValue', data['editor']);
+                        $('#align').combobox('setValue', data['align']);
+                        $('#ParentId').combobox('setValue', data['ParentId']);
+                        $('#field').attr('readonly', true);
+                    }
+                });
+
+            }
+
+            //实现的编辑，包括增查改
+            function SaveInfo() {
+
+                //判断的信息是否通过验证
+                var validate = $("#ff").form('validate');
+                if (validate == false) {
+                    return false;
+                }
+                //获取需要传递的参数传递给前台
+                var data = DataBaseFunction.GetFormData("ff")
+                //发送异步请求到后台保存数据
+                $.post(BaseUrl + 'ColumnEditInfo', data, function (data) {
+                    alerts(data.Msg, 2);
+                    if (data.Code > 0) {
+                        $('#DivEditor').dialog('close');
+                        $(".validatebox-tip").remove();
+                        $("#dg").datagrid("reload");
+                        loadColum();
+                        bindconbox();
+
+                    }
+                });
+
+            }
+            //删除
+            function Del() {
+                DataBaseFunction.deleteInfo("dg", "Id", "TName");
+
+            }
+
+        </script>
+    }
+
+</head>
+<body>
+ <input type="hidden" id="Filename"   />
+<h1>Uploadify Demo</h1>
+<form>
+    <div id="queue"></div>
+    <input id="file_upload" name="file_upload" type="file" multiple="true">
+    <a href="javascript:void(0)" class="easyui-linkbutton" id="btnUpload" data-options="plain:true,iconCls:'icon-save'"
+       onclick="javascript: $('#file_upload').uploadify('upload', '*')">上传</a>
+</form>
+
+<script type="text/javascript">
+    $(function() {
+        //添加界面的附件管理
+        $('#file_upload').uploadify({
+            'swf': '/Content/uploadify/uploadify.swf', //FLash文件路径
+            'buttonText': '浏  览', //按钮文本
+            'uploader': '/FileUpload/Upload', //处理文件上传Action
+            'queueID': 'fileQueue', //队列的ID
+            'queueSizeLimit': 10, //队列最多可上传文件数量，默认为999
+            'auto': false, //选择文件后是否自动上传，默认为true
+            'multi': false, //是否为多选，默认为true
+            'removeCompleted': true, //是否完成后移除序列，默认为true
+            'fileSizeLimit': '10MB', //单个文件大小，0为无限制，可接受KB,MB,GB等单位的字符串值
+            'fileTypeDesc': 'Image Files', //文件描述
+            'fileTypeExts': '*.gif; *.jpg; *.png; *.bmp;*.tif;*.doc;*.xls;*.zip', //上传的文件后缀过滤器
+           
+            'onQueueComplete': function(event, data) { //所有队列完成后事件
+                //	                ShowUpFiles($("#Attachment_GUID").val(), "div_files"); //完成后更新已上传的文件列表
+
+                $.messager.alert("提示", "上传完毕！"); //提示完成           
+            },
+            'onUploadStart': function(file) {
+                $("#file_upload").uploadify("settings", 'formData', { 'folder': '政策法规', 'guid': $("#Attachment_GUID").val() }); //动态传参数
+            },
+            'onUploadError': function(event, queueId, fileObj, errorObj) {
+                //alert(errorObj.type + "：" + errorObj.info);
+            },
+            'onUploadSuccess': function (file, data, response) {
+                var d = JSON.parse(data);
+                if (d.Code > 0) {
+                    alert(d.Data);
+                    $("#Filename").val(d.Data);
+               
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
