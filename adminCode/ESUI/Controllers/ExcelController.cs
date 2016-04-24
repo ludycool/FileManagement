@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using CommonFunction;
 using DefaultConnection;
 using e3net.BLL.DynamicTable;
 using e3net.Mode;
@@ -127,5 +128,15 @@ namespace ESUI.Controllers
             // dt3.TableName = DTName; //设置DT的名字
         }
 
+        public JsonResult ReadExcel(string filename)
+        {
+            string virtualPath =
+string.Format("~/UploadFiles/{0}", filename);
+            string filePath = Server.MapPath(virtualPath);
+// ExcelHelper ff=new ExcelHelper();
+            var ffd = ExcelHelper.ImportExceltoDt(filePath);
+            return Json(ffd, JsonRequestBehavior.AllowGet);
+            
+        }
     }
 }

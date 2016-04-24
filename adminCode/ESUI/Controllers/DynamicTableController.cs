@@ -1510,6 +1510,11 @@ namespace ESUI.Controllers
             return Json(dic);
         }
 
+        public ActionResult Importview()
+        {
+            return View();
+        }
+
        
     }
 }
