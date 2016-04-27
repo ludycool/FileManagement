@@ -500,7 +500,22 @@ namespace CommonFunction
             return dt;
         }
 
-
+        public static DataTable ImportExceltoDt(string strFileName, string SheetName, int HeaderRowIndex)
+        {
+            HSSFWorkbook workbook;
+            IWorkbook wb;
+            using (FileStream file = new FileStream(strFileName, FileMode.Open, FileAccess.Read))
+            {
+                wb = WorkbookFactory.Create(file);
+            }
+            ISheet sheet = wb.GetSheet(SheetName);
+            DataTable table = new DataTable();
+            table = ImportDt(sheet, HeaderRowIndex, true);
+            //ExcelFileStream.Close();
+            workbook = null;
+            sheet = null;
+            return table;
+        }
 
         /// <summary>
         /// 导入表头数据
@@ -538,7 +553,7 @@ namespace CommonFunction
         /// <param name="SheetName">Name of the sheet.</param>
         /// <param name="HeaderRowIndex">列头所在行号，-1表示没有列头</param>
         /// <returns>DataTable.</returns>
-        public static DataTable ImportExceltoDt(string strFileName, string SheetName, int HeaderRowIndex)
+        public static DataTable ImportExceltoColumnHeaderDt(string strFileName, string SheetName, int HeaderRowIndex)
         {
             HSSFWorkbook workbook;
             IWorkbook wb;
@@ -1238,7 +1253,66 @@ namespace CommonFunction
             }
             return table;
         }
+        static DataTable ImportDtColumn(ISheet sheet, int HeaderRowIndex, bool needHeader)
+        {
+            DataTable table = new DataTable();
+            IRow headerRow;
+            int cellCount;
+            try
+            {
+                if (HeaderRowIndex < 0 || !needHeader)
+                {
+                    headerRow = sheet.GetRow(0);
+                    cellCount = headerRow.LastCellNum;
 
+                    for (int i = headerRow.FirstCellNum; i <= cellCount; i++)
+                    {
+                        DataColumn column = new DataColumn(Convert.ToString(i));
+                        table.Columns.Add(column);
+                    }
+                }
+                else
+                {
+                    headerRow = sheet.GetRow(HeaderRowIndex);
+                    cellCount = headerRow.LastCellNum;
+
+                    for (int i = headerRow.FirstCellNum; i <= cellCount; i++)
+                    {
+                        if (headerRow.GetCell(i) == null)
+                        {
+                            if (table.Columns.IndexOf(Convert.ToString(i)) > 0)
+                            {
+                                DataColumn column = new DataColumn(Convert.ToString("重复列名" + i));
+                                table.Columns.Add(column);
+                            }
+                            else
+                            {
+                                DataColumn column = new DataColumn(Convert.ToString(i));
+                                table.Columns.Add(column);
+                            }
+
+                        }
+                        else if (table.Columns.IndexOf(headerRow.GetCell(i).ToString()) > 0)
+                        {
+                            DataColumn column = new DataColumn(Convert.ToString("重复列名" + i));
+                            table.Columns.Add(column);
+                        }
+                        else
+                        {
+                            DataColumn column = new DataColumn(headerRow.GetCell(i).ToString());
+                            table.Columns.Add(column);
+                        }
+                    }
+                }
+                int rowCount = sheet.LastRowNum;
+             
+            }
+            catch (Exception exception)
+            {
+                wl.WriteLogs(exception.ToString());
+            }
+            return table;
+        }
         #endregion
 
 
