@@ -62,6 +62,8 @@
     <Content Include="main.aspx" />
     <Content Include="PIE.htc" />
     <Content Include="PIE.js" />
+    <Content Include="rout1.html" />
+    <Content Include="rout2.html" />
     <Content Include="sqlGenerate.aspx" />
     <Content Include="table2.html" />
     <Content Include="textbox.css" />
@@ -104,6 +106,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SUIMobileDemo.html" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
