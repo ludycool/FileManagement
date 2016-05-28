@@ -3,7 +3,9 @@ using Moon.Orm;
 
 namespace e3net.Mode
 {
-
+    /// <summary>
+    /// 基础数据类别表对应的值
+    /// </summary>
     [Table("[Bascharvalue]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(String), "CharId")]
     public partial class Bascharvalue : EntityBase

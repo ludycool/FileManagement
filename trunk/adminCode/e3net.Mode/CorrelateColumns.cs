@@ -6,7 +6,9 @@ using Moon.Orm;
 
 namespace DefaultConnection
 {
-
+    /// <summary>
+    /// 记录导出关联字段
+    /// </summary>
     [Table("[CorrelateColumns]", DbType.SqlServer)]
 
     public partial class CorrelateColumns : EntityBase

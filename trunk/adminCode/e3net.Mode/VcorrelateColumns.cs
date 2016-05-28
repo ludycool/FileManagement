@@ -6,7 +6,9 @@ using Moon.Orm;
 
 namespace DefaultConnection
 {
-
+    /// <summary>
+    ///  字段关联导出字段视图
+    /// </summary>
     [Table("[VcorrelateColumns]", DbType.SqlServer)]
 
     public partial class VcorrelateColumns : EntityBase

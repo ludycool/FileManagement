@@ -6,7 +6,9 @@ using Moon.Orm;
 
 namespace DefaultConnection
 {
-
+    /// <summary>
+    /// 动态表关联的列
+    /// </summary>
     [Table("[ColumnCharts]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(String), "ID")]
     public partial class ColumnCharts : EntityBase

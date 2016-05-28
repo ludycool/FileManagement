@@ -3,7 +3,9 @@ using Moon.Orm;
 
 namespace e3net.Mode
 {
-
+    /// <summary>
+    /// 基础数据类别表
+    /// </summary>
     [Table("[Baschartype]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(String), "CharTypeId")]
     public partial class Baschartype : EntityBase
