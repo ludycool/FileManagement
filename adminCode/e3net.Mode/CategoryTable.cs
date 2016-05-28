@@ -3,7 +3,9 @@ using Moon.Orm;
 
 namespace e3net.Mode
 {
-
+    /// <summary>
+    /// 动态表
+    /// </summary>
     [Table("[CategoryTable]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(String), "ID")]
     public partial class CategoryTable : EntityBase

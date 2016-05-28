@@ -6,6 +6,9 @@ using Moon.Orm;
 
 namespace DefaultConnection
 {
+    /// <summary>
+    /// 按次数记录录入信息
+    /// </summary>
 
     [Table("[VEntryRecordForm]", DbType.SqlServer)]
 

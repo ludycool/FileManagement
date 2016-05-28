@@ -6,7 +6,9 @@ using Moon.Orm;
 
 namespace DefaultConnection
 {
-
+    /// <summary>
+    /// 每次录入记录
+    /// </summary>
     [Table("[EntryRecordForm]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(String), "ID")]
     public partial class EntryRecordForm : EntityBase
