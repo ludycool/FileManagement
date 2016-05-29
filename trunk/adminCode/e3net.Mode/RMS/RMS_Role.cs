@@ -6,7 +6,9 @@ using Moon.Orm;
 
 namespace e3net.Mode.RMS
 {
-
+    /// <summary>
+    /// 角色表
+    /// </summary>
     [Table("[RMS_Role]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public partial class RMS_Role : EntityBase

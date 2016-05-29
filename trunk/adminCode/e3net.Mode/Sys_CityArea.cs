@@ -6,7 +6,9 @@ using Moon.Orm;
 
 namespace e3net.Mode
 {
-
+    /// <summary>
+    /// 城市 区 
+    /// </summary>
     [Table("[Sys_CityArea]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.AutoIncrease, typeof(Int32), "Id")]
     public partial class Sys_CityArea : EntityBase

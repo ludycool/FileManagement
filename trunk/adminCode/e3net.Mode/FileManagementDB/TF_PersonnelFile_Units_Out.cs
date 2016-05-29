@@ -6,7 +6,9 @@ using Moon.Orm;
 
 namespace e3net.Mode.FileManagementDB
 {
-
+    /// <summary>
+    /// 人员档案-可转出单位
+    /// </summary>
     [Table("[TF_PersonnelFile_Units_Out]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public partial class TF_PersonnelFile_Units_Out : EntityBase

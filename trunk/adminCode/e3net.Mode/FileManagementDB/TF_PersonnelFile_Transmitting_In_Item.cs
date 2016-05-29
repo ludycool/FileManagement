@@ -6,7 +6,9 @@ using Moon.Orm;
 
 namespace e3net.Mode.FileManagementDB
 {
-
+    /// <summary>
+    /// 人员档案转递单（入）项
+    /// </summary>
     [Table("[TF_PersonnelFile_Transmitting_In_Item]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public partial class TF_PersonnelFile_Transmitting_In_Item : EntityBase

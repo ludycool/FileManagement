@@ -6,7 +6,9 @@ using Moon.Orm;
 
 namespace e3net.Mode
 {
-
+    /// <summary>
+    /// 图片 保存路径说明 
+    /// </summary>
     [Table("[File_Image]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public class File_Image : EntityBase

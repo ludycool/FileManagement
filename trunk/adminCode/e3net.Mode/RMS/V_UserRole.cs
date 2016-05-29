@@ -7,6 +7,9 @@ using Moon.Orm;
 namespace e3net.Mode.RMS
 {
 
+    /// <summary>
+    /// 视图  用户拥有的角色表
+    /// </summary>
     [Table("[V_UserRole]", DbType.SqlServer)]
 
     public partial class V_UserRole : EntityBase

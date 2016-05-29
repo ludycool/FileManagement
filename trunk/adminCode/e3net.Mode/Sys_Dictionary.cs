@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using Moon.Orm;
 namespace e3net.Mode
 {
-
+    /// <summary>
+    /// 数据词典2 树型
+    /// </summary>
     [Table("[Sys_Dictionary]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public class Sys_Dictionary : EntityBase

@@ -6,6 +6,9 @@ using Moon.Orm;
 namespace e3net.Mode.RMS 
 {
 
+    /// <summary>
+    /// 视图 角色所拥有的菜单及所有的按钮表
+    /// </summary>
     [Table("[V_RoleManuButtons]", DbType.SqlServer)]
     public class V_RoleManuButtons : EntityBase
     {

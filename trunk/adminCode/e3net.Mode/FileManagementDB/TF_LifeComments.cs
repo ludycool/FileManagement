@@ -7,6 +7,10 @@ using Moon.Orm;
 namespace e3net.Mode.FileManagementDB
 {
 
+
+    /// <summary>
+    /// 生评
+    /// </summary>
     [Table("[TF_LifeComments]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public partial class TF_LifeComments : EntityBase

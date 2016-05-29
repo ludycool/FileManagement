@@ -6,7 +6,9 @@ using Moon.Orm;
 
 namespace e3net.Mode.FileManagementDB
 {
-
+    /// <summary>
+    /// 纸质文档
+    /// </summary>
     [Table("[TF_PaperFile]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public partial class TF_PaperFile : EntityBase
