@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using Moon.Orm;
 namespace e3net.Mode.RMS 
 {
-
+    /// <summary>
+    /// 视图 角色拥有的菜单表 
+    /// </summary>
     [Table("[V_RoleManus]", DbType.SqlServer)]
     public class V_RoleManus : EntityBase
     {

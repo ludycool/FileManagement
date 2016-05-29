@@ -7,6 +7,9 @@ using Moon.Orm;
 namespace e3net.Mode.FileManagementDB
 {
 
+    /// <summary>
+    /// 人员档案
+    /// </summary>
     [Table("[TF_PersonnelFile]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public partial class TF_PersonnelFile : EntityBase

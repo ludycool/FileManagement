@@ -7,6 +7,9 @@ using Moon.Orm;
 namespace e3net.Mode
 {
 
+    /// <summary>
+    /// 系统数据词典1 普通 s
+    /// </summary>
     [Table("[SysItem]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.AutoIncrease, typeof(Int32), "Id")]
     public partial class SysItem : EntityBase

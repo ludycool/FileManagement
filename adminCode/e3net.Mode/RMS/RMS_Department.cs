@@ -6,7 +6,9 @@ using Moon.Orm;
 
 namespace e3net.Mode.RMS
 {
-
+    /// <summary>
+    /// 登录 用户的部门表
+    /// </summary>
     [Table("[RMS_Department]", DbType.SqlServer)]
     public class RMS_DepartmentSet : MQLBase
     {

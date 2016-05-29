@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using Moon.Orm;
 namespace e3net.Mode.RMS 
 {
-
+    /// <summary>
+    /// 角色-菜单-按钮表
+    /// </summary>
     [Table("[RMS_RoleManuButtons]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public class RMS_RoleManuButtons : EntityBase

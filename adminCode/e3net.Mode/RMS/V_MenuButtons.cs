@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using Moon.Orm;
 namespace e3net.Mode.RMS 
 {
-
+    /// <summary>
+    /// 视图 菜单所拥有的按钮表
+    /// </summary>
     [Table("[V_MenuButtons]", DbType.SqlServer)]
     public class V_MenuButtons : EntityBase
     {

@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using Moon.Orm;
 namespace e3net.Mode.RMS
 {
-
+    /// <summary>
+    /// 按钮表
+    /// </summary>
     [Table("[RMS_Menus]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public class RMS_Menus : EntityBase

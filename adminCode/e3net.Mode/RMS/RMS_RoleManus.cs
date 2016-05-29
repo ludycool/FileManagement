@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using Moon.Orm;
 namespace e3net.Mode.RMS 
 {
-
+    /// <summary>
+    /// 角色菜单表
+    /// </summary>
     [Table("[RMS_RoleManus]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public class RMS_RoleManus : EntityBase

@@ -84,8 +84,6 @@
     <Compile Include="VcorrelateColumns.cs" />
     <Compile Include="VEntryRecordForm.cs" />
     <Compile Include="V_mode\AdminUserInfo.cs" />
-    <Compile Include="V_mode\v_Sys_Advertising.cs" />
-    <Compile Include="V_mode\v_Sys_AppVerSion.cs" />
     <Compile Include="V_mode\v_Sys_CityArea.cs" />
     <Compile Include="HttpView\HttpReSultMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
