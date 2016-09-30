@@ -34,39 +34,19 @@
             var editIndex = undefined;
 
             jQuery(document).ready(function() {
-
-                AutoWH("#body", 100, 100); //自适应宽度
-
+             
+              AutoWH("#body", 100, 100); //自适应宽度
+               
                 // loadColum();
                 $('#CategoryTableList').combobox({
-                    url: "/DynamicTable/GetAllCategoryTable",
+                    url: "/DynamicTable/GetAllCategoryTable"
 
-                    //onSelect: function (record) {
-                    //    var peo = $('#language').combobox('getValue');
-                    //    //bingbdinglist(peo);
-                    //    //bingalreadybdinglist(peo);
-                     
-                    //}
+                  
                 });
-               // loadColum();
+         
 
             });
-//            $.ajax({
-//                url: BaseUrl + 'GetSeachJson',
-//                type: 'POST',
-//                data: { Condition: '@ViewBag.RuteUrl' },
-//                cache: false,
-//                error: function() { alert('Error loading PHP document'); },
-//                success: function(data) {
-//                    var g = data;
-//                    var a = new Array();
-//                    for (var i = 0; i < g.length; i++) {
-//                        a[i] = new Array(g[i].field, g[i].title, 's');
-//                    }
-//                    colFilter = a;
-//
-//                }
-//            });
+
 
 
             function loadColum(id) {
