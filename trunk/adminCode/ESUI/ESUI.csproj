@@ -23,6 +23,7 @@
     <TargetFrameworkProfile />
     <SilverlightApplicationList>
     </SilverlightApplicationList>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -133,11 +134,13 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -270,6 +273,9 @@
     </Compile>
     <Compile Include="httpHandle\SystemSetHandler.ashx.cs">
       <DependentUpon>SystemSetHandler.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="httpHandle\WebOfficeHandler.ashx.cs">
+      <DependentUpon>WebOfficeHandler.ashx</DependentUpon>
     </Compile>
     <Compile Include="Models\ViewModes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -3417,6 +3423,11 @@
     </Content>
     <Content Include="Scripts\linq.min.js" />
     <Content Include="Scripts\search.js" />
+    <Content Include="Scripts\weboffic7\index.html" />
+    <Content Include="Scripts\weboffic7\LoadWebOffice.js" />
+    <Content Include="Scripts\weboffic7\main.js" />
+    <Content Include="Scripts\weboffic7\style.css" />
+    <Content Include="Scripts\weboffic7\WebOffice.cab" />
     <Content Include="test.html" />
     <Content Include="upload\file\20150319022047_psb.jpg" />
     <Content Include="Content\ueditor\net\config.json" />
@@ -3450,6 +3461,7 @@
     <Content Include="Content\uploadify\check-exists.php" />
     <Content Include="Content\uploadify\index.php" />
     <Content Include="Content\uploadify\uploadify.php" />
+    <Content Include="httpHandle\WebOfficeHandler.ashx" />
     <None Include="Properties\PublishProfiles\ESUIConfig.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
@@ -3525,6 +3537,7 @@
     <Content Include="Views\DynamicTable\IndexDynamicColumnByUserLook.cshtml" />
     <Content Include="Views\DynamicTable\Importview.cshtml" />
     <Content Include="Views\FileUpload\Index.cshtml" />
+    <Content Include="Views\TF_PaperFile\WebOfficeDoc.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="temp\" />
