@@ -51,7 +51,7 @@ namespace ESUI.Controllers
             pc.sys_Table = "TF_PaperFile";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
-            DataSet ds= OPBiz.GetPagingDataP(pc);
+            DataSet ds = OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
 
@@ -65,55 +65,55 @@ namespace ESUI.Controllers
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
             bool IsAdd = false;
-           
-                EidModle.UpdateTime = DateTime.Now;
-                if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+
+            EidModle.UpdateTime = DateTime.Now;
+            if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+            {
+                IsAdd = true;
+            }
+            if (IsAdd)
+            {
+                EidModle.Id = Guid.NewGuid();
+                EidModle.CreateMan = UserData.UserName;
+                EidModle.CreateTime = DateTime.Now;
+                EidModle.isValid = true;
+                EidModle.isDeleted = false;
+                EidModle.States = 0;
+                try
                 {
-                    IsAdd = true;
+                    OPBiz.Add(EidModle);
+
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = EidModle.Id.ToString();
+                    ReSultMode.Msg = "添加成功";
                 }
-                if (IsAdd)
+                catch (Exception e)
                 {
-                    EidModle.Id = Guid.NewGuid();
-                    EidModle.CreateMan = UserData.UserName;
-                    EidModle.CreateTime = DateTime.Now;
-                    EidModle.isValid = true;
-                    EidModle.isDeleted = false;
-                    EidModle.States = 0;
-                    try
-                    {
-                        OPBiz.Add(EidModle);
 
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = EidModle.Id.ToString();
-                        ReSultMode.Msg = "添加成功";
-                    }
-                    catch (Exception e)
-                    {
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data = e.ToString();
+                    ReSultMode.Msg = "添加失败";
+                }
 
-                        ReSultMode.Code = -11;
-                        ReSultMode.Data = e.ToString();
-                        ReSultMode.Msg = "添加失败";
-                    }
-
+            }
+            else
+            {
+                EidModle.WhereExpression = TF_PaperFileSet.Id.Equal(EidModle.Id);
+                // EidModle.ChangedMap.Remove("id");//移除主键值
+                if (OPBiz.Update(EidModle) > 0)
+                {
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改成功";
                 }
                 else
                 {
-                    EidModle.WhereExpression = TF_PaperFileSet.Id.Equal(EidModle.Id);
-                    // EidModle.ChangedMap.Remove("id");//移除主键值
-                    if (OPBiz.Update(EidModle) > 0)
-                    {
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "修改成功";
-                    }
-                    else
-                    {
-                        ReSultMode.Code = -13;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "修改失败";
-                    }
+                    ReSultMode.Code = -13;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改失败";
                 }
-            
+            }
+
 
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
@@ -126,6 +126,15 @@ namespace ESUI.Controllers
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult WebOfficeDoc()//JsonResult WebOfficeDoc(string ID)
+        {
+            //var mql2 = TF_PaperFileSet.SelectAll().Where(TF_PaperFileSet.Id.Equal(ID));
+            //TF_PaperFile Rmodel = OPBiz.GetEntity(mql2);
+            ////  groupsBiz.Add(rol);
+            //return Json(Rmodel, JsonRequestBehavior.AllowGet);
+            ViewBag.RuteUrl = RuteUrl();
+            return View();
+        }
 
         public JsonResult Del(string IDSet)
         {
