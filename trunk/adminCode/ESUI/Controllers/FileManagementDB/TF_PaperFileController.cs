@@ -132,6 +132,7 @@ namespace ESUI.Controllers
             //TF_PaperFile Rmodel = OPBiz.GetEntity(mql2);
             ////  groupsBiz.Add(rol);
             //return Json(Rmodel, JsonRequestBehavior.AllowGet);
+            string TFPaperFileid = Request["id"]; 
             ViewBag.RuteUrl = RuteUrl();
             return View();
         }
