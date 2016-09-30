@@ -3538,6 +3538,7 @@
     <Content Include="Views\DynamicTable\Importview.cshtml" />
     <Content Include="Views\FileUpload\Index.cshtml" />
     <Content Include="Views\TF_PaperFile\WebOfficeDoc.cshtml" />
+    <Content Include="Views\TF_LifeComments\LifeWebOfficeDoc.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="temp\" />
