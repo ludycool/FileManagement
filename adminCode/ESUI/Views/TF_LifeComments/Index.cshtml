@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+    <script type="text/javascript" charset="utf-8" src="~/Content/js/ImgUp.js"></script>
     <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
     @* ReSharper disable once NotAllPathsReturnValue *@
 
@@ -23,6 +23,7 @@
              
                 DataGridSet();
                 $('#States').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
+                FTypes = 1;//上传类型 1为文件 0 为图片
             })
             function DataGridSet() {
                 $('#dg').datagrid({
@@ -105,8 +106,11 @@
                         DataBaseFunction.BindForm("ff", data);
                         $('#Category').combotree('setValue', data['Category']);
                         $('#States').combobox('select', data.States);
+                        GetFileList(data.Id);//图片
                     }
                 });
+
+               
 
             }
 
@@ -127,6 +131,14 @@
                         $('#DivEditor').dialog('close');
                         $(".validatebox-tip").remove();
                         $("#dg").datagrid("reload");
+
+
+                        var id = $("input[name='Id']").val();
+                        if (id == "") {
+                            id = data.Data;//id
+                        }
+                        Delfile();//删除移除的图片
+                        SaveToid(id);//保存添加的图片
                     }
                 });
 
@@ -146,6 +158,9 @@
             //删除
             function Del() {
                 DataBaseFunction.deleteInfo("dg", "Id", "TrueName");
+            }
+            function AddImg() {
+                FileUp("TF_LifeComments");
             }
         </script>
     }
@@ -251,8 +266,31 @@
                             <label>状态：</label></td>
                         <td>
                             <input id="States" class="easyui-combobox" name="States"
-                                data-options="valueField:'ItemValue',textField:'ItemName'" />
+                                   data-options="valueField:'ItemValue',textField:'ItemName'" />
 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>附件：</label>
+                        </td>
+                        <td>
+                            <div style="line-height: 20px; height: 20px;display: block;width: 500px;">
+                                <span style=" font-size: 16px; float: left;">
+                                    <input type="file" id="fileimg" name="file" style="width: 50px;" onchange="AddImg()" />
+                                </span>
+                                <span style="padding-left: 10px; float: left; color: red;">(右键另存为，可保存文件)</span>
+                            </div>
+
+                            <div style="display: none">
+                                <div id="content" style="display: block; width: 450px; float: left;margin-top:2px;">
+                                    <input id="fileId" type="hidden" />
+                                    <a href="/Content/js/ImgUp.js" target="_blank" id="aflie"></a>
+                                    <a id="jian" href="#" class="easyui-linkbutton" style="float: right; " data-options="iconCls:'icon-delete'">移除</a>
+                                </div>
+                            </div>
+                            <div id="zhi" style="display: block; width: 450px;">
+                            </div>
                         </td>
                     </tr>
                 </table>
