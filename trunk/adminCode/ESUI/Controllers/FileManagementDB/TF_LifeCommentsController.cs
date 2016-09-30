@@ -13,6 +13,7 @@ using e3net.common.SysMode;
 using e3net.Mode.FileManagementDB;
 using e3net.Mode.HttpView;
 using e3net.BLL;
+using e3net.Mode;
 
 namespace ESUI.Controllers
 {
@@ -22,7 +23,9 @@ namespace ESUI.Controllers
 
         [Dependency]
         public TF_LifeCommentsBiz OPBiz { get; set; }
-        public ActionResult Index()
+        [Dependency]
+        public File_ImageBiz    imgBiz { get; set; }
+    public ActionResult Index()
         {
             ViewBag.RuteUrl = RuteUrl();
             ViewBag.toolbar = toolbar();
@@ -120,7 +123,9 @@ namespace ESUI.Controllers
 
         public ActionResult LifeWebOfficeDoc()
         {
-            string TFPaperFileid = Request["id"];
+             ViewBag.ViewBag= Request["id"]; 
+
+
             ViewBag.RuteUrl = RuteUrl();
             return View();
         }
@@ -134,6 +139,19 @@ namespace ESUI.Controllers
         }
 
 
+        public JsonResult GetFileInfo(string ID)
+        {
+            string TFPaperFileid = Request["id"];
+
+            var mql2 = File_ImageSet.SelectAll().Where(File_ImageSet.ToId.Equal(TFPaperFileid));
+
+            var f = imgBiz.GetEntity(mql2);
+            var dd = Server.MapPath("~" + f.FullRoute);
+          
+           
+            //  groupsBiz.Add(rol);
+            return Json(dd, JsonRequestBehavior.AllowGet);
+        }
         public JsonResult Del(string IDSet)
         {
 
