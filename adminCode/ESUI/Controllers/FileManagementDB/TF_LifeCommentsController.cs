@@ -117,6 +117,14 @@ namespace ESUI.Controllers
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
         }
+
+        public ActionResult LifeWebOfficeDoc()
+        {
+            string TFPaperFileid = Request["id"];
+            ViewBag.RuteUrl = RuteUrl();
+            return View();
+        }
+
         public JsonResult GetInfo(string ID)
         {
             var mql2 = TF_LifeCommentsSet.SelectAll().Where(TF_LifeCommentsSet.Id.Equal(ID));

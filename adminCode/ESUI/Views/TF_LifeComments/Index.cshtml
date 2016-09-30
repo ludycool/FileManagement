@@ -114,6 +114,16 @@
 
             }
 
+            function EditDoc() {
+                var rows = $("#dg").datagrid('getSelected');
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }             
+                window.parent.JumpP("编辑生平", "TF_LifeComments/LifeWebOfficeDoc?id=" + rows.Id, "icon-rgb");
+            }
+
             //实现的编辑，包括增查改
             function SaveInfo() {
 
