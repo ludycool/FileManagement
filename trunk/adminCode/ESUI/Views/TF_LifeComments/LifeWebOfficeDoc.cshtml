@@ -54,7 +54,7 @@
 
 
 
-                $.ajax({
+                @*$.ajax({
                     url: BaseUrl + 'GetFileInfo',
                     type: 'POST',
                     data: { ID:'@ViewBag.ViewBag' },
@@ -62,14 +62,14 @@
                     error: function () { alert('Error $.ajax'); },
                     success: function (data) {
                         //
-                        alert(data);
+                        alert(data);*@
                         document.all.WebOffice1.SetCustomToolBtn(32772, "关闭");
                         document.all.WebOffice1.SetCustomToolBtn(2, "上传文档");
                         document.all.WebOffice1.HideMenuItem(0x04); //隐藏保存
-                         document.all.WebOffice1.LoadOriginalFile(data, "doc");
+                        document.all.WebOffice1.LoadOriginalFile(BaseUrl + 'GetFileInfo?ID='+'@ViewBag.ViewBag', "doc");
                         document.all.WebOffice1.AcceptAllRevisions();
-                    }
-                });
+                //    }
+                //});
             };
             function saveUpload() {
                 var returnValue;// 保存页面的返回值

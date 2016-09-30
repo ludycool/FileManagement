@@ -139,7 +139,7 @@ namespace ESUI.Controllers
         }
 
 
-        public JsonResult GetFileInfo(string ID)
+        public FileResult GetFileInfo(string ID)
         {
             string TFPaperFileid = Request["id"];
 
@@ -147,10 +147,10 @@ namespace ESUI.Controllers
 
             var f = imgBiz.GetEntity(mql2);
             var dd = Server.MapPath("~" + f.FullRoute);
-          
-           
+
+            return File(dd, "1", Url.Encode(f.FileName));
             //  groupsBiz.Add(rol);
-            return Json(dd, JsonRequestBehavior.AllowGet);
+           // return File(dd, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", string.Format("{0}.doc", f.FileName));
         }
         public JsonResult Del(string IDSet)
         {
