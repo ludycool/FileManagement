@@ -1,0 +1,96 @@
+﻿
+<!DOCTYPE html>
+@{
+    ViewBag.TName = "Index";
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>WebOfficeDocFile</title>
+    @section Jsprepare{
+        @*<script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+        <script src="~/Content/js/json2.js"></script>*@
+
+        <link href="weboffic7/style.css" rel="stylesheet" />
+        <script src="weboffic7/main.js"></script>
+
+        <script language="javascript" for="WebOffice1" event="NotifyCtrlReady">
+    <!--
+    //WebOffice1_NotifyCtrlReady()
+    //-->
+        </script>
+        <script language="javascript" event="NotifyToolBarClick(iIndex)" for="WebOffice1">
+<!--
+    // WebOffice_Event_Flash("NotifyToolBarClick");
+    WebOffice1_NotifyToolBarClick(iIndex);
+    //-->
+        </script>
+
+        <script type="text/javascript">
+            @Html.Raw(ViewBag.RuteUrl)
+         @Html.Raw(ViewBag.toolbar)
+                       
+
+            function WebOffice1_NotifyCtrlReady() {
+                document.all.WebOffice1.LoadOriginalFile("d:\\MyWork\\Demo\\测试文档文件.doc", "doc");
+                okCopy();
+            }
+            function WebOffice1_NotifyToolBarClick(iIndex) {
+                //alert(iIndex);
+                if (iIndex == 32772) {
+
+                }
+            }
+            function closeWord() {
+                document.all.WebOffice1.CloseDoc(2);
+            }
+            window.onload = function () {
+                document.all.WebOffice1.SetCustomToolBtn(32772, "关闭");
+                document.all.WebOffice1.SetCustomToolBtn(2, "上传文档");
+                document.all.WebOffice1.HideMenuItem(0x04); //隐藏保存
+               
+                document.all.WebOffice1.AcceptAllRevisions();
+            };
+            function saveUpload() {
+                var returnValue;// 保存页面的返回值
+                var isOpened = document.all.WebOffice1.IsOpened();
+                if (isOpened == 0) {
+                    alert("未打开任何文档文件！");
+                    return false;
+                }
+                else {
+                    var isSaved = document.all.WebOffice1.IsSaved();
+                    if (isSaved == 0) {
+                        alert("文件已被修改，是否保存？");
+                    }
+
+                    document.all.WebOffice1.HttpInit();	// 初始化Http引擎
+                    document.all.WebOffice1.HttpAddPostString("username", form1.username.value);//添加相应的Post元素
+
+                    document.all.WebOffice1.HttpAddPostCurrFile("AipFile ", "");
+                    returnValue = document.all.WebOffice1.HttpPost("/uploadHandler.ashx");
+                    if ("true" == returnValue) {
+                        alert("文件上传成功");
+                    } else {
+                        alert("文件上传失败")
+                    }
+                    document.all.weboffice1.HttpAddPostFile("111", "d:\\MyWork\\Demo\\测试文档文件.doc")
+                }
+            }
+        </script>
+    }
+</head>
+<body>
+    <div>
+        <object id="WebOffice1" style="height: 768px; width: 100%; left: 0px; top: 0px"
+                classid="clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5" codebase="WebOffice.cab#Version=7,0,1,0">
+            <param name="ExtentX" value="6350" />
+            <param name="ExtentY" value="6350" />
+            <param name="_StockProps" value="0" />
+        </object>
+        <input type="text" name="username" value="zhangSan" />
+        <input id="btnSave" type="button" onclick="saveUpload()" value="上传" />
+        <input id="btnClose" type="button" onclick="window_onunload()" value="关闭" />
+    </div>
+</body>
+</html>
