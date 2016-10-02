@@ -29,39 +29,69 @@
     @section Jsprepare{
         <script type="text/javascript">
             var BaseUrl = '/DynamicTable/';
-            jQuery(document).ready(function () {
+            jQuery(document).ready(function() {
                 AutoWH("#body", 100, 100); //自适应宽度
                 $('#dg').datagrid({
                     url: BaseUrl + 'GetJsonResulVEntryRecordFormAdmin',
-                    columns: [[
-                        { field: 'ck', checkbox: true },
-                        { field: 'unit', title: '单位', width: 120 },
-                    //{ field: 'UserTableName', title: '表名', width: 100 },
-                     { field: 'name', title: '姓名', width: 100 },
-                     { field: 'ChineseName', title: '模板名称', width: 300 },
+                    columns: [
+                        [
+                            { field: 'ck', checkbox: true },
+                                {
+                                    field: 'state', title: '签收状态', width: 100, formatter: function (value, rowData, rowIndex) {
+
+                                        var shuchu;
+                                        switch (rowData.state) {
+                                            case "GenerationSign":
+                                                shuchu = '<span>代签收<span>';
+                                                break;
+                                            case "HaveSign":
+                                                shuchu = '<span>已签收<span>';
+                                                break;
+                                            default: shuchu = '<span>代签收<span>'; break;
+
+                                        }
+                                        //                                rowData.state
+                                        return shuchu;
+
+
+                                    }
+                                },
+                            { field: 'unit', title: '单位', width: 120 },
+                            //{ field: 'UserTableName', title: '表名', width: 100 },
+                            { field: 'name', title: '姓名', width: 100 },
+                            { field: 'ChineseName', title: '模板名称', width: 300 },
 //                     { field: 'MaterialName', title: '说明', width: 100 },
-                     { field: 'CreateDate', title: '录入时间', width: 100 },
-                     { field: 'Remark', title: '备注', width: 100 },
-                    {field:'ID',title: '操作'  ,width:100,  
+                            { field: 'CreateDate', title: '录入时间', width: 100 },
+                            { field: 'Remark', title: '备注', width: 100 },
+                            {
+                                field: 'ID',
+                                title: '操作',
+                                width: 100,
 
-                //添加超级链 
+                                //添加超级链
 
-                formatter:function(value,rowData,rowIndex){
+                                formatter: function(value, rowData, rowIndex) {
 
-                    //function里面的三个参数代表当前字段值，当前行数据对象，行号（行号从0开始）
+                                    //function里面的三个参数代表当前字段值，当前行数据对象，行号（行号从0开始）
 
-                    //alert(rowData.username);
-                    return '<a href="#" onclick="LooKInfo(\'' + rowData.CategoryTableID + '\',\'' + rowData.ID + '\',\'' + rowData.CreateDate + rowData.ChineseName + '\')">办理</a>  ';
-//                    return "<a href='#' onclick='LooKInfo('" + rowData.ID + "');'>角色管理</a>";
-                    //  return "<a href='/DynamicTable/IndexDynamicColumn?ID=" + rowData.ID + "' target='_blank'>操作</a>";
+                                    //alert(rowData.username);
+                                    // return
 
-                }  
 
-            }
+                                    var d = '<a href="#" onclick="LooKInfo(\'' + rowData.CategoryTableID + '\',\'' + rowData.ID + '\',\'' + rowData.CreateDate + rowData.ChineseName + '\')">办理</a>  ';
 
-              
-                    ]],
-                  
+                                    d += '<a href="#" onclick="sign(\'' + rowData.ID + '\')">确认签收</a>  ';
+                                    return d;
+
+                                    //                    return "<a href='#' onclick='LooKInfo('" + rowData.ID + "');'>角色管理</a>";
+                                    //  return "<a href='/DynamicTable/IndexDynamicColumn?ID=" + rowData.ID + "' target='_blank'>操作</a>";
+
+                                }
+
+                            }
+                        ]
+                    ],
+
                     nowrap: true,
                     singleSelect: true,
                     striped: true,
@@ -71,29 +101,46 @@
                     fitColumns: true,
                     rownumbers: true,
                     toolbar: [
-                 
                     ]
                 });
                 $("#dd").datebox({
-
                     showSeconds: false
 
                 });
                 $('#ChineseName').combobox({
                     url: "/DynamicTable/GetAllCategoryTable"
 
-                    
+
                 });
             });
 
-            function LooKInfo(not,erfid,name) {
-               // alert(erfid);
-                addTab(name+"办理", '/DynamicTable/IndexDynamicColumnByUser?ID=' + not + '&EntryRecordFormID=' + erfid + '');
+            function sign(id) {
 
-               
+               $.ajax({
+                   url: BaseUrl + 'ChangeSign',
+                    type: 'POST',
+                    data: { IDSet: id },
+                    cache: false,
+                    error: function () { alert('Error loading PHP document'); },
+                    success: function (data) {
+
+                        alerts(data.Msg, 2);
+                        if (data.Code > 0) {
+                            $("#dg").datagrid("reload");
+                        }
+                    }
+                });
+            }
+
+
+            function LooKInfo(not, erfid, name) {
+                // alert(erfid);
+                addTab(name + "办理", '/DynamicTable/IndexDynamicColumnByUser?ID=' + not + '&EntryRecordFormID=' + erfid + '');
+
 
             }
-            //easyUI 弹出添加按钮的对话框
+
+//easyUI 弹出添加按钮的对话框
             function ShowAddDialog() {
                 //弹出层
                 // $("#DivEditor").dialog('open').dialog('setTitle', '添加按钮信息');
@@ -104,15 +151,17 @@
                     closed: false,
                     cache: false,
                     // href: 'get_content.php',
-                    modal: true, top: 100,
-                    onClose: function () {
+                    modal: true,
+                    top: 100,
+                    onClose: function() {
                         //解决弹出窗口关闭后，验证消息还显示在最上面
 
                     }
                 });
                 $("#ff").form("clear");
             }
-            //实现按钮的编辑，包括增查改
+
+//实现按钮的编辑，包括增查改
             function EditInfo() {
 
                 //判断按钮的信息是否通过验证
@@ -124,7 +173,7 @@
                 var postData = $("#ff").serializeArray();
 
                 //发送异步请求到后台保存按钮数据
-                $.post(BaseUrl + 'EditInfo', postData, function (data) {
+                $.post(BaseUrl + 'EditInfo', postData, function(data) {
                     if (data = "OK") {
                         //添加成功  1.关闭弹出层，2.刷新DataGird
                         alert("编辑成功");
@@ -133,8 +182,7 @@
                         // $("#DivEditor").dialog("close");
                         $("#dg").datagrid("reload");
                         $("#ff").form("clear");
-                    }
-                    else {
+                    } else {
                         alert("编辑失败，请您检查");
                     }
                 });
@@ -155,8 +203,7 @@
                     $("#DivEditor").dialog('open').dialog('setTitle', '修改按钮信息').window('resize', { top: 100 });
                     //绑定修改显示详细信息的方法
                     BindShowUpdateInfo();
-                }
-                else {
+                } else {
                     //处理浏览的信息，弹出浏览狂，然后显示浏览信息的相信信息
                     $("#DivBrowerRole").dialog('open').dialog('setTitle', '按钮浏览').window('resize', { top: 100 });
                     //绑定按钮的浏览信息
@@ -167,14 +214,14 @@
             //绑定修改显示详细信息的方法
             function BindShowUpdateInfo() {
                 //首先按钮发送一个异步请求去后台实现方法
-                var ID = $("#dg").datagrid("getSelections")[0].ID;  //获取到了用按钮选择的ID
+                var ID = $("#dg").datagrid("getSelections")[0].ID; //获取到了用按钮选择的ID
                 $.ajax({
                     url: BaseUrl + 'GetInfo',
                     type: 'POST',
                     data: { ID: ID },
                     cache: false,
-                    error: function () { alert('Error loading PHP document'); },
-                    success: function (result) {
+                    error: function() { alert('Error loading PHP document'); },
+                    success: function(result) {
 
                         for (items in result) {
                             $("#" + items).val(result[items]);
@@ -184,14 +231,15 @@
                 });
 
             }
-            //实现直接删除数据和伪删除数据的方法
+
+//实现直接删除数据和伪删除数据的方法
             function deleteInfo(not) {
                 //得到按钮选择的数据的ID
                 var rows = $("#dg").datagrid("getSelections");
                 //首先判断按钮是否已经选择了需要删除的数据,然后循环将按钮选择的数据传递到后台
                 if (rows.length >= 1) {
                     //遍历出按钮选择的数据的信息，这就是按钮按钮选择删除的按钮ID的信息
-                    var ids = "";   //1,2,3,4,5
+                    var ids = ""; //1,2,3,4,5
                     for (var i = 0; i < rows.length; i++) {
                         //异步将删除的ID发送到后台，后台删除之后，返回前台，前台刷洗表格
                         ids += + ",";
@@ -201,6 +249,7 @@
                 }
 
             }
+
 //            function LooKInfo(not) {
 //                //得到按钮选择的数据的ID
 //                var rows = $("#dg").datagrid("getSelections");
@@ -222,7 +271,7 @@
                 DataBaseFunction.Search("fSearh", "dg");
 //                $("#Div_Searh").dialog('close');
             }
-          
+
         </script>
     }
 </head>
