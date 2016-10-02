@@ -6,9 +6,6 @@ using Moon.Orm;
 
 namespace DefaultConnection
 {
-    /// <summary>
-    /// 按次数记录录入信息
-    /// </summary>
 
     [Table("[VEntryRecordForm]", DbType.SqlServer)]
 
@@ -27,7 +24,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String unit
+        public String Unit
         {
             get { return GetPropertyValue<String>("unit"); }
             set { SetPropertyValue("unit", value); }
@@ -36,7 +33,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String name
+        public String Name
         {
             get { return GetPropertyValue<String>("name"); }
             set { SetPropertyValue("name", value); }
@@ -72,7 +69,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Column_7
+        public String Column7
         {
             get { return GetPropertyValue<String>("Column_7"); }
             set { SetPropertyValue("Column_7", value); }
@@ -81,7 +78,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Column_8
+        public String Column8
         {
             get { return GetPropertyValue<String>("Column_8"); }
             set { SetPropertyValue("Column_8", value); }
@@ -90,7 +87,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Column_9
+        public String Column9
         {
             get { return GetPropertyValue<String>("Column_9"); }
             set { SetPropertyValue("Column_9", value); }
@@ -99,7 +96,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Column_10
+        public String Column10
         {
             get { return GetPropertyValue<String>("Column_10"); }
             set { SetPropertyValue("Column_10", value); }
@@ -121,6 +118,15 @@ namespace DefaultConnection
         {
             get { return GetPropertyValue<String>("ChineseName"); }
             set { SetPropertyValue("ChineseName", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String State
+        {
+            get { return GetPropertyValue<String>("state"); }
+            set { SetPropertyValue("state", value); }
         }
     }
 
@@ -148,12 +154,12 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase unit = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[unit]");
+        public static readonly FieldBase Unit = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[unit]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase name = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[name]");
+        public static readonly FieldBase Name = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[name]");
 
         /// <summary>
         /// 
@@ -173,22 +179,22 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column_7 = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[Column_7]");
+        public static readonly FieldBase Column7 = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[Column_7]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column_8 = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[Column_8]");
+        public static readonly FieldBase Column8 = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[Column_8]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column_9 = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[Column_9]");
+        public static readonly FieldBase Column9 = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[Column_9]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column_10 = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[Column_10]");
+        public static readonly FieldBase Column10 = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[Column_10]");
 
         /// <summary>
         /// 
@@ -199,6 +205,11 @@ namespace DefaultConnection
         /// 
         /// </summary>
         public static readonly FieldBase ChineseName = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[ChineseName]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase State = new FieldBase(DbType.SqlServer, "[VEntryRecordForm]", FieldType.Common, "[state]");
     }
 
 }

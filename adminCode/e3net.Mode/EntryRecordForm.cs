@@ -6,9 +6,7 @@ using Moon.Orm;
 
 namespace DefaultConnection
 {
-    /// <summary>
-    /// 每次录入记录
-    /// </summary>
+
     [Table("[EntryRecordForm]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(String), "ID")]
     public partial class EntryRecordForm : EntityBase
@@ -26,7 +24,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String unit
+        public String Unit
         {
             get { return GetPropertyValue<String>("unit"); }
             set { SetPropertyValue("unit", value); }
@@ -35,7 +33,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String name
+        public String Name
         {
             get { return GetPropertyValue<String>("name"); }
             set { SetPropertyValue("name", value); }
@@ -71,7 +69,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Column_7
+        public String Column7
         {
             get { return GetPropertyValue<String>("Column_7"); }
             set { SetPropertyValue("Column_7", value); }
@@ -80,7 +78,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Column_8
+        public String Column8
         {
             get { return GetPropertyValue<String>("Column_8"); }
             set { SetPropertyValue("Column_8", value); }
@@ -89,7 +87,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Column_9
+        public String Column9
         {
             get { return GetPropertyValue<String>("Column_9"); }
             set { SetPropertyValue("Column_9", value); }
@@ -98,7 +96,7 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public String Column_10
+        public String Column10
         {
             get { return GetPropertyValue<String>("Column_10"); }
             set { SetPropertyValue("Column_10", value); }
@@ -111,6 +109,15 @@ namespace DefaultConnection
         {
             get { return GetPropertyValue<String>("CategoryTableID"); }
             set { SetPropertyValue("CategoryTableID", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String State
+        {
+            get { return GetPropertyValue<String>("state"); }
+            set { SetPropertyValue("state", value); }
         }
     }
 
@@ -138,12 +145,12 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase unit = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[unit]");
+        public static readonly FieldBase Unit = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[unit]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase name = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[name]");
+        public static readonly FieldBase Name = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[name]");
 
         /// <summary>
         /// 材料名称
@@ -163,27 +170,32 @@ namespace DefaultConnection
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column_7 = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[Column_7]");
+        public static readonly FieldBase Column7 = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[Column_7]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column_8 = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[Column_8]");
+        public static readonly FieldBase Column8 = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[Column_8]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column_9 = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[Column_9]");
+        public static readonly FieldBase Column9 = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[Column_9]");
 
         /// <summary>
         /// 
         /// </summary>
-        public static readonly FieldBase Column_10 = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[Column_10]");
+        public static readonly FieldBase Column10 = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[Column_10]");
 
         /// <summary>
         /// 
         /// </summary>
         public static readonly FieldBase CategoryTableID = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[CategoryTableID]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase State = new FieldBase(DbType.SqlServer, "[EntryRecordForm]", FieldType.Common, "[state]");
     }
 
 }
