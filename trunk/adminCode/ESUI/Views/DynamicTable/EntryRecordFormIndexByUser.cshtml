@@ -34,8 +34,28 @@
                     url: BaseUrl + 'GetJsonResulVEntryRecordForm',
                     columns: [[
                         { field: 'ck', checkbox: true },
+                        {
+                            field: 'state', title: '签收状态', width: 100, formatter: function (value, rowData, rowIndex) {
+
+                                var shuchu;
+                                switch (rowData.state) {
+                                    case "GenerationSign":
+                                        shuchu = '<span>代签收<span>';
+                                        break;
+                                    case "HaveSign":
+                                        shuchu = '<span>已签收<span>';
+                                        break;
+                                    default: shuchu = '<span>代签收<span>'; break;
+                                   
+                                }
+//                                rowData.state
+                                return shuchu;
+                              
+
+                            }
+                        },
                         { field: 'unit', title: '单位', width: 120 },
-                    //{ field: 'UserTableName', title: '表名', width: 100 },
+                  
                      { field: 'name', title: '姓名', width: 100 },
                      { field: 'ChineseName', title: '模板名称', width: 300 },
 //                     { field: 'MaterialName', title: '说明', width: 100 },

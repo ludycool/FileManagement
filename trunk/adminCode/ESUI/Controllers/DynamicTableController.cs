@@ -697,9 +697,10 @@ namespace ESUI.Controllers
                 EntryRecordForm erfmodle = new EntryRecordForm();
                 erfmodle.ID = ErfCategoryTableID;
                 erfmodle.CategoryTableID = CategoryTableID;
-                erfmodle.name = UserData.UserName;
-                erfmodle.unit = UserData.DepartmentName;
+                erfmodle.Name = UserData.UserName;
+                erfmodle.Unit = UserData.DepartmentName;
                 erfmodle.CreateDate = DateTime.Now;
+                erfmodle.State = EnumConfig.ArchiveType.GenerationSign.ToString();
                 erfbiz.Add(erfmodle);
             }
             else
@@ -1518,6 +1519,33 @@ namespace ESUI.Controllers
         public ActionResult InptuTemplateResult()
         {
             return View();
+        }
+ 
+              public JsonResult     ChangeSign(string IDSet)
+        {
+            //int f
+            //=0;
+
+            var catmodle = erfbiz.GetEntity(EntryRecordFormSet.SelectAll().Where(EntryRecordFormSet.ID.Equal(IDSet)));
+                  catmodle.State = EnumConfig.ArchiveType.HaveSign.ToString();
+            catmodle.WhereExpression = EntryRecordFormSet.ID.Equal(IDSet);
+ 
+               var f=   erfbiz.Update(catmodle);
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            if (f > 0)
+            {
+                ReSultMode.Code = 11;
+                ReSultMode.Data = f.ToString();
+                ReSultMode.Msg = "签收成功！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                ReSultMode.Code = -13;
+                ReSultMode.Data = "0";
+                ReSultMode.Msg = "签收失败！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }
