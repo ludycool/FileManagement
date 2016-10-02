@@ -1515,6 +1515,9 @@ namespace ESUI.Controllers
             return View();
         }
 
-       
+        public ActionResult InptuTemplateResult()
+        {
+            return View();
+        }
     }
 }
