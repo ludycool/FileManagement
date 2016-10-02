@@ -101,6 +101,7 @@
     <Compile Include="Convert\String.cs" />
     <Compile Include="Convert\TreeData.cs" />
     <Compile Include="CustomEntity.cs" />
+    <Compile Include="EnumConfig.cs" />
     <Compile Include="ExcelHelper.cs" />
     <Compile Include="exporter\Column.cs" />
     <Compile Include="exporter\Exporter.cs" />
