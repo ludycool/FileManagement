@@ -34,20 +34,38 @@
             var editIndex = undefined;
 
             jQuery(document).ready(function() {
-             
-              AutoWH("#body", 100, 100); //自适应宽度
-               
-                // loadColum();
-                $('#CategoryTableList').combobox({
-                    url: "/DynamicTable/GetAllCategoryTable"
 
-                  
-                });
-         
+                AutoWH("#body", 100, 100); //自适应宽度
+//                alert(GetUrlParam('ID'));
+                // loadColum();
+                var catid = GetUrlParam('ID');
+                $("#CategoryTableID").val(catid);
+                
+                loadColum(catid);
+//                $('#CategoryTableList').combobox({
+//                    url: "/DynamicTable/GetAllCategoryTable"
+//
+//                    //onSelect: function (record) {
+//                    //    var peo = $('#language').combobox('getValue');
+//                    //    //bingbdinglist(peo);
+//                    //    //bingalreadybdinglist(peo);
+//
+//                    //}
+//                });
+                // loadColum();
 
             });
 
+            function GetUrlParam(name) {
 
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) { return unescape(r[2]); } else {
+                     return null;
+                }
+               
+
+            }
 
             function loadColum(id) {
                 var Column = $.ajax({
@@ -62,7 +80,7 @@
                 $('#dg2').datagrid({
                     url: BaseUrl + 'GetJsonResultListByUserNew',
                     columns: Columndata,
-                    queryParams: { Condition: id ,EntryRecordFormID:erfiid},
+                    queryParams: { Condition: id, EntryRecordFormID: erfiid },
                     height: 450,
                     //iconCls: 'icon-save',
                     //  title: '@ViewBag.ViewBag',
@@ -89,7 +107,8 @@
                                 }
 
                                 if (editIndex == undefined) {
-                                    var ctid = $('#CategoryTableList').combobox('getValue');
+//                                    var ctid = $('#CategoryTableList').combobox('getValue');
+                                    var ctid = $("#CategoryTableID").val();
                                     var t = $.ajax({
                                         //获取列数据
                                         url: BaseUrl + 'GetNumberColumn',
@@ -149,7 +168,9 @@
                                 //实现修改的方法
                                 //if (endEditing()) {
                                 //alert(editIndex);
-                                var ctid = $('#CategoryTableList').combobox('getValue');
+
+                                var ctid = $("#CategoryTableID").val();
+//                                var ctid = $('#CategoryTableList').combobox('getValue');
                                 $("#dg2").datagrid('endEdit', editIndex);
                                 var rows = $("#dg2").datagrid('getChanges');
 
@@ -168,7 +189,7 @@
 
                                             alerts(data.Msg, 2);
                                             if (data.Code > 0) {
-                                     
+
                                                 $("#EntryRecordFormID").val(data.Data);
 
                                                 var queryParams = $('#dg2').datagrid('options').queryParams;
@@ -235,7 +256,8 @@
 
             function loadhidColum(poe) {
                 //                $("#dataGrid").datagrid("getRows")获取所有行
-                var ctid = $('#CategoryTableList').combobox('getValue');
+//                var ctid = $('#CategoryTableList').combobox('getValue');
+                var ctid = $("#CategoryTableID").val();
                 var Column2 = $.ajax({
                     //获取列数据
                     url: BaseUrl + 'GetBtnColumn',
@@ -615,27 +637,28 @@
 
             function Entering() {
                 var peo = $('#CategoryTableList').combobox('getValue');
-                    //bingbdinglist(peo);
-                    //bingalreadybdinglist(peo);
-                    loadColum(peo);
+                //bingbdinglist(peo);
+                //bingalreadybdinglist(peo);
+                loadColum(peo);
             }
 
         </script>
     }
 </head>
 <body>
-  <div style="text-align:left; padding: 10px 10px 10px 10px;">
-      模板选择 ：<input class="easyui-combobox" id="CategoryTableList" name="CategoryTableList"
-                   data-options="valueField:'ID',textField:'ChineseName'">
-       <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
-                   onclick="javascript:Entering()">录入</a> 
-    </div>
+@*  <div style="text-align:left; padding: 10px 10px 10px 10px;">*@
+@*      模板选择 ：<input class="easyui-combobox" id="CategoryTableList" name="CategoryTableList"*@
+@*                   data-options="valueField:'ID',textField:'ChineseName'">*@
+@*       <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"*@
+@*                   onclick="javascript:Entering()">录入</a> *@
+@*    </div>*@
 <div id="body">
     <table id="dg2"></table>
 
     @*        <table id="dg3"></table>*@
 </div>
 <input type="hidden" id="EntryRecordFormID"/>
+<input type="hidden" id="CategoryTableID"/>
 <div id="DivExport" class="easyui-dialog" style="width: 700px; height: 550px"
      closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
     <table>
