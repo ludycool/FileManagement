@@ -19,8 +19,6 @@
 
 
             jQuery(document).ready(function () {
-
-
                 DataGridSet();
                 $('#States').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
                 FTypes = 1;//上传类型 1为文件 0 为图片
@@ -32,20 +30,17 @@
                         { field: 'ck', checkbox: true },
                         { field: 'TrueName', title: '姓名', width: 150, sortable: true },
                         { field: 'Units', title: '单位', width: 100, sortable: true },
-                        {
-                            field: 'Duties', title: '职务', width: 100, sortable: true, formatter: function (value, row, index) {
-                                return value;
-                            }
-                        },
-                        { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
-                        { field: 'AprovalName', title: '审核状态', align:"center", width: 60, sortable: true },
-                        {
-                            field: 'Summary', title: '评语', width: 300, formatter: function (value, row, index) {
-                                return value;
-                            }
-
-                        },
-                        { field: 'AprovalStates', width: 0 ,hidden:"true"}
+                       {
+                           field: 'Duties', title: '职务', width: 100, sortable: true, formatter: function (value, row, index) {
+                               return value;
+                           }
+                       },
+                    { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
+            {
+                field: 'Summary', title: '评语', width: 300, formatter: function (value, row, index) {
+                    return value;
+                }
+            }
                     ]],
                     iconCls: 'icon-save',
                     title: '生平',
@@ -84,7 +79,8 @@
                 $(".validatebox-tip").remove();//清除验证样式
                 DataBaseFunction.ClearForm("ff");
             }
-            
+
+
             //绑定修改显示详细信息的方法
             function EditInfo() {
 
@@ -94,12 +90,6 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                var aprovalstatus = rows.AprovalStates;
-                if (aprovalstatus != "0") {
-                    $.messager.alert("友情提示", "此文件不可编辑", "error");
-                    return;
-                }
-
                 $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.TrueName).window('resize', { top: 50 });
                 $(".validatebox-tip").remove();//清除验证样式
                 var ID = rows.Id;  //获取到了用选择的ID
@@ -117,9 +107,6 @@
                         GetFileList(data.Id);//图片
                     }
                 });
-
-
-
             }
 
             function EditDoc() {
@@ -129,12 +116,7 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                var aprovalstatus = rows.AprovalStates;
-                if (aprovalstatus != "0") {
-                    $.messager.alert("友情提示", "此文件不可编辑", "error");
-                    return;
-                }
-                window.parent.JumpP("编辑生平", "TF_LifeComments/LifeWebOfficeDoc?id=" + rows.Id, "icon-rgb");
+                window.parent.JumpP("编辑生平", "TF_LiftApprove/EditWebOffice?id=" + rows.Id, "icon-rgb");
             }
 
             //实现的编辑，包括增查改
@@ -167,6 +149,21 @@
 
             }
 
+            //提交审核
+            function submitApprove()
+            {
+                alert("1212");
+                //var rows = $("#dg").datagrid('getSelected');
+                ////首先取出来值判断只能选择一个
+                //if (rows == null) {
+                //    $.messager.alert("友情提示", "请选择", "error");
+                //    return;
+                //}
+                //if (confirm("您确定现在提交审核吗？<br/>提交后不可在编辑！")) {
+                //    alert(rows.id);
+                //}
+            }
+
             //搜索
             function SearchGo() {
                 DataBaseFunction.Search("fSearh", "dg");
@@ -185,35 +182,6 @@
             function AddImg() {
                 FileUp("TF_LifeComments");
             }
-
-            //提交审核
-            function submitApprove() {
-                var rows = $("#dg").datagrid('getSelected');
-                //首先取出来值判断只能选择一个
-                if (rows == null) {
-                    $.messager.alert("友情提示", "请选择", "error");
-                    return;
-                }
-                var aprovalstatus = rows.AprovalStates;
-                if (aprovalstatus != "0") {
-                    $.messager.alert("友情提示", "此文件已经提交过", "error");
-                    return;
-                }
-                if (confirm("提交后不可在编辑，您确定现在提交审核吗？")) {
-                    var ID = rows.Id;  //获取到了用选择的ID
-                    $.ajax({
-                        url: BaseUrl + 'Approve',
-                        type: 'POST',
-                        data: { ID: ID, state: "1" },
-                        cache: false,
-                        error: function () { alert('Error $.ajax'); },
-                        success: function (data) {
-                            alert(data["Msg"]);
-                        }
-                    });
-                }
-            }
-
         </script>
     }
 
@@ -343,7 +311,7 @@
                         </td>
                         <td>
                             <div style="line-height: 20px; height: 20px;display: block;width: 500px;">
-                                <span style=" font-size:16px; float:left;">
+                                <span style="font-size:16px; float:left;">
                                     <input type="file" id="fileimg" name="file" style="width: 50px;" onchange="AddImg()" />
                                 </span>
                                 <span style="padding-left: 10px; float: left; color: red;">(右键另存为，可保存文件)</span>
