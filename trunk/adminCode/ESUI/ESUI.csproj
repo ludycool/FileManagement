@@ -3442,6 +3442,7 @@
     <Content Include="moon.license">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="MOON_WORK_DIRECTORY_PATH\sql.xml" />
     <Content Include="Scripts\linq.min.js" />
     <Content Include="Scripts\search.js" />
     <Content Include="Scripts\weboffic7\index.html" />
@@ -3483,6 +3484,8 @@
     <Content Include="Content\uploadify\index.php" />
     <Content Include="Content\uploadify\uploadify.php" />
     <Content Include="httpHandle\WebOfficeHandler.ashx" />
+    <Content Include="MOON_WORK_DIRECTORY_PATH\MoonLogs\2015-12-10.log" />
+    <Content Include="MOON_WORK_DIRECTORY_PATH\sqls\sql.config" />
     <None Include="Properties\PublishProfiles\ESUIConfig.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
@@ -3561,8 +3564,11 @@
     <Content Include="Views\TF_PaperFile\WebOfficeDoc.cshtml" />
     <Content Include="Views\TF_LifeComments\LifeWebOfficeDoc.cshtml" />
     <Content Include="Views\DynamicTable\InptuTemplateResult.cshtml" />
+    <Content Include="Views\TF_LiftApprove\EditWebOffice.cshtml" />
+    <Content Include="Views\TF_LiftApprove\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />
     <Folder Include="temp\" />
     <Folder Include="UploadFiles\" />
     <Folder Include="upload\image\20150319\" />
