@@ -30,7 +30,7 @@
         <script type="text/javascript">
             @Html.Raw(ViewBag.RuteUrl)
          @Html.Raw(ViewBag.toolbar)
-            var BaseUrl = '/TF_LifeComments/';
+            var BaseUrl = '/TF_LiftApprove/';
             function WebOffice1_NotifyToolBarClick(iIndex) {
                 if (iIndex == 32777) {
                     var isOpened = document.all.WebOffice1.IsOpened();
@@ -97,7 +97,7 @@
                 $("#currFileDir").val(dir);
                 $("#currFileID").val(ID);
                 $("#currFile").val(curfilepath);
-              
+
                 document.all.WebOffice1.HideMenuItem(0x04); //隐藏保存
                 document.all.WebOffice1.LoadOriginalFile(curfilepath, suffix);
                 document.all.WebOffice1.AcceptAllRevisions();
@@ -115,9 +115,9 @@
                     var _basefile = $("#currFile").val();
                     document.all.WebOffice1.HttpInit();	// 初始化Http引擎
                     document.all.WebOffice1.HttpAddPostString("sfile", _basefile);
-                    document.all.WebOffice1.HttpAddPostString("action", "user");
+                    document.all.WebOffice1.HttpAddPostString("action", "manager");
                     document.all.WebOffice1.HttpAddPostString("curfiledir", _filedir);
-                    document.all.WebOffice1.HttpAddPostCurrFile("curfile", _fileId);      
+                    document.all.WebOffice1.HttpAddPostCurrFile("curfile", _fileId);
                     returnValue = document.all.WebOffice1.HttpPost("/httpHandle/WebOfficeHandler.ashx");
                     if ("true" == returnValue) {
                         var curTempFile = document.all.WebOffice1.GetTempFilePath();
