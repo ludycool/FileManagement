@@ -38,7 +38,7 @@ namespace ESUI.Controllers.FileManagementDB
             //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
 
-            Where += " and (isDeleted=0) and AprovalStates in(1,2) and ";
+            Where += " and (isDeleted=0) and AprovalStates in(1,2) and States in(0,1)";
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
