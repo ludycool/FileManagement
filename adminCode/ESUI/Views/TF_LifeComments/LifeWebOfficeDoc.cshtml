@@ -32,6 +32,11 @@
          @Html.Raw(ViewBag.toolbar)
             var BaseUrl = '/TF_LifeComments/';
             function WebOffice1_NotifyToolBarClick(iIndex) {
+
+                //例子
+                var catid = GetUrlParam('ID');
+
+
                 if (iIndex == 32777) {
                     var isOpened = document.all.WebOffice1.IsOpened();
                     if (isOpened == 0) {
@@ -73,7 +78,17 @@
                 document.all.WebOffice1.HideMenuItem(0x10);
                 document.all.WebOffice1.AcceptAllRevisions();
             };
+            //获取游览器上面的参数
+            function GetUrlParam(name) {
 
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) { return unescape(r[2]); } else {
+                    return null;
+                }
+
+
+            }
             function InitTreeData() {
                 var ID = "BC2B2A4E-CC72-49DD-B2FB-7FD314C80947";
                 $.ajax({
