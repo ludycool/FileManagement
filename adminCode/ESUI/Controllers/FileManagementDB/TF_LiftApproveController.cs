@@ -38,7 +38,7 @@ namespace ESUI.Controllers.FileManagementDB
             //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
 
-            Where += " and (isDeleted=0) ";
+            Where += " and (isDeleted=0) and AprovalStates in(1,2) and ";
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
@@ -47,7 +47,7 @@ namespace ESUI.Controllers.FileManagementDB
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "TF_LifeComments";
+            pc.sys_Table = "v_TF_LeftComments";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
             List<TF_LifeComments> list2 = OPBiz.GetPagingData<TF_LifeComments>(pc);
