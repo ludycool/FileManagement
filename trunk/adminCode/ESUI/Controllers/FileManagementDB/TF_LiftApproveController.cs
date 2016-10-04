@@ -1,12 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-//using System.ComponentModel.Composition;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.Practices.Unity;
-using Newtonsoft.Json;
 
 using System.Data.Common;
 using e3net.common.SysMode;
@@ -15,12 +11,13 @@ using e3net.Mode.HttpView;
 using e3net.BLL;
 using e3net.Mode;
 
-namespace ESUI.Controllers
-{
-    //[Export]
-    public class TF_LifeCommentsController : BaseController
-    {
+using Microsoft.Practices.Unity;
+using Newtonsoft.Json;
 
+namespace ESUI.Controllers.FileManagementDB
+{
+    public class TF_LiftApproveController : BaseController
+    {
         [Dependency]
         public TF_LifeCommentsBiz OPBiz { get; set; }
         [Dependency]
@@ -50,7 +47,7 @@ namespace ESUI.Controllers
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "v_TF_LeftComments";
+            pc.sys_Table = "TF_LifeComments";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
             List<TF_LifeComments> list2 = OPBiz.GetPagingData<TF_LifeComments>(pc);
@@ -87,7 +84,7 @@ namespace ESUI.Controllers
 
                     ReSultMode.Code = 11;
                     ReSultMode.Data = EidModle.Id.ToString();
-                    ReSultMode.Msg = "保存成功，请尽快提交审核！";
+                    ReSultMode.Msg = "添加成功";
                 }
                 catch (Exception e)
                 {
@@ -106,7 +103,7 @@ namespace ESUI.Controllers
                 {
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
-                    ReSultMode.Msg = "保存成功，请尽快提交审核！";
+                    ReSultMode.Msg = "修改成功";
                 }
                 else
                 {
@@ -115,47 +112,17 @@ namespace ESUI.Controllers
                     ReSultMode.Msg = "修改失败";
                 }
             }
-
-
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
         }
 
-        public ActionResult LifeWebOfficeDoc()
+        public ActionResult EditWebOffice()
         {
             ViewBag.ViewBag = Request["id"];
 
 
             ViewBag.RuteUrl = RuteUrl();
             return View();
-        }
-
-        public JsonResult GetLifeFiles(string id)
-        {
-            var mql = File_ImageSet.SelectAll().Where(File_ImageSet.ToId.Equal(id));
-            List<File_Image> list = new File_ImageBiz().GetOwnList(mql);
-            return Json(list, JsonRequestBehavior.AllowGet);
-        }
-
-        public JsonResult Approve(string ID, string state = "0")
-        {//AprovalStates 提交审核状态：0--未提交；1--已提交；2--审核中；3--已审核
-            string sql = string.Format("update TF_LifeComments set AprovalStates={0} Where Id='{1}'", state, ID);
-            int f = OPBiz.ExecuteSqlWithNonQuery(sql);
-            HttpReSultMode ReSultMode = new HttpReSultMode();
-            if (f > 0)
-            {
-                ReSultMode.Code = 11;
-                ReSultMode.Data = f.ToString();
-                ReSultMode.Msg = "提交审核成功！";
-                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                ReSultMode.Code = -13;
-                ReSultMode.Data = "0";
-                ReSultMode.Msg = "提交审核失败！";
-                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
-            }
         }
 
         public JsonResult GetInfo(string ID)
@@ -165,7 +132,12 @@ namespace ESUI.Controllers
             //  groupsBiz.Add(rol);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
-
+        public JsonResult GetLifeFiles(string id)
+        {
+            var mql = File_ImageSet.SelectAll().Where(File_ImageSet.ToId.Equal(id));
+            List<File_Image> list = new File_ImageBiz().GetOwnList(mql);
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
 
         public FileResult GetFileInfo(string ID)
         {
