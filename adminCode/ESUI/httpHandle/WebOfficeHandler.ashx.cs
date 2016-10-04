@@ -32,27 +32,57 @@ namespace WebApplication1
             if (context.Request.Files.Count > 0)
             {
                 string fileExt = System.IO.Path.GetExtension(file.FileName);
+                string fileFullName = "";
+                string uploadPath = context.Server.MapPath(context.Request["curfiledir"].ToString().Trim()); //保存目录
                 HttpPostedFile upPhoto = context.Request.Files[0];
                 int filelength = file.ContentLength;
                 byte[] fileArray = new Byte[filelength];
                 Stream fstream = upPhoto.InputStream;
                 fstream.Read(fileArray, 0, filelength); //这些编码是把文件转换成二进制的文件
-                string newName = System.DateTime.Now.ToString("yyyyMMddHHmmssfff") + fileExt;
-                string uploadPath = context.Server.MapPath("/upload/" + folder + "/" + System.DateTime.Now.Year.ToString() + "/" + System.DateTime.Now.ToString("yyyyMM/"));
-                string fileFullName = uploadPath + newName;
-                if (!File.Exists(fileFullName))
+                if (!string.IsNullOrEmpty(context.Request["action"]))
                 {
-                    if (!Directory.Exists(uploadPath))
+                    if (context.Request["action"].ToString().Trim() == "user")
                     {
-                        Directory.CreateDirectory(uploadPath);
+                        if (!string.IsNullOrEmpty(context.Request["sfile"]))
+                        {
+                            fileFullName = context.Request["sfile"].ToString().Trim();//服务器文件地址                           
+                            fileFullName = context.Server.MapPath(fileFullName);
+                            if (!Directory.Exists(uploadPath))
+                            {
+                                Directory.CreateDirectory(uploadPath);
+                            }
+                            File.WriteAllBytes(fileFullName, fileArray);
+                                            
+                            //FileStream fs = new System.IO.FileStream(fileFullName, System.IO.FileMode.Open, System.IO.FileAccess.Write);
+                            //fs.Write(fileArray,0, fileArray.Length);
+                            //fs.Close();
+                            backURL = "true";
+                        }
                     }
-                   // file.SaveAs(fileFullName);
+                    else if (context.Request["action"].ToString().Trim() == "manager")
+                    {
+                        string newName = System.DateTime.Now.ToString("yyyyMMddHHmmss_fff") + fileExt;
 
-                    FileStream fs = new System.IO.FileStream(fileFullName, System.IO.FileMode.CreateNew, System.IO.FileAccess.Write);
-                    fs.Write(fileArray, 0, fileArray.Length);
-                    fs.Close();
+                        //uploadPath + newName;
+                        if (!File.Exists(uploadPath))
+                        {
+                            if (!Directory.Exists(uploadPath))
+                            {
+                                // Directory.CreateDirectory(uploadPath);
+                            }
+                            FileStream fs = new System.IO.FileStream(fileFullName, System.IO.FileMode.CreateNew, System.IO.FileAccess.Write);
+                            fs.Write(fileArray, 0, fileArray.Length);
+                            fs.Close();
+                        }
+                        else
+                        {
+                            FileStream fs = new System.IO.FileStream(uploadPath, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                            fs.Write(fileArray, 0, fileArray.Length);
+                            fs.Close();
+                        }
+                        backURL = "true";
+                    }
                 }
-                backURL = "true";
             }
             return backURL;
         }
