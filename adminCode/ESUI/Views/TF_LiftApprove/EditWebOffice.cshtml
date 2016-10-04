@@ -58,6 +58,15 @@
                     saveUpload();
                 }
             }
+            //获取游览器上面的参数
+            function GetUrlParam(name) {
+
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) { return unescape(r[2]); } else {
+                    return null;
+                }
+            }
             function closeWord() {
                 document.all.WebOffice1.CloseDoc(2);
             }
@@ -75,7 +84,7 @@
             };
 
             function InitTreeData() {
-                var ID = "BC2B2A4E-CC72-49DD-B2FB-7FD314C80947";
+                var ID = GetUrlParam('id');
                 $.ajax({
                     url: BaseUrl + 'GetLifeFiles',
                     type: 'GET',
