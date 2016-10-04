@@ -38,7 +38,7 @@ namespace ESUI.Controllers.FileManagementDB
             //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
 
-            Where += " and (isDeleted=0) and AprovalStates in(1,2) and States in(0,1)";
+            Where += " and (isDeleted=0) and States>-1";
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
@@ -59,7 +59,26 @@ namespace ESUI.Controllers.FileManagementDB
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
-
+        public JsonResult Approve(string ID, string state = "-1")
+        {//States 状态（已审核--2、审核中--1，已提交--0，编辑中--1）
+            string sql = string.Format("update TF_LifeComments set States={0} Where Id='{1}'", state, ID);
+            int f = OPBiz.ExecuteSqlWithNonQuery(sql);
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            if (f > 0)
+            {
+                ReSultMode.Code = 11;
+                ReSultMode.Data = f.ToString();
+                ReSultMode.Msg = "提交审核成功！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                ReSultMode.Code = -13;
+                ReSultMode.Data = "0";
+                ReSultMode.Msg = "提交审核失败！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
+        }
         public JsonResult EditInfo(TF_LifeComments EidModle)
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
