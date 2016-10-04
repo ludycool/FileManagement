@@ -19,8 +19,6 @@
 
 
             jQuery(document).ready(function () {
-
-
                 DataGridSet();
                 $('#States').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
                 FTypes = 1;//上传类型 1为文件 0 为图片
@@ -44,8 +42,7 @@
                                 return value;
                             }
 
-                        },
-                        { field: 'AprovalStates', width: 0 ,hidden:"true"}
+                        }
                     ]],
                     iconCls: 'icon-save',
                     title: '生平',
@@ -94,8 +91,8 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                var aprovalstatus = rows.AprovalStates;
-                if (aprovalstatus != "0") {
+                var aprovalstatus = rows.States;
+                if (aprovalstatus != "-1") {
                     $.messager.alert("友情提示", "此文件不可编辑", "error");
                     return;
                 }
@@ -126,8 +123,8 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                var aprovalstatus = rows.AprovalStates;
-                if (aprovalstatus != "0") {
+                var aprovalstatus = rows.States;
+                if (aprovalstatus != "-1") {
                     $.messager.alert("友情提示", "此文件不可编辑", "error");
                     return;
                 }
@@ -201,7 +198,7 @@
                     $.ajax({
                         url: BaseUrl + 'Approve',
                         type: 'POST',
-                        data: { ID: ID, state: "1" },
+                        data: { ID: ID, state: "0" },
                         cache: false,
                         error: function () { alert('Error $.ajax'); },
                         success: function (data) {
@@ -258,7 +255,6 @@
                     <td>
                         <input id="States_eq" class="easyui-combobox" name="States_eq"
                                data-options="valueField:'ItemValue',textField:'ItemName'" />
-
                     </td>
                 </tr>
             </table>
