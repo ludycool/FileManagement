@@ -17,6 +17,7 @@ using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using TZHSWEET.Common;
 using e3net.Mode.HttpView;
+using ESUI.Models;
 
 namespace ESUI.Controllers
 {
@@ -1546,6 +1547,29 @@ namespace ESUI.Controllers
                 ReSultMode.Msg = "签收失败！";
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
+        }
+        [HttpPost]
+        public JsonResult ReadExcel(string filename, string CategoryTableID)
+        {
+            string virtualPath =
+string.Format("~/UploadFiles/{0}", filename);
+            string filePath = Server.MapPath(virtualPath);
+            var liListColumnst = CCBiz.GetEntities(ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(CategoryTableID).And(ColumnChartsSet.IsEnable.Equal(true))).OrderByASC(ColumnChartsSet.SortNo));
+
+            var ddd = liListColumnst.FirstOrDefault(t => t.colspan > 1);
+            DataTable ffd = new DataTable();
+            if (ddd != null)
+            {
+                ffd = NewExeclHelper.ImportExceltoDt(filePath, liListColumnst, 3);
+            }
+            else
+            {
+                ffd = NewExeclHelper.ImportExceltoDt(filePath, liListColumnst, 2);
+            }
+            // ExcelHelper ff=new ExcelHelper();
+
+            return Json(ffd);
+
         }
     }
 }

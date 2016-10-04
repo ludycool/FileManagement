@@ -127,16 +127,6 @@ namespace ESUI.Controllers
 
             // dt3.TableName = DTName; //设置DT的名字
         }
-
-        public JsonResult ReadExcel(string filename)
-        {
-            string virtualPath =
-string.Format("~/UploadFiles/{0}", filename);
-            string filePath = Server.MapPath(virtualPath);
-// ExcelHelper ff=new ExcelHelper();
-            var ffd = ExcelHelper.ImportExceltoDt(filePath);
-            return Json(ffd, JsonRequestBehavior.AllowGet);
-            
-        }
+    
     }
 }
