@@ -240,7 +240,7 @@ namespace Zephyr.Core
 
             //设置数据样式
             var dataCount = 0;
-            if (_datatable !=null&&_datatable.Rows.Count == 0)
+            if (_datatable !=null&&_datatable.Rows.Count > 0)
             {
                 dataCount = _datatable.Rows.Count;
                 //EachHelper.EachListRow(_data, (i, r) => dataCount++);
