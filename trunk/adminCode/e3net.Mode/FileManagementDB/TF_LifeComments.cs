@@ -96,6 +96,24 @@ namespace e3net.Mode.FileManagementDB
             get { return GetPropertyValue<DateTime?>("UpdateTime"); }
             set { SetPropertyValue("UpdateTime", value); }
         }
+        /// <summary>
+        /// 提交审核状态：0--未提交；1--已提交；2--审核中；3--通过审核
+        /// </summary>
+        public Int32? AprovalStates
+        {
+            get { return GetPropertyValue<Int32?>("AprovalStates"); }
+            set { SetPropertyValue("AprovalStates", value); }
+        }
+
+        /// <summary>
+        /// 提交审核状态：0--未提交；1--已提交；2--审核中；3--通过审核
+        /// </summary>
+        public string AprovalName
+        {
+            get { return GetPropertyValue<string>("AprovalName"); }
+            set { SetPropertyValue("AprovalName", value); }
+        }
+
 
         /// <summary>
         /// 状态（2已审核、开启1，未审核0，关闭-1）
@@ -126,15 +144,15 @@ namespace e3net.Mode.FileManagementDB
     }
 
     [Table("[TF_LifeComments]", DbType.SqlServer)]
-    public  partial class TF_LifeCommentsSet : MQLBase
+    public partial class TF_LifeCommentsSet : MQLBase
     {
         public static new MQLBase Select(params FieldBase[] fields)
         {
-            return MQLBase.Select(DbType.SqlServer,"[TF_LifeComments]",fields);
+            return MQLBase.Select(DbType.SqlServer, "[TF_LifeComments]", fields);
         }
         public static new MQLBase SelectAll()
         {
-            return MQLBase.SelectAll(DbType.SqlServer,"[TF_LifeComments]");
+            return MQLBase.SelectAll(DbType.SqlServer, "[TF_LifeComments]");
         }
 
         /// <summary>
@@ -183,6 +201,12 @@ namespace e3net.Mode.FileManagementDB
         public static readonly FieldBase UpdateTime = new FieldBase(DbType.SqlServer, "[TF_LifeComments]", FieldType.Common, "[UpdateTime]");
 
         /// <summary>
+        /// 提交审核状态：0--未提交；1--已提交；2--审核中；3--通过审核
+        /// </summary>
+        public static readonly FieldBase AprovalStates = new FieldBase(DbType.SqlServer, "[TF_LifeComments]", FieldType.Common, "[AprovalStates]");
+        public static readonly FieldBase AprovalName = new FieldBase(DbType.SqlServer, "[TF_LifeComments]", FieldType.Common, "[AprovalName]");
+
+        /// <summary>
         /// 状态（2已审核、开启1，未审核0，关闭-1）
         /// </summary>
         public static readonly FieldBase States = new FieldBase(DbType.SqlServer, "[TF_LifeComments]", FieldType.Common, "[States]");
@@ -196,6 +220,8 @@ namespace e3net.Mode.FileManagementDB
         /// 是否删除
         /// </summary>
         public static readonly FieldBase isDeleted = new FieldBase(DbType.SqlServer, "[TF_LifeComments]", FieldType.Common, "[isDeleted]");
+
+
     }
 
 }
