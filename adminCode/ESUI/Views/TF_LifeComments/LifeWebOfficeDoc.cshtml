@@ -34,7 +34,7 @@
             function WebOffice1_NotifyToolBarClick(iIndex) {
 
                 //例子
-                var catid = GetUrlParam('ID');
+                
 
 
                 if (iIndex == 32777) {
@@ -86,11 +86,9 @@
                 if (r != null) { return unescape(r[2]); } else {
                     return null;
                 }
-
-
             }
             function InitTreeData() {
-                var ID = "BC2B2A4E-CC72-49DD-B2FB-7FD314C80947";
+                var ID =GetUrlParam('id');
                 $.ajax({
                     url: BaseUrl + 'GetLifeFiles',
                     type: 'GET',
