@@ -48,9 +48,9 @@
                                   //function里面的三个参数代表当前字段值，当前行数据对象，行号（行号从0开始）
 
                                   //alert(rowData.username);
-                                var d=   '<a href="#" onclick="luruInfo(\'' + rowData.ID + '\',\'' + rowData.ID + '\',\'' + Math.random() * 10 + rowData.ChineseName + '\')">录入</a>  ';
+                                var d=   '<a href="#" onclick="luruInfo(\'' + rowData.ID + '\',\'' + rowData.ID + '\',\'' + Math.random() * 10 + rowData.ChineseName + '\')">录入材料</a>  ';
                                 d += '<a href="#" onclick="exportToExcel(\'' + rowData.ID + '\',\'' + rowData.ChineseName +'模板'+ '\')">下载模板</a>  ';
-                                d += '<a href="#" onclick="sign(\'' + rowData.ID + '\')">导入</a>  ';
+                                d += '<a href="#" onclick="sign(\'' + rowData.ID + '\')">导入材料</a>  ';
                                   return d;
                                   //                    return "<a href='#' onclick='LooKInfo('" + rowData.ID + "');'>角色管理</a>";
                                   //  return "<a href='/DynamicTable/IndexDynamicColumn?ID=" + rowData.ID + "' target='_blank'>操作</a>";
