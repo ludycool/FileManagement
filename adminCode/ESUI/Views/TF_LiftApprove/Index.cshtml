@@ -30,17 +30,20 @@
                         { field: 'ck', checkbox: true },
                         { field: 'TrueName', title: '姓名', width: 150, sortable: true },
                         { field: 'Units', title: '单位', width: 100, sortable: true },
-                       {
-                           field: 'Duties', title: '职务', width: 100, sortable: true, formatter: function (value, row, index) {
-                               return value;
-                           }
-                       },
-                    { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
-            {
-                field: 'Summary', title: '评语', width: 300, formatter: function (value, row, index) {
-                    return value;
-                }
-            }
+                        {
+                            field: 'Duties', title: '职务', width: 100, sortable: true, formatter: function (value, row, index) {
+                                return value;
+                            }
+                        },
+                        { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
+                        { field: 'AprovalName', title: '审核状态', align: "center", width: 60, sortable: true },
+                        {
+                            field: 'Summary', title: '评语', width: 300, formatter: function (value, row, index) {
+                                return value;
+                            }
+
+                        },
+                        { field: 'AprovalStates', width: 0, hidden: "true" }
                     ]],
                     iconCls: 'icon-save',
                     title: '生平',
