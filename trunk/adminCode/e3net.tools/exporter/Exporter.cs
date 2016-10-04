@@ -240,53 +240,57 @@ namespace Zephyr.Core
 
             //设置数据样式
             var dataCount = 0;
-            dataCount = _datatable.Rows.Count;
-            //EachHelper.EachListRow(_data, (i, r) => dataCount++);
-            export.SetRowsStyle(0, currentRow, currentCell - 1, currentRow + dataCount - 1);
+            if (_datatable !=null&&_datatable.Rows.Count == 0)
+            {
+                dataCount = _datatable.Rows.Count;
+                //EachHelper.EachListRow(_data, (i, r) => dataCount++);
+                export.SetRowsStyle(0, currentRow, currentCell - 1, currentRow + dataCount - 1);
 
-            //填充数据
-//            EachHelper.EachListRow(_data, (rowIndex, rowData) =>
-//            {
-//                EachHelper.EachObjectProperty(rowData, (i, name, value) =>
-//                {
-//                    if (fieldIndex.ContainsKey(name))
-//                        foreach (int cellIndex in fieldIndex[name])
-//                        {
-//                            if (_fieldFormatter.ContainsKey(name))
-//                                value = _fieldFormatter[name].Format(value);
-//                            export.FillData(cellIndex, currentRow, name, value);
-//                        }
-//                });
-//                currentRow++;
-//            });
-            int cellIndex = 0;
-            int cellnum = currentCell;
-            int h = 0;
-            if (_datatable.Columns.Contains("ck"))
-            {
-                cellnum++;
-                h++;
-            }
-            if (_datatable.Columns.Contains("ID"))
-            {
-                cellnum++;
-                h++;
-
-            }
-            foreach (DataRow row in _datatable.Rows)
-            {
-                int k = 0;
-                for (int i =h; i <cellnum; i++)
+                //填充数据
+                //            EachHelper.EachListRow(_data, (rowIndex, rowData) =>
+                //            {
+                //                EachHelper.EachObjectProperty(rowData, (i, name, value) =>
+                //                {
+                //                    if (fieldIndex.ContainsKey(name))
+                //                        foreach (int cellIndex in fieldIndex[name])
+                //                        {
+                //                            if (_fieldFormatter.ContainsKey(name))
+                //                                value = _fieldFormatter[name].Format(value);
+                //                            export.FillData(cellIndex, currentRow, name, value);
+                //                        }
+                //                });
+                //                currentRow++;
+                //            });
+                int cellIndex = 0;
+                int cellnum = currentCell;
+                int h = 0;
+                if (_datatable.Columns.Contains("ck"))
                 {
-
-
-                    export.FillData(k, currentRow, "", row[i]);
-                    k++;
+                    cellnum++;
+                    h++;
                 }
-               
-                
-              currentRow++;
+                if (_datatable.Columns.Contains("ID"))
+                {
+                    cellnum++;
+                    h++;
+
+                }
+                foreach (DataRow row in _datatable.Rows)
+                {
+                    int k = 0;
+                    for (int i = h; i < cellnum; i++)
+                    {
+
+
+                        export.FillData(k, currentRow, "", row[i]);
+                        k++;
+                    }
+
+
+                    currentRow++;
+                }
             }
+           
              export.SaveAsStream(Path);
 
             //_suffix = export.suffix;
