@@ -96,7 +96,7 @@ namespace ESUI.Controllers.FileManagementDB
                 EidModle.CreateTime = DateTime.Now;
                 EidModle.isValid = true;
                 EidModle.isDeleted = false;
-                EidModle.States = 0;
+                EidModle.States = 1;
                 try
                 {
                     OPBiz.Add(EidModle);
