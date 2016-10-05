@@ -112,6 +112,31 @@ namespace e3net.Mode
             get { return GetPropertyValue<DateTime?>("UpdateTime"); }
             set { SetPropertyValue("UpdateTime", value); }
         }
+
+        /// <summary>
+        /// 备份文件名
+        /// </summary>
+        public String FileNameCopy
+        {
+            get { return GetPropertyValue<String>("FileNameCopy"); }
+            set { SetPropertyValue("FileNameCopy", value); }
+        }
+        /// <summary>
+        /// 备份全文件地址
+        /// </summary>
+        public String FullRouteCopy
+        {
+            get { return GetPropertyValue<String>("FullRouteCopy"); }
+            set { SetPropertyValue("FullRouteCopy", value); }
+        }
+        /// <summary>
+        /// 是否已经备份
+        /// </summary>
+        public Boolean? HasBackups
+        {
+            get { return GetPropertyValue<Boolean?>("HasBackups"); }
+            set { SetPropertyValue("HasBackups", value); }
+        }
     }
 
     [Table("[File_Image]", DbType.SqlServer)]
@@ -136,6 +161,9 @@ namespace e3net.Mode
         public static readonly FieldBase FileType = new FieldBase(DbType.SqlServer, "[File_Image]", FieldType.Common, "[FileType]");
         public static readonly FieldBase AddTime = new FieldBase(DbType.SqlServer, "[File_Image]", FieldType.Common, "[AddTime]");
         public static readonly FieldBase UpdateTime = new FieldBase(DbType.SqlServer, "[File_Image]", FieldType.Common, "[UpdateTime]");
+        public static readonly FieldBase FileNameCopy = new FieldBase(DbType.SqlServer, "[File_Image]", FieldType.Common, "[FileNameCopy]");
+        public static readonly FieldBase FullRouteCopy = new FieldBase(DbType.SqlServer, "[File_Image]", FieldType.Common, "[FullRouteCopy]");
+        public static readonly FieldBase HasBackups = new FieldBase(DbType.SqlServer, "[File_Image]", FieldType.Common, "[HasBackups]");
     }
 
 }
