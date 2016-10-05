@@ -144,6 +144,9 @@ namespace ESUI.Controllers
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
             {
+                string sql2 =string.Format("update File_Image set FileNameCopy=[FileName],FullRouteCopy=FullRoute Where ToId='{0}' and FileType<>'图片'",ID);
+                int s1 = OPBiz.ExecuteSqlWithNonQuery(sql);
+
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "提交审核成功！";
@@ -157,12 +160,12 @@ namespace ESUI.Controllers
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
+        
 
         public JsonResult GetInfo(string ID)
         {
             var mql2 = TF_LifeCommentsSet.SelectAll().Where(TF_LifeCommentsSet.Id.Equal(ID));
             TF_LifeComments Rmodel = OPBiz.GetEntity(mql2);
-            //  groupsBiz.Add(rol);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
 
