@@ -128,7 +128,7 @@
                     $.messager.alert("友情提示", "此文件不可编辑", "error");
                     return;
                 }
-                window.parent.JumpP("编辑生平", "TF_LifeComments/LifeWebOfficeDoc?id=" + rows.Id, "icon-rgb");
+                window.parent.JumpP("生平管理--在线编辑", "TF_LifeComments/LifeWebOfficeDoc?id=" + rows.Id, "icon-rgb");
             }
 
             //实现的编辑，包括增查改
@@ -188,8 +188,8 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                var aprovalstatus = rows.AprovalStates;
-                if (aprovalstatus != "0") {
+                var aprovalstatus = rows.States;
+                if (aprovalstatus != "-1") {
                     $.messager.alert("友情提示", "此文件已经提交过", "error");
                     return;
                 }
@@ -208,6 +208,9 @@
                 }
             }
 
+            function RefreshOP() {
+                DataGridSet();
+            }
         </script>
     }
 

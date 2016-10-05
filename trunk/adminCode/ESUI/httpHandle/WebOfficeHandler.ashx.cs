@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using Microsoft.Practices.Unity;
+using e3net.BLL;
 
 namespace WebApplication1
 {
@@ -11,7 +13,6 @@ namespace WebApplication1
     /// </summary>
     public class uploadHandler : IHttpHandler
     {
-
         public void ProcessRequest(HttpContext context)
         {
             context.Response.ContentType = "text/plain";
@@ -25,6 +26,7 @@ namespace WebApplication1
             string backmsg = UploadImgForMatch(file, context, "DocumentFiles", "doc");
             context.Response.Write(backmsg);
         }
+
 
         private string UploadImgForMatch(HttpPostedFile file, HttpContext context, string folder, string fileType)
         {
@@ -52,34 +54,54 @@ namespace WebApplication1
                                 Directory.CreateDirectory(uploadPath);
                             }
                             File.WriteAllBytes(fileFullName, fileArray);
-                                            
-                            //FileStream fs = new System.IO.FileStream(fileFullName, System.IO.FileMode.Open, System.IO.FileAccess.Write);
-                            //fs.Write(fileArray,0, fileArray.Length);
-                            //fs.Close();
                             backURL = "true";
                         }
                     }
                     else if (context.Request["action"].ToString().Trim() == "manager")
                     {
-                        string newName = System.DateTime.Now.ToString("yyyyMMddHHmmss_fff") + fileExt;
+                        string serverfile = context.Request["sfile"].ToString().Trim();//服务器文件地址     /Upload/file/20161004121157_286.docx                      
 
-                        //uploadPath + newName;
-                        if (!File.Exists(uploadPath))
+                        string fileid = context.Request["curfileid"].ToString().Trim();
+                        string filedir = context.Request["curfiledir"].ToString().Trim();
+                       
+                        string sourceFileName = context.Server.MapPath(serverfile); //原始文件名称
+                        string tempF = serverfile;
+
+                        if (!Directory.Exists(uploadPath))
                         {
-                            if (!Directory.Exists(uploadPath))
+                            Directory.CreateDirectory(uploadPath);
+                        }
+
+                        bool hasBackups = false;
+                        string fullroutecopy = "";
+                        string filenamecopy = "";
+                        var mql1 = e3net.Mode.File_ImageSet.SelectAll().Where(e3net.Mode.File_ImageSet.Id.Equal(fileid));
+                        e3net.Mode.File_Image fmodel = new File_ImageBiz().GetEntity(mql1);
+                        if (fmodel != null)
+                        {
+                            hasBackups = Convert.ToBoolean(fmodel.HasBackups);
+                        }
+                        if (hasBackups==false)
+                        {
+                            tempF = "bak_" + serverfile.Replace(filedir, "");
+                            string destFileName = context.Server.MapPath(filedir) + tempF;//备份文件名称
+                            if (File.Exists(destFileName) == false)
                             {
-                                // Directory.CreateDirectory(uploadPath);
+                                File.Copy(sourceFileName, destFileName);
+                                fileFullName = destFileName;
                             }
-                            FileStream fs = new System.IO.FileStream(fileFullName, System.IO.FileMode.CreateNew, System.IO.FileAccess.Write);
-                            fs.Write(fileArray, 0, fileArray.Length);
-                            fs.Close();
+                            filenamecopy = tempF;
+                            fullroutecopy = filedir + tempF;
                         }
                         else
                         {
-                            FileStream fs = new System.IO.FileStream(uploadPath, System.IO.FileMode.Create, System.IO.FileAccess.Write);
-                            fs.Write(fileArray, 0, fileArray.Length);
-                            fs.Close();
+                            fileFullName = sourceFileName;
+                            fullroutecopy = fmodel.FullRouteCopy;
+                            filenamecopy = fmodel.FileNameCopy;
                         }
+                        File.WriteAllBytes(fileFullName, fileArray);                       
+                        string sql = string.Format("update File_Image set FileNameCopy='{1}',FullRouteCopy='{2}',UpdateTime=getdate(),HasBackups='true' Where Id='{0}'", fileid, filenamecopy, fullroutecopy);
+                        int f = new TF_LifeCommentsBiz().ExecuteSqlWithNonQuery(sql);
                         backURL = "true";
                     }
                 }

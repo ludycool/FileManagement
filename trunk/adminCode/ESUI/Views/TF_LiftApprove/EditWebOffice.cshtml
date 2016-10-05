@@ -92,11 +92,17 @@
                     cache: false,
                     error: function () { alert('Error $.ajax'); },
                     success: function (data) {
+                        $("#curfileList li").remove();
                         $.each(data, function (i, n) {
-                            $("#curfileList").append("<li><a href=\"#\" onclick=\"loadFileToEdit('" + this.Id + "','" + this.Route + "','" + this.FullRoute + "','" + this.Suffix + "')\">" + this.ShowName + "</a></li>");
+                            $("#curfileList").append("<li><a href=\"#\" onclick=\"loadFileToEdit('" + this.Id + "','" + this.Route + "','" + this.FullRouteCopy + "','" + this.Suffix + "')\">" + this.ShowName + "</a></li>");
                         });
                     }
                 });
+            }
+
+            function copyFile()
+            {
+
             }
 
             function loadFileToEdit(ID, dir, curfilepath, suffix) {
@@ -123,6 +129,7 @@
                     var _filedir = $("#currFileDir").val();
                     var _basefile = $("#currFile").val();
                     document.all.WebOffice1.HttpInit();	// 初始化Http引擎
+                    document.all.WebOffice1.HttpAddPostString("curfileid", _fileId);
                     document.all.WebOffice1.HttpAddPostString("sfile", _basefile);
                     document.all.WebOffice1.HttpAddPostString("action", "manager");
                     document.all.WebOffice1.HttpAddPostString("curfiledir", _filedir);
@@ -133,6 +140,7 @@
                         if (curTempFile != null || curTempFile != "") {
                             document.all.WebOffice1.DelLocalFile(curTempFile);//删除临时文件
                         }
+                        InitTreeData();//重新加载文件列表
                         alert("文件保存成功");
                     } else {
                         alert("文件保存失败")

@@ -145,15 +145,15 @@ namespace ESUI.Controllers.FileManagementDB
         }
 
         public JsonResult GetInfo(string ID)
-        {
+        {          
             var mql2 = TF_LifeCommentsSet.SelectAll().Where(TF_LifeCommentsSet.Id.Equal(ID));
-            TF_LifeComments Rmodel = OPBiz.GetEntity(mql2);
-            //  groupsBiz.Add(rol);
+            TF_LifeComments Rmodel = OPBiz.GetEntity(mql2);           
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
+
         public JsonResult GetLifeFiles(string id)
         {
-            var mql = File_ImageSet.SelectAll().Where(File_ImageSet.ToId.Equal(id));
+            var mql = File_ImageSet.SelectAll().Where(File_ImageSet.ToId.Equal(id));//.Where(File_ImageSet.FullRouteCopy.NotEqual(""));
             List<File_Image> list = new File_ImageBiz().GetOwnList(mql);
             return Json(list, JsonRequestBehavior.AllowGet);
         }
