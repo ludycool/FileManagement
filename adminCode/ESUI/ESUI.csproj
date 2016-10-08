@@ -45,6 +45,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocX">
+      <HintPath>..\e3net.tools\dll\DocX.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\e3net.tools\dll\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -299,6 +302,7 @@
     </Compile>
     <Compile Include="Models\NewExeclHelper.cs" />
     <Compile Include="Models\ViewModes.cs" />
+    <Compile Include="Models\WordHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
@@ -3452,7 +3456,6 @@
     <Content Include="Scripts\weboffic7\style.css" />
     <Content Include="Scripts\weboffic7\WebOffice.cab" />
     <Content Include="test.html" />
-    <Content Include="upload\file\20150319022047_psb.jpg" />
     <Content Include="Content\ueditor\net\config.json" />
     <Content Include="Content\ueditor\net\controller.ashx" />
     <Content Include="Content\ueditor\third-party\jquery-1.10.2.min.map" />
@@ -3567,11 +3570,13 @@
     <Content Include="Views\DynamicTable\InptuTemplateResult.cshtml" />
     <Content Include="Views\TF_LiftApprove\EditWebOffice.cshtml" />
     <Content Include="Views\TF_LiftApprove\Index.cshtml" />
+    <Content Include="tempword\干部人事档案材料转递单.docx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />
     <Folder Include="temp\" />
     <Folder Include="UploadFiles\" />
+    <Folder Include="upload\file\" />
     <Folder Include="upload\image\20150319\" />
   </ItemGroup>
   <ItemGroup>
