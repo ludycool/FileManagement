@@ -171,6 +171,7 @@
     <Compile Include="XMLEntityHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dll\DocX.dll" />
     <Content Include="dll\ICSharpCode.SharpZipLib.dll" />
     <Content Include="dll\log4net.dll" />
     <Content Include="dll\Newtonsoft.Json.dll" />
