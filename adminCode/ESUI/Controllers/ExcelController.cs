@@ -12,6 +12,8 @@ using ESUI.Models;
 using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using Zephyr.Core;
+using e3net.BLL;
+using e3net.Mode.FileManagementDB;
 
 namespace ESUI.Controllers
 {
@@ -31,6 +33,12 @@ namespace ESUI.Controllers
         // GET: /Excel/
         [Dependency]
         public CategoryTableBiz OPBiz { get; set; }
+
+
+        [Dependency]
+        public TF_PersonnelFile_Transmitting_InBiz tfpftBiz { get; set; }
+        [Dependency]
+        public TF_PersonnelFile_Transmitting_In_ItemBiz OPItemBiz { get; set; }
         public ActionResult Index()
         {
             return View();
@@ -127,6 +135,30 @@ namespace ESUI.Controllers
 
             // dt3.TableName = DTName; //设置DT的名字
         }
-    
+
+
+        [HttpPost]
+        public FileResult CommonExportWordIn(string id)
+        {
+            var mql2 = TF_PersonnelFile_Transmitting_InSet.SelectAll().Where(TF_PersonnelFile_Transmitting_InSet.Id.Equal(id));
+            TF_PersonnelFile_Transmitting_In Rmodel = tfpftBiz.GetEntity(mql2);
+
+            Dictionary<string, string> dir = new Dictionary<string, string>();
+            dir.Add("Series", Rmodel.Series);
+            dir.Add("Nos", Rmodel.Nos); dir.Add("Series2", Rmodel.Series);
+            dir.Add("Nos2", Rmodel.Nos);
+
+
+            var mql3 = TF_PersonnelFile_Transmitting_In_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_In_ItemSet.OwnerId.Equal(id));
+            var listItem = OPBiz.GetDictionaryList(mql3);
+        
+            string filename = Guid.NewGuid().ToString() + ".docx";
+            string loadfilename = Server.MapPath("~/tempword/干部人事档案材料转递单.docx");
+            WordHelper.ExportWord(listItem, dir, Server.MapPath("~/temp/" + filename), loadfilename, 2);
+            //            var ff = Exporter.Instance(Server.MapPath("~/temp/" + filename)).Download();
+            return File(Server.MapPath("~/temp/" + filename), "application/ms-word", string.Format("{0}.docx", "干部人事档案材料转递单"));
+
+        }
+
     }
 }
