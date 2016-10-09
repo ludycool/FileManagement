@@ -3588,7 +3588,6 @@
     <ProjectReference Include="..\App.Core\App.Core.csproj">
       <Project>{f1f04103-2059-4c6a-955d-b44b1a87a824}</Project>
       <Name>App.Core</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
     <ProjectReference Include="..\e3net.BLL\e3net.BLL.csproj">
       <Project>{adeff34b-9e34-4c9a-8f97-dde8efe88e8c}</Project>
