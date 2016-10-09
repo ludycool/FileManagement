@@ -138,6 +138,36 @@
                 });
 
             }
+            function ExportWord() {
+                var rows = $("#dg").datagrid('getSelected');
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    // $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+
+                var ID = rows.Id;  //获取项
+
+                $("#exportToExcelForm").remove();
+                var form = $("<form>"); //定义一个form表单
+                form.attr("id", "exportToExcelForm");
+                form.attr("style", "display:none");
+                form.attr("target", "");
+                form.attr("method", "post");
+                form.attr("action", "/Excel/CommonExportWordIn");
+                var input1 = $("<input>");
+                input1.attr("type", "hidden");
+                input1.attr("name", "id");
+                input1.attr("value", ID);
+
+                $("body").append(form); //将表单放置在web中
+                form.append(input1);
+
+                form.submit(); //表单提交
+
+                $("#exportToExcelForm").remove();
+
+            }
             //刷新
             function RefreshOP() {
                 $("#dg").datagrid("reload");

@@ -39,6 +39,13 @@ namespace ESUI.Controllers
         public TF_PersonnelFile_Transmitting_InBiz tfpftBiz { get; set; }
         [Dependency]
         public TF_PersonnelFile_Transmitting_In_ItemBiz OPItemBiz { get; set; }
+
+        [Dependency]
+        public TF_PersonnelFile_Transmitting_OutBiz OPoutBiz { get; set; } 
+
+
+        [Dependency]
+        public TF_PersonnelFile_Transmitting_Out_ItemBiz OPItemoutBiz { get; set; }
         public ActionResult Index()
         {
             return View();
@@ -159,6 +166,28 @@ namespace ESUI.Controllers
             return File(Server.MapPath("~/temp/" + filename), "application/ms-word", string.Format("{0}.docx", "干部人事档案材料转递单"));
 
         }
+        [HttpPost]
+        public FileResult CommonExportWordout(string id)
+        {
+            var mql2 = TF_PersonnelFile_Transmitting_OutSet.SelectAll().Where(TF_PersonnelFile_Transmitting_OutSet.Id.Equal(id));
+            TF_PersonnelFile_Transmitting_Out Rmodel = OPoutBiz.GetEntity(mql2);
 
+            Dictionary<string, string> dir = new Dictionary<string, string>();
+            dir.Add("Series", Rmodel.Series);
+            dir.Add("Nos", Rmodel.Nos); dir.Add("Series2", Rmodel.Series);
+            dir.Add("Nos2", Rmodel.Nos);
+
+            var mql3 = TF_PersonnelFile_Transmitting_Out_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_Out_ItemSet.OwnerId.Equal(id));
+            var  listItem = OPItemoutBiz.GetDictionaryList(mql3);
+            //var mql3 = TF_PersonnelFile_Transmitting_In_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_In_ItemSet.OwnerId.Equal(id));
+            //var listItem = OPBiz.GetDictionaryList(mql3);
+
+            string filename = Guid.NewGuid().ToString() + ".docx";
+            string loadfilename = Server.MapPath("~/tempword/干部人事档案材料转递单.docx");
+            WordHelper.ExportWord(listItem, dir, Server.MapPath("~/temp/" + filename), loadfilename, 2);
+            //            var ff = Exporter.Instance(Server.MapPath("~/temp/" + filename)).Download();
+            return File(Server.MapPath("~/temp/" + filename), "application/ms-word", string.Format("{0}.docx", "干部人事档案材料转递单"));
+
+        }
     }
 }
