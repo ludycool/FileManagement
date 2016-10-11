@@ -76,7 +76,10 @@
                 $(".validatebox-tip").remove();//清除验证样式
                 DataBaseFunction.ClearForm("ff");
             }
-
+            function Import() {
+                window.parent.JumpP("导入", "TF_PersonnelFile/PersonnelFileInput", "icon-rgb");
+              //  addTab("导入", '/TF_PersonnelFile/PersonnelFileInput');
+            }
 
             //绑定修改显示详细信息的方法
             function EditInfo() {

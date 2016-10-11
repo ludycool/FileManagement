@@ -42,12 +42,12 @@
                                         var shuchu;
                                         switch (rowData.state) {
                                             case "GenerationSign":
-                                                shuchu = '<span>代签收<span>';
+                                                shuchu = '<span>待签收<span>';
                                                 break;
                                             case "HaveSign":
                                                 shuchu = '<span>已签收<span>';
                                                 break;
-                                            default: shuchu = '<span>代签收<span>'; break;
+                                            default: shuchu = '<span>待签收<span>'; break;
 
                                         }
                                         //                                rowData.state
@@ -61,7 +61,7 @@
                             { field: 'name', title: '姓名', width: 100 },
                             { field: 'ChineseName', title: '模板名称', width: 300 },
 //                     { field: 'MaterialName', title: '说明', width: 100 },
-                            { field: 'CreateDate', title: '录入时间', width: 100 },
+                            { field: 'CreateDate', title: '录入时间', width: 200 },
                             { field: 'Remark', title: '备注', width: 100 },
                             {
                                 field: 'ID',
@@ -115,8 +115,9 @@
             });
 
             function sign(id) {
-
-               $.ajax({
+     $.messager.confirm("签收信息", "您确认签收<font color='red' size='3'>" + "" + "</font>吗？", function(Delete) {
+                        if (Delete) {
+                           $.ajax({
                    url: BaseUrl + 'ChangeSign',
                     type: 'POST',
                     data: { IDSet: id },
@@ -130,6 +131,9 @@
                         }
                     }
                 });
+                        }
+                    });
+             
             }
 
 

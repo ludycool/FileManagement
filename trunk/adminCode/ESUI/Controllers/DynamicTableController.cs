@@ -1571,5 +1571,48 @@ string.Format("~/UploadFiles/{0}", filename);
             return Json(ffd);
 
         }
+
+
+        public JsonResult ReadExcelPaperFile(string filename, string CategoryTableID)
+        {
+            string virtualPath =
+string.Format("~/UploadFiles/{0}", filename);
+            string filePath = Server.MapPath(virtualPath);
+           // var liListColumnst = CCBiz.GetEntities(ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(CategoryTableID).And(ColumnChartsSet.IsEnable.Equal(true))).OrderByASC(ColumnChartsSet.SortNo));
+
+         //   var ddd = liListColumnst.FirstOrDefault(t => t.colspan > 1);
+            DataTable ffd = new DataTable();
+//                  { field: 'RealName', title: '姓名', width: 100, sortable: true },
+//              
+//              { field: 'Units', title: '单位', width: 100, sortable: true },
+//              { field: 'Duties', title: '职务', width: 100, sortable: true },
+//              { field: 'Summary', title: '摘要', width: 100, sortable: true },
+//              { field: 'location', title: '存放位置', width: 100, sortable: true },
+
+            DataColumn column = new DataColumn("RealName");
+            DataColumn column2 = new DataColumn("Units");
+            DataColumn column3 = new DataColumn("Duties");
+            DataColumn column4 = new DataColumn("Summary");
+            DataColumn column5 = new DataColumn("location");
+           
+
+            ffd.Columns.Add(column);
+            ffd.Columns.Add(column2);
+            ffd.Columns.Add(column3);
+            ffd.Columns.Add(column4);
+            ffd.Columns.Add(column5);
+          ///  if (ddd != null)
+          //  {
+             NewExeclHelper.ImportExceltoDt(filePath, 0, 0,ffd);
+         //   }
+         //   else
+         //   {
+         //       ffd = NewExeclHelper.ImportExceltoDt(filePath, liListColumnst, 2);
+       //     }
+            // ExcelHelper ff=new ExcelHelper();
+
+            return Json(ffd);
+
+        }
     }
 }
