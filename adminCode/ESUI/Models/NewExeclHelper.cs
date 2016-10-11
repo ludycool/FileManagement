@@ -513,7 +513,7 @@ namespace ESUI.Models
         /// <param name="SheetIndex">Index of the sheet.</param>
         /// <param name="HeaderRowIndex">列头所在行号，-1表示没有列头</param>
         /// <returns>DataTable.</returns>
-        public static DataTable ImportExceltoDt(string strFileName, int SheetIndex, int HeaderRowIndex)
+        public static DataTable ImportExceltoDt(string strFileName, int SheetIndex, int HeaderRowIndex,DataTable table )
         {
             HSSFWorkbook workbook;
             IWorkbook wb;
@@ -522,8 +522,8 @@ namespace ESUI.Models
                 wb = WorkbookFactory.Create(file);
             }
             ISheet isheet = wb.GetSheetAt(SheetIndex);
-            DataTable table = new DataTable();
-            table = ImportDt(isheet, HeaderRowIndex, true);
+//            DataTable table = new DataTable();
+            table = ImportDt(isheet, HeaderRowIndex, true, table);
             //ExcelFileStream.Close();
             workbook = null;
             isheet = null;
@@ -768,9 +768,171 @@ namespace ESUI.Models
         /// <param name="HeaderRowIndex">列头所在行号，-1表示没有列头</param>
         /// <param name="needHeader">if set to <c>true</c> [need header].</param>
         /// <returns>DataTable.</returns>
+        static DataTable ImportDt(ISheet sheet, int HeaderRowIndex, bool needHeader, DataTable table)
+        {
+//            DataTable table = new DataTable();
+            IRow headerRow;
+            int cellCount;
+            try
+            {
+                //if (HeaderRowIndex < 0 || !needHeader)
+                //{
+                //    headerRow = sheet.GetRow(0);
+                //    cellCount = headerRow.LastCellNum;
+
+                //    for (int i = headerRow.FirstCellNum; i <= cellCount; i++)
+                //    {
+                //        DataColumn column = new DataColumn(Convert.ToString(i));
+                //        table.Columns.Add(column);
+                //    }
+                //}
+                //else
+                //{
+                   headerRow = sheet.GetRow(HeaderRowIndex);
+                  cellCount = headerRow.LastCellNum;
+
+                //    for (int i = headerRow.FirstCellNum; i <= cellCount; i++)
+                //    {
+                //        if (headerRow.GetCell(i) == null)
+                //        {
+                //            if (table.Columns.IndexOf(Convert.ToString(i)) > 0)
+                //            {
+                //                DataColumn column = new DataColumn(Convert.ToString("重复列名" + i));
+                //                table.Columns.Add(column);
+                //            }
+                //            else
+                //            {
+                //                DataColumn column = new DataColumn(Convert.ToString(i));
+                //                table.Columns.Add(column);
+                //            }
+
+                //        }
+                //        else if (table.Columns.IndexOf(headerRow.GetCell(i).ToString()) > 0)
+                //        {
+                //            DataColumn column = new DataColumn(Convert.ToString("重复列名" + i));
+                //            table.Columns.Add(column);
+                //        }
+                //        else
+                //        {
+                //            DataColumn column = new DataColumn(headerRow.GetCell(i).ToString());
+                //            table.Columns.Add(column);
+                //        }
+                //    }
+                //}
+                int rowCount = sheet.LastRowNum;
+                for (int i = (HeaderRowIndex + 1); i <= sheet.LastRowNum; i++)
+                {
+                    try
+                    {
+                        IRow row;
+                        if (sheet.GetRow(i) == null)
+                        {
+                            row = sheet.CreateRow(i);
+                        }
+                        else
+                        {
+                            row = sheet.GetRow(i);
+                        }
+
+                        DataRow dataRow = table.NewRow();
+
+                        for (int j = row.FirstCellNum; j <= cellCount; j++)
+                        {
+                            try
+                            {
+                                if (row.GetCell(j) != null)
+                                {
+                                    switch (row.GetCell(j).CellType)
+                                    {
+                                        case CellType.String:
+                                            string str = row.GetCell(j).StringCellValue;
+                                            if (str != null && str.Length > 0)
+                                            {
+                                                dataRow[j] = str.ToString();
+                                            }
+                                            else
+                                            {
+                                                dataRow[j] = null;
+                                            }
+                                            break;
+                                        case CellType.Numeric:
+                                            if (DateUtil.IsCellDateFormatted(row.GetCell(j)))
+                                            {
+                                                dataRow[j] = DateTime.FromOADate(row.GetCell(j).NumericCellValue);
+                                            }
+                                            else
+                                            {
+                                                dataRow[j] = Convert.ToDouble(row.GetCell(j).NumericCellValue);
+                                            }
+                                            break;
+                                        case CellType.Boolean:
+                                            dataRow[j] = Convert.ToString(row.GetCell(j).BooleanCellValue);
+                                            break;
+                                        case CellType.Error:
+                                            dataRow[j] = ErrorEval.GetText(row.GetCell(j).ErrorCellValue);
+                                            break;
+                                        case CellType.Formula:
+                                            switch (row.GetCell(j).CachedFormulaResultType)
+                                            {
+                                                case CellType.String:
+                                                    string strFORMULA = row.GetCell(j).StringCellValue;
+                                                    if (strFORMULA != null && strFORMULA.Length > 0)
+                                                    {
+                                                        dataRow[j] = strFORMULA.ToString();
+                                                    }
+                                                    else
+                                                    {
+                                                        dataRow[j] = null;
+                                                    }
+                                                    break;
+                                                case CellType.Numeric:
+                                                    dataRow[j] = Convert.ToString(row.GetCell(j).NumericCellValue);
+                                                    break;
+                                                case CellType.Boolean:
+                                                    dataRow[j] = Convert.ToString(row.GetCell(j).BooleanCellValue);
+                                                    break;
+                                                case CellType.Error:
+                                                    dataRow[j] = ErrorEval.GetText(row.GetCell(j).ErrorCellValue);
+                                                    break;
+                                                default:
+                                                    dataRow[j] = "";
+                                                    break;
+                                            }
+                                            break;
+                                        default:
+                                            dataRow[j] = "";
+                                            break;
+                                    }
+                                }
+                            }
+                            catch (Exception exception)
+                            {
+                                wl.WriteLogs(exception.ToString());
+                            }
+                        }
+                        table.Rows.Add(dataRow);
+                    }
+                    catch (Exception exception)
+                    {
+                        wl.WriteLogs(exception.ToString());
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                wl.WriteLogs(exception.ToString());
+            }
+            return table;
+        } /// <summary>
+        /// 将制定sheet中的数据导出到datatable中
+        /// </summary>
+        /// <param name="sheet">需要导出的sheet</param>
+        /// <param name="HeaderRowIndex">列头所在行号，-1表示没有列头</param>
+        /// <param name="needHeader">if set to <c>true</c> [need header].</param>
+        /// <returns>DataTable.</returns>
         static DataTable ImportDt(ISheet sheet, int HeaderRowIndex, bool needHeader)
         {
-            DataTable table = new DataTable();
+         DataTable table = new DataTable();
             IRow headerRow;
             int cellCount;
             try
@@ -788,8 +950,8 @@ namespace ESUI.Models
                 }
                 else
                 {
-                    headerRow = sheet.GetRow(HeaderRowIndex);
-                    cellCount = headerRow.LastCellNum;
+                   headerRow = sheet.GetRow(HeaderRowIndex);
+                  cellCount = headerRow.LastCellNum;
 
                     for (int i = headerRow.FirstCellNum; i <= cellCount; i++)
                     {

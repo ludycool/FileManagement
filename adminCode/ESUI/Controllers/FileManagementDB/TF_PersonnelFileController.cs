@@ -404,6 +404,13 @@ namespace ESUI.Controllers
 
         #endregion
 
+        public ActionResult PersonnelFileInput()
+        {
+            ViewBag.RuteUrl = RuteUrl();
+            ViewBag.toolbar = toolbar();
+            return View();
+        }
+
 
     }
 }
