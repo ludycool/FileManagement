@@ -34,10 +34,6 @@
             var BaseUrl = '/TF_LifeComments/';
             function WebOffice1_NotifyToolBarClick(iIndex) {
 
-                //例子
-                
-
-
                 if (iIndex == 32777) {
                     var isOpened = document.all.WebOffice1.IsOpened();
                     if (isOpened == 0) {
@@ -70,8 +66,10 @@
             window.onload = function () {
                 InitTreeData();
                 document.all.WebOffice1.SetCustomToolBtn(1, "关闭文档");
-                document.all.WebOffice1.SetCustomToolBtn(4, "保存修改");
-
+                var states = GetUrlParam("states");
+                if (states == "-1") {
+                    document.all.WebOffice1.SetCustomToolBtn(4, "保存修改");
+                }
                 document.all.WebOffice1.HideMenuItem(0x01);
                 document.all.WebOffice1.HideMenuItem(0x02);
                 document.all.WebOffice1.HideMenuItem(0x03);
@@ -89,7 +87,7 @@
                 }
             }
             function InitTreeData() {
-                var ID =GetUrlParam('id');
+                var ID = GetUrlParam('id');
                 $.ajax({
                     url: BaseUrl + 'GetLifeFiles',
                     type: 'GET',
@@ -111,7 +109,7 @@
                 $("#currFileDir").val(dir);
                 $("#currFileID").val(ID);
                 $("#currFile").val(curfilepath);
-              
+
                 document.all.WebOffice1.HideMenuItem(0x04); //隐藏保存
                 document.all.WebOffice1.LoadOriginalFile(curfilepath, suffix);
                 document.all.WebOffice1.AcceptAllRevisions();
@@ -131,7 +129,7 @@
                     document.all.WebOffice1.HttpAddPostString("sfile", _basefile);
                     document.all.WebOffice1.HttpAddPostString("action", "user");
                     document.all.WebOffice1.HttpAddPostString("curfiledir", _filedir);
-                    document.all.WebOffice1.HttpAddPostCurrFile("curfile", _fileId);      
+                    document.all.WebOffice1.HttpAddPostCurrFile("curfile", _fileId);
                     returnValue = document.all.WebOffice1.HttpPost("/httpHandle/WebOfficeHandler.ashx");
                     if ("true" == returnValue) {
                         var curTempFile = document.all.WebOffice1.GetTempFilePath();

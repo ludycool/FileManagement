@@ -38,7 +38,7 @@ namespace ESUI.Controllers.FileManagementDB
             //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
 
-            Where += " and (isDeleted=0) and States>-1";
+            Where += " and (isDeleted=0) and States<>-1";
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
@@ -68,14 +68,14 @@ namespace ESUI.Controllers.FileManagementDB
             {
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
-                ReSultMode.Msg = "提交审核成功！";
+                ReSultMode.Msg = "审核通过成功！";
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
             {
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
-                ReSultMode.Msg = "提交审核失败！";
+                ReSultMode.Msg = "审核通过失败！";
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
@@ -145,9 +145,9 @@ namespace ESUI.Controllers.FileManagementDB
         }
 
         public JsonResult GetInfo(string ID)
-        {          
+        {
             var mql2 = TF_LifeCommentsSet.SelectAll().Where(TF_LifeCommentsSet.Id.Equal(ID));
-            TF_LifeComments Rmodel = OPBiz.GetEntity(mql2);           
+            TF_LifeComments Rmodel = OPBiz.GetEntity(mql2);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
 
