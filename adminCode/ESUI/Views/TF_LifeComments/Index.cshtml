@@ -237,8 +237,7 @@
                             data: { ID: ID, state: "0" },
                             cache: false,
                             error: function () { alert('Error $.ajax'); },
-                            success: function (data) {
-                                alert(data["Msg"]);
+                            success: function (data) {                               
                                 $.messager.alert("友情提示", data["Msg"], "info");
                             }
                         });

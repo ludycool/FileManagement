@@ -83,7 +83,10 @@
             window.onload = function () {
                 InitTreeData();
                 document.all.WebOffice1.SetCustomToolBtn(1, "关闭文档");
-                document.all.WebOffice1.SetCustomToolBtn(4, "保存修改");
+                var states = GetUrlParam("states");
+                if (states != "2") {
+                    document.all.WebOffice1.SetCustomToolBtn(4, "保存修改");
+                }
 
                 document.all.WebOffice1.HideMenuItem(0x01);
                 document.all.WebOffice1.HideMenuItem(0x02);
