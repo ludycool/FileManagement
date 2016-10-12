@@ -16,7 +16,7 @@
         <script type="text/javascript">
             @Html.Raw(ViewBag.RuteUrl)
          @Html.Raw(ViewBag.toolbar)
-
+            //var BaseUrl = "/TF_LifeComments/";
             jQuery(document).ready(function () {
                 DataGridSet();
                 $('#States').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
@@ -142,7 +142,7 @@
                     }
                 });
             }
-
+            //在线编辑word
             function EditDoc() {
                 var rows = $("#dg").datagrid('getSelected');
                 //首先取出来值判断只能选择一个
@@ -151,10 +151,11 @@
                     return;
                 }
                 var aprovalstatus = rows.States;
+                var url = "TF_LifeComments/LifeWebOfficeDoc?id=" + rows.Id + "&states=" + aprovalstatus;
                 if (aprovalstatus != "-1") {
                     $.messager.confirm("友情提示", "文件已提交，只能查看。确定要打开吗？", function (r) {
                         if (r) {
-                            window.parent.JumpP("生平管理--在线编辑", "TF_LifeComments/LifeWebOfficeDoc?id=" + rows.Id + "&states=" + aprovalstatus, "icon-rgb");
+                            window.open(url, "_blank");
                         }
                         else {
                             return;
@@ -162,7 +163,7 @@
                     });
                 }
                 else {
-                    window.parent.JumpP("生平管理--在线编辑", "TF_LifeComments/LifeWebOfficeDoc?id=" + rows.Id + "&states=" + aprovalstatus, "icon-rgb");
+                    window.open(url, "_blank");
                 }
             }
 
@@ -237,8 +238,8 @@
                             data: { ID: ID, state: "0" },
                             cache: false,
                             error: function () { alert('Error $.ajax'); },
-                            success: function (data) {                               
-                                $.messager.alert("友情提示", data["Msg"], "info");
+                            success: function (data) {
+                                $.messager.alert("友情提示", data["Msg"], "info");                               
                             }
                         });
                     }
