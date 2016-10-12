@@ -173,11 +173,12 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                var aprovalstatus = rows.States;                
+                var aprovalstatus = rows.States;
+                var url = "TF_LiftApprove/EditWebOffice?id=" + rows.Id + "&states=" + aprovalstatus;
                 if (aprovalstatus == "2") {
                     $.messager.confirm("友情提示", "文件已审核通过，只能查看。确定要打开吗？", function (r) {
                         if (r) {
-                            window.parent.JumpP("生平审核--在线编辑", "TF_LiftApprove/EditWebOffice?id=" + rows.Id + "&states=" + aprovalstatus, "icon-rgb");
+                            window.open(url, "_blank");
                         }
                         else {
                             return;
@@ -193,9 +194,9 @@
                         cache: false,
                         error: function () { alert('Error $.ajax'); },
                         success: function (data) {
-                            window.parent.JumpP("生平审核--在线编辑", "TF_LiftApprove/EditWebOffice?id=" + rows.Id + "&states=" + aprovalstatus, "icon-rgb");
+                            window.open(url, "_blank");
                         }
-                    });                    
+                    });
                 }
             }
 
@@ -222,7 +223,7 @@
                             cache: false,
                             error: function () { alert('Error $.ajax'); },
                             success: function (data) {
-                                alert(data["Msg"]);
+                                $.messager.alert("友情提示", data["Msg"], "info");
                             }
                         });
                     }

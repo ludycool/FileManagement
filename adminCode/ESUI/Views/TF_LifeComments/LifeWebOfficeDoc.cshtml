@@ -31,9 +31,18 @@
         <script type="text/javascript">
             @Html.Raw(ViewBag.RuteUrl)
          @Html.Raw(ViewBag.toolbar)
-            var BaseUrl = '/TF_LifeComments/';
-            function WebOffice1_NotifyToolBarClick(iIndex) {
+            //获取游览器上面的参数
+            function GetUrlParam(name) {
 
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) { return unescape(r[2]); } else {
+                    return null;
+                }
+            }
+
+            //var BaseUrl = '/TF_LifeComments/';
+            function WebOffice1_NotifyToolBarClick(iIndex) {
                 if (iIndex == 32777) {
                     var isOpened = document.all.WebOffice1.IsOpened();
                     if (isOpened == 0) {
@@ -42,7 +51,8 @@
                     }
                     else {
                         var isSaved = document.all.WebOffice1.IsSaved();
-                        if (isSaved == 0) {
+                        var states = GetUrlParam("states");
+                        if (isSaved == 0 && states == "-1") {
                             if (confirm("文件已被修改，是否保存？")) {
                                 saveUpload();
                                 window_onunload();
@@ -61,15 +71,20 @@
                 }
             }
             function closeWord() {
+
                 document.all.WebOffice1.CloseDoc(2);
             }
             window.onload = function () {
-                InitTreeData();
+                InitFileData();
                 document.all.WebOffice1.SetCustomToolBtn(1, "关闭文档");
                 var states = GetUrlParam("states");
                 if (states == "-1") {
                     document.all.WebOffice1.SetCustomToolBtn(4, "保存修改");
                 }
+                else {
+                    document.all.WebOffice1.ProtectDoc(1, 2, "nnzzb");
+                }
+             
                 document.all.WebOffice1.HideMenuItem(0x01);
                 document.all.WebOffice1.HideMenuItem(0x02);
                 document.all.WebOffice1.HideMenuItem(0x03);
@@ -77,16 +92,8 @@
                 document.all.WebOffice1.HideMenuItem(0x10);
                 document.all.WebOffice1.AcceptAllRevisions();
             };
-            //获取游览器上面的参数
-            function GetUrlParam(name) {
 
-                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-                var r = window.location.search.substr(1).match(reg);
-                if (r != null) { return unescape(r[2]); } else {
-                    return null;
-                }
-            }
-            function InitTreeData() {
+            function InitFileData() {
                 var ID = GetUrlParam('id');
                 $.ajax({
                     url: BaseUrl + 'GetLifeFiles',
@@ -95,9 +102,11 @@
                     cache: false,
                     error: function () { alert('Error $.ajax'); },
                     success: function (data) {
-                        $.each(data, function (i, n) {
-                            $("#curfileList").append("<li><a href=\"#\" onclick=\"loadFileToEdit('" + this.Id + "','" + this.Route + "','" + this.FullRoute + "','" + this.Suffix + "')\">" + this.ShowName + "</a></li>");
-                        });
+                        // $.each(data, function (i, n) {data[0].Route
+                        loadFileToEdit(data[0].Id, data[0].Route, data[0].FullRoute, data[0].Suffix);
+                        document.title = "正在编辑：" + data[0].ShowName;
+                        // $("#curfileList").append("<li><a href=\"#\" onclick=\"loadFileToEdit('" + this.Id + "','" + this.Route + "','" + this.FullRoute + "','" + this.Suffix + "')\">" + this.ShowName + "</a></li>");
+                        // });
                     }
                 });
             }
@@ -109,9 +118,10 @@
                 $("#currFileDir").val(dir);
                 $("#currFileID").val(ID);
                 $("#currFile").val(curfilepath);
+                var path = "/.." + curfilepath;// location.protocol + "//" + window.location.host + curfilepath;
 
-                document.all.WebOffice1.HideMenuItem(0x04); //隐藏保存
-                document.all.WebOffice1.LoadOriginalFile(curfilepath, suffix);
+                document.all.WebOffice1.HideMenuItem(0x04);
+                document.all.WebOffice1.LoadOriginalFile(path, suffix);
                 document.all.WebOffice1.AcceptAllRevisions();
             }
             function saveUpload() {
@@ -125,12 +135,13 @@
                     var _fileId = $("#currFileID").val();
                     var _filedir = $("#currFileDir").val();
                     var _basefile = $("#currFile").val();
+
                     document.all.WebOffice1.HttpInit();	// 初始化Http引擎
                     document.all.WebOffice1.HttpAddPostString("sfile", _basefile);
                     document.all.WebOffice1.HttpAddPostString("action", "user");
                     document.all.WebOffice1.HttpAddPostString("curfiledir", _filedir);
                     document.all.WebOffice1.HttpAddPostCurrFile("curfile", _fileId);
-                    returnValue = document.all.WebOffice1.HttpPost("/httpHandle/WebOfficeHandler.ashx");
+                    returnValue = document.all.WebOffice1.HttpPost("../httpHandle/WebOfficeHandler.ashx");
                     if ("true" == returnValue) {
                         var curTempFile = document.all.WebOffice1.GetTempFilePath();
                         if (curTempFile != null || curTempFile != "") {
@@ -138,7 +149,7 @@
                         }
                         alert("文件保存成功");
                     } else {
-                        alert("文件保存失败")
+                        alert("文件保存失败");
                     }
                 }
             }
@@ -147,18 +158,18 @@
 </head>
 <body>
     <div class="easyui-layout" data-options="fit:true" style="margin:5px;">
-        <div region="west" split="true" title="文件列表" style="width:180px;">
-            <ul id="curfileList"></ul>
-        </div>
-        <div region="center" title="文件编辑区域" style="padding:5px;background:#eee;">
-            <object id="WebOffice1" style="height: 100%; width: 100%; top: 0px"
-                    classid="clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5"
-                    codebase="WebOffice.cab#Version=7,0,1,0">
-                <param name="ExtentX" value="6050" />
-                <param name="ExtentY" value="6050" />
-                <param name="_StockProps" value="0" />
-            </object>
-        </div>
+        @*<div region="west" split="true" title="文件列表" style="width:180px;">
+                <ul id="curfileList"></ul>
+            </div>
+            <div region="center" title="文件编辑区域" style="padding:5px;background:#eee;">*@
+        <object id="WebOffice1" style="height: 100%; width: 100%; top: 0px"
+                classid="clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5"
+                codebase="WebOffice.cab#Version=7,0,1,0">
+            <param name="ExtentX" value="6050" />
+            <param name="ExtentY" value="6050" />
+            <param name="_StockProps" value="0" />
+        </object>
+        @*</div>*@
     </div>
     <div>
         <input id="currFile" type="hidden" />
