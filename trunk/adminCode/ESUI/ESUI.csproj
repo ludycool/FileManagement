@@ -3490,6 +3490,7 @@
     <Content Include="httpHandle\WebOfficeHandler.ashx" />
     <Content Include="MOON_WORK_DIRECTORY_PATH\MoonLogs\2015-12-10.log" />
     <Content Include="MOON_WORK_DIRECTORY_PATH\sqls\sql.config" />
+    <None Include="Properties\PublishProfiles\ddd.pubxml" />
     <None Include="Properties\PublishProfiles\ESUIConfig.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
