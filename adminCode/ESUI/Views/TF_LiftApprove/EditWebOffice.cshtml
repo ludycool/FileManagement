@@ -19,14 +19,12 @@
                 margin-left: 0px;
             }
         </style>
-        <script src="~/Scripts/weboffic7/main.js"></script>
+        @*<script src="~/Scripts/weboffic7/main.js"></script>*@
         <script language=javascript for=WebOffice1 event="NotifyCtrlReady">
             <!--
             WebOffice1_NotifyCtrlReady();
             //-->
         </script>
-
-
         <script language="javascript" event="NotifyToolBarClick(iIndex)" for="WebOffice1">
             <!--
                 WebOffice1_NotifyToolBarClick(iIndex);
@@ -37,8 +35,31 @@
             @Html.Raw(ViewBag.RuteUrl)
          @Html.Raw(ViewBag.toolbar)
             var BaseUrl = '/TF_LiftApprove/';
+            //获取游览器上面的参数
+            function GetUrlParam(name) {
+
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) { return unescape(r[2]); } else {
+                    return null;
+                }
+            }
+
             function WebOffice1_NotifyCtrlReady() {
-                document.all.WebOffice1.SetTrackRevisions(1);
+                document.all.WebOffice1.SetCustomToolBtn(1, "关闭文档");
+                var states = GetUrlParam("states");
+                if (states != "2") {
+                    document.all.WebOffice1.SetCustomToolBtn(4, "保存修改");
+                }
+                else {
+                    document.all.WebOffice1.ProtectDoc(1, 2, "nnzzb");
+                }
+                document.all.WebOffice1.HideMenuItem(0x01);
+                document.all.WebOffice1.HideMenuItem(0x02);
+                document.all.WebOffice1.HideMenuItem(0x03);
+                document.all.WebOffice1.HideMenuItem(0x04);
+                document.all.WebOffice1.HideMenuItem(0x10);
+                document.all.WebOffice1.AcceptAllRevisions();
             }
 
             function WebOffice1_NotifyToolBarClick(iIndex) {
@@ -54,14 +75,14 @@
                         if (isSaved == 0 && states != "2") {
                             if (confirm("文件已被修改，是否保存？")) {
                                 saveUpload();
-                                window_onunload();
+                                closeWord();
                             }
                             else {
-                                window_onunload();
+                                closeWord();
                             }
                         }
                         else {
-                            window_onunload();
+                            closeWord();
                         }
                     }
                 }
@@ -69,35 +90,17 @@
                     saveUpload();
                 }
             }
-            //获取游览器上面的参数
-            function GetUrlParam(name) {
 
-                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-                var r = window.location.search.substr(1).match(reg);
-                if (r != null) { return unescape(r[2]); } else {
-                    return null;
-                }
-            }
+
             function closeWord() {
-                document.all.WebOffice1.CloseDoc(2);
+                try {
+                    var webObj = document.getElementById("WebOffice1");
+                    webObj.Close();
+                } catch (e) { }
             }
             window.onload = function () {
                 InitTreeData();
-                document.all.WebOffice1.SetCustomToolBtn(1, "关闭文档");
-                var states = GetUrlParam("states");
-                if (states != "2") {
-                    document.all.WebOffice1.SetCustomToolBtn(4, "保存修改");
-                }
-                else
-                {
-                    document.all.WebOffice1.ProtectDoc(1, 2,"nnzzb");
-                }
-                document.all.WebOffice1.HideMenuItem(0x01);
-                document.all.WebOffice1.HideMenuItem(0x02);
-                document.all.WebOffice1.HideMenuItem(0x03);
-                document.all.WebOffice1.HideMenuItem(0x04);
-                document.all.WebOffice1.HideMenuItem(0x10);
-                document.all.WebOffice1.AcceptAllRevisions();
+
             };
 
             function InitTreeData() {
@@ -168,14 +171,14 @@
 </head>
 <body>
     <div class="easyui-layout" data-options="fit:true" style="margin:5px;">
-
-        <object id="WebOffice1" style="height: 100%; width: 100%; top: 0px"
-                classid="clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5"
-                codebase="WebOffice.cab#Version=7,0,1,0">
-            <param name="ExtentX" value="6050" />
-            <param name="ExtentY" value="6050" />
-            <param name="_StockProps" value="0" />
-        </object>
+        <script src="~/Scripts/weboffic7/LoadWebOffice.js"></script>
+        @*<object id="WebOffice1" style="height: 100%; width: 100%; top: 0px"
+                    classid="clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5"
+                    codebase="WebOffice.cab#Version=7,0,1,0">
+                <param name="ExtentX" value="6050" />
+                <param name="ExtentY" value="6050" />
+                <param name="_StockProps" value="0" />
+            </object>*@
     </div>
     <div>
         <input id="currFile" type="hidden" />
