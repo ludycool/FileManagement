@@ -3455,6 +3455,7 @@
     <Content Include="Scripts\weboffic7\main.js" />
     <Content Include="Scripts\weboffic7\style.css" />
     <Content Include="Scripts\weboffic7\WebOffice.cab" />
+    <Content Include="tempword\模板.xlsx" />
     <Content Include="test.html" />
     <Content Include="Content\ueditor\net\config.json" />
     <Content Include="Content\ueditor\net\controller.ashx" />
@@ -3507,6 +3508,7 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Views\TF_PersonnelFile\PersonnelFileInput.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -3572,8 +3574,6 @@
     <Content Include="Views\TF_LiftApprove\EditWebOffice.cshtml" />
     <Content Include="Views\TF_LiftApprove\Index.cshtml" />
     <Content Include="tempword\干部人事档案材料转递单.docx" />
-    <Content Include="Views\TF_PersonnelFile\PersonnelFileInput.cshtml" />
-    <Content Include="tempword\模板.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />
