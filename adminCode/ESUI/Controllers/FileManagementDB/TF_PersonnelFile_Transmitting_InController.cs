@@ -32,6 +32,7 @@ namespace ESUI.Controllers
         {
             ViewBag.RuteUrl = RuteUrl();
             ViewBag.toolbar = toolbar();
+            ViewBag.Userdates = UserData.UserTypes;
             return View();
         }
         /// <summary>
@@ -62,7 +63,15 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = "v_TF_PersonnelFile_Transmitting_In";
-            pc.sys_Where = Where;
+            if (UserData.UserTypes == 1)
+            {
+                pc.sys_Where = Where ;
+            }
+            else
+            {
+                pc.sys_Where = Where + " and   CreateMan='" + UserData.UserName + "'";
+            }
+      
             pc.sys_Order = " " + sortField + " " + sortOrder;
             DataSet ds = OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
@@ -200,7 +209,32 @@ namespace ESUI.Controllers
             }
         }
 
+        public JsonResult ChangeSign(string IDSet)
+        {
+            //int f
+            //=0;
 
+            var catmodle = OPBiz.GetEntity(TF_PersonnelFile_Transmitting_InSet.SelectAll().Where(TF_PersonnelFile_Transmitting_InSet.Id.Equal(IDSet)));
+            catmodle.States = 2;
+            catmodle.WhereExpression = TF_PersonnelFile_Transmitting_InSet.Id.Equal(IDSet);
+
+            var f = OPBiz.Update(catmodle);
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            if (f > 0)
+            {
+                ReSultMode.Code = 11;
+                ReSultMode.Data = f.ToString();
+                ReSultMode.Msg = "转入成功！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                ReSultMode.Code = -13;
+                ReSultMode.Data = "0";
+                ReSultMode.Msg = "转入失败！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         /// <summary>
         /// 单位可用
