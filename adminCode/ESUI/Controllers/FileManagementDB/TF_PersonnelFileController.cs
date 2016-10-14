@@ -14,6 +14,7 @@ using e3net.Mode.FileManagementDB;
 using e3net.Mode.HttpView;
 using e3net.BLL;
 using System.Data;
+using TZHSWEET.Common;
 
 namespace ESUI.Controllers
 {
@@ -410,7 +411,38 @@ namespace ESUI.Controllers
             ViewBag.toolbar = toolbar();
             return View();
         }
+        public JsonResult inpormt(string categoryTable)
+        {
+            List<TF_PersonnelFile> listItem = JsonHelper.JSONToList<TF_PersonnelFile>(categoryTable);
+            //            int f = OPBiz.DelForSetDelete("Id", IDSet);
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            foreach (TF_PersonnelFile file in listItem)
+            {
+                file.Id = Guid.NewGuid();
+                file.CreateMan = UserData.UserName;
+                file.CreateTime = DateTime.Now;
+                file.isValid = true;
+                file.isDeleted = false;
+                try
+                {
+                    OPBiz.Add(file);
 
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = file.Id.ToString();
+                    ReSultMode.Msg = "添加成功";
+                }
+                catch (Exception e)
+                {
+
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data = e.ToString();
+                    ReSultMode.Msg = "添加失败";
+                    break;
+                }
+            }
+            return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+
+        }
 
     }
 }
