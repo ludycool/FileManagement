@@ -45,19 +45,7 @@
             var BaseUrl = '/TF_LifeComments/';
 
             function WebOffice1_NotifyCtrlReady() {
-                document.all.WebOffice1.SetCustomToolBtn(1, "关闭文档");
-                var states = GetUrlParam("states");
-                if (states == "-1") {
-                    document.all.WebOffice1.SetCustomToolBtn(4, "保存修改");
-                }
-                else {
-                    document.all.WebOffice1.ProtectDoc(1, 2, "nnzzb");
-                }
-                document.all.WebOffice1.HideMenuItem(0x01);
-                document.all.WebOffice1.HideMenuItem(0x02);
-                document.all.WebOffice1.HideMenuItem(0x03);
-                document.all.WebOffice1.HideMenuItem(0x04);
-                document.all.WebOffice1.HideMenuItem(0x10);
+                
                 document.all.WebOffice1.AcceptAllRevisions();
             }
             function WebOffice1_NotifyToolBarClick(iIndex) {
@@ -95,6 +83,19 @@
                 } catch (e) { }
             }
             window.onload = function () {
+				document.all.WebOffice1.SetCustomToolBtn(1, "关闭文档");
+                var states = GetUrlParam("states");
+                if (states == "-1") {
+                    document.all.WebOffice1.SetCustomToolBtn(4, "保存修改");
+                }
+                else {
+                    document.all.WebOffice1.ProtectDoc(1, 2, "nnzzb");
+                }
+                document.all.WebOffice1.HideMenuItem(0x01);
+                document.all.WebOffice1.HideMenuItem(0x02);
+                document.all.WebOffice1.HideMenuItem(0x03);
+                document.all.WebOffice1.HideMenuItem(0x04);
+                document.all.WebOffice1.HideMenuItem(0x10);
                 InitFileData();
 
             };
