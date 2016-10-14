@@ -36,9 +36,10 @@
                 DataGridSet();
             })
             function DataGridSet() {
-                $('#dg').datagrid({
-                    url: BaseUrl + 'Search',
-                    columns: [[
+                var dd = '@ViewBag.Userdates';
+                var f;
+                if (dd=='1') {
+                    f = [[
                         { field: 'ck', checkbox: true },
            { field: 'TransmittingMan', title: '转递人', width: 100, sortable: true },
               { field: 'Series', title: '字', width: 100, sortable: true },
@@ -48,8 +49,47 @@
               { field: 'MaterialCount', title: '材料（份）', width: 100, sortable: true },
               { field: 'CreateMan', title: '创建人', width: 100, sortable: true },
               { field: 'StatesName', title: '状态', width: 100, sortable: true },
-              { field: 'TransmittingTime', title: '转递时间', width: 100, sortable: true }
-                    ]],
+              { field: 'TransmittingTime', title: '转递时间', width: 200, sortable: true },
+
+
+                    {
+                        field: 'Id', title: '操作', width: 50,
+
+                        //添加超级链 
+
+                        formatter: function (value, rowData, rowIndex) {
+
+
+
+                            var d = '<a href="#" onclick="sign(\'' + rowData.Id + '\')">确认转入</a>  ';
+                            return d;
+
+
+                        }
+                    }
+
+                    ]];
+                }
+                else {
+                    f = [[
+                      { field: 'ck', checkbox: true },
+         { field: 'TransmittingMan', title: '转递人', width: 100, sortable: true },
+            { field: 'Series', title: '字', width: 100, sortable: true },
+            { field: 'Nos', title: '号', width: 100, sortable: true },
+            { field: 'OriginalCount', title: '正本（卷）', width: 100, sortable: true },
+            { field: 'DuplicateCount', title: '副本（卷）', width: 100, sortable: true },
+            { field: 'MaterialCount', title: '材料（份）', width: 100, sortable: true },
+            { field: 'CreateMan', title: '创建人', width: 100, sortable: true },
+            { field: 'StatesName', title: '状态', width: 100, sortable: true },
+            { field: 'TransmittingTime', title: '转递时间', width: 200, sortable: true },
+
+             
+
+                    ]];
+                }
+                $('#dg').datagrid({
+                    url: BaseUrl + 'Search',
+                    columns: f,
                     iconCls: 'icon-save',
                     title: '转入记录',
                     nowrap: true,
@@ -64,6 +104,26 @@
                     sortName: 'CreateTime',
                     sortOrder: 'desc',
                     toolbar: toolbars
+                });
+            }
+            function sign(id) {
+                $.messager.confirm("签收信息", "您确认转入<font color='red' size='3'>" + "" + "</font>吗？", function (Delete) {
+                    if (Delete) {
+                        $.ajax({
+                            url: BaseUrl + 'ChangeSign',
+                            type: 'POST',
+                            data: { IDSet: id },
+                            cache: false,
+                            error: function () { alert('Error loading PHP document'); },
+                            success: function (data) {
+
+                                alerts(data.Msg, 2);
+                                if (data.Code > 0) {
+                                    $("#dg").datagrid("reload");
+                                }
+                            }
+                        });
+                    }
                 });
             }
             //easyUI 弹出添加的对话框
