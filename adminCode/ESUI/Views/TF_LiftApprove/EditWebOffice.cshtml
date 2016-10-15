@@ -37,7 +37,6 @@
             var BaseUrl = '/TF_LiftApprove/';
             //获取游览器上面的参数
             function GetUrlParam(name) {
-
                 var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
                 var r = window.location.search.substr(1).match(reg);
                 if (r != null) { return unescape(r[2]); } else {
@@ -45,9 +44,8 @@
                 }
             }
 
-            function WebOffice1_NotifyCtrlReady() {
-               
-                document.all.WebOffice1.AcceptAllRevisions();
+            function WebOffice1_NotifyCtrlReady() {               
+               // document.all.WebOffice1.AcceptAllRevisions();
             }
 
             function WebOffice1_NotifyToolBarClick(iIndex) {
@@ -58,7 +56,7 @@
                         return false;
                     }
                     else {
-                        var isSaved = document.all.WebOffice1.IsSaved();
+                        var isSaved = document.all.WebOffice1.IsSaved();                       
                         var states = GetUrlParam("states");
                         if (isSaved == 0 && states != "2") {
                             if (confirm("文件已被修改，是否保存？")) {
@@ -78,14 +76,17 @@
                     saveUpload();
                 }
             }
-
-
+            
             function closeWord() {
-                try {
-                    var webObj = document.getElementById("WebOffice1");
-                    webObj.Close();
-                } catch (e) { }
+                var isOpened = document.all.WebOffice1.IsOpened();
+                if (isOpened != 0) {
+                    try {
+                        var webObj = document.all.WebOffice1.Close();
+                    } catch (e) { }
+                }
+                window.close();
             }
+
             window.onload = function () {
 			 document.all.WebOffice1.SetCustomToolBtn(1, "关闭文档");
                 var states = GetUrlParam("states");
@@ -112,12 +113,8 @@
                     cache: false,
                     error: function () { alert('Error $.ajax'); },
                     success: function (data) {
-                        loadFileToEdit(data[0].Id, data[0].Route, data[0].FullRoute, data[0].Suffix);
-                        document.title = "正在编辑：" + data[0].ShowName;
-                        //$("#curfileList li").remove();
-                        //$.each(data, function (i, n) {
-                        //    $("#curfileList").append("<li><a href=\"#\" onclick=\"loadFileToEdit('" + this.Id + "','" + this.Route + "','" + this.FullRouteCopy + "','" + this.Suffix + "')\">" + this.ShowName + "</a></li>");
-                        //});
+                        loadFileToEdit(data[0].Id, data[0].Route, data[0].FullRouteCopy, data[0].Suffix);
+                        document.title = "正在编辑：" + data[0].ShowName;                      
                     }
                 });
             }
@@ -129,11 +126,9 @@
                 $("#currFileDir").val(dir);
                 $("#currFileID").val(ID);
                 $("#currFile").val(curfilepath);
-                var path = "/.." + curfilepath; //相对地址
-                //location.protocol + "//" + window.location.host + curfilepath;//绝对地址
+                var path = "/.." + curfilepath;
                 document.all.WebOffice1.HideMenuItem(0x04); //隐藏保存
                 document.all.WebOffice1.LoadOriginalFile(path, suffix);
-                document.all.WebOffice1.AcceptAllRevisions();
             }
             function saveUpload() {
                 var returnValue;// 保存页面的返回值
@@ -150,7 +145,7 @@
                     document.all.WebOffice1.HttpInit();	// 初始化Http引擎
                     document.all.WebOffice1.HttpAddPostString("curfileid", _fileId);
                     document.all.WebOffice1.HttpAddPostString("sfile", _basefile);
-                    document.all.WebOffice1.HttpAddPostString("action", "manager");
+                    document.all.WebOffice1.HttpAddPostString("action", "savewebword");
                     document.all.WebOffice1.HttpAddPostString("curfiledir", _filedir);
                     document.all.WebOffice1.HttpAddPostCurrFile("curfile", _fileId);
                     returnValue = document.all.WebOffice1.HttpPost("../httpHandle/WebOfficeHandler.ashx");
@@ -171,14 +166,7 @@
 </head>
 <body>
     <div class="easyui-layout" data-options="fit:true" style="margin:5px;">
-        <script src="~/Scripts/weboffic7/LoadWebOffice.js"></script>
-        @*<object id="WebOffice1" style="height: 100%; width: 100%; top: 0px"
-                    classid="clsid:E77E049B-23FC-4DB8-B756-60529A35FAD5"
-                    codebase="WebOffice.cab#Version=7,0,1,0">
-                <param name="ExtentX" value="6050" />
-                <param name="ExtentY" value="6050" />
-                <param name="_StockProps" value="0" />
-            </object>*@
+        <script src="~/Scripts/weboffic7/LoadWebOffice.js"></script>       
     </div>
     <div>
         <input id="currFile" type="hidden" />

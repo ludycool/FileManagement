@@ -200,6 +200,18 @@
                 }
             }
 
+            function viewUserFile() {
+                var rows = $("#dg").datagrid('getSelected');
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+                var aprovalstatus = rows.States;
+                var url = "TF_LifeComments/LifeWebOfficeDoc?id=" + rows.Id + "&states=" + aprovalstatus;
+                window.open(url, "_blank");
+            }
+
             //提交审核
             function passApprove() {
                 var rows = $("#dg").datagrid('getSelected');
@@ -224,6 +236,7 @@
                             error: function () { alert('Error $.ajax'); },
                             success: function (data) {
                                 $.messager.alert("友情提示", data["Msg"], "info");
+                                DataGridSet();
                             }
                         });
                     }
