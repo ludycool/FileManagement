@@ -207,6 +207,34 @@
             });
 
         }
+        function BindDepertment() {
+
+            $('#tbDepartMent').datagrid({
+                url: '/httpHandle/DictionaryHandler.ashx?action=GetDepartment',
+                columns: [[
+                    { field: 'TName', title: '名称', width: 140 }
+                ]],
+                nowrap: true,
+                singleSelect: true,
+                striped: true,
+                collapsible: true,
+                pageSize: 1000,
+                fit: true,
+                rownumbers: true,
+                onClickRow: function () {
+
+                    DeParmentId = $("#tbDepartMent").datagrid("getSelections")[0].Id;  //获取到了用按钮选择的ID
+
+                    $('#dg').datagrid('load', {
+                        page: 1,
+                        DepartmentId: DeParmentId
+                    });
+                }
+            });
+            $('#DepartmentId').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetDepartment');  // 使用新的URL重新载入列表数据
+
+
+        }
         function ShowCPwd() {
             //弹出层
             $('#DivEditor').dialog({
@@ -223,7 +251,37 @@
             });
             $("#ff").form("clear");
         }
+        //实现按钮的编辑，包括增查改
+        function EditInfo() {
 
+            //判断按钮的信息是否通过验证
+            var validate = $("#ff").form('validate');
+            if (validate == false) {
+                return false;
+            }
+            //获取需要传递的参数传递给前台 push
+            var postData = $("#ff").serializeArray();
+            //var DeparId =
+            //{
+            //    'name': "DepartmentId",        //属性名用引号括起来，属性间由逗号隔开
+            //    'value': $('#DepartmentId').combotree('getValue')
+            //};
+            //postData.push(DeparId);
+
+
+            //发送异步请求到后台保存按钮数据
+            $.post(BaseUrl + 'EditInfo', postData, function (data) {
+                alerts(data.Msg, 2);
+                if (data.Code > 0) {
+                    $('#DivEditor').dialog('close');
+                    $(".validatebox-tip").remove();
+                    // $("#DivEditor").dialog("close");
+//                    $("#dg").datagrid("reload");
+//                    $("#ff").form("clear");
+                }
+            });
+
+        }
     </script>
     <style>
         #css3menu li {
@@ -279,7 +337,7 @@
                 <script>
                     jQuery(document).ready(function () {
 
-
+                        BindDepertment();
                         $.ajax({
                             url: '/httpHandle/SystemSetHandler.ashx?action=GetUser',
                             type: 'GET',
@@ -288,8 +346,8 @@
                             error: function () { alert('Error $.ajax'); },
                             success: function (data) {
                                 var result = eval('(' + data + ')');
-                                if (result.UserTypes != 1) {
-                                    $("#DivEditor").dialog('open').dialog('setTitle', '请完善个人信息').window('resize', { top: 200 });
+                                if (result.UserTypes != 1 && result.Modify=='false') {
+                                    $("#DivEditor2").dialog('open').dialog('setTitle', '请完善个人信息').window('resize', { top: 200 });
                                 }
                             }
                         });
@@ -298,7 +356,7 @@
                 </script>
 
                 <!------------------------弹出信息的弹出层---------------------------------->
-                <div id="DivEditor" class="easyui-dialog" style="width: 600px;"
+                <div id="DivEditor2" class="easyui-dialog" style="width: 600px;"
                     closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
                     <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:200,width:580,border:false">
                         <form id="ff" method="post" enctype="multipart/form-data">
@@ -313,7 +371,7 @@
                                     <td>
                                         <label>办公电话：</label></td>
                                     <td>
-                                        <input class="easyui-validatebox textbox" type="text" name="Tel" />
+                                        <input class="easyui-validatebox textbox" type="text" name="Tel" data-options="required:true" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -326,7 +384,10 @@
                                     <td>
                                         <label>单位：</label></td>
                                     <td>
-                                        <textarea class="textbox" name="DepartmentName" style="width: 400px;"></textarea></td>
+                                     <input id="DepartmentId" class="easyui-combobox" name="DepartmentId"
+                            data-options="valueField:'Id',textField:'TName'" />
+
+                                    </td>
                                 </tr>
 
 
@@ -335,7 +396,7 @@
                     </div>
 
                     <div style="text-align: center; width: 100%; margin-bottom: 5px;">
-                        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="EditInfo();">确定</a>
                         @*                        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>*@
                     </div>
                 </div>

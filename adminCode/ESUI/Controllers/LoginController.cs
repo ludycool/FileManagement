@@ -157,7 +157,14 @@ namespace ESUI.Controllers
                 UserData.UserName = adminRole[0].LoginName;
                 UserData.RoleId = adminRole[0].RoleId;
                 UserData.Password = adminRole[0].Password;
-
+                if (!string.IsNullOrEmpty(adminRole[0].Tel))
+                {
+                    UserData.Modify = true;
+                }
+                else
+                {
+                    UserData.Modify = false;
+                }    
                 if (adminRole[0].DepartmentId != null)
                 {
                     var dpsql = RMS_DepartmentSet.SelectAll().Where(RMS_DepartmentSet.Id.Equal(adminRole[0].DepartmentId));
