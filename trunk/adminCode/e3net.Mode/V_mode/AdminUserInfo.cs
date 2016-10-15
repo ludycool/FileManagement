@@ -77,6 +77,11 @@ namespace e3net.Mode.V_mode
             get;
             set;
         }
+        public bool Modify
+        {
+            get;
+            set;
+        }
         ///// <summary>
         ///// 管理员用户信息
         ///// </summary>
