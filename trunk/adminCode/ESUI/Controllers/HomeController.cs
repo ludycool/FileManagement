@@ -12,6 +12,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using e3net.Mode.HttpView;
 using Microsoft.Practices.Unity;
 using e3net.Mode.V_mode;
 
@@ -29,6 +30,8 @@ namespace ESUI.Controllers
         public RMS_MenusBiz uBiz { get; set; }
         [Dependency]
         public RMS_UserBiz userBiz { get; set; }
+        [Dependency]
+        public RMS_UserBiz OPBiz { get; set; }
         public ActionResult Index()
         {
 
@@ -160,6 +163,35 @@ namespace ESUI.Controllers
                 resultList.Add(resultItem);
             }
             return resultList;
+        }
+
+        public JsonResult EditInfo(RMS_User EidModle)
+        {
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+           
+//                var mql = RMS_UserSet.SelectAll().Where(RMS_UserSet.Id.Equal(UserData.Id));
+//                RMS_User item = userBiz.GetEntity(mql);
+            EidModle.Id = UserData.Id;
+
+                EidModle.WhereExpression = RMS_UserSet.Id.Equal(EidModle.Id);
+                //  spmodel.GroupId = GroupId;
+                if (OPBiz.Update(EidModle) > 0)
+                {
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改成功";
+                }
+                else
+                {
+                    ReSultMode.Code = -13;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改失败";
+                }
+            
+            return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+
+
+
         }
     }
 }
