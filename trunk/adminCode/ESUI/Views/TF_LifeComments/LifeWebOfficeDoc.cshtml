@@ -45,8 +45,7 @@
             var BaseUrl = '/TF_LifeComments/';
 
             function WebOffice1_NotifyCtrlReady() {
-                
-                document.all.WebOffice1.AcceptAllRevisions();
+
             }
             function WebOffice1_NotifyToolBarClick(iIndex) {
                 if (iIndex == 32777) {
@@ -56,7 +55,7 @@
                         return false;
                     }
                     else {
-                        var isSaved = document.all.WebOffice1.IsSaved();
+                        var isSaved = document.all.WebOffice1.IsSaved();                        
                         var states = GetUrlParam("states");
                         if (isSaved == 0 && states == "-1") {
                             if (confirm("文件已被修改，是否保存？")) {
@@ -68,7 +67,7 @@
                             }
                         }
                         else {
-                            closeWord()();
+                            closeWord();
                         }
                     }
                 }
@@ -77,13 +76,16 @@
                 }
             }
             function closeWord() {
-                try {
-                    var webObj = document.getElementById("WebOffice1");
-                    webObj.Close();
-                } catch (e) { }
+                var isOpened = document.all.WebOffice1.IsOpened();
+                if (isOpened != 0) {
+                    try {
+                        var webObj = document.all.WebOffice1.Close();
+                    } catch (e) { }
+                }
+                window.close();
             }
             window.onload = function () {
-				document.all.WebOffice1.SetCustomToolBtn(1, "关闭文档");
+                document.all.WebOffice1.SetCustomToolBtn(1, "关闭文档");
                 var states = GetUrlParam("states");
                 if (states == "-1") {
                     document.all.WebOffice1.SetCustomToolBtn(4, "保存修改");
@@ -97,7 +99,6 @@
                 document.all.WebOffice1.HideMenuItem(0x04);
                 document.all.WebOffice1.HideMenuItem(0x10);
                 InitFileData();
-
             };
 
             function InitFileData() {
@@ -126,7 +127,7 @@
 
                 document.all.WebOffice1.HideMenuItem(0x04);
                 document.all.WebOffice1.LoadOriginalFile(path, suffix);
-                document.all.WebOffice1.AcceptAllRevisions();
+               // document.all.WebOffice1.AcceptAllRevisions();
             }
             function saveUpload() {
                 var returnValue;// 保存页面的返回值
@@ -142,7 +143,7 @@
 
                     document.all.WebOffice1.HttpInit();	// 初始化Http引擎
                     document.all.WebOffice1.HttpAddPostString("sfile", _basefile);
-                    document.all.WebOffice1.HttpAddPostString("action", "user");
+                    document.all.WebOffice1.HttpAddPostString("action", "savewebword");
                     document.all.WebOffice1.HttpAddPostString("curfiledir", _filedir);
                     document.all.WebOffice1.HttpAddPostCurrFile("curfile", _fileId);
                     returnValue = document.all.WebOffice1.HttpPost("../httpHandle/WebOfficeHandler.ashx");

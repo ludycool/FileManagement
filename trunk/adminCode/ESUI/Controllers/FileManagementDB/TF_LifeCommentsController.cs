@@ -144,9 +144,6 @@ namespace ESUI.Controllers
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
             {
-                string sql2 =string.Format("update File_Image set FileNameCopy=[FileName],FullRouteCopy=FullRoute Where ToId='{0}' and FileType<>'图片'",ID);
-                int s1 = OPBiz.ExecuteSqlWithNonQuery(sql);
-
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "提交审核成功！";

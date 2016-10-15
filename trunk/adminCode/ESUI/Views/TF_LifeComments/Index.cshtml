@@ -169,7 +169,6 @@
 
             //实现的编辑，包括增查改
             function SaveInfo() {
-
                 //判断的信息是否通过验证
                 var validate = $("#ff").form('validate');
                 if (validate == false) {
@@ -231,15 +230,21 @@
                 }
                 $.messager.confirm("友情提示", "提交后不可在编辑，您确定现在提交审核吗？", function (r) {
                     if (r) {
-                        var ID = rows.Id;  //获取到了用选择的ID
+                        var _toid = rows.Id;  //获取到了用选择的ID
                         $.ajax({
-                            url: BaseUrl + 'Approve',
+                            url: '/httpHandle/WebOfficeHandler.ashx',
                             type: 'POST',
-                            data: { ID: ID, state: "0" },
+                            data: { action: "copyfilebak", toid: _toid},
                             cache: false,
                             error: function () { alert('Error $.ajax'); },
                             success: function (data) {
-                                $.messager.alert("友情提示", data["Msg"], "info");                               
+                                if (data=="true") {
+                                    $.messager.alert("友情提示", "提交审核成功", "info");
+                                    DataGridSet();
+                                }
+                                else {
+                                    $.messager.alert("友情提示", "提交审核失败", "error");
+                                }
                             }
                         });
                     }

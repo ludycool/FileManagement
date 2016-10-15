@@ -21,14 +21,82 @@ namespace WebApplication1
             context.Response.AddHeader("pragma", "no-cache");
             context.Response.AddHeader("cache-control", "");
             context.Response.CacheControl = "no-cache";
+            string action = context.Request["action"];
+            if (action == "savewebword")
+            {
+                HttpPostedFile file = context.Request.Files[0];
+                string backmsg = SaveWebWord(file, context);
+                context.Response.Write(backmsg);
+            }
+            else if (action == "copyfilebak")
+            {
+                string backmsg = CopyFileAndSave(context);
+                context.Response.Write(backmsg);
+            }
+        }
 
-            HttpPostedFile file = context.Request.Files[0];
-            string backmsg = UploadImgForMatch(file, context, "DocumentFiles", "doc");
-            context.Response.Write(backmsg);
+        private string CopyFileAndSave(HttpContext context)
+        {
+            string backURL = "false";
+            string toId = context.Request["toid"];
+            var mql2 = e3net.Mode.File_ImageSet.SelectAll().Where(e3net.Mode.File_ImageSet.ToId.Equal(toId));
+            var fileEntity = new File_ImageBiz().GetEntity(mql2);
+
+            string fileid = fileEntity.Id.ToString().Trim();
+            string filenamecopy = "bak_" + fileEntity.FileName.Trim();
+            string fullroutecopy = fileEntity.Route.Trim() + filenamecopy;
+            string sourceFileName = context.Server.MapPath(fileEntity.FullRoute.Trim()); //原始文件名称
+            string destFileName = context.Server.MapPath(fullroutecopy);//备份文件名称
+            if (File.Exists(destFileName) == false)
+            {
+                File.Copy(sourceFileName, destFileName);
+            }
+            //States 状态（已审核--2、审核中--1，已提交--0，编辑中--1）   
+            string sql = string.Format("update TF_LifeComments set States=0 Where Id='{0}'", toId);
+            int f1 = new TF_LifeCommentsBiz().ExecuteSqlWithNonQuery(sql);
+            if (f1 > 0)
+            {
+                string sql2 = string.Format("update File_Image set FileNameCopy='{1}',FullRouteCopy='{2}',UpdateTime=getdate(),HasBackups='true' Where Id='{0}'", fileid, filenamecopy, fullroutecopy);
+                int f2 = new File_ImageBiz().ExecuteSqlWithNonQuery(sql2);
+                if (f2 > 0)
+                {
+                    backURL = "true";
+                }
+            }
+            return backURL;
         }
 
 
-        private string UploadImgForMatch(HttpPostedFile file, HttpContext context, string folder, string fileType)
+        private string SaveWebWord(HttpPostedFile file, HttpContext context)
+        {
+            string backURL = "false";
+            if (context.Request.Files.Count > 0)
+            {
+                string fileExt = System.IO.Path.GetExtension(file.FileName);
+                string fileFullName = "";
+                string uploadPath = context.Server.MapPath(context.Request["curfiledir"].ToString().Trim()); //保存目录
+                HttpPostedFile upPhoto = context.Request.Files[0];
+                int filelength = file.ContentLength;
+                byte[] fileArray = new Byte[filelength];
+                Stream fstream = upPhoto.InputStream;
+                fstream.Read(fileArray, 0, filelength); //这些编码是把文件转换成二进制的文件
+
+                if (!string.IsNullOrEmpty(context.Request["sfile"]))
+                {
+                    fileFullName = context.Request["sfile"].ToString().Trim();//服务器文件地址                           
+                    fileFullName = context.Server.MapPath(fileFullName);
+                    if (!Directory.Exists(uploadPath))
+                    {
+                        Directory.CreateDirectory(uploadPath);
+                    }
+                    File.WriteAllBytes(fileFullName, fileArray);
+                    backURL = "true";
+                }
+            }
+            return backURL;
+        }
+
+        private string UploadImgForMatch_bak(HttpPostedFile file, HttpContext context, string folder, string fileType)
         {
             string backURL = "false";
             if (context.Request.Files.Count > 0)
@@ -63,7 +131,7 @@ namespace WebApplication1
 
                         string fileid = context.Request["curfileid"].ToString().Trim();
                         string filedir = context.Request["curfiledir"].ToString().Trim();
-                       
+
                         string sourceFileName = context.Server.MapPath(serverfile); //原始文件名称
                         string tempF = serverfile;
 
@@ -81,7 +149,7 @@ namespace WebApplication1
                         {
                             hasBackups = Convert.ToBoolean(fmodel.HasBackups);
                         }
-                        if (hasBackups==false)
+                        if (hasBackups == false)
                         {
                             tempF = "bak_" + serverfile.Replace(filedir, "");
                             string destFileName = context.Server.MapPath(filedir) + tempF;//备份文件名称
@@ -99,9 +167,8 @@ namespace WebApplication1
                             fullroutecopy = fmodel.FullRouteCopy;
                             filenamecopy = fmodel.FileNameCopy;
                         }
-                        File.WriteAllBytes(fileFullName, fileArray);                       
-                        string sql = string.Format("update File_Image set FileNameCopy='{1}',FullRouteCopy='{2}',UpdateTime=getdate(),HasBackups='true' Where Id='{0}'", fileid, filenamecopy, fullroutecopy);
-                        int f = new TF_LifeCommentsBiz().ExecuteSqlWithNonQuery(sql);
+                        File.WriteAllBytes(fileFullName, fileArray);
+
                         backURL = "true";
                     }
                 }
