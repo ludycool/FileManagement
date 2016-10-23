@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+@{
+    ViewBag.TName = "Index";
+}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+
+    @* ReSharper disable once NotAllPathsReturnValue *@
+
+
+    @section Jsprepare{
+
+        <script type="text/javascript">
+            @Html.Raw(ViewBag.RuteUrl)
+         @Html.Raw(ViewBag.toolbar)
+
+
+            jQuery(document).ready(function () {
+                AddInfo();
+            });
+
+            //easyUI 弹出添加的对话框
+            function AddInfo() {
+                //弹出层
+                // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
+                $('#DivEditor').dialog({
+                    title: '添加档案',
+                    //width: 400,
+                    //height: 200,
+                    closed: false,
+                    cache: false,
+                    // href: 'get_content.php',
+                    modal: true, top: 50,
+                    onClose: function () {
+                        //解决弹出窗口关闭后，验证消息还显示在最上面
+
+                    }
+                });
+                $(".validatebox-tip").remove();//清除验证样式
+                DataBaseFunction.ClearForm("ff");
+            }
+   
+            //绑定修改显示详细信息的方法
+            function EditInfo() {
+
+                var rows = $("#dg").datagrid('getSelected');
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.RealName).window('resize', { top:20 });
+                $(".validatebox-tip").remove();//清除验证样式
+                var ID = rows.Id;  //获取到了用选择的ID
+                $.ajax({
+                    url: BaseUrl + 'GetInfo',
+                    type: 'POST',
+                    data: { ID: ID },
+                    cache: false,
+                    error: function () { alert('Error $.ajax'); },
+                    success: function (data) {
+                        //var result = eval('(' + data + ')');
+                        DataBaseFunction.BindForm("ff", data);
+                        //$('#Category').combotree('setValue', data['Category']);
+                    }
+                });
+
+            }
+
+            //实现的编辑，包括增查改
+            function SaveInfo() {
+
+                //判断的信息是否通过验证
+                var validate = $("#ff").form('validate');
+                if (validate == false) {
+                    return false;
+                }
+                //获取需要传递的参数传递给前台
+                var data = DataBaseFunction.GetFormData("ff")
+                //发送异步请求到后台保存数据
+                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                    alerts(data.Msg, 2);
+                    if (data.Code > 0) {
+                        $('#DivEditor').dialog('close');
+                        $(".validatebox-tip").remove();
+                        $("#dg").datagrid("reload");
+                    }
+                });
+
+            }
+        </script>
+    }
+
+</head>
+<body style="overflow-y: hidden">
+    <!------------------------弹出信息的弹出层---------------------------------->
+    <div id="DivEditor" class="easyui-dialog" style="width: 670px;" data-options="closed:true,resizable:true,modal:true"
+         buttons="#dlg-buttons">
+        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:350,width:650,border:false">
+            <form id="ff" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="Id" />
+                <input type="hidden" name="TName" />
+                <input type="hidden" name="Category" />
+                <input type="hidden" name="CreateMan" />
+                <input type="hidden" name="CreateTime" />
+                <input type="hidden" name="UpdateTime" />
+                <input type="hidden" name="isValid" />
+                <input type="hidden" name="isDeleted" />
+                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+
+                    <tr>
+                        <td style="width:120px;">
+                            <label>姓名：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="RealName" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>单位：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="Units" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>职务：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="Duties" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>摘要：</label>
+                        </td>
+                        <td>
+                            <textarea class="areabox" style="height:100px;" name="Summary"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>存放位置：</label>
+                        </td>
+                        <td>
+                            <textarea class="areabox" style="height:100px;" name="location"></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        <div style="text-align: center; width: 100%; margin-bottom: 5px;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>
+        </div>
+    </div>
+</body>
+</html>

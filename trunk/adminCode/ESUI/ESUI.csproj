@@ -281,6 +281,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManuController.cs" />
+    <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ParameterController.cs" />
@@ -3576,6 +3577,7 @@
     <Content Include="tempword\干部人事档案材料转递单.docx" />
     <Content Include="Views\TF_PersonnelFile\PersonnelFileInput.cshtml" />
     <Content Include="tempword\模板.xlsx" />
+    <Content Include="Views\Register\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />

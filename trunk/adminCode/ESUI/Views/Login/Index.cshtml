@@ -19,8 +19,9 @@
     <meta id="d_meta_keywords" name="keywords" content="">
     <meta name="description" content="">
     <meta name="copyright" content="">
-    <title>南宁市组织部日常工作管理系统
-</title>
+    <title>
+        南宁市组织部日常工作管理系统
+    </title>
 
     <link href="~/Content/Login/wuye/base.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/Login/wuye/login.css" rel="stylesheet" type="text/css" />
@@ -39,14 +40,14 @@
 
 
 
-            });
+        });
 
-            //function CV() {
-            //    $("#valiCode").attr("src", "/Login/GetValidateCode?time=" + (new Date()).getTime());
+        //function CV() {
+        //    $("#valiCode").attr("src", "/Login/GetValidateCode?time=" + (new Date()).getTime());
 
-            //}
-            //function cleartxt() {
-            //    $('#VCode').val('');
+        //}
+        //function cleartxt() {
+        //    $('#VCode').val('');
         //}
         function onchanges() {
 
@@ -61,6 +62,11 @@
                 $("#LoginName").focus();
             }
 
+        }
+
+        function register() {
+            window.open("/Register/Index", "_self");
+            return false;
         }
     </script>
 </head>
@@ -119,14 +125,18 @@
                             @Html.PasswordFor(m => m.Password, new { @class = "TxtPasswordCssClass", @Value = "123456" })
                         </p>
                         @*   <p class="verify">
-                            @Html.TextBoxFor(m => m.VCode, new { @class = "TxtValidateCodeCssClass", @Value = "验证码", @onfocus = "cleartxt();" })
-                            <span class="code">
-                                <img id="valiCode" style="cursor: pointer;" class="img" src="/Common/GetValidateCode" alt="看不清？请点我" /></span>
-                            <a href="#" onclick="CV();">看不清楚</a>
-                        </p>*@
+                                @Html.TextBoxFor(m => m.VCode, new { @class = "TxtValidateCodeCssClass", @Value = "验证码", @onfocus = "cleartxt();" })
+                                <span class="code">
+                                    <img id="valiCode" style="cursor: pointer;" class="img" src="/Common/GetValidateCode" alt="看不清？请点我" /></span>
+                                <a href="#" onclick="CV();">看不清楚</a>
+                            </p>*@
                         <p>
                             <label><a href="#"></a>类型</label>
-                            @Html.DropDownListFor(model => model.UserType, ViewData["UserType"] as SelectList, new { @class = "selecttor" ,@onchange="onchanges()"})
+                            @Html.DropDownListFor(model => model.UserType, ViewData["UserType"] as SelectList, new { @class = "selecttor", @onchange = "onchanges()" })
+                        </p>
+                        <p>
+                            <br />
+                            <a href="javascript:void(0);" onclick="return register()">注册</a>
                         </p>
                         <p class="btn">
                             <input name="" type="submit" value="登录">
