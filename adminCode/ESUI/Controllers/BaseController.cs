@@ -211,7 +211,7 @@ namespace ESUI.Controllers
                 // string controller =context.ActionDescriptor.ControllerDescriptor.ControllerName
 
                 string[] IgnoreP = { "home", "login" };//不用权限控制的页面一定要写在这里，不然会死循环
-                Manu ManuItem = UserData.ListManus.Find(p => p.manuInfo.URL.Equals(controller));
+                Manu ManuItem = UserData.ListManus.Find(p => p.manuInfo.URL.Contains(controller));
                 if (!IgnoreP.Contains(controller.ToLower()) && ManuItem == null)//菜单控制
                 {
                     IsNull = true;
