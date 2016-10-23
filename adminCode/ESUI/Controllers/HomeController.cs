@@ -39,7 +39,7 @@ namespace ESUI.Controllers
             ViewBag.Message = "修改此模板以快速启动你的 ASP.NET MVC 应用程序。";
             //  ViewBag.ManuString= GetManu();
             ViewBag.testString = "<div title=\"功能管理\" iconcls=\"icon-edit\" style=\"padding: 10px;\"><p><a href=\"javascript:void(0)\" src=\"/RoleManagement/Index\" class=\"MenuLink\">角色管理</a></p> </div>";
-
+            ViewBag.username = UserData.UserName;
             return View();
         }
 
