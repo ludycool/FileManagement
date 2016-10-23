@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@model ESUI.Models.LoginModel
+<!DOCTYPE html>
 @{
     ViewBag.TName = "Index";
 }
@@ -9,6 +10,8 @@
 
     <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
 
+    @*<script src="~/Scripts/Idcardvalidation.js"></script>*@
+    @*<script src="~/Scripts/validata.js"></script>*@
     @* ReSharper disable once NotAllPathsReturnValue *@
 
 
@@ -18,147 +21,96 @@
             @Html.Raw(ViewBag.RuteUrl)
          @Html.Raw(ViewBag.toolbar)
 
-
+            var BaseUrl = "/Register/";
             jQuery(document).ready(function () {
-                AddInfo();
+                BindDepertment();
             });
 
-            //easyUI 弹出添加的对话框
-            function AddInfo() {
-                //弹出层
-                // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
-                $('#DivEditor').dialog({
-                    title: '添加档案',
-                    //width: 400,
-                    //height: 200,
-                    closed: false,
-                    cache: false,
-                    // href: 'get_content.php',
-                    modal: true, top: 50,
-                    onClose: function () {
-                        //解决弹出窗口关闭后，验证消息还显示在最上面
-
-                    }
-                });
-                $(".validatebox-tip").remove();//清除验证样式
-                DataBaseFunction.ClearForm("ff");
-            }
-   
-            //绑定修改显示详细信息的方法
-            function EditInfo() {
-
-                var rows = $("#dg").datagrid('getSelected');
-                //首先取出来值判断只能选择一个
-                if (rows == null) {
-                    $.messager.alert("友情提示", "请选择", "error");
-                    return;
-                }
-                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.RealName).window('resize', { top:20 });
-                $(".validatebox-tip").remove();//清除验证样式
-                var ID = rows.Id;  //获取到了用选择的ID
-                $.ajax({
-                    url: BaseUrl + 'GetInfo',
-                    type: 'POST',
-                    data: { ID: ID },
-                    cache: false,
-                    error: function () { alert('Error $.ajax'); },
-                    success: function (data) {
-                        //var result = eval('(' + data + ')');
-                        DataBaseFunction.BindForm("ff", data);
-                        //$('#Category').combotree('setValue', data['Category']);
-                    }
-                });
-
-            }
-
             //实现的编辑，包括增查改
-            function SaveInfo() {
-
-                //判断的信息是否通过验证
+            function submitForm() {
+                //判断按钮的信息是否通过验证
                 var validate = $("#ff").form('validate');
+
                 if (validate == false) {
                     return false;
                 }
-                //获取需要传递的参数传递给前台
-                var data = DataBaseFunction.GetFormData("ff")
-                //发送异步请求到后台保存数据
-                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                //获取需要传递的参数传递给前台 push
+                var postData = $("#ff").serializeArray();
+
+                //发送异步请求到后台保存按钮数据
+                $.post(BaseUrl + 'NewRegister', postData, function (data) {
                     alerts(data.Msg, 2);
-                    if (data.Code > 0) {
-                        $('#DivEditor').dialog('close');
-                        $(".validatebox-tip").remove();
-                        $("#dg").datagrid("reload");
+                    if (data.Code > 0) {                       
+                         setTimeout(login, 3);
+                        // $("#ff").form("clear");
                     }
                 });
+            }
 
+            function login() {
+                var _uid = $("#LoginName").val(), _pwd = $("#Password").val();
+                
+                $.ajax({
+                    url: BaseUrl + 'RegLogin',
+                    type: 'POST',
+                    data: { uid: _uid, pwd: _pwd },
+                    cache: false,
+                    error: function () { alert('Error $.ajax'); },
+                    success: function (data) {
+
+                    }
+                });
+            }
+
+            function clearForm() {
+                $('#ff').form('clear');
+            }
+
+            function BindDepertment() {
+                $('#DepartmentId').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetDepartment');  // 使用新的URL重新载入列表数据
             }
         </script>
     }
 
 </head>
-<body style="overflow-y: hidden">
-    <!------------------------弹出信息的弹出层---------------------------------->
-    <div id="DivEditor" class="easyui-dialog" style="width: 670px;" data-options="closed:true,resizable:true,modal:true"
-         buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:350,width:650,border:false">
-            <form id="ff" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="Id" />
-                <input type="hidden" name="TName" />
-                <input type="hidden" name="Category" />
-                <input type="hidden" name="CreateMan" />
-                <input type="hidden" name="CreateTime" />
-                <input type="hidden" name="UpdateTime" />
-                <input type="hidden" name="isValid" />
-                <input type="hidden" name="isDeleted" />
-                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
-
+<body>
+    <div style="margin:0 auto;width:100%;text-align:center;">
+        <div class="easyui-panel" title="新用户注册" style="left:0;right:0;min-width:600px;min-height:760px;">
+            <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+                <table cellpadding="5" style="margin:100px auto 0px auto;border:none">
                     <tr>
-                        <td style="width:120px;">
-                            <label>姓名：</label>
-                        </td>
+                        <td>用户名:</td>
+                        <td><input class="easyui-validatebox easyui-textbox" type="text" id="LoginName" name="LoginName" data-options="required:true" /></td>
+                    </tr>
+                    <tr>
+                        <td>姓名:</td>
+                        <td><input class="easyui-validatebox easyui-textbox" type="text" name="TrueName" data-options="required:true" /></td>
+                    </tr>
+                    <tr>
+                        <td>身份证号:</td>
+                        <td><input class="easyui-validatebox easyui-textbox" type="text" id="IdCard" name="IdCard" data-options="required:true" /></td>
+                    </tr>
+                    <tr>
+                        <td>选择单位:</td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="RealName" />
+                            <input id="DepartmentId" class="easyui-combobox" name="DepartmentId"
+                                   data-options="valueField:'Id',textField:'TName'" />
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <label>单位：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Units" />
-                        </td>
+                        <td>密码:</td>
+                        <td><input class="easyui-validatebox easyui-textbox" type="password" id="Password" name="Password" data-options="required:true" /></td>
                     </tr>
                     <tr>
-                        <td>
-                            <label>职务：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Duties" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>摘要：</label>
-                        </td>
-                        <td>
-                            <textarea class="areabox" style="height:100px;" name="Summary"></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>存放位置：</label>
-                        </td>
-                        <td>
-                            <textarea class="areabox" style="height:100px;" name="location"></textarea>
-                        </td>
+                        <td>确认密码:</td>
+                        <td><input class="easyui-validatebox easyui-textbox" type="password" name="ConfirmPassword" data-options="required:true" /></td>
                     </tr>
                 </table>
             </form>
-        </div>
-
-        <div style="text-align: center; width: 100%; margin-bottom: 5px;">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>
+            <div style="text-align:center;padding:5px">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">注册并登录</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
+            </div>
         </div>
     </div>
 </body>

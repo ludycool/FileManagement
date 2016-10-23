@@ -3451,6 +3451,8 @@
     <Content Include="MOON_WORK_DIRECTORY_PATH\sql.xml" />
     <Content Include="Scripts\linq.min.js" />
     <Content Include="Scripts\search.js" />
+    <Content Include="Scripts\Idcardvalidation.js" />
+    <Content Include="Scripts\validata.js" />
     <Content Include="Scripts\weboffic7\index.html" />
     <Content Include="Scripts\weboffic7\LoadWebOffice.js" />
     <Content Include="Scripts\weboffic7\main.js" />
