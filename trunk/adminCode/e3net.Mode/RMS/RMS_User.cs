@@ -103,6 +103,15 @@ namespace e3net.Mode.RMS
             get { return GetPropertyValue<String>("Phone"); }
             set { SetPropertyValue("Phone", value); }
         }
+
+        /// <summary>
+        /// 身份证号
+        /// </summary>
+        public String IdCard
+        {
+            get { return GetPropertyValue<String>("IdCard"); }
+            set { SetPropertyValue("IdCard", value); }
+        }
     }
 
     [Table("[RMS_User]", DbType.SqlServer)]
@@ -166,6 +175,11 @@ namespace e3net.Mode.RMS
         /// 手机
         /// </summary>
         public static readonly FieldBase Phone = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[Phone]");
+
+        /// <summary>
+        /// 身份证号
+        /// </summary>
+        public static readonly FieldBase IdCard = new FieldBase(DbType.SqlServer, "[RMS_User]", FieldType.Common, "[IdCard]");
     }
 
 }
