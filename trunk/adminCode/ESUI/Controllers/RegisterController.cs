@@ -16,7 +16,7 @@ using TZHSWEET.Common;
 
 namespace ESUI.Controllers
 {
-    public class RegisterController : BaseController
+    public class RegisterController : Controller
     {
         //
         // GET: /User/
