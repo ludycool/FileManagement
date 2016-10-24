@@ -32,27 +32,27 @@ namespace ESUI.Controllers
         public ColumnChartsBiz CCBiz { get; set; }
 
         [Dependency]
-        public BascharvalueBiz BBiz { get; set; }   
+        public BascharvalueBiz BBiz { get; set; }
         [Dependency]
         public BaschartypeBiz Bciz { get; set; }
-        
+
         [Dependency]
-        public BascharvalueBiz Bcviz { get; set; }  
-        
-        
+        public BascharvalueBiz Bcviz { get; set; }
+
+
         [Dependency]
-        public MainAssociationBiz Mabiz { get; set; }   
-        
+        public MainAssociationBiz Mabiz { get; set; }
+
         [Dependency]
-        public CorrelateColumnsBiz Correlatecbiz { get; set; }    
+        public CorrelateColumnsBiz Correlatecbiz { get; set; }
         [Dependency]
-        public VcorrelateColumnsBiz Vcbiz { get; set; } 
+        public VcorrelateColumnsBiz Vcbiz { get; set; }
         [Dependency]
         public EntryRecordFormBiz erfbiz { get; set; }
         [Dependency]
         public VEntryRecordFormBiz Verfbiz { get; set; }
 
-        
+
         public ActionResult Index()
         {
             return View();
@@ -115,7 +115,7 @@ namespace ESUI.Controllers
 
                 OPBiz.Add(categoryTable);
                 OPBiz.ExecuteSqlWithNonQuery("create table [" + categoryTable.UserTableName + "]  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null,ck nvarchar(100) null,EntryRecordFormID  nvarchar(100) null)");
-                OPBiz.ExecuteSqlWithNonQuery("INSERT INTO [ColumnCharts]      ([ID],[CategoryTableID],[field],[title],[rowspan],[width],[IsEnable]) VALUES('" + Guid.NewGuid().ToString() + "','" + categoryTable .ID+ "','ck','ck',1,100,1) ");
+                OPBiz.ExecuteSqlWithNonQuery("INSERT INTO [ColumnCharts]      ([ID],[CategoryTableID],[field],[title],[rowspan],[width],[IsEnable]) VALUES('" + Guid.NewGuid().ToString() + "','" + categoryTable.ID + "','ck','ck',1,100,1) ");
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
@@ -206,7 +206,7 @@ namespace ESUI.Controllers
                         OPBiz.ExecuteSqlWithNonQuery("alter table [" + catmodle.UserTableName + "] add [" + categoryTable.field + "] nvarchar(500) null");
                         ReSultMode.Code = 11;
                         ReSultMode.Data = "";
-                        ReSultMode.Msg = "添加成功";  
+                        ReSultMode.Msg = "添加成功";
                     }
                 }
 
@@ -307,14 +307,14 @@ namespace ESUI.Controllers
             var list3 = CCBiz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + Condition + "' and (title='ck') and IsEnable=1 ORDER BY  SortNo");
             if (list != null)
             {
-                if (list3.Count>0)
+                if (list3.Count > 0)
                 {
-                    
-               
-                menus += "{  ";
 
-                menus += "field:\"ck\" ,checkbox:true,rowspan:\"" + list3[0].rowspan + "\", width:\"" + list3[0].width + "\"";
-                menus += "},";
+
+                    menus += "{  ";
+
+                    menus += "field:\"ck\" ,checkbox:true,rowspan:\"" + list3[0].rowspan + "\", width:\"" + list3[0].width + "\"";
+                    menus += "},";
                 }
                 menus += "{  ";
 
@@ -327,7 +327,7 @@ namespace ESUI.Controllers
 
                 foreach (ColumnCharts item in list)
                 {
-                    if (item.title!="ck")
+                    if (item.title != "ck")
                     {
                         if (item.MergeHeader == true)
                         {
@@ -351,7 +351,7 @@ namespace ESUI.Controllers
                             {
                                 if (!string.IsNullOrEmpty(item.align))
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 0)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
                                         menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" +
                                       item.rowspan + "\", width:\"" + item.width + "\",editor:{" +
@@ -363,16 +363,16 @@ namespace ESUI.Controllers
                                       item.rowspan + "\", width:\"" + item.width + "\",editor:{" + item.editor +
                                            "}" + ",align:\"" + item.align + "\"";
                                     }
-                                  
+
 
                                 }
                                 else
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 0)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
                                         menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" +
                                                  item.rowspan + "\", width:\"" + item.width + "\",editor:{" +
-                                                 
+
                                                  "}";
                                     }
                                     else
@@ -392,10 +392,10 @@ namespace ESUI.Controllers
                             {
                                 if (!string.IsNullOrEmpty(item.align))
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes!=0)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
                                         menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
-                                           item.width + "\",editor:{" +   "}" + ",align:\"" + item.align +
+                                           item.width + "\",editor:{" + "}" + ",align:\"" + item.align +
                                            "\"";
                                     }
                                     else
@@ -404,14 +404,14 @@ namespace ESUI.Controllers
                                            item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align +
                                            "\"";
                                     }
-                                  
+
                                 }
                                 else
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 0)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
                                         menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
-                                                  item.width + "\",editor:{" +  "}";
+                                                  item.width + "\",editor:{" + "}";
                                     }
                                     else
                                     {
@@ -461,42 +461,42 @@ namespace ESUI.Controllers
                             {
                                 if (!string.IsNullOrEmpty(item.align))
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes !=0)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
                                         menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
-                                              item.rowspan + ", width:\"" + item.width + "\",editor:{" + 
+                                              item.rowspan + ", width:\"" + item.width + "\",editor:{" +
                                               "}" + ",align:\"" + item.align + "\"";
                                     }
                                     else
                                     {
-                                       menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
-                                              item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor +
-                                              "}" + ",align:\"" + item.align + "\""; 
+                                        menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
+                                               item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor +
+                                               "}" + ",align:\"" + item.align + "\"";
                                     }
-                                    
+
                                 }
                                 else
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 0)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
                                         menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
-                                             item.rowspan + ", width:\"" + item.width + "\",editor:{" + 
+                                             item.rowspan + ", width:\"" + item.width + "\",editor:{" +
                                              "}";
                                     }
                                     else
                                     {
                                         menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
                                               item.rowspan + ", width:\"" + item.width + "\",editor:{" + item.editor +
-                                              "}"; 
+                                              "}";
                                     }
-                                   
+
                                 }
                             }
                             else
                             {
                                 if (!string.IsNullOrEmpty(item.align))
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 0)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
                                         menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
                                             item.width + "\",editor:{" + "}" + ",align:\"" + item.align +
@@ -506,23 +506,23 @@ namespace ESUI.Controllers
                                     {
                                         menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
                                              item.width + "\",editor:{" + item.editor + "}" + ",align:\"" + item.align +
-                                             "\""; 
-                                    }  
-                                  
+                                             "\"";
+                                    }
+
                                 }
                                 else
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes !=0)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
                                         menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
-                                          item.width + "\",editor:{" +  "}";
+                                          item.width + "\",editor:{" + "}";
                                     }
                                     else
                                     {
                                         menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
-                                             item.width + "\",editor:{" + item.editor + "}";   
+                                             item.width + "\",editor:{" + item.editor + "}";
                                     }
-                                
+
 
                                 }
                             }
@@ -590,7 +590,7 @@ namespace ESUI.Controllers
         /// <param name="Condition"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult GetAllJsonResultList(string Condition,string seachsql)
+        public JsonResult GetAllJsonResultList(string Condition, string seachsql)
         {
 
             var modle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
@@ -642,7 +642,7 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = modle.UserTableName;
-            pc.sys_Where =GetNewSql(seachsql)+ "and CreatName='" + UserData.UserName + "'";
+            pc.sys_Where = GetNewSql(seachsql) + "and CreatName='" + UserData.UserName + "'";
             pc.sys_Order = "ID";
 
             var list2 = OPBiz.ExecuteProToDataSetNew("sp_PaginationEx", pc);
@@ -713,19 +713,19 @@ namespace ESUI.Controllers
 
                 try
                 {
-                   
+
                     var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(CategoryTableID)));
 
                     string sql = "INSERT INTO " + catmodle.UserTableName + "(ID,CreatName,EntryRecordFormID,";
 
                     foreach (KeyValuePair<string, string> kv in o2[0])
                     {
-                        sql += "["+kv.Key + "],";
+                        sql += "[" + kv.Key + "],";
 
                     }
-               
+
                     sql = sql.Substring(0, sql.Length - 1);
-                    sql += ")VALUES ('" + Guid.NewGuid().ToString() + "','" + UserData.UserName + "','" + ErfCategoryTableID+"',";
+                    sql += ")VALUES ('" + Guid.NewGuid().ToString() + "','" + UserData.UserName + "','" + ErfCategoryTableID + "',";
 
                     foreach (KeyValuePair<string, string> kv in o2[0])
                     {
@@ -738,14 +738,14 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = ErfCategoryTableID;
                     ReSultMode.Msg = "添加成功";
-//                    return Json("ok", JsonRequestBehavior.AllowGet);
+                    //                    return Json("ok", JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception e)
                 {
                     ReSultMode.Code = -11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "添加失败";
-//                    return Json("Nok", JsonRequestBehavior.AllowGet);
+                    //                    return Json("Nok", JsonRequestBehavior.AllowGet);
                 }
             }
             else
@@ -775,20 +775,20 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = ErfCategoryTableID;
                     ReSultMode.Msg = "更新成功";
-//                    return Json("ok", JsonRequestBehavior.AllowGet);
+                    //                    return Json("ok", JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception e)
                 {
                     ReSultMode.Code = -11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "更新失败";
-//                    return Json("Nok", JsonRequestBehavior.AllowGet);
+                    //                    return Json("Nok", JsonRequestBehavior.AllowGet);
                 }
 
 
 
             }
-           
+
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
 
@@ -799,8 +799,8 @@ namespace ESUI.Controllers
             //=0;
 
             var catmodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(CategoryTableID)));
-            string sql = "DELETE FROM  [" + catmodle.UserTableName + "] where  ID  in(" + IDSet+")";
-         int f =  OPBiz.ExecuteSqlWithNonQuery(sql);;
+            string sql = "DELETE FROM  [" + catmodle.UserTableName + "] where  ID  in(" + IDSet + ")";
+            int f = OPBiz.ExecuteSqlWithNonQuery(sql); ;
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
             {
@@ -859,21 +859,21 @@ namespace ESUI.Controllers
             //  var cheaklist = CCBiz.GetEntities(cheakwhere);
             //if (cheaklist.Count>0)
             //{
-                foreach (ColumnCharts chartse in cheaklist)
+            foreach (ColumnCharts chartse in cheaklist)
+            {
+                if (chartse.ISLoginsector != null && chartse.ISLoginsector.Value)
                 {
-                    if (chartse.ISLoginsector != null && chartse.ISLoginsector.Value)
-                    {
-                        menus += ",\"" + chartse.field + "\":\"" + UserData.DepartmentName + "\"";
-                    }
-                    else if (chartse.ISLogpeople != null && chartse.ISLogpeople.Value)
-                    {
-                        menus += ",\"" + chartse.field + "\":\"" + UserData.UserName + "\"";
-                    }
+                    menus += ",\"" + chartse.field + "\":\"" + UserData.DepartmentName + "\"";
                 }
+                else if (chartse.ISLogpeople != null && chartse.ISLogpeople.Value)
+                {
+                    menus += ",\"" + chartse.field + "\":\"" + UserData.UserName + "\"";
+                }
+            }
 
-                menus += "}]";  
+            menus += "}]";
             //}
-            
+
 
             return menus;
 
@@ -952,9 +952,9 @@ namespace ESUI.Controllers
                 Bciz.Add(categoryTable);
                 ReSultMode.Code = 11;
                 ReSultMode.Data = "";
-                ReSultMode.Msg = "添加成功"; 
-//                OPBiz.ExecuteSqlWithNonQuery("create table [" + categoryTable.UserTableName + "]  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null,ck nvarchar(100) null) ");
-//                OPBiz.ExecuteSqlWithNonQuery("INSERT INTO [ColumnCharts]      ([ID],[CategoryTableID],[field],[title],[rowspan],[width],[IsEnable]) VALUES('" + Guid.NewGuid().ToString() + "','" + categoryTable.ID + "','ck','ck',1,100,1) ");
+                ReSultMode.Msg = "添加成功";
+                //                OPBiz.ExecuteSqlWithNonQuery("create table [" + categoryTable.UserTableName + "]  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null,ck nvarchar(100) null) ");
+                //                OPBiz.ExecuteSqlWithNonQuery("INSERT INTO [ColumnCharts]      ([ID],[CategoryTableID],[field],[title],[rowspan],[width],[IsEnable]) VALUES('" + Guid.NewGuid().ToString() + "','" + categoryTable.ID + "','ck','ck',1,100,1) ");
                 //return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
@@ -1001,7 +1001,7 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = "Bascharvalue";
-            pc.sys_Where = "CharTypeId='" + Condition+"'";
+            pc.sys_Where = "CharTypeId='" + Condition + "'";
             pc.sys_Order = "CharId";
 
             var list2 = Bcviz.GetPagingData(pc);
@@ -1047,7 +1047,7 @@ namespace ESUI.Controllers
             //   var Rmodel = CCBiz.GetEntities(mql2);
             var mql2 = BaschartypeSet.SelectAll();
             var Rmodel = Bciz.GetEntities(mql2);
-          //  var Rmodel = Bciz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + ID + "' and MergeHeader=1");
+            //  var Rmodel = Bciz.ExecuteSqlToOwnList("select * from ColumnCharts where CategoryTableID='" + ID + "' and MergeHeader=1");
             List<ComboxModle> list = new List<ComboxModle>();
             ComboxModle d2 = new ComboxModle();
             //d2.id = "";
@@ -1127,13 +1127,13 @@ namespace ESUI.Controllers
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult DelBascharvalue(string IDSet )
+        public JsonResult DelBascharvalue(string IDSet)
         {
             //int f
             //=0;
             string sql = "DELETE FROM  [Bascharvalue] where  CharId  in(" + IDSet + ")";
             int f = Bcviz.ExecuteSqlWithNonQuery(sql); ;
-           // int f = Bcviz.DelForSetDelete("CharId", IDSet);
+            // int f = Bcviz.DelForSetDelete("CharId", IDSet);
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
             {
@@ -1163,14 +1163,15 @@ namespace ESUI.Controllers
         public JsonResult GetBdlList(string Condition, string seachsql, string ChildCategoryTableID)
         {
             var sqlc2 = MainAssociationSet.SelectAll().Where(MainAssociationSet.CategoryTableID.Equal(Condition).And(MainAssociationSet.ChildCategoryTableID.Equal(ChildCategoryTableID)));
-           var d= Mabiz.GetEntity(sqlc2);
+            var d = Mabiz.GetEntity(sqlc2);
             var dic = new List<ColumnCharts>();
             if (d == null & !string.IsNullOrEmpty(ChildCategoryTableID))
             {
                 var sqlc = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(ChildCategoryTableID).And(ColumnChartsSet.IsEnable.Equal(true)).And(ColumnChartsSet.MergeHeader.NotEqual(true))).OrderByASC(ColumnChartsSet.SortNo);
-                 dic = CCBiz.GetEntities(sqlc);
+                dic = CCBiz.GetEntities(sqlc);
             }
-            else{
+            else
+            {
 
                 if (d != null)
                 {
@@ -1190,8 +1191,8 @@ namespace ESUI.Controllers
             var dic = new List<VcorrelateColumns>();
             if (d != null)
             {
-            var sqlc = VcorrelateColumnsSet.SelectAll().Where(VcorrelateColumnsSet.MainAssociationID.Equal(d.ID));
-            dic = Vcbiz.GetEntities(sqlc);
+                var sqlc = VcorrelateColumnsSet.SelectAll().Where(VcorrelateColumnsSet.MainAssociationID.Equal(d.ID));
+                dic = Vcbiz.GetEntities(sqlc);
             }
             //else
             //{
@@ -1201,14 +1202,14 @@ namespace ESUI.Controllers
 
             return Json(dic);
         }
-        public JsonResult GetCategoryTable(string ID )
+        public JsonResult GetCategoryTable(string ID)
         {
             var mql2 = CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.NotEqual(ID));
             var Rmodel = OPBiz.GetEntities(mql2);
             //  groupsBiz.Add(rol);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
-       // CategoryTableID: categoryTableID, ChildCategoryTableID: childCategoryTableID, tbOutrow: tbOutrow, dgrows: dgrows 
+        // CategoryTableID: categoryTableID, ChildCategoryTableID: childCategoryTableID, tbOutrow: tbOutrow, dgrows: dgrows 
         public JsonResult EditconnectionRelation(string CategoryTableID, string ChildCategoryTableID, string tbOutrow, string dgrows)
         {
 
@@ -1217,12 +1218,12 @@ namespace ESUI.Controllers
             var ColumnChartstbOutrow = JsonConvert.DeserializeObject<ColumnCharts>(tbOutrow);
             var ColumnChartsdgrows = JsonConvert.DeserializeObject<ColumnCharts>(dgrows);
             var sqlc2 = MainAssociationSet.SelectAll().Where(MainAssociationSet.CategoryTableID.Equal(CategoryTableID).And(MainAssociationSet.ChildCategoryTableID.Equal(ChildCategoryTableID)));
-              
+
             var newmodle = Mabiz.GetEntity(sqlc2);
-           
-            if (newmodle==null)
+
+            if (newmodle == null)
             {
-               newmodle=new MainAssociation();
+                newmodle = new MainAssociation();
                 newmodle.ID = Guid.NewGuid().ToString();
                 newmodle.CategoryTableID = CategoryTableID;
                 newmodle.ChildCategoryTableID = ChildCategoryTableID;
@@ -1243,25 +1244,25 @@ namespace ESUI.Controllers
             catch (Exception e)
             {
                 ReSultMode.Code = -11;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "更新失败";
+                ReSultMode.Data = "";
+                ReSultMode.Msg = "更新失败";
             }
-      
+
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
 
 
         }
 
-        public JsonResult DelconnectionRelation(string IDSet )
+        public JsonResult DelconnectionRelation(string IDSet)
         {
             //int f
             //=0;
-//           var ccsql=CorrelateColumnsSet.SelectAll(CorrelateColumnsSet.ID.In())
+            //           var ccsql=CorrelateColumnsSet.SelectAll(CorrelateColumnsSet.ID.In())
             var newmodle = Correlatecbiz.ExecuteSqlToOwnList("select * from CorrelateColumns where ID=" + IDSet);
 
 
-            
+
             //var catmccsodle = OPBiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(CategoryTableID)));
             string sql = "DELETE FROM  [CorrelateColumns] where  ID  in(" + IDSet + ")";
             int f = Correlatecbiz.ExecuteSqlWithNonQuery(sql); ;
@@ -1275,7 +1276,7 @@ namespace ESUI.Controllers
 
                     var newmodle2 = Mabiz.ExecuteSqlWithNonQuery("DELETE FROM [MainAssociation] where ID='" + newmodle[0].MainAssociationID + "'");
                 }
-             
+
 
 
 
@@ -1305,13 +1306,13 @@ namespace ESUI.Controllers
         [HttpPost]
         public JsonResult GetexistingList(string Condition, string seachsql, string ChildCategoryTableID)
         {
-          
+
             var dic = new List<ColumnCharts>();
 
-            var sqlc = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition) ).OrderByASC(ColumnChartsSet.SortNo);
-                dic = CCBiz.GetEntities(sqlc);
-             
-          
+            var sqlc = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition)).OrderByASC(ColumnChartsSet.SortNo);
+            dic = CCBiz.GetEntities(sqlc);
+
+
 
 
             return Json(dic);
@@ -1325,7 +1326,7 @@ namespace ESUI.Controllers
             _datatable = JsonConvert.DeserializeObject<DataTable>(dataGetter);
 
 
-        
+
 
             var sqlc2 = MainAssociationSet.SelectAll().Where(MainAssociationSet.CategoryTableID.Equal(CategoryTableID).And(MainAssociationSet.ChildCategoryTableID.Equal(ChildCategoryTableID)));
 
@@ -1345,10 +1346,10 @@ namespace ESUI.Controllers
                 dt2.Columns.Add(list[i].field);
             }
             UniteDataTable(_datatable, dt2, dic);
-//            var dic = new List<ColumnCharts>();
-//
-//            var sqlc = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition)).OrderByASC(ColumnChartsSet.SortNo);
-//            dic = CCBiz.GetEntities(sqlc);
+            //            var dic = new List<ColumnCharts>();
+            //
+            //            var sqlc = ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(Condition)).OrderByASC(ColumnChartsSet.SortNo);
+            //            dic = CCBiz.GetEntities(sqlc);
 
 
 
@@ -1380,7 +1381,7 @@ namespace ESUI.Controllers
         public JsonResult GetJsonResulVEntryRecordForm(string Condition, string seachsql)
         {
 
-           // var modle = Verfbiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
+            // var modle = Verfbiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
 
             int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
             int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
@@ -1407,11 +1408,11 @@ namespace ESUI.Controllers
 
             return Json(dic);
         }
-     [HttpPost]
+        [HttpPost]
         public JsonResult GetJsonResulVEntryRecordFormAdmin(string Condition, string seachsql)
         {
 
-           // var modle = Verfbiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
+            // var modle = Verfbiz.GetEntity(CategoryTableSet.SelectAll().Where(CategoryTableSet.ID.Equal(Condition)));
 
             int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
             int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
@@ -1443,7 +1444,8 @@ namespace ESUI.Controllers
         public ActionResult EntryRecordFormIndex()
         {
             return View();
-        }  public ActionResult EntryRecordFormIndexByUser()
+        }
+        public ActionResult EntryRecordFormIndexByUser()
         {
             return View();
         }
@@ -1463,8 +1465,8 @@ namespace ESUI.Controllers
             //string id = Request.QueryString["ID"];
             //ViewBag.RuteUrl = id;
             return View();
-            
-        }     
+
+        }
 
 
         public JsonResult GetAllCategoryTable()
@@ -1521,17 +1523,17 @@ namespace ESUI.Controllers
         {
             return View();
         }
- 
-              public JsonResult     ChangeSign(string IDSet)
+
+        public JsonResult ChangeSign(string IDSet)
         {
             //int f
             //=0;
 
             var catmodle = erfbiz.GetEntity(EntryRecordFormSet.SelectAll().Where(EntryRecordFormSet.ID.Equal(IDSet)));
-                  catmodle.State = EnumConfig.ArchiveType.HaveSign.ToString();
+            catmodle.State = EnumConfig.ArchiveType.HaveSign.ToString();
             catmodle.WhereExpression = EntryRecordFormSet.ID.Equal(IDSet);
- 
-               var f=   erfbiz.Update(catmodle);
+
+            var f = erfbiz.Update(catmodle);
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
             {
@@ -1578,37 +1580,37 @@ string.Format("~/UploadFiles/{0}", filename);
             string virtualPath =
 string.Format("~/UploadFiles/{0}", filename);
             string filePath = Server.MapPath(virtualPath);
-           // var liListColumnst = CCBiz.GetEntities(ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(CategoryTableID).And(ColumnChartsSet.IsEnable.Equal(true))).OrderByASC(ColumnChartsSet.SortNo));
+            // var liListColumnst = CCBiz.GetEntities(ColumnChartsSet.SelectAll().Where(ColumnChartsSet.CategoryTableID.Equal(CategoryTableID).And(ColumnChartsSet.IsEnable.Equal(true))).OrderByASC(ColumnChartsSet.SortNo));
 
-         //   var ddd = liListColumnst.FirstOrDefault(t => t.colspan > 1);
+            //   var ddd = liListColumnst.FirstOrDefault(t => t.colspan > 1);
             DataTable ffd = new DataTable();
-//                  { field: 'RealName', title: '姓名', width: 100, sortable: true },
-//              
-//              { field: 'Units', title: '单位', width: 100, sortable: true },
-//              { field: 'Duties', title: '职务', width: 100, sortable: true },
-//              { field: 'Summary', title: '摘要', width: 100, sortable: true },
-//              { field: 'location', title: '存放位置', width: 100, sortable: true },
+            //                  { field: 'RealName', title: '姓名', width: 100, sortable: true },
+            //              
+            //              { field: 'Units', title: '单位', width: 100, sortable: true },
+            //              { field: 'Duties', title: '职务', width: 100, sortable: true },
+            //              { field: 'Summary', title: '摘要', width: 100, sortable: true },
+            //              { field: 'location', title: '存放位置', width: 100, sortable: true },
 
             DataColumn column = new DataColumn("RealName");
             DataColumn column2 = new DataColumn("Units");
             DataColumn column3 = new DataColumn("Duties");
             DataColumn column4 = new DataColumn("Summary");
             DataColumn column5 = new DataColumn("location");
-           
+
 
             ffd.Columns.Add(column);
             ffd.Columns.Add(column2);
             ffd.Columns.Add(column3);
             ffd.Columns.Add(column4);
             ffd.Columns.Add(column5);
-          ///  if (ddd != null)
-          //  {
-             NewExeclHelper.ImportExceltoDt(filePath, 0, 0,ffd);
-         //   }
-         //   else
-         //   {
-         //       ffd = NewExeclHelper.ImportExceltoDt(filePath, liListColumnst, 2);
-       //     }
+            ///  if (ddd != null)
+            //  {
+            NewExeclHelper.ImportExceltoDt(filePath, 0, 0, ffd);
+            //   }
+            //   else
+            //   {
+            //       ffd = NewExeclHelper.ImportExceltoDt(filePath, liListColumnst, 2);
+            //     }
             // ExcelHelper ff=new ExcelHelper();
 
             return Json(ffd);
