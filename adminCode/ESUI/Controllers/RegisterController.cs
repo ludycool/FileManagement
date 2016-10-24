@@ -74,72 +74,35 @@ namespace ESUI.Controllers
                 {
                     EidModle.Id = Guid.NewGuid();
                     EidModle.CreateTime = DateTime.Now;
-                    EidModle.ModifyTime = DateTime.Now;
-                    //rol.RoleDescription = EidModle.RoleDescription;
-                    //rol.RoleOrder = EidModle.RoleOrder;
-                    SetRole(EidModle.Id.ToString(), EidModle.UserType);
-
+                    EidModle.ModifyTime = DateTime.Now;        
                     OPBiz.Add(EidModle);
+
+                    //设置默认角色
+                    List<RMS_Role> listRole = URBiz.GetOwnList<RMS_Role>(RMS_RoleSet.SelectAll().Where(RMS_RoleSet.RoleTypes.Equal(0)));//所有的姓名登录角色
+                    RMS_UserRole urItem = new RMS_UserRole();
+                    urItem.Id = Guid.NewGuid();
+                    urItem.UserId = EidModle.Id;
+                    urItem.RoleId = listRole[0].Id;
+                    urBiz.Add(urItem);
+                    
                     ReSultMode.Code = 11;
                     ReSultMode.Data = EidModle.Id.ToString();
-                    ReSultMode.Msg = "注册成功,3秒后自动登录";
-                    // RedirectToAction("LoginController", "index");
+                    ReSultMode.Msg = "注册成功!";
+                    RedirectToAction("index", "home");
                 }
             }
 
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
         }
-
-        public JsonResult SetRole(string UserId, int? roleType)
-        {
-            string RoleId = "";
-            string sqlR = string.Format("Select Id,RoleName From [dbo].[RMS_Role] Where RoleTypes={0}", roleType);
-            RMS_RoleBiz role = new RMS_RoleBiz();
-            DataSet ds = role.ExecuteSqlToDataSet(sqlR);
-            if (ds != null && ds.Tables[0].Rows.Count > 0)
-            {
-                RoleId = ds.Tables[0].Rows[0]["Id"].ToString().Trim();
-            }
-            Guid uId = Guid.Parse(UserId);
-            Guid rId = Guid.Parse(RoleId);
-            var sql = RMS_UserRoleSet.SelectAll().Where(RMS_UserRoleSet.UserId.Equal(uId));
-
-            RMS_UserRole Rmodel = URBiz.GetEntity(sql);
-            if (Rmodel == null)
-            {
-                Rmodel = new RMS_UserRole();
-                Rmodel.Id = Guid.NewGuid();
-                Rmodel.UserId = uId;
-                Rmodel.RoleId = rId;
-                URBiz.Add(Rmodel);
-                return Json("ok", JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                Rmodel.RoleId = rId;
-                Rmodel.WhereExpression = RMS_UserRoleSet.Id.Equal(Rmodel.Id);
-                //  spmodel.GroupId = GroupId;
-                if (URBiz.Update(Rmodel) > 0)
-                {
-                    return Json("ok", JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json("Nok", JsonRequestBehavior.AllowGet);
-                }
-
-            }
-
-        }
-
+        
         [HttpPost]
         [AllowAnonymous]
         //[ValidateAntiForgeryToken] 安全必须 外网出错 所需的防伪 Cookie“__RequestVerificationToken”不存在。 暂时去掉，待解决
-        public ActionResult RegLogin()
+        public ActionResult RegLogin(string loginname, string password)
         {
             LoginModel mode = new LoginModel();
-            mode.LoginName = Request["uid"];
-            mode.Password = Request["pwd"];
+            mode.LoginName = loginname;//Request["uid"];
+            mode.Password = password;// Request["pwd"];
             mode.UserType = "1";
             // if (ModelState.IsValid)
 
@@ -305,7 +268,7 @@ namespace ESUI.Controllers
                     #endregion
 
 
-                    return RedirectToAction("index", "home");
+                    //return RedirectToAction("index", "home");
                 }
 
                 #endregion
