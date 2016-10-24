@@ -7,8 +7,21 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+    
     <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+    <style>
+        *{
+            font-size:14px;
+        }
+        .easyui-combobox .easyui-textbox{
+            width:100%;
+            line-height:16px;
+        }
+        .easyui-textbox{
+            width:100%;
+            line-height:16px;
+        }
+    </style>
 
     @* ReSharper disable once NotAllPathsReturnValue *@
 
@@ -22,7 +35,7 @@
             var BaseUrl = "/Register/";
             jQuery(document).ready(function () {
                 BindDepertment();
-                
+
             });
 
             var aCity = { 11: "北京", 12: "天津", 13: "河北", 14: "山西", 15: "内蒙古", 21: "辽宁", 22: "吉林", 23: "黑龙江", 31: "上海", 32: "江苏", 33: "浙江", 34: "安徽", 35: "福建", 36: "江西", 37: "山东", 41: "河南", 42: "湖北", 43: "湖南", 44: "广东", 45: "广西", 46: "海南", 50: "重庆", 51: "四川", 52: "贵州", 53: "云南", 54: "西藏", 61: "陕西", 62: "甘肃", 63: "青海", 64: "宁夏", 65: "新疆", 71: "台湾", 81: "香港", 82: "澳门", 91: "国外" }
@@ -38,7 +51,7 @@
                 if (sBirthday != (d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()))
                     return "身份证上的出生日期非法";
                 for (var i = 17; i >= 0; i--)
-                    iSum += (Math.pow(2, i) % 11) * parseInt(sId.charAt(17 - i), 11);               
+                    iSum += (Math.pow(2, i) % 11) * parseInt(sId.charAt(17 - i), 11);
                 if (iSum % 11 != 1)
                     return "你输入的身份证号非法";
                 return true;//aCity[parseInt(sId.substr(0,2))]+","+sBirthday+","+(sId.substr(16,1)%2?"男":"女")
@@ -55,7 +68,7 @@
 
             $.extend($.fn.validatebox.defaults.rules, {
                 idcared: {
-                    validator: function (value, param) {                        
+                    validator: function (value, param) {
                         var flag = isCardID(value);
                         return flag == true ? true : false;
                     },
@@ -74,18 +87,25 @@
                     return false;
                 }
 
-
+                var curUser = $("#TrueName").val();
 
                 //获取需要传递的参数传递给前台 push
                 var postData = $("#ff").serializeArray();
 
                 //发送异步请求到后台保存按钮数据
                 $.post(BaseUrl + 'NewRegister', postData, function (data) {
-                    alerts(data.Msg, 2);
                     if (data.Code > 0) {
-                        // setTimeout(login, 3);
-                        window.location.href = "/Login/Index";
-                        // $("#ff").form("clear");
+                        $.messager.confirm("友情提示", curUser + " 注册成功，请重新登录，点击确定就转回登录界面？", function (r) {
+                            if (r) {
+                                window.open("/Login/Index", "_self");
+                            }
+                            else {
+                                return;
+                            }
+                        });
+                    }
+                    else {
+                        $.messager.alert("友情提示", "注册失败:" + data.Msg, "error");
                     }
                 });
             }
@@ -121,17 +141,17 @@
 
 </head>
 <body>
-    <div style="margin:10% auto;width:450px;text-align:center;">
+    <div style="margin:10% auto;width:450px;text-align:center;font-size:14px;">
         <div class="easyui-panel" title="新用户注册" style="min-width:400px;">
             <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
-                <table cellpadding="5" style="border:none">
+                <table cellpadding="5" style="border:none;background-color:palegreen">
                     <tr>
-                        <td>用户名:</td>
-                        <td><input class="easyui-validatebox easyui-textbox" type="text" id="LoginName" name="LoginName" data-options="required:true" /></td>
+                        <td style="width:80px;">用户名:</td>
+                        <td style="width:240px;"><input class="easyui-validatebox easyui-textbox" type="text" id="LoginName" name="LoginName" data-options="required:true" /></td>
                     </tr>
                     <tr>
                         <td>姓名:</td>
-                        <td><input class="easyui-validatebox easyui-textbox" type="text" name="TrueName" data-options="required:true" /></td>
+                        <td><input class="easyui-validatebox easyui-textbox" type="text" name="TrueName" id="TrueName" data-options="required:true" /></td>
                     </tr>
                     <tr>
                         <td>身份证号:</td>
@@ -155,9 +175,8 @@
                 </table>
             </form>
             <div style="text-align:center;padding:5px">
-                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">注册并登录</a>
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
-                <a href="javascript:void(0)" class="easyui-link" onclick="login()">已经有账号</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">注册</a>
             </div>
         </div>
     </div>
