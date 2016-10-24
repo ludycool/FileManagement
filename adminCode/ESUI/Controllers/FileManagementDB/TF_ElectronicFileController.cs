@@ -48,7 +48,16 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = "TF_ElectronicFile";
-            pc.sys_Where = Where;
+         
+            if (UserData.UserTypes == 1)
+            {
+                pc.sys_Where = Where;
+            }
+            else
+            {
+                pc.sys_Where = Where + " and CreateMan='" + UserData.UserName + "'";
+            }
+
             pc.sys_Order = " " + sortField + " " + sortOrder;
             List<TF_ElectronicFile> list2 = OPBiz.GetPagingData<TF_ElectronicFile>(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();

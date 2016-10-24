@@ -51,7 +51,14 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = "v_TF_LeftComments";
-            pc.sys_Where = Where;
+            if (UserData.UserTypes == 1)
+            {
+                pc.sys_Where = Where;
+            }
+            else
+            {
+                pc.sys_Where = Where + " and CreateMan='" + UserData.UserName + "'";
+            }
             pc.sys_Order = " " + sortField + " " + sortOrder;
             List<TF_LifeComments> list2 = OPBiz.GetPagingData<TF_LifeComments>(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
@@ -157,7 +164,7 @@ namespace ESUI.Controllers
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
-        
+
 
         public JsonResult GetInfo(string ID)
         {
