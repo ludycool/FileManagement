@@ -112,15 +112,19 @@
             function BindDepertment() {
                 $('#DepartmentId').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetDepartment');  // 使用新的URL重新载入列表数据
             }
+
+            function login() {
+
+            }
         </script>
     }
 
 </head>
 <body>
-    <div style="margin:0 auto;width:100%;text-align:center;">
-        <div class="easyui-panel" title="新用户注册" style="left:0;right:0;min-width:600px;min-height:760px;">
+    <div style="margin:10% auto;width:450px;text-align:center;">
+        <div class="easyui-panel" title="新用户注册" style="min-width:400px;">
             <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
-                <table cellpadding="5" style="margin:100px auto 0px auto;border:none">
+                <table cellpadding="5" style="border:none">
                     <tr>
                         <td>用户名:</td>
                         <td><input class="easyui-validatebox easyui-textbox" type="text" id="LoginName" name="LoginName" data-options="required:true" /></td>
@@ -153,6 +157,7 @@
             <div style="text-align:center;padding:5px">
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">注册并登录</a>
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
+                <a href="javascript:void(0)" class="easyui-link" onclick="login()">已经有账号</a>
             </div>
         </div>
     </div>

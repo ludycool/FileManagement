@@ -39,10 +39,10 @@
       <publishTime>07/07/2016 21:33:55</publishTime>
     </File>
     <File Include="bin/App.Core.dll">
-      <publishTime>10/15/2016 18:00:10</publishTime>
+      <publishTime>10/24/2016 13:46:51</publishTime>
     </File>
     <File Include="bin/App.Core.pdb">
-      <publishTime>10/15/2016 18:00:10</publishTime>
+      <publishTime>10/24/2016 13:46:51</publishTime>
     </File>
     <File Include="bin/App_Data/AdvertisingData.xml">
       <publishTime>04/07/2015 15:02:29</publishTime>
@@ -60,10 +60,10 @@
       <publishTime>04/08/2015 09:11:07</publishTime>
     </File>
     <File Include="bin/App_global.asax.compiled">
-      <publishTime>10/15/2016 18:01:05</publishTime>
+      <publishTime>10/24/2016 13:47:09</publishTime>
     </File>
     <File Include="bin/App_global.asax.dll">
-      <publishTime>10/15/2016 18:01:05</publishTime>
+      <publishTime>10/24/2016 13:47:09</publishTime>
     </File>
     <File Include="bin/DocX.dll">
       <publishTime>10/09/2016 20:32:42</publishTime>
@@ -87,49 +87,49 @@
       <publishTime>07/07/2016 21:32:33</publishTime>
     </File>
     <File Include="bin/e3net.BLL.dll">
-      <publishTime>10/15/2016 18:00:10</publishTime>
+      <publishTime>10/24/2016 13:46:50</publishTime>
     </File>
     <File Include="bin/e3net.BLL.pdb">
-      <publishTime>10/15/2016 18:00:10</publishTime>
+      <publishTime>10/24/2016 13:46:50</publishTime>
     </File>
     <File Include="bin/e3net.common.dll">
-      <publishTime>10/15/2016 18:00:08</publishTime>
+      <publishTime>10/24/2016 13:46:49</publishTime>
     </File>
     <File Include="bin/e3net.common.pdb">
-      <publishTime>10/15/2016 18:00:08</publishTime>
+      <publishTime>10/24/2016 13:46:49</publishTime>
     </File>
     <File Include="bin/e3net.DAL.dll">
-      <publishTime>10/15/2016 18:00:09</publishTime>
+      <publishTime>10/24/2016 13:46:49</publishTime>
     </File>
     <File Include="bin/e3net.DAL.pdb">
-      <publishTime>10/15/2016 18:00:09</publishTime>
+      <publishTime>10/24/2016 13:46:49</publishTime>
     </File>
     <File Include="bin/e3net.IDAL.dll">
-      <publishTime>10/15/2016 18:00:09</publishTime>
+      <publishTime>10/24/2016 13:46:49</publishTime>
     </File>
     <File Include="bin/e3net.IDAL.pdb">
-      <publishTime>10/15/2016 18:00:09</publishTime>
+      <publishTime>10/24/2016 13:46:49</publishTime>
     </File>
     <File Include="bin/e3net.Mode.dll">
-      <publishTime>10/15/2016 18:00:09</publishTime>
+      <publishTime>10/24/2016 13:46:49</publishTime>
     </File>
     <File Include="bin/e3net.Mode.pdb">
-      <publishTime>10/15/2016 18:00:09</publishTime>
+      <publishTime>10/24/2016 13:46:49</publishTime>
     </File>
     <File Include="bin/e3net.tools.dll">
-      <publishTime>10/15/2016 18:00:09</publishTime>
+      <publishTime>10/24/2016 13:46:49</publishTime>
     </File>
     <File Include="bin/e3net.tools.pdb">
-      <publishTime>10/15/2016 18:00:09</publishTime>
+      <publishTime>10/24/2016 13:46:49</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>07/07/2016 21:33:12</publishTime>
     </File>
     <File Include="bin/ESUI.dll">
-      <publishTime>10/15/2016 18:00:13</publishTime>
+      <publishTime>10/24/2016 13:46:51</publishTime>
     </File>
     <File Include="bin/ESUI.pdb">
-      <publishTime>10/15/2016 18:00:13</publishTime>
+      <publishTime>10/24/2016 13:46:51</publishTime>
     </File>
     <File Include="bin/ICSharpCode.SharpZipLib.dll">
       <publishTime>07/07/2016 21:32:14</publishTime>
@@ -9963,7 +9963,7 @@
       <publishTime>07/07/2016 21:34:38</publishTime>
     </File>
     <File Include="PrecompiledApp.config">
-      <publishTime>10/15/2016 18:01:01</publishTime>
+      <publishTime>10/24/2016 13:47:07</publishTime>
     </File>
     <File Include="Scripts/jquery-1.7.1.js">
       <publishTime>07/07/2016 21:34:43</publishTime>
@@ -10014,7 +10014,7 @@
       <publishTime>09/29/2016 23:05:11</publishTime>
     </File>
     <File Include="Scripts/weboffic7/LoadWebOffice.js">
-      <publishTime>10/13/2016 23:15:44</publishTime>
+      <publishTime>10/14/2016 09:29:15</publishTime>
     </File>
     <File Include="Scripts/weboffic7/main.js">
       <publishTime>09/29/2016 23:05:11</publishTime>
@@ -10032,7 +10032,7 @@
       <publishTime>10/09/2016 20:32:42</publishTime>
     </File>
     <File Include="tempword/模板.xlsx">
-      <publishTime>10/13/2016 22:15:52</publishTime>
+      <publishTime>10/14/2016 09:29:15</publishTime>
     </File>
     <File Include="test.html">
       <publishTime>07/07/2016 21:34:38</publishTime>
@@ -10077,10 +10077,10 @@
       <publishTime>07/07/2016 21:34:45</publishTime>
     </File>
     <File Include="Views/DynamicTable/EntryRecordFormIndex.cshtml">
-      <publishTime>10/12/2016 20:54:25</publishTime>
+      <publishTime>10/12/2016 10:10:31</publishTime>
     </File>
     <File Include="Views/DynamicTable/EntryRecordFormIndexByUser.cshtml">
-      <publishTime>10/12/2016 20:54:25</publishTime>
+      <publishTime>10/12/2016 10:10:31</publishTime>
     </File>
     <File Include="Views/DynamicTable/Importview.cshtml">
       <publishTime>07/07/2016 21:34:45</publishTime>
@@ -10119,7 +10119,7 @@
       <publishTime>02/12/2015 16:19:58</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>10/15/2016 17:56:06</publishTime>
+      <publishTime>10/24/2016 09:09:32</publishTime>
     </File>
     <File Include="Views/HospitalData/Index.cshtml">
       <publishTime>11/23/2015 19:06:35</publishTime>
@@ -10131,7 +10131,7 @@
       <publishTime>02/12/2015 16:21:23</publishTime>
     </File>
     <File Include="Views/Login/Index.cshtml">
-      <publishTime>07/07/2016 21:34:45</publishTime>
+      <publishTime>10/24/2016 10:45:06</publishTime>
     </File>
     <File Include="Views/Login_old/Index.cshtml">
       <publishTime>07/07/2016 21:34:45</publishTime>
@@ -10151,8 +10151,11 @@
     <File Include="Views/PushMessage/Index.cshtml">
       <publishTime>11/30/2015 14:37:29</publishTime>
     </File>
+    <File Include="Views/Register/Index.cshtml">
+      <publishTime>10/24/2016 13:45:34</publishTime>
+    </File>
     <File Include="Views/Role/Index.cshtml">
-      <publishTime>07/07/2016 21:34:45</publishTime>
+      <publishTime>10/24/2016 13:03:58</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>07/07/2016 21:34:45</publishTime>
@@ -10176,16 +10179,16 @@
       <publishTime>07/07/2016 21:34:44</publishTime>
     </File>
     <File Include="Views/TF_LifeComments/Index.cshtml">
-      <publishTime>10/15/2016 12:41:36</publishTime>
+      <publishTime>10/24/2016 09:09:32</publishTime>
     </File>
     <File Include="Views/TF_LifeComments/LifeWebOfficeDoc.cshtml">
-      <publishTime>10/15/2016 12:02:17</publishTime>
+      <publishTime>10/24/2016 09:09:32</publishTime>
     </File>
     <File Include="Views/TF_LiftApprove/EditWebOffice.cshtml">
-      <publishTime>10/15/2016 12:05:23</publishTime>
+      <publishTime>10/24/2016 09:09:32</publishTime>
     </File>
     <File Include="Views/TF_LiftApprove/Index.cshtml">
-      <publishTime>10/15/2016 12:41:01</publishTime>
+      <publishTime>10/24/2016 09:09:32</publishTime>
     </File>
     <File Include="Views/TF_PaperFile/Index.cshtml">
       <publishTime>10/04/2016 13:10:49</publishTime>
@@ -10194,10 +10197,10 @@
       <publishTime>09/30/2016 20:17:16</publishTime>
     </File>
     <File Include="Views/TF_PersonnelFile/Index.cshtml">
-      <publishTime>10/13/2016 22:15:52</publishTime>
+      <publishTime>10/14/2016 09:29:15</publishTime>
     </File>
     <File Include="Views/TF_PersonnelFile/PersonnelFileInput.cshtml">
-      <publishTime>10/13/2016 22:15:52</publishTime>
+      <publishTime>10/14/2016 09:29:15</publishTime>
     </File>
     <File Include="Views/TF_PersonnelFile/SetUnitsIn.cshtml">
       <publishTime>07/07/2016 21:34:45</publishTime>
@@ -10230,7 +10233,7 @@
       <publishTime>07/07/2016 21:34:44</publishTime>
     </File>
     <File Include="Views/TF_PersonnelFile_Transmitting_In/Index.cshtml">
-      <publishTime>10/14/2016 21:26:48</publishTime>
+      <publishTime>10/24/2016 09:09:32</publishTime>
     </File>
     <File Include="Views/TF_PersonnelFile_Transmitting_Out/Add.cshtml">
       <publishTime>07/07/2016 21:34:44</publishTime>
@@ -10335,7 +10338,7 @@
       <publishTime>07/07/2016 21:34:44</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>10/15/2016 18:00:54</publishTime>
+      <publishTime>10/24/2016 13:47:03</publishTime>
     </File>
     <File Include="文档/HospitalAssistant.pdm">
       <publishTime>04/03/2015 17:40:53</publishTime>
