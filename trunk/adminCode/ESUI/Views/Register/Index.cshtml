@@ -41,7 +41,8 @@
                 $.post(BaseUrl + 'NewRegister', postData, function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {                       
-                         setTimeout(login, 3);
+                        setTimeout(login, 3);
+                        window.location.href = "/Login/Index";
                         // $("#ff").form("clear");
                     }
                 });
