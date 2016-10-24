@@ -63,7 +63,7 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = "v_TF_PersonnelFile_Transmitting_In";
-            if (UserData.UserTypes == 0)
+            if (UserData.UserTypes == 1)
             {
                 pc.sys_Where = Where ;
             }
