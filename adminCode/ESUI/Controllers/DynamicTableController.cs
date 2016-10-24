@@ -351,7 +351,7 @@ namespace ESUI.Controllers
                             {
                                 if (!string.IsNullOrEmpty(item.align))
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 0)
                                     {
                                         menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" +
                                       item.rowspan + "\", width:\"" + item.width + "\",editor:{" +
@@ -368,7 +368,7 @@ namespace ESUI.Controllers
                                 }
                                 else
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 0)
                                     {
                                         menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" +
                                                  item.rowspan + "\", width:\"" + item.width + "\",editor:{" +
@@ -392,7 +392,7 @@ namespace ESUI.Controllers
                             {
                                 if (!string.IsNullOrEmpty(item.align))
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes!=1)
+                                    if (item.ManagingStatus == true && UserData.UserTypes!=0)
                                     {
                                         menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
                                            item.width + "\",editor:{" +   "}" + ",align:\"" + item.align +
@@ -408,7 +408,7 @@ namespace ESUI.Controllers
                                 }
                                 else
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 0)
                                     {
                                         menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
                                                   item.width + "\",editor:{" +  "}";
@@ -461,7 +461,7 @@ namespace ESUI.Controllers
                             {
                                 if (!string.IsNullOrEmpty(item.align))
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
+                                    if (item.ManagingStatus == true && UserData.UserTypes !=0)
                                     {
                                         menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
                                               item.rowspan + ", width:\"" + item.width + "\",editor:{" + 
@@ -477,7 +477,7 @@ namespace ESUI.Controllers
                                 }
                                 else
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 0)
                                     {
                                         menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:" +
                                              item.rowspan + ", width:\"" + item.width + "\",editor:{" + 
@@ -496,7 +496,7 @@ namespace ESUI.Controllers
                             {
                                 if (!string.IsNullOrEmpty(item.align))
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
+                                    if (item.ManagingStatus == true && UserData.UserTypes != 0)
                                     {
                                         menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
                                             item.width + "\",editor:{" + "}" + ",align:\"" + item.align +
@@ -512,7 +512,7 @@ namespace ESUI.Controllers
                                 }
                                 else
                                 {
-                                    if (item.ManagingStatus == true && UserData.UserTypes != 1)
+                                    if (item.ManagingStatus == true && UserData.UserTypes !=0)
                                     {
                                         menus2 += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
                                           item.width + "\",editor:{" +  "}";
