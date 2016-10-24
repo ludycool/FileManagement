@@ -61,7 +61,7 @@ namespace ESUI.Controllers
             }
             if (IsAdd)
             {
-                EidModle.UserType = 1;
+                EidModle.UserType = 0;
                 var mql2 = RMS_UserSet.LoginName.Equal(EidModle.LoginName);
                 long i = OPBiz.GetCount<RMS_UserSet>(mql2);
                 if (i > 0)
