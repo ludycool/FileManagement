@@ -178,13 +178,13 @@ namespace ESUI.Controllers
                 }    
                 if (adminRole[0].DepartmentId != null)
                 {
-                    var dpsql = RMS_DepartmentSet.SelectAll().Where(RMS_DepartmentSet.Id.Equal(adminRole[0].DepartmentId));
-                    RMS_Department dpItem = dpBiz.GetEntity(dpsql);
-                    if (dpItem != null)
-                    {
-                        UserData.DepartmentId = dpItem.Id;
-                        UserData.DepartmentName = dpItem.Name;
-                    }
+                    //var dpsql = RMS_DepartmentSet.SelectAll().Where(RMS_DepartmentSet.Id.Equal(adminRole[0].DepartmentId));
+                    //RMS_Department dpItem = dpBiz.GetEntity(dpsql);
+                    //if (dpItem != null)
+                    //{
+                        UserData.DepartmentId = (Guid)adminRole[0].DepartmentId;
+                    UserData.DepartmentName = adminRole[0].DepartmentName;
+                    //}
                 }
                 IsHaveP = true;
 

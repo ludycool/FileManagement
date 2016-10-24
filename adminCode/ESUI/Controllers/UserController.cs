@@ -102,6 +102,7 @@ namespace ESUI.Controllers
                 }
                 else
                 {
+               EidModle.UserType = 0;
                 EidModle.Id = Guid.NewGuid();
                 EidModle.CreateTime = DateTime.Now;
                 EidModle.ModifyTime = DateTime.Now;
