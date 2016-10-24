@@ -28,6 +28,8 @@
     <link href="~/Content/Login/wuye/sitebefore.css" rel="stylesheet" type="text/css" />
 
     <script src="~/Content/JqueryEasyUI/jquery1.9.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script type="text/javascript">
         $(function () {
 
@@ -37,7 +39,16 @@
 
             //    //单击验证码事件
 
-
+            $(this).validate({
+                rules: {
+                    LoginName: "required",
+                    Password: "required"
+                },
+                messages: {
+                    LoginName: "用户名不能为空",
+                    Password: "密码不能为空"
+                }
+            });
 
 
         });
@@ -108,7 +119,7 @@
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
-            @Html.ValidationSummary()
+            @Html.ValidationSummary(true)
 
             <div class="content">
                 <div class="login_box cf">
@@ -118,11 +129,11 @@
                     <div class="login fr">
                         <p>
                             <label>用户名</label>
-                            @Html.TextBoxFor(m => m.LoginName, new { @class = "TxtUserNameCssClass", @Value = "admin" })
+                            @Html.TextBoxFor(m => m.LoginName, new { @class = "TxtUserNameCssClass", @Value = "" })
                         </p>
                         <p id="ppwd">
                             <label><a href="#"></a>密码</label>
-                            @Html.PasswordFor(m => m.Password, new { @class = "TxtPasswordCssClass", @Value = "123456" })
+                            @Html.PasswordFor(m => m.Password, new { @class = "TxtPasswordCssClass", @Value = "" })
                         </p>
                         @*   <p class="verify">
             @Html.TextBoxFor(m => m.VCode, new { @class = "TxtValidateCodeCssClass", @Value = "验证码", @onfocus = "cleartxt();" })
@@ -139,7 +150,7 @@
                             <a href="javascript:void(0);" onclick="return register()">注册</a>
                         </p>
                         <p class="btn">
-                            <input name="" type="submit" value="登录">
+                            <input name="login" type="submit" value="登录">
                         </p>
                     </div>
                 </div>
