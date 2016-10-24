@@ -73,6 +73,17 @@ namespace ESUI.Controllers
             List<V_UserRole> adminRole = null;
             bool IsHaveP = false;//是否有权限登录
 
+            //20161024 janhuang
+            if (mode.LoginName!=""&&mode.Password!="")
+            {
+                mode.UserType = "1";
+            }
+            else
+            {
+                mode.UserType = "2";
+            }
+
+
             #region  根据类型登录
             switch (mode.UserType)
             {
