@@ -74,7 +74,7 @@ namespace ESUI.Controllers
                 {
                     EidModle.Id = Guid.NewGuid();
                     EidModle.CreateTime = DateTime.Now;
-                    EidModle.ModifyTime = DateTime.Now;        
+                    EidModle.ModifyTime = DateTime.Now;
                     OPBiz.Add(EidModle);
 
                     //设置默认角色
@@ -84,17 +84,16 @@ namespace ESUI.Controllers
                     urItem.UserId = EidModle.Id;
                     urItem.RoleId = listRole[0].Id;
                     urBiz.Add(urItem);
-                    
+
                     ReSultMode.Code = 11;
                     ReSultMode.Data = EidModle.Id.ToString();
                     ReSultMode.Msg = "注册成功!";
-                    RedirectToAction("index", "home");
                 }
             }
 
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
         }
-        
+
         [HttpPost]
         [AllowAnonymous]
         //[ValidateAntiForgeryToken] 安全必须 外网出错 所需的防伪 Cookie“__RequestVerificationToken”不存在。 暂时去掉，待解决
