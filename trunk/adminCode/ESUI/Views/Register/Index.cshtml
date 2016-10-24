@@ -13,13 +13,17 @@
         *{
             font-size:14px;
         }
-        .easyui-combobox .easyui-textbox{
-            width:100%;
-            line-height:16px;
+        .easyui-combobox{
+            width:240px;
+             height:20px;
+              font-size:14px;
+            padding:3px;
         }
         .easyui-textbox{
-            width:100%;
-            line-height:16px;
+            width:240px;
+            height:20px;
+            font-size:14px;
+            padding:3px;
         }
     </style>
 
@@ -144,7 +148,7 @@
     <div style="margin:10% auto;width:450px;text-align:center;font-size:14px;">
         <div class="easyui-panel" title="新用户注册" style="min-width:400px;">
             <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
-                <table cellpadding="5" style="border:none;background-color:palegreen">
+                <table cellpadding="5" style="border:none;">
                     <tr>
                         <td style="width:80px;">用户名:</td>
                         <td style="width:240px;"><input class="easyui-validatebox easyui-textbox" type="text" id="LoginName" name="LoginName" data-options="required:true" /></td>
@@ -160,7 +164,7 @@
                     <tr>
                         <td>选择单位:</td>
                         <td>
-                            <input id="DepartmentId" class="easyui-combobox" name="DepartmentId"
+                            <input id="DepartmentId" class="easyui-combobox" height="20" name="DepartmentId"
                                    data-options="valueField:'Id',textField:'TName'" />
                         </td>
                     </tr>
