@@ -25,6 +25,23 @@
                 GetSonDictionaryNo("Category", "0102");
                 FTypes = 1;//上传类型 1为文件 0 为图片
             })
+
+            Date.prototype.Format = function (fmt) {
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+
             function DataGridSet() {
                 $('#dg').datagrid({
                     url: BaseUrl + 'Search',
@@ -32,7 +49,19 @@
                         { field: 'ck', checkbox: true },
                         { field: 'TName', title: '名称', width: 150, sortable: true },
                         { field: 'Units', title: '单位', width: 100, sortable: true },
-                        { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
+                        {
+                            field: 'CreateTime', title: '添加时间', width: 130, sortable: true, formatter: function (value, row, index) {
+                                if (value != null && value != "") {
+                                    var pa = /.*\((.*)\)/;
+                                    var unixtime = value.match(pa)[1].substring(0, 10);
+                                    var currtime = new Date(unixtime * 1000);
+                                    return currtime.Format("yyyy-MM-dd hh:mm:ss");
+                                }
+                                else {
+                                    return "";
+                                }
+                            }
+                        },
                          {
                              field: 'Summary', title: '摘要', width: 300, formatter: function (value, row, index) {
                                  return value;
