@@ -28,8 +28,8 @@
     <link href="~/Content/Login/wuye/sitebefore.css" rel="stylesheet" type="text/css" />
 
     <script src="~/Content/JqueryEasyUI/jquery1.9.min.js"></script>
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    @*<script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
     <script type="text/javascript">
         $(function () {
 
@@ -39,17 +39,50 @@
 
             //    //单击验证码事件
 
-            $(this).validate({
-                rules: {
-                    LoginName: "required",
-                    Password: "required"
-                },
-                messages: {
-                    LoginName: "用户名不能为空",
-                    Password: "密码不能为空"
+            //$(this).validate({
+            //    rules: {
+            //        LoginName: "required",
+            //        Password: "required"
+            //    },
+            //    messages: {
+            //        LoginName: "用户名不能为空",
+            //        Password: "密码不能为空"
+            //    }
+            //});
+
+            $("#login").click(function () {
+                var loginname = $("#LoginName").val();
+                var password = $("#Password").val();
+                if (loginname == "") {
+                    $("#errorMsg").html("用户名不能为空");
+                    return false;
+                }
+                else if (password == "") {
+                    $("#errorMsg").html("密码不能为空");
+                    return false;
                 }
             });
 
+            $("#LoginName").blur(function () {
+                if ($("#LoginName").val() != "") {
+                    $("#errorMsg").html("");
+                }
+                else
+                {
+                    $("#errorMsg").html("用户名不能为空");
+                    return false;
+                }
+            });
+            $("#Password").blur(function () {
+                if ($("#Password").val() != "") {
+                    $("#errorMsg").html("");                    
+                }
+                else
+                {
+                    $("#errorMsg").html("密码不能为空");
+                    return false;
+                }
+            });
 
         });
 
@@ -60,6 +93,8 @@
         //function cleartxt() {
         //    $('#VCode').val('');
         //}
+
+
         function onchanges() {
 
             var se = $("#UserType").val();
@@ -136,21 +171,24 @@
                             @Html.PasswordFor(m => m.Password, new { @class = "TxtPasswordCssClass", @Value = "" })
                         </p>
                         @*   <p class="verify">
-            @Html.TextBoxFor(m => m.VCode, new { @class = "TxtValidateCodeCssClass", @Value = "验证码", @onfocus = "cleartxt();" })
-            <span class="code">
-                <img id="valiCode" style="cursor: pointer;" class="img" src="/Common/GetValidateCode" alt="看不清？请点我" /></span>
-            <a href="#" onclick="CV();">看不清楚</a>
-        </p>
-    <p>
-        <label><a href="#"></a>类型</label>
-        @Html.DropDownListFor(model => model.UserType, ViewData["UserType"] as SelectList, new { @class = "selecttor", @onchange = "onchanges()" })
-    </p>*@
+                                    @Html.TextBoxFor(m => m.VCode, new { @class = "TxtValidateCodeCssClass", @Value = "验证码", @onfocus = "cleartxt();" })
+                                    <span class="code">
+                                        <img id="valiCode" style="cursor: pointer;" class="img" src="/Common/GetValidateCode" alt="看不清？请点我" /></span>
+                                    <a href="#" onclick="CV();">看不清楚</a>
+                                </p>
+                            <p>
+                                <label><a href="#"></a>类型</label>
+                                @Html.DropDownListFor(model => model.UserType, ViewData["UserType"] as SelectList, new { @class = "selecttor", @onchange = "onchanges()" })
+                            </p>*@
                         <p>
                             <br />
                             <a href="javascript:void(0);" onclick="return register()">注册</a>
                         </p>
+                        <p style="height:20px;">
+                            <span id="errorMsg" style="color:red;font-size:12px;"></span>
+                        </p>
                         <p class="btn">
-                            <input name="login" type="submit" value="登录">
+                            <input name="login" id="login" type="submit" value="登录">
                         </p>
                     </div>
                 </div>
