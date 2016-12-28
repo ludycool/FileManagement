@@ -125,7 +125,14 @@ namespace ESUI.Controllers
             //  groupsBiz.Add(rol);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
-
+        public JsonResult GetAllInfo()
+        {
+            //var sqlc2 = MainAssociationSet.SelectAll().Where(MainAssociationSet.CategoryTableID.Equal(ID));
+            //var d = Mabiz.GetEntities(sqlc2);
+            var f = TF_UnitsSet.SelectAll();
+            var df = OPBiz.GetEntities(f);
+            return Json(df, JsonRequestBehavior.AllowGet);
+        }
 
         public JsonResult Del(string IDSet)
         {

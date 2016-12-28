@@ -4,12 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Moon.Orm;
 
-namespace e3net.Mode.FileManagementDB
+  namespace e3net.Mode.FileManagementDB
+
 {
 
-    /// <summary>
-    /// 人员档案转递单（入）
-    /// </summary>
     [Table("[TF_PersonnelFile_Transmitting_In]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public partial class TF_PersonnelFile_Transmitting_In : EntityBase
@@ -149,18 +147,85 @@ namespace e3net.Mode.FileManagementDB
             get { return GetPropertyValue<Boolean?>("isDeleted"); }
             set { SetPropertyValue("isDeleted", value); }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String DepartmentId
+        {
+            get { return GetPropertyValue<String>("DepartmentId"); }
+            set { SetPropertyValue("DepartmentId", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String SubmitState
+        {
+            get { return GetPropertyValue<String>("SubmitState"); }
+            set { SetPropertyValue("SubmitState", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String SignPeople
+        {
+            get { return GetPropertyValue<String>("SignPeople"); }
+            set { SetPropertyValue("SignPeople", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? SignTime
+        {
+            get { return GetPropertyValue<DateTime?>("SignTime"); }
+            set { SetPropertyValue("SignTime", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String Modified
+        {
+            get { return GetPropertyValue<String>("Modified"); }
+            set { SetPropertyValue("Modified", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? ModifiedTime
+        {
+            get { return GetPropertyValue<DateTime?>("ModifiedTime"); }
+            set { SetPropertyValue("ModifiedTime", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte[] signatureimage
+        {
+            get { return GetPropertyValue<byte[]>("signatureimage"); }
+            set { SetPropertyValue("signatureimage", value); }
+        }
     }
 
     [Table("[TF_PersonnelFile_Transmitting_In]", DbType.SqlServer)]
     public  partial class TF_PersonnelFile_Transmitting_InSet : MQLBase
     {
-        public static new MQLBase Select(params FieldBase[] fields)
+        public static  MQLBase Select(params FieldBase[] fields)
         {
             return MQLBase.Select(DbType.SqlServer,"[TF_PersonnelFile_Transmitting_In]",fields);
         }
-        public static new MQLBase SelectAll()
+        public static  MQLBase SelectAll()
         {
             return MQLBase.SelectAll(DbType.SqlServer,"[TF_PersonnelFile_Transmitting_In]");
+        }
+        public static MQLBase SelectAllBut(params FieldBase[] fields)
+        {
+            return MQLBase.SelectAllBut(typeof(TF_PersonnelFile_Transmitting_InSet),DbType.SqlServer,"[TF_PersonnelFile_Transmitting_In]",fields);
         }
 
         /// <summary>
@@ -237,6 +302,41 @@ namespace e3net.Mode.FileManagementDB
         /// 是否删除
         /// </summary>
         public static readonly FieldBase isDeleted = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_In]", FieldType.Common, "[isDeleted]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase DepartmentId = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_In]", FieldType.Common, "[DepartmentId]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase SubmitState = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_In]", FieldType.Common, "[SubmitState]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase SignPeople = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_In]", FieldType.Common, "[SignPeople]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase SignTime = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_In]", FieldType.Common, "[SignTime]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase Modified = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_In]", FieldType.Common, "[Modified]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase ModifiedTime = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_In]", FieldType.Common, "[ModifiedTime]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase signatureimage = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_In]", FieldType.Common, "[signatureimage]");
     }
 
 }
