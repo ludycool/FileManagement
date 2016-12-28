@@ -44,6 +44,16 @@ namespace ESUI.Controllers
             ViewBag.RuteUrl = RuteUrl();
             return View();
         }
+        /// <summary>
+        /// 修改页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Edit()
+        {
+            ViewBag.id = Request["Id"] + "";
+            ViewBag.RuteUrl = RuteUrl();
+            return View();
+        }
         [HttpPost]
         public JsonResult Search()
         {
@@ -149,9 +159,40 @@ namespace ESUI.Controllers
                 else
                 {
                     EidModle.WhereExpression = TF_PersonnelFile_Transmitting_InSet.Id.Equal(EidModle.Id);
+                    List<TF_PersonnelFile_Transmitting_In_Item> listItem = JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_In_Item>(EidModle.FistName);
                     // EidModle.ChangedMap.Remove("id");//移除主键值
+                    EidModle.FistName = listItem[0].RealName;
                     if (OPBiz.Update(EidModle) > 0)
                     {
+
+                      
+                        int OriginalCount = 0;
+                        int DuplicateCount = 0;
+                        int MaterialCount = 0;
+
+
+                        if (listItem != null && listItem.Count > 0)
+                        {
+                            EidModle.FistName = listItem[0].RealName;
+
+                            for (int i = 0; i < listItem.Count; i++)
+                            {
+//                                OriginalCount += listItem[i].OriginalCount;
+//                                DuplicateCount += listItem[i].DuplicateCount;
+//                                MaterialCount += listItem[i].MaterialCount;//统计数
+//                                listItem[i].Id = listItem[i].Id; ;
+//                                listItem[i].OwnerId = EidModle.Id;
+                                listItem[i].WhereExpression = TF_PersonnelFile_Transmitting_In_ItemSet.Id.Equal(listItem[i].Id);
+                                OPItemBiz.Update(listItem[i]);//添加项
+
+                            }
+                       
+
+                        }
+
+
+
+
                         ReSultMode.Code = 11;
                         ReSultMode.Data = "";
                         ReSultMode.Msg = "修改成功";
@@ -172,8 +213,11 @@ namespace ESUI.Controllers
         {
             var mql2 = TF_PersonnelFile_Transmitting_InSet.SelectAll().Where(TF_PersonnelFile_Transmitting_InSet.Id.Equal(ID));
             TF_PersonnelFile_Transmitting_In Rmodel = OPBiz.GetEntity(mql2);
+              var mql3 = TF_PersonnelFile_Transmitting_In_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_In_ItemSet.OwnerId.Equal(ID));
+            var ItemBlist = OPItemBiz.GetEntities(mql3);
+            var df = new {inmode = Rmodel, InItem = ItemBlist};
             //  groupsBiz.Add(rol);
-            return Json(Rmodel, JsonRequestBehavior.AllowGet);
+            return Json(df, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 获取项
@@ -248,12 +292,12 @@ namespace ESUI.Controllers
             int pageSize = Request["rows"] == null ? 1000 : int.Parse(Request["rows"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
             Where += "  and (isDeleted=0) ";
-            string table = "TF_PersonnelFile";
-            if (UserData.UserTypes != 1)
-            {
-                Where += " and ( UnitsId='" + UserData.DepartmentId + "')";
-                table = "v_TF_PersonnelFile_Units_In";
-            }
+//            string table = "TF_PersonnelFile";
+//            if (UserData.UserTypes != 1)
+//            {
+//                Where += " and ( UnitsId='" + UserData.DepartmentId + "')";
+            string table = "v_TF_PersonnelFile_Units_In";
+//            }
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
@@ -273,5 +317,10 @@ namespace ESUI.Controllers
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
+
+        //public JsonResult GetInfo(ID)
+        //{
+            
+        //}
     }
 }

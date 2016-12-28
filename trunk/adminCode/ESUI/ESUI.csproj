@@ -3578,6 +3578,7 @@
     <Content Include="Views\TF_PersonnelFile\PersonnelFileInput.cshtml" />
     <Content Include="tempword\模板.xlsx" />
     <Content Include="Views\Register\Index.cshtml" />
+    <Content Include="Views\TF_PersonnelFile_Transmitting_In\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />
@@ -3635,11 +3636,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
-          <AutoAssignPort>False</AutoAssignPort>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>8043</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:31974/</IISUrl>
+          <IISUrl>http://localhost:33164/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
