@@ -231,7 +231,7 @@
 //                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="DuplicateCount" /></td>';
 //                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="MaterialCount" /></td>';
 
-                    result += "</tr>"
+                    result += "</tr>";
                 }
                 $("#SelectList").append(result);
 
@@ -242,7 +242,7 @@
                 var trList = $("#SelectList").children("tr")
                 for (var i = 1; i < trList.length; i++) {//第二项开始
                     var items = new Object();;
-                    items.PersonnelFileId = trList.eq(i).attr("id");
+                    items.Id = trList.eq(i).attr("id");
 
                     var tdArr = trList.eq(i).find("td");
                     items.RealName = tdArr.eq(0).html();//名称
