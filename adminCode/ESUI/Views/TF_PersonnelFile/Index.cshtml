@@ -30,12 +30,16 @@
                     columns: [[
                         { field: 'ck', checkbox: true },
               //{ field: 'TName', title: '名称', width: 100, sortable: true },
-              { field: 'RealName', title: '姓名', width: 100, sortable: true },
-              //{ field: 'Category', title: '类别', width: 100, sortable: true },
-              { field: 'Units', title: '单位', width: 100, sortable: true },
-              { field: 'Duties', title: '职务', width: 100, sortable: true },
-              { field: 'Summary', title: '摘要', width: 100, sortable: true },
-              { field: 'location', title: '存放位置', width: 100, sortable: true },
+              { field: 'RealName', title: '档案姓名', width: 100, sortable: true },
+  
+              { field: 'Duties', title: '所在单位职务', width: 100, sortable: true },
+              { field: 'PersonalStatus', title: '状态', width: 100, sortable: true },
+              { field: 'TankNo', title: '柜号', width: 100, sortable: true },
+             { field: 'LayerNo', title: '层号', width: 100, sortable: true },
+              { field: 'SerialNumber', title: '序号', width: 100, sortable: true },
+              { field: 'ArchivesVolumes', title: '档案卷数', width: 100, sortable: true },
+           
+              { field: 'Remark', title: '备注', width: 100, sortable: true },
               { field: 'CreateMan', title: '创建人', width: 100, sortable: true },
               { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
               { field: 'UpdateTime', title: '修改时间', width: 100, sortable: true }
@@ -188,9 +192,9 @@
             <table class="stripes" style="table-layout: fixed; margin: 0 auto; width: 320px;" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td style="width: 60px;">
-                        <label>姓名：</label></td>
+                        <label>档案姓名：</label></td>
                     <td>
-                        <input type="text" class="textbox" name="RealName_like" style="width: 200px;" />
+                        <input type="text" class="textbox" name="RealName_like" style="width: 200px;"/>
                     </td>
 
                 </tr>
@@ -220,7 +224,7 @@
     <!------------------------弹出信息的弹出层---------------------------------->
     <div id="DivEditor" class="easyui-dialog" style="width: 670px;" data-options="closed:true,resizable:true,modal:true"
         buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:350,width:650,border:false">
+        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:400,width:650,border:false">
             <form id="ff" method="post" enctype="multipart/form-data">
                  <input type="hidden" name="Id" />
                     <input type="hidden" name="TName" />
@@ -232,36 +236,72 @@
                     <input type="hidden" name="isDeleted" />
                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
                    
-                    <tr>
-                        <td style="width:120px;">
-                            <label>姓名：</label></td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="RealName" /></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>单位：</label></td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Units" /></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>职务：</label></td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Duties" /></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>摘要：</label></td>
-                        <td>
-                            <textarea class="areabox" style="height:100px;" name="Summary"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>存放位置：</label></td>
-                        <td>
-                            <textarea class="areabox" style="height:100px;" name="location"></textarea></td>
-                    </tr>
+                       <tr>
+                    <td style="width: 60px;">
+                        <label>档案姓名：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="RealName" style="width: 200px;"/>
+                    </td>
+
+                </tr>
+                  <tr>
+                    <td>
+                        <label>状态：</label></td>
+                    <td>
+                          <select id="PersonalStatus" class="easyui-combobox" data-options="required:true" name="PersonalStatus" style="width: 200px;" >
+                                <option value="已故">已故</option>
+                                <option value="无主">无主</option>
+                                <option value="副本">副本</option>
+                                <option value="离休">离休</option>
+                                <option value="退休">退休</option>
+                                <option value="在职">在职</option>
+
+                            </select>
+                    </td>
+                </tr> 
+                <tr>
+                    <td>
+                        <label>柜号：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="TankNo" style="width: 200px;" />
+                    </td>
+                </tr> 
+                <tr>
+                    <td>
+                        <label>层号：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="LayerNo" style="width: 200px;" />
+                    </td>
+                </tr> 
+                <tr>
+                    <td>
+                        <label>序号：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="SerialNumber" style="width: 200px;" />
+                    </td>
+                </tr> 
+                <tr>
+                    <td>
+                        <label>档案卷数：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="ArchivesVolumes" style="width: 200px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>职务：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="Duties" style="width: 200px;"/>
+                    </td>
+                </tr>
+                  <tr>
+                    <td>
+                        <label>备注：</label></td>
+                      <td>
+                             <textarea class="areabox" style="height:100px;" name="Remark"></textarea> 
+                         
+                      </td>
+                </tr>
                 </table>
             </form>
         </div>

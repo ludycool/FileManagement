@@ -192,7 +192,7 @@ namespace ESUI.Controllers
                         ReSultMode.Msg = "添加成功";
                     }
                     catch (Exception e)
-                    {
+                    { 
 
                         ReSultMode.Code = -11;
                         ReSultMode.Data = e.ToString();
@@ -208,6 +208,11 @@ namespace ESUI.Controllers
                     EidModle.FistName = listItem[0].RealName;
                     EidModle.TransmittingMan = UserData.UserName;
                     EidModle.TransmittingTime = DateTime.Now;
+                    if (EidModle.signatureimage == null || EidModle.signatureimage.Length == 0)
+                    {
+                        byte[] myByteArray = new byte[1];
+                        EidModle.signatureimage = myByteArray;
+                    }
                     if (OPBiz.Update(EidModle) > 0)
                     {
 
@@ -390,9 +395,32 @@ namespace ESUI.Controllers
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
 
-        //public JsonResult GetInfo(ID)
-        //{
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult Upload(HttpPostedFileBase fileData, string guid, string folder)
+        {
+            return null;
             
-        //}
+        }
+
+        public FileContentResult GetImage(string id)
+        {
+            var df = TF_PersonnelFile_Transmitting_InSet.SelectAll().Where(TF_PersonnelFile_Transmitting_InSet.Id.Equal(id));
+            var dfw =OPBiz.GetEntity(df);
+
+
+            if (dfw != null)
+            {
+
+                return File(dfw.signatureimage,"jpg");
+
+            }
+            else
+            {
+
+                return null;
+
+            }
+
+        }
     }
 }

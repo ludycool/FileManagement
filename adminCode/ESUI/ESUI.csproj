@@ -3449,6 +3449,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MOON_WORK_DIRECTORY_PATH\sql.xml" />
+    <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\linq.min.js" />
     <Content Include="Scripts\search.js" />
     <Content Include="Scripts\weboffic7\index.html" />
