@@ -7,9 +7,124 @@ using Moon.Orm;
 namespace e3net.Mode.FileManagementDB
 {
 
-    /// <summary>
-    /// 人员档案
-    /// </summary>
+    [Table("[TF_PersonnelFile]", DbType.SqlServer)]
+    public partial class TF_PersonnelFileSet : MQLBase
+    {
+        public static MQLBase Select(params FieldBase[] fields)
+        {
+            return MQLBase.Select(DbType.SqlServer, "[TF_PersonnelFile]", fields);
+        }
+        public static MQLBase SelectAll()
+        {
+            return MQLBase.SelectAll(DbType.SqlServer, "[TF_PersonnelFile]");
+        }
+        public static MQLBase SelectAllBut(params FieldBase[] fields)
+        {
+            return MQLBase.SelectAllBut(typeof(TF_PersonnelFileSet), DbType.SqlServer, "[TF_PersonnelFile]", fields);
+        }
+
+        /// <summary>
+        /// 主键
+        /// </summary>
+        public static readonly FieldBase Id = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.OnlyPrimaryKey, "[Id]");
+
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public static readonly FieldBase TName = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[TName]");
+
+        /// <summary>
+        /// 姓名
+        /// </summary>
+        public static readonly FieldBase RealName = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[RealName]");
+
+        /// <summary>
+        /// 类别
+        /// </summary>
+        public static readonly FieldBase Category = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[Category]");
+
+        /// <summary>
+        /// 单位
+        /// </summary>
+        public static readonly FieldBase Units = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[Units]");
+
+        /// <summary>
+        /// 职务
+        /// </summary>
+        public static readonly FieldBase Duties = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[Duties]");
+
+        /// <summary>
+        /// 摘要
+        /// </summary>
+        public static readonly FieldBase Summary = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[Summary]");
+
+        /// <summary>
+        /// 存放位置
+        /// </summary>
+        public static readonly FieldBase location = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[location]");
+
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        public static readonly FieldBase CreateMan = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[CreateMan]");
+
+        /// <summary>
+        /// 添加时间
+        /// </summary>
+        public static readonly FieldBase CreateTime = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[CreateTime]");
+
+        /// <summary>
+        /// 修改时间
+        /// </summary>
+        public static readonly FieldBase UpdateTime = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[UpdateTime]");
+
+        /// <summary>
+        /// 是否有效
+        /// </summary>
+        public static readonly FieldBase isValid = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[isValid]");
+
+        /// <summary>
+        /// 是否删除
+        /// </summary>
+        public static readonly FieldBase isDeleted = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[isDeleted]");
+
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public static readonly FieldBase PersonalStatus = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[PersonalStatus]");
+
+        /// <summary>
+        /// 柜号
+        /// </summary>
+        public static readonly FieldBase TankNo = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[TankNo]");
+
+        /// <summary>
+        /// 层号
+        /// </summary>
+        public static readonly FieldBase LayerNo = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[LayerNo]");
+
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public static readonly FieldBase SerialNumber = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[SerialNumber]");
+
+        /// <summary>
+        /// 档案卷数
+        /// </summary>
+        public static readonly FieldBase ArchivesVolumes = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[ArchivesVolumes]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase Position = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[Position]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase Remark = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[Remark]");
+    }
+
+
     [Table("[TF_PersonnelFile]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public partial class TF_PersonnelFile : EntityBase
@@ -131,84 +246,70 @@ namespace e3net.Mode.FileManagementDB
             get { return GetPropertyValue<Boolean?>("isDeleted"); }
             set { SetPropertyValue("isDeleted", value); }
         }
-    }
 
-    [Table("[TF_PersonnelFile]", DbType.SqlServer)]
-    public  partial class TF_PersonnelFileSet : MQLBase
-    {
-        public static new MQLBase Select(params FieldBase[] fields)
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public String PersonalStatus
         {
-            return MQLBase.Select(DbType.SqlServer,"[TF_PersonnelFile]",fields);
-        }
-        public static new MQLBase SelectAll()
-        {
-            return MQLBase.SelectAll(DbType.SqlServer,"[TF_PersonnelFile]");
+            get { return GetPropertyValue<String>("PersonalStatus"); }
+            set { SetPropertyValue("PersonalStatus", value); }
         }
 
         /// <summary>
-        /// 主键
+        /// 柜号
         /// </summary>
-        public static readonly FieldBase Id = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.OnlyPrimaryKey, "[Id]");
+        public String TankNo
+        {
+            get { return GetPropertyValue<String>("TankNo"); }
+            set { SetPropertyValue("TankNo", value); }
+        }
 
         /// <summary>
-        /// 名称
+        /// 层号
         /// </summary>
-        public static readonly FieldBase TName = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[TName]");
+        public String LayerNo
+        {
+            get { return GetPropertyValue<String>("LayerNo"); }
+            set { SetPropertyValue("LayerNo", value); }
+        }
 
         /// <summary>
-        /// 姓名
+        /// 序号
         /// </summary>
-        public static readonly FieldBase RealName = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[RealName]");
+        public String SerialNumber
+        {
+            get { return GetPropertyValue<String>("SerialNumber"); }
+            set { SetPropertyValue("SerialNumber", value); }
+        }
 
         /// <summary>
-        /// 类别
+        /// 档案卷数
         /// </summary>
-        public static readonly FieldBase Category = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[Category]");
+        public String ArchivesVolumes
+        {
+            get { return GetPropertyValue<String>("ArchivesVolumes"); }
+            set { SetPropertyValue("ArchivesVolumes", value); }
+        }
 
         /// <summary>
-        /// 单位
+        /// 
         /// </summary>
-        public static readonly FieldBase Units = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[Units]");
+        public String Position
+        {
+            get { return GetPropertyValue<String>("Position"); }
+            set { SetPropertyValue("Position", value); }
+        }
 
         /// <summary>
-        /// 职务
+        /// 
         /// </summary>
-        public static readonly FieldBase Duties = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[Duties]");
-
-        /// <summary>
-        /// 摘要
-        /// </summary>
-        public static readonly FieldBase Summary = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[Summary]");
-
-        /// <summary>
-        /// 存放位置
-        /// </summary>
-        public static readonly FieldBase location = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[location]");
-
-        /// <summary>
-        /// 创建人
-        /// </summary>
-        public static readonly FieldBase CreateMan = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[CreateMan]");
-
-        /// <summary>
-        /// 添加时间
-        /// </summary>
-        public static readonly FieldBase CreateTime = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[CreateTime]");
-
-        /// <summary>
-        /// 修改时间
-        /// </summary>
-        public static readonly FieldBase UpdateTime = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[UpdateTime]");
-
-        /// <summary>
-        /// 是否有效
-        /// </summary>
-        public static readonly FieldBase isValid = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[isValid]");
-
-        /// <summary>
-        /// 是否删除
-        /// </summary>
-        public static readonly FieldBase isDeleted = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile]", FieldType.Common, "[isDeleted]");
+        public String Remark
+        {
+            get { return GetPropertyValue<String>("Remark"); }
+            set { SetPropertyValue("Remark", value); }
+        }
     }
+
 
 }

@@ -9,6 +9,7 @@
 
     <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
     <script src="~/Scripts/linq.min.js"></script>
+  
     @* ReSharper disable once NotAllPathsReturnValue *@
 
     <style>
@@ -58,10 +59,16 @@
                         //添加超级链 
 
                         formatter: function (value, rowData, rowIndex) {
+                            var d = "";
 
+                            if (rowData.States == 2) {
+                                d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">确认转入</a>  ';
+                                
+                            } else {
+                                  d = '<a href="#" onclick="ShowDetailsSing(\'' + rowIndex + '\')">确认转入</a>  ';
+                            }
 
-
-                            var d = '<a href="#" onclick="sign(\'' + rowData.Id + '\')">确认转入</a>  ';
+                         
                             return d;
 
 
@@ -176,6 +183,7 @@
             }
             //查看
             function ExportWord() {
+
                 var rows = $("#dg").datagrid('getSelected');
                 //首先取出来值判断只能选择一个
                 if (rows == null) {
@@ -208,13 +216,45 @@
  
             //查看
             function ShowDetails() {
+            
+              
                 var rows = $("#dg").datagrid('getSelected');
                 //首先取出来值判断只能选择一个
                 if (rows == null) {
                     // $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                $("#DivShow").dialog('open').dialog('setTitle', '查看-' + rows.Series + "字" + rows.Nos + "号").window('resize', { top: 20 });
+                $("#imgId").attr('src', "TF_PersonnelFile_Transmitting_In/GetImage?id=" + rows.Id);
+                $("#DivShow2").dialog('open').dialog('setTitle', '查看-字号' + rows.Series + "").window('resize', { top: 20 });
+                DataBaseFunction.BindForm("f3", rows);
+                DataBaseFunction.BindForm("f4", rows);
+                var ID = rows.Id;  //获取项
+                $.ajax({
+                    url: BaseUrl + 'GetListItems',
+                    type: 'POST',
+                    data: { ID: ID },
+                    cache: false,
+                    error: function () { alert('Error $.ajax'); },
+                    success: function (data) {
+                        createList2(data);
+                    }
+                });
+
+            }
+            function ShowDetailsSing(id) {
+         var rows = $('#dg').datagrid('getData').rows[id];
+                var obj = document.getElementById("HWPenSign");
+                obj.HWSetBkColor(0xE0F8E0);
+                obj.HWSetCtlFrame(1, 0x000000);
+                res = obj.HWInitialize();
+//                var rows = $("#dg").datagrid('getSelected');
+//                //首先取出来值判断只能选择一个
+//                if (rows == null) {
+//                    // $.messager.alert("友情提示", "请选择", "error");
+//                    return;
+//                }
+//                $("#DivShow2").dialog('open').dialog('setTitle', '查看-字号' + "" + "").window('resize', { top: 20 });
+         $("#DivShow").dialog('open').dialog('setTitle', '查看-字号' + rows.Series + "").window('resize', { top: 20 });
                 DataBaseFunction.BindForm("f1", rows);
                 DataBaseFunction.BindForm("f2", rows);
                 var ID = rows.Id;  //获取项
@@ -230,29 +270,96 @@
                 });
 
             }
+            function getTableData() {
+                var data = new Array();//当前选择的
+                var trList = $("#SelectList").children("tr")
+                for (var i = 1; i < trList.length; i++) {//第二项开始
+                    var items = new Object();;
+                    items.Id = trList.eq(i).attr("id");
 
+                    var tdArr = trList.eq(i).find("td");
+                    items.RealName = tdArr.eq(0).html();//名称
+                    items.Units = tdArr.eq(1).html();//单位
+                    items.Duties = tdArr.eq(2).html();//职位
+                    items.Reasons = tdArr.eq(3).find("input").val();//
+                    items.OriginalCount = tdArr.eq(4).find("input").val();//    
+                    items.DuplicateCount = tdArr.eq(5).find("input").val();//    
+                    items.MaterialCount = tdArr.eq(6).find("input").val();//    
 
+                    data.push(items);
+                }
+
+                return data;
+            }
             //实现的编辑，包括增查改
             function SaveInfo() {
 
                 //判断的信息是否通过验证
-                var validate = $("#ff").form('validate');
-                if (validate == false) {
-                    return false;
+                //var validate = $("#f1").form('validate');
+                //if (validate == false) {
+                //    return false;
+                //}
+                ////判断的信息是否通过验证
+                //var validate2 = $("#f2").form('validate');
+                //if (validate2 == false) {
+                //    return false;
+                //}
+                var stream;
+                var obj = document.getElementById("HWPenSign");
+                stream = obj.HWGetBase64Stream(2);
+            
+                var data = DataBaseFunction.GetFormData("f1");
+
+                //var data2 = DataBaseFunction.GetFormData("f2");
+                //for (var i = 0; i < data2.length; i++) {
+
+                //    data.push(data2[i]);
+                //}
+
+                var ItemList = getTableData();//项
+
+                var jsonstr = JSON.stringify(ItemList);
+                var FistName = {
+                    name: "FistName",
+                    value: jsonstr
+
                 }
-                //获取需要传递的参数传递给前台
-                var data = DataBaseFunction.GetFormData("ff")
-                //发送异步请求到后台保存数据
-                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                var signatureimage = {
+                    name: "signatureimage",
+                    value: stream
+
+                }
+                var States = {
+                    name: "States",
+                    value: "2"
+
+                }
+                data.push(FistName);
+                data.push(signatureimage);
+                data.push(States);
+                //  发送异步请求到后台保存数据
+                $.post(BaseUrl + 'EditInfo', data,function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
-                        $('#DivEditor').dialog('close');
-                        $(".validatebox-tip").remove();
-                        $("#dg").datagrid("reload");
-
+                        //                        alert("保存成功");
+                        //                        window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
                     }
                 });
-
+              
+              
+//                $.ajax({
+//                    url: BaseUrl + 'EditInfo',
+//                    type: 'POST',
+//                    data: {  data },
+//                    cache: false,
+//                    error: function () { alert('Error $.ajax'); },
+//                    success: function (data) {
+//                        alerts(data.Msg, 2);
+//                         if (data.Code > 0) {
+//                     
+//                                      }
+//                    }
+//                });
             }
             //刷新
             function RefreshOP() {
@@ -290,7 +397,37 @@
                 $("#SelectList").append(result);
 
             }
+            function createList2(datas) {
 
+                $("#SelectList2").empty();
+                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                for (var i = 0; i < datas.length; i++) {
+                    result += '<tr id="' + datas[i].Id + '" >'
+                    result += "<td>" + datas[i].RealName + "</td>";
+                    result += "<td>" + datas[i].Units + "</td>";
+                    result += "<td>" + datas[i].Duties + "</td>";
+                    result += "<td>" + datas[i].Reasons + "</td>";
+                    result += "<td>" + datas[i].OriginalCount + "</td>";
+                    result += "<td>" + datas[i].DuplicateCount + "</td>";
+                    result += "<td>" + datas[i].MaterialCount + "</td>";
+                    result += "</tr>"
+                }
+                $("#SelectList2").append(result);
+
+            }
+            function showRequest(formData, jqForm, options) {
+
+                alert('发送前');
+
+                return true;
+
+            }
+
+            function showResponse(responseText, statusText) {
+
+                alert('发送后');
+
+            }
         </script>
     }
 
@@ -340,72 +477,172 @@
 
 
     <!------------------------弹出查看层---------------------------------->
-    <div id="DivShow" class="easyui-dialog" style="width: 750px;"
-        closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <div class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:300,width:730,border:false">
-           
+<div id="DivShow" class="easyui-dialog" style="width: 750px;"
+     closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+    <div class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:300,width:730,border:false">
 
-                <table style="table-layout: fixed; margin: 0 auto; width: 720px;" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <td>
-                            <form id="f1">
-                                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
-                                    <tr>
-                                        <td style="width: 50px;">
-                                            <label>字号：</label></td>
-                                        <td style="width: 120px;">
-                                            <span name="Series"></span></td>
-@*                                        <td style="width: 20px;">*@
-@*                                            <label>号：</label></td>*@
-@*                                        <td style="width: 660px;">*@
-@*                                            <span name="Nos"></span></td>*@
-                                    </tr>
-                                </table>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="height: 10px;"></td>
-                    </tr>
-                    <tr>
-                        <td>
 
-                            <table class="border-table" id="SelectList" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 720px;">
-                            </table>
+        <table style="table-layout: fixed; margin: 0 auto; width: 720px;" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>
+                    <form id="f1">
+                        <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="width: 50px;">
+                                    <label>字号：</label></td>
+                                <td style="width: 120px;">
+                                    <span name="Series"></span>
+                                    <input type="hidden" name="Id"/> 
+                                    
+                                </td>
+                            
+                            </tr>
+                        </table>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td style="height: 10px;"></td>
+            </tr>
+            <tr>
+                <td>
 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="height: 20px;"></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <form id="f2" method="post" enctype="multipart/form-data">
+                    <table class="border-table" id="SelectList" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 720px;">
+                    </table>
 
-                                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
-                                    <tr>
-                                        <td style="width: 80px;">
-                                            <label>转递人：</label></td>
-                                        <td style="width: 220px;">
-                                            <span name="TransmittingMan"></span></td>
+                </td>
+            </tr>
+            <tr>
+                <td style="height: 20px;"></td>
+            </tr>
+            <tr>
+                <td>
+                    <form id="f2" method="post" enctype="multipart/form-data">
 
-                                        <td style="width: 80px;">
-                                            <label>转递时间：</label></td>
-                                        <td style="width: 340px;">
-                                            <span name="TransmittingTime"></span></td>
-                                    </tr>
-                                </table>
-                            </form>
-                        </td>
-                    </tr>
-                </table>
+                        <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="width: 80px;">
+                                    <label>转递人：</label></td>
+                                <td style="width: 220px;">
+                                    <span name="TransmittingMan"></span></td>
 
-            
-        </div>
+                                <td style="width: 80px;">
+                                    <label>转递时间：</label></td>
+                                <td style="width: 340px;">
+                                    <span name="TransmittingTime"></span></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 80px;">
+                                    <label>签名：</label></td>
+                                <td colspan="3">
 
-        <div style="text-align: center; width: 100%; margin-bottom: 5px;">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow').dialog('close')">关闭</a>
-        </div>
+                                        <object id="HWPenSign"
+                    name="HWPenSign"
+                    classid="clsid:E8F5278C-0C72-4561-8F7E-CCBC3E48C2E3"
+                    width="400"
+                    height="200">
+              </object>
+                                </td>
+
+
+                            </tr>
+                        </table>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+
     </div>
+
+    <div style="text-align: center; width: 100%; margin-bottom: 5px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow').dialog('close')">关闭</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
+    </div>
+</div>
+
+
+<div id="DivShow2" class="easyui-dialog" style="width: 750px;"
+     closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+     <div class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:300,width:730,border:false">
+
+
+        <table style="table-layout: fixed; margin: 0 auto; width: 720px;" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>
+                    <form id="f3">
+                        <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="width: 50px;">
+                                    <label>字号：</label></td>
+                                <td style="width: 120px;">
+                                    <span name="Series"></span>
+                                    <input type="hidden" name="Id"/>
+                                </td>
+                                @*                                        <td style="width: 20px;">*@
+                                @*                                            <label>号：</label></td>*@
+                                @*                                        <td style="width: 660px;">*@
+                                @*                                            <span name="Nos"></span></td>*@
+                            </tr>
+                        </table>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td style="height: 10px;"></td>
+            </tr>
+            <tr>
+                <td>
+
+                    <table class="border-table" id="SelectList2" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 720px;">
+                    </table>
+
+                </td>
+            </tr>
+            <tr>
+                <td style="height: 20px;"></td>
+            </tr>
+            <tr>
+                <td>
+                    <form id="f4" method="post" enctype="multipart/form-data">
+
+                        <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="width: 80px;">
+                                    <label>转递人：</label></td>
+                                <td style="width: 220px;">
+                                    <span name="TransmittingMan"></span></td>
+
+                                <td style="width: 80px;">
+                                    <label>转递时间：</label></td>
+                                <td style="width: 340px;">
+                                    <span name="TransmittingTime"></span></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 80px;">
+                                    <label>签名：</label></td>
+                                <td colspan="3">
+
+                  <img id="imgId" />
+                                </td>
+
+
+                            </tr>
+                        </table>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+
+    </div>
+
+    <div style="text-align: center; width: 100%; margin-bottom: 5px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow2').dialog('close')">关闭</a>
+     
+    </div>
+   
+    </div>
+
 </body>
 </html>
