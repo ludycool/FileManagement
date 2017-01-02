@@ -137,6 +137,20 @@ namespace ESUI.Controllers
             return View();
         }
 
+        private bool HasLifeFiles(string id)
+        {
+            var mql = File_ImageSet.SelectAll().Where(File_ImageSet.ToId.Equal(id));
+            List<File_Image> list = new File_ImageBiz().GetOwnList(mql);
+            if (list!=null&&list.Count>0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public JsonResult GetLifeFiles(string id)
         {
             var mql = File_ImageSet.SelectAll().Where(File_ImageSet.ToId.Equal(id));

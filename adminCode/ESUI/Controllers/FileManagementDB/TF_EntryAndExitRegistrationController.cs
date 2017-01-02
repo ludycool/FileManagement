@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Practices.Unity;
+using Newtonsoft.Json;
 
 using System.Data.Common;
 using e3net.common.SysMode;
@@ -11,15 +13,14 @@ using e3net.Mode.HttpView;
 using e3net.BLL;
 using e3net.Mode;
 
-using Microsoft.Practices.Unity;
-using Newtonsoft.Json;
 
 namespace ESUI.Controllers.FileManagementDB
 {
-    public class TF_LiftApproveController : BaseController
+
+    public class TF_EntryAndExitRegistrationController : BaseController
     {
         [Dependency]
-        public TF_LifeCommentsBiz OPBiz { get; set; }
+        public TF_EntryAndExitRegistrationBiz OPBiz { get; set; }
         [Dependency]
         public File_ImageBiz imgBiz { get; set; }
         public ActionResult Index()
@@ -38,7 +39,7 @@ namespace ESUI.Controllers.FileManagementDB
             //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
 
-            Where += " and (isDeleted=0) and States<>-1";
+            Where += " and IsDeleted='false'";
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
@@ -47,7 +48,7 @@ namespace ESUI.Controllers.FileManagementDB
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "v_TF_LeftComments";
+            pc.sys_Table = "TF_EntryAndExitRegistration";
             if (UserData.UserTypes == 1)
             {
                 pc.sys_Where = Where;
@@ -58,18 +59,18 @@ namespace ESUI.Controllers.FileManagementDB
             }
 
             pc.sys_Order = " " + sortField + " " + sortOrder;
-            List<TF_LifeComments> list2 = OPBiz.GetPagingData<TF_LifeComments>(pc);
+            List<TF_EntryAndExitRegistration> list2 = OPBiz.GetPagingData<TF_EntryAndExitRegistration>(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
 
-            // var mql = TF_LifeCommentsSet.Id.NotEqual("");
+            // var mql = TF_EntryAndExitRegistrationSet.Id.NotEqual("");
             dic.Add("rows", list2);
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
         public JsonResult Approve(string ID, string state = "-1")
         {//States 状态（已审核--2、审核中--1，已提交--0，编辑中--1）
-            string sql = string.Format("update TF_LifeComments set States={0},AprovalTime=getdate() Where Id='{1}'", state, ID);
+            string sql = string.Format("update TF_EntryAndExitRegistration set States={0},AprovalTime=getdate() Where Id='{1}'", state, ID);
             int f = OPBiz.ExecuteSqlWithNonQuery(sql);
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
@@ -87,7 +88,7 @@ namespace ESUI.Controllers.FileManagementDB
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult EditInfo(TF_LifeComments EidModle)
+        public JsonResult EditInfo(TF_EntryAndExitRegistration EidModle)
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
             bool IsAdd = false;
@@ -103,8 +104,9 @@ namespace ESUI.Controllers.FileManagementDB
                 EidModle.CreateMan = UserData.UserName;
                 EidModle.CreateTime = DateTime.Now;
                 EidModle.isValid = true;
-                EidModle.isDeleted = false;
-                EidModle.States = 1;
+                EidModle.IsDeleted = false;
+                EidModle.ApprovalStates = 0;
+               
                 try
                 {
                     OPBiz.Add(EidModle);
@@ -124,7 +126,7 @@ namespace ESUI.Controllers.FileManagementDB
             }
             else
             {
-                EidModle.WhereExpression = TF_LifeCommentsSet.Id.Equal(EidModle.Id);
+                EidModle.WhereExpression = TF_EntryAndExitRegistrationSet.Id.Equal(EidModle.Id);
                 // EidModle.ChangedMap.Remove("id");//移除主键值
                 if (OPBiz.Update(EidModle) > 0)
                 {
@@ -143,27 +145,11 @@ namespace ESUI.Controllers.FileManagementDB
 
         }
 
-        public ActionResult EditWebOffice()
-        {
-            ViewBag.ViewBag = Request["id"];
-
-
-            ViewBag.RuteUrl = RuteUrl();
-            return View();
-        }
-
         public JsonResult GetInfo(string ID)
         {
-            var mql2 = TF_LifeCommentsSet.SelectAll().Where(TF_LifeCommentsSet.Id.Equal(ID));
-            TF_LifeComments Rmodel = OPBiz.GetEntity(mql2);
+            var mql2 = TF_EntryAndExitRegistrationSet.SelectAll().Where(TF_EntryAndExitRegistrationSet.Id.Equal(ID));
+            TF_EntryAndExitRegistration Rmodel = OPBiz.GetEntity(mql2);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
-        }
-
-        public JsonResult GetLifeFiles(string id)
-        {
-            var mql = File_ImageSet.SelectAll().Where(File_ImageSet.ToId.Equal(id));//.Where(File_ImageSet.FullRouteCopy.NotEqual(""));
-            List<File_Image> list = new File_ImageBiz().GetOwnList(mql);
-            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         public FileResult GetFileInfo(string ID)
@@ -181,17 +167,9 @@ namespace ESUI.Controllers.FileManagementDB
         }
         public JsonResult Del(string IDSet)
         {
-           
+
             int f = OPBiz.DelForSetDelete("Id", IDSet);
             HttpReSultMode ReSultMode = new HttpReSultMode();
-            if (UserData.UserTypes != 1)
-            {
-                ReSultMode.Code = -13;
-                ReSultMode.Data = "0";
-                ReSultMode.Msg = "没有权限删除生平信息，请联系管理员！";
-                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
-            }
-
             if (f > 0)
             {
                 ReSultMode.Code = 11;
@@ -207,5 +185,6 @@ namespace ESUI.Controllers.FileManagementDB
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
+
     }
 }

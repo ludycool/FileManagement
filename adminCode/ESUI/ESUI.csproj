@@ -266,6 +266,7 @@
     <Compile Include="Controllers\DictionaryController.cs" />
     <Compile Include="Controllers\DynamicTableController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
+    <Compile Include="Controllers\FileManagementDB\TF_EntryAndExitRegistrationController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_LiftApproveController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PaperFileController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_ElectronicFileController.cs" />
@@ -3583,6 +3584,7 @@
     <Content Include="Views\TF_PersonnelFile_Transmitting_In\UserListResult.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Transmitting_Out\OutUserListResult.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Transmitting_Out\Edit.cshtml" />
+    <Content Include="Views\TF_EntryAndExitRegistration\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />

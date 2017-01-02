@@ -44,15 +44,64 @@
                     url: BaseUrl + 'Search',
                     columns: [[
                         { field: 'ck', checkbox: true },
-                        { field: 'TrueName', title: '姓名', width: 150, sortable: true },
-                        //{ field: 'Units', title: '单位', width: 100, sortable: true },
                         {
-                            field: 'Duties', title: '职务', width: 100, sortable: true, formatter: function (value, row, index) {
-                                return value;
+                            field: 'UseCategory', title: '使用类型', width: 150, sortable: true, formatter: function (value, row, index) {
+                                if (value == 1) {
+                                    return "保管";
+                                }
+                                else if (value == 2) {
+                                    return "领用";
+                                }
+                                else if (value == 3) {
+                                    return "归还";
+                                }
+                                else if (value == 4) {
+                                    return "退回";
+                                }
+                                else {
+                                    return "";
+                                }
                             }
                         },
+                        { field: 'OfficialDocOrRemarks', title: '批文', width: 100, sortable: true },
+                        { field: 'TrueName', title: '干部名字', width: 100, sortable: true },
                         {
-                            field: 'CreateTime', title: '添加时间', width: 120, sortable: true, formatter: function (value, row, index) {
+                            field: 'Sex', title: '性别', width: 100, sortable: true, formatter: function (value, row, index) {
+                                if (value == 1) {
+                                    return "男";
+                                }
+                                else if (value == 0) {
+                                    return "女";
+                                }
+                                else {
+                                    return "";
+                                }
+                            }
+                        },
+                        { field: 'Units', title: '所在单位', align: "center", width: 140, sortable: true },
+                        {
+                            field: 'CertificateCategory', title: '证件类型', width: 100, sortable: true, formatter: function (value, row, index) {
+                                if (value == 1) {
+                                    return "护照";
+                                }
+                                else if (value == 2) {
+                                    return "港澳通行证";
+                                }
+                                else if (value == 3) {
+                                    return "台湾通行证";
+                                }
+                                else {
+                                    return "";
+                                }
+                            }
+                        },
+                        { field: 'CertificateNumber', title: '证件号码', align: "center", width: 100, sortable: true },
+                        { field: 'IdentityCardNumber', title: '身份证号码', align: "center", width: 100, sortable: true },
+                        { field: 'ApproverUnit', title: '办理人单位', align: "center", width: 140, sortable: true },
+                        { field: 'Approver', title: '办理人', align: "center", width: 100, sortable: true },
+                        { field: 'ContactInformation', title: '联系方式', align: "center", width: 100, sortable: true },
+                        {
+                            field: 'CreateTime', title: '日期', width: 120, sortable: true, formatter: function (value, row, index) {
                                 if (value != null && value != "") {
                                     var pa = /.*\((.*)\)/;
                                     var unixtime = value.match(pa)[1].substring(0, 10);
@@ -62,30 +111,11 @@
                                 else {
                                     return "";
                                 }
-                            }
-                        },
-                        { field: 'AprovalName', title: '审核状态', align: "center", width: 60, sortable: true },
-                        {
-                            field: 'AprovalTime', title: '审核时间', width: 120, sortable: true, formatter: function (value, row, index) {
-                                if (value != null && value != "") {
-                                    var pa = /.*\((.*)\)/;
-                                    var unixtime = value.match(pa)[1].substring(0, 10);
-                                    var currtime = new Date(unixtime * 1000);
-                                    return currtime.Format("yyyy-MM-dd hh:mm:ss");
-                                }
-                                else {
-                                    return "";
-                                }
-                            }
-                        },
-                        {
-                            field: 'Summary', title: '评语', width: 300, formatter: function (value, row, index) {
-                                return value;
                             }
                         }
                     ]],
                     iconCls: 'icon-save',
-                    title: '生平',
+                    title: '证件登记',
                     nowrap: true,
                     fit: true,
                     fitColumns: true,
@@ -105,7 +135,7 @@
                 //弹出层
                 // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
                 $('#DivEditor').dialog({
-                    title: '添加生平',
+                    title: '证件登记',
                     //width: 400,
                     //height: 200,
                     closed: false,
@@ -131,11 +161,11 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                var aprovalstatus = rows.States;
-                if (aprovalstatus != "-1") {
-                    $.messager.alert("友情提示", "此文件不可编辑", "error");
-                    return;
-                }
+                //var aprovalstatus = rows.States;
+                //if (aprovalstatus != "-1") {
+                //    $.messager.alert("友情提示", "此文件不可编辑", "error");
+                //    return;
+                //}
 
                 $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.TrueName).window('resize', { top: 50 });
                 $(".validatebox-tip").remove();//清除验证样式
@@ -149,35 +179,11 @@
                     success: function (data) {
                         //var result = eval('(' + data + ')');
                         DataBaseFunction.BindForm("ff", data);
-                        $('#Category').combotree('setValue', data['Category']);
-                        $('#States').combobox('select', data.States);
-                        GetFileList(data.Id);//图片
+                        //$('#Category').combotree('setValue', data['Category']);
+                        //$('#States').combobox('select', data.States);
+                        //GetFileList(data.Id);//图片
                     }
                 });
-            }
-            //在线编辑word
-            function EditDoc() {
-                var rows = $("#dg").datagrid('getSelected');
-                //首先取出来值判断只能选择一个
-                if (rows == null) {
-                    $.messager.alert("友情提示", "请选择", "error");
-                    return;
-                }
-                var aprovalstatus = rows.States;
-                var url = "TF_LifeComments/LifeWebOfficeDoc?id=" + rows.Id + "&states=" + aprovalstatus;
-                if (aprovalstatus != "-1") {
-                    $.messager.confirm("友情提示", "文件已提交，只能查看。确定要打开吗？", function (r) {
-                        if (r) {
-                            window.open(url, "_blank");
-                        }
-                        else {
-                            return;
-                        }
-                    });
-                }
-                else {
-                    window.open(url, "_blank");
-                }
             }
 
             //实现的编辑，包括增查改
@@ -187,11 +193,7 @@
                 if (validate == false) {
                     return false;
                 }
-                var bb = hasFiles();
-                if (bb == false) {
-                    $.messager.alert("友情提示", "必须上传相关文件材料", "error");
-                    return false;
-                }
+              
                 //获取需要传递的参数传递给前台
                 var data = DataBaseFunction.GetFormData("ff")
                 //发送异步请求到后台保存数据
@@ -229,8 +231,9 @@
             function Del() {
                 DataBaseFunction.deleteInfo("dg", "Id", "TrueName");
             }
+
             function AddImg() {
-                FileUp("TF_LifeComments");
+                FileUp("TF_EntryAndExitRegistration");
             }
 
             function hasFiles() {
@@ -288,6 +291,15 @@
             function RefreshOP() {
                 DataGridSet();
             }
+
+            $.extend($.fn.validatebox.defaults.rules, {
+                IdentityCardNumber: {// 验证身份证
+                    validator: function (value) {
+                        return /^\d{15}(\d{2}[A-Za-z0-9])?$/i.test(value);
+                    },
+                    message: '身份证号码格式不正确'
+                }
+            });
 
         </script>
     }
@@ -348,9 +360,9 @@
         </div>
     </div>
     <!------------------------弹出信息的弹出层---------------------------------->
-    <div id="DivEditor" class="easyui-dialog" style="width: 900px;"
+    <div id="DivEditor" class="easyui-dialog" style="width: 800px;"
          closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options="height:480,width:880,border:false">
+        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options="height:520,width:780,border:false">
             <form id="ff" method="post" enctype="multipart/form-data">
                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
                     <input type="hidden" name="Id" />
@@ -361,7 +373,28 @@
                     <input type="hidden" name="isDeleted" />
                     <tr>
                         <td style="width: 100px;">
-                            <label>生平人姓名*：</label>
+                            <label>使用类型：</label>
+                        </td>
+                        <td>
+                            <select id="UseCategory" name="UseCategory" class="easyui-combobox" style="width: 200px;" data-options="required:true">
+                                <option value="1">保管</option>
+                                <option value="2">领用</option>
+                                <option value="3">归还</option>
+                                <option value="4">退回</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>批文：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="OfficialDocOrRemarks" style="width: 600px;" data-options="required:true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>干部名字：</label>
                         </td>
                         <td>
                             <input class="easyui-validatebox textbox" type="text" name="TrueName" data-options="required:true" />
@@ -369,40 +402,10 @@
                     </tr>
                     <tr>
                         <td style="width: 100px;">
-                            <label>离退休时所在单位职务*：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Duties" data-options="required:true" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>附件*：</label>
-                        </td>
-                        <td>
-                            <div style="line-height: 20px; height: 20px;display: block;width: 500px;">
-                                <span style="font-size:16px; float:left;">
-                                    <input type="file" id="fileimg" name="file" style="width: 50px;" onchange="AddImg()" />
-                                </span>
-                                <span style="padding-left: 10px; float: left; color: red;">(右键另存为，可保存文件)</span>
-                            </div>
-                            <div style="display: none">
-                                <div id="content" style="display: block; width: 450px; float: left;margin-top:2px;">
-                                    <input id="fileId" type="hidden" data-options="required:true" />
-                                    <a href="/Content/js/ImgUp.js" target="_blank" id="aflie"></a>
-                                    <a id="jian" href="#" class="easyui-linkbutton" style="float: right; " data-options="iconCls:'icon-delete'">移除</a>
-                                </div>
-                            </div>
-                            <div id="zhi" style="display: block; width: 450px;">
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
                             <label>性别：</label>
                         </td>
                         <td>
-                            <select id="Sex" name="Sex" class="easyui-combobox" style="width: 200px;" data-options="required:true">
+                            <select id="Sex" name="Sex" class="easyui-combobox" style="width: 200px;">
                                 <option value="1">男</option>
                                 <option value="0">女</option>
                             </select>
@@ -410,46 +413,80 @@
                     </tr>
                     <tr>
                         <td style="width: 100px;">
-                            <label>籍贯：</label>
+                            <label>所在单位：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="NativePlace" />
+                            <input class="easyui-validatebox textbox" type="text" name="Units" style="width:600px;" data-options="required:true" />
                         </td>
                     </tr>
                     <tr>
                         <td style="width: 100px;">
-                            <label>出生日期：</label>
+                            <label>证件类型：</label>
                         </td>
                         <td>
-                            <input class="easyui-datebox easyui-validatebox" type="text" name="Birthday" />
+                            <select id="Sex" name="CertificateCategory" class="easyui-combobox" style="width: 200px;">
+                                <option value="1">护照</option>
+                                <option value="2">港澳通行证</option>
+                                <option value="3">台湾通行证</option>
+                            </select>
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <label>离退时间：</label>
+                        <td style="width: 100px;">
+                            <label>证件号码：</label>
                         </td>
                         <td>
-                            <input class="easyui-datebox easyui-validatebox" type="text" name="RetirementTime" />
+                            <input class="easyui-validatebox textbox" type="text" maxlength="9" name="CertificateNumber" />
                         </td>
-
                     </tr>
                     <tr>
-                        <td>
-                            <label>死亡时间：</label>
+                        <td style="width: 100px;">
+                            <label>身份证号：</label>
                         </td>
                         <td>
-                            <input class="easyui-datebox easyui-validatebox" type="text" name="DeathTime" />
+                            <input class="easyui-validatebox textbox" type="text" maxlength="18" name="IdentityCardNumber" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>办理人单位：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="ApproverUnit" style="width: 600px;"  data-options="required:true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>办理人：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="Approver" data-options="required:true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>联系方式：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="ContactInformation" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>日期：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-datebox easyui-validatebox" type="text" style="width: 200px;" name="AprovalTime" />
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <label>备注：</label>
                         </td>
-                        <td colspan="3">
-                            <textarea class="areabox" name="Remark" maxlength="150" style="height: 100px; width: 600px;"></textarea>
+                        <td>
+                            <textarea class="areabox" name="Remark" maxlength="250" style="height: 50px; width: 600px;"></textarea>
                         </td>
                     </tr>
-
                 </table>
             </form>
         </div>

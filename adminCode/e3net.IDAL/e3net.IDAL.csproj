@@ -66,6 +66,7 @@
     <Compile Include="DynamicTable\IBascharvalueDao.cs" />
     <Compile Include="DynamicTable\IVcorrelateColumnsDao.cs" />
     <Compile Include="DynamicTable\IVEntryRecordFormDao.cs" />
+    <Compile Include="FileManagementDB\ITF_EntryAndExitRegistrationDao.cs" />
     <Compile Include="FileManagementDB\ITF_PaperFileDao.cs" />
     <Compile Include="FileManagementDB\ITF_LifeCommentsDao.cs" />
     <Compile Include="FileManagementDB\ITF_ElectronicFileDao.cs" />
