@@ -29,15 +29,15 @@
     @section Jsprepare{
 
         <script type="text/javascript">
-            @Html.Raw(ViewBag.RuteUrl)
-         @Html.Raw(ViewBag.toolbar)
-
+//            @Html.Raw(ViewBag.RuteUrl)
+//         @Html.Raw(ViewBag.toolbar)
+            var SherUrl = "/TF_PersonnelFile_Transmitting_Out/";
             jQuery(document).ready(function () {
                 DataGridSet();
             })
             function DataGridSet() {
                 $('#dg').datagrid({
-                    url: BaseUrl + 'Search',
+                    url: SherUrl + 'Search',
                     columns: [[
                         { field: 'ck', checkbox: true },
            { field: 'TransmittingMan', title: '转递人', width: 100, sortable: true },
@@ -48,7 +48,27 @@
               { field: 'MaterialCount', title: '材料（份）', width: 100, sortable: true },
               { field: 'CreateMan', title: '创建人', width: 100, sortable: true },
               { field: 'StatesName', title: '状态', width: 100, sortable: true },
-              { field: 'TransmittingTime', title: '转递时间', width: 100, sortable: true }
+              { field: 'TransmittingTime', title: '转递时间', width: 100, sortable: true },
+                    {
+                        field: 'Id', title: '操作', width: 50,
+
+                        //添加超级链 
+
+                        formatter: function (value, rowData, rowIndex) {
+                            //                        alert(rowData.States);
+                            if (rowData.States == 1) {
+                                var d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">填写资料</a>  ';
+                                d += '<a href="#"  href="javascript:void(0);" style="cursor: default;">提交</a>  ';
+                            } else {
+                                var d = '<a href="#" onclick="EditInfo(\'' + rowData.Id + '\')">填写资料</a>  ';
+                                d += '<a href="#" onclick="sign(\'' + rowData.Id + '\')">提交</a>  ';
+                            }
+
+                            return d;
+
+
+                        }
+                    }
                     ]],
                     iconCls: 'icon-save',
                     title: '转出记录',
@@ -63,7 +83,7 @@
                     rownumbers: true,
                     sortName: 'CreateTime',
                     sortOrder: 'desc',
-                    toolbar: toolbars
+//                    toolbar: toolbars
                 });
             }
             //easyUI 弹出添加的对话框
@@ -85,10 +105,58 @@
                 //    });
                 //    $('#TransmittingTime').datetimebox('setValue', '9999');
                 //    $(".validatebox-tip").remove();//清除验证样式
-                window.parent.JumpP("登记转出记录", "TF_PersonnelFile_Transmitting_Out/Add", "icon-rgb");
+                window.parent.JumpP("登记转出记录", SherUrl+"Add", "icon-rgb");
             }
 
+            function sign(id) {
+                $.messager.confirm("提交信息", "您提交<font color='red' size='3'>" + "" + "</font>吗？", function (Delete) {
+                    if (Delete) {
+                        $.ajax({
+                            url: SherUrl + 'ChangeSignChangeSignadmin',
+                            type: 'POST',
+                            data: { IDSet: id },
+                            cache: false,
+                            error: function () { alert('Error loading PHP document'); },
+                            success: function (data) {
 
+                                alerts(data.Msg, 2);
+                                if (data.Code > 0) {
+                                    $("#dg").datagrid("reload");
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+            //easyUI 弹出添加的对话框
+
+            function EditInfo(id) {
+                //弹出层
+                // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
+                //    $('#DivEditor').dialog({
+                //        title: '转递单登记',
+                //        //width: 400,
+                //        //height: 200,
+                //        closed: false,
+                //        cache: false,
+                //        // href: 'get_content.php',
+                //        modal: true, top: 50,
+                //        onClose: function () {
+                //            //解决弹出窗口关闭后，验证消息还显示在最上面
+
+                //        }
+                //    });
+                //    $('#TransmittingTime').datetimebox('setValue', '9999');
+                //    $(".validatebox-tip").remove();//清除验证样式
+                //                var rows = $("#dg").datagrid('getSelected');
+                //
+                //                //首先取出来值判断只能选择一个
+                //                if (rows == null) {
+                //                    $.messager.alert("友情提示", "请选择", "error");
+                //                    return;
+                //                }
+                window.parent.JumpP("填写资料", SherUrl+"Edit?Id=" + id, "icon-rgb");
+            }
 
             //查看
             function ShowDetails() {

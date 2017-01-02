@@ -75,7 +75,7 @@
         <script type="text/javascript">
             @Html.Raw(ViewBag.RuteUrl)
          @Html.Raw(ViewBag.toolbar)
-
+            var ID = '@ViewBag.id';
             var CurrentList;
             var step;
             jQuery(document).ready(function () {
@@ -208,17 +208,21 @@
 
                 $("#SelectList").empty();
 
-                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
                 for (var i = 0; i < datas.length; i++) {
                     result += '<tr id="' + datas[i].Id + '" >'
                     result += "<td>" + datas[i].RealName + "</td>";
-                    result += "<td>" + datas[i].Units + "</td>";
+//                    result += "<td>" + datas[i].Units + "</td>";
                     result += "<td>" + datas[i].Duties + "</td>";
+                    var rea = "";
+                    if (datas[i].Reasons) {
+                        rea = datas[i].Reasons;
+                    }
 //                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Reasons" /></td>';
 //                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="OriginalCount" /></td>';
 //                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="DuplicateCount" /></td>';
                     //                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="MaterialCount" /></td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Reasons" value=' + datas[i].Reasons + '>' +
+                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Reasons" value=' + rea + '>' +
                   '</input></td>';
                     result += "<td> " + datas[i].OriginalCount + "</td>";
                     result += "<td> " + datas[i].DuplicateCount + "</td>";
@@ -235,16 +239,16 @@
                 var trList = $("#SelectList").children("tr")
                 for (var i = 1; i < trList.length; i++) {//第二项开始
                     var items = new Object();;
-                    items.PersonnelFileId = trList.eq(i).attr("id");
+                    items.Id = trList.eq(i).attr("id");
 
                     var tdArr = trList.eq(i).find("td");
                     items.RealName = tdArr.eq(0).html();//名称
-                    items.Units = tdArr.eq(1).html();//单位
-                    items.Duties = tdArr.eq(2).html();//职位
-                    items.Reasons = tdArr.eq(3).find("input").val();//
-                    items.OriginalCount = tdArr.eq(4).find("input").val();//    
-                    items.DuplicateCount = tdArr.eq(5).find("input").val();//    
-                    items.MaterialCount = tdArr.eq(6).find("input").val();//    
+//                    items.Units = tdArr.eq(1).html();//单位
+                    items.Duties = tdArr.eq(1).html();//职位
+                    items.Reasons = tdArr.eq(2).find("input").val();//
+                    items.OriginalCount = tdArr.eq(3).find("input").val();//    
+                    items.DuplicateCount = tdArr.eq(4).find("input").val();//    
+                    items.MaterialCount = tdArr.eq(5).find("input").val();//    
 
                     data.push(items);
                 }
@@ -264,10 +268,13 @@
                                  <form id="f1">
                                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
                                         <tr>
-                                            <td style="width:20px;">
+                                            <td style="width:60px;">
                                                 <label>字号：</label></td>
                                             <td style="width:120px;">
-                                                <input class="easyui-validatebox textbox" style="width:100px;" data-options="required:true"  type="text" name="Series" /></td>
+                                             <span name="Series"></span>
+                                                <input type="hidden" name="Id"
+                                />
+                                            </td>
 @*                                            <td style="width:20px;">*@
 @*                                                <label>号：</label></td>*@
 @*                                            <td style="width:660px;">*@
@@ -331,9 +338,9 @@
                         <tr>
                             <td>
                                 <div style="text-align: center; width: 100%; margin-bottom: 5px; margin-top: 10px;">
-                                    
+                                      <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="window.parent.closeC();">关闭</a>
                                     <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
-                                      <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">关闭</a>
+                                   
 
                                 </div>
                             </td>
