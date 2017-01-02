@@ -338,7 +338,7 @@
                 data.push(signatureimage);
                 data.push(States);
                 //  发送异步请求到后台保存数据
-                $.post(BaseUrl + 'EditInfo', data,function (data) {
+                $.post(BaseUrl + 'AdminEditInfo', data, function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
                         //                        alert("保存成功");

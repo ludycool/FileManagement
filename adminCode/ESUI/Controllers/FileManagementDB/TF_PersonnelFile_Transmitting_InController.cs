@@ -260,6 +260,129 @@ namespace ESUI.Controllers
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
         }
+        public JsonResult AdminEditInfo(TF_PersonnelFile_Transmitting_In EidModle)
+        {
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            bool IsAdd = false;
+
+            if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+            {
+                IsAdd = true;
+            }
+            if (IsAdd)
+            {
+                EidModle.Id = Guid.NewGuid();
+                EidModle.CreateMan = UserData.UserName;
+                EidModle.CreateManId = UserData.Id;
+                EidModle.CreateTime = DateTime.Now;
+                EidModle.isDeleted = false;
+                EidModle.States = 0;
+                try
+                {
+                    List<TF_PersonnelFile_Transmitting_In_Item> listItem = JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_In_Item>(EidModle.FistName);
+                    int OriginalCount = 0;
+                    int DuplicateCount = 0;
+                    int MaterialCount = 0;
+
+
+                    if (listItem != null && listItem.Count > 0)
+                    {
+                        EidModle.FistName = listItem[0].RealName;
+
+                        for (int i = 0; i < listItem.Count; i++)
+                        {
+                            OriginalCount += listItem[i].OriginalCount;
+                            DuplicateCount += listItem[i].DuplicateCount;
+                            MaterialCount += listItem[i].MaterialCount;//统计数
+                            listItem[i].Id = Guid.NewGuid(); ;
+                            listItem[i].OwnerId = EidModle.Id;
+                            OPItemBiz.Add(listItem[i]);//添加项
+
+                        }
+                        EidModle.OriginalCount = OriginalCount;
+                        EidModle.DuplicateCount = DuplicateCount;
+                        EidModle.MaterialCount = MaterialCount;
+                        EidModle.NumberS = listItem.Count;
+
+                    }
+
+
+
+                    OPBiz.Add(EidModle);
+
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = EidModle.Id.ToString();
+                    ReSultMode.Msg = "添加成功";
+                }
+                catch (Exception e)
+                {
+
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data = e.ToString();
+                    ReSultMode.Msg = "添加失败";
+                }
+
+            }
+            else
+            {
+                EidModle.WhereExpression = TF_PersonnelFile_Transmitting_InSet.Id.Equal(EidModle.Id);
+                List<TF_PersonnelFile_Transmitting_In_Item> listItem = JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_In_Item>(EidModle.FistName);
+                // EidModle.ChangedMap.Remove("id");//移除主键值
+                EidModle.FistName = listItem[0].RealName;
+//                EidModle.TransmittingMan = UserData.UserName;
+                EidModle.TransmittingTime = DateTime.Now;
+                if (EidModle.signatureimage == null || EidModle.signatureimage.Length == 0)
+                {
+                    byte[] myByteArray = new byte[1];
+                    EidModle.signatureimage = myByteArray;
+                }
+                if (OPBiz.Update(EidModle) > 0)
+                {
+
+
+                    int OriginalCount = 0;
+                    int DuplicateCount = 0;
+                    int MaterialCount = 0;
+
+
+                    if (listItem != null && listItem.Count > 0)
+                    {
+                        EidModle.FistName = listItem[0].RealName;
+
+                        for (int i = 0; i < listItem.Count; i++)
+                        {
+                            //                                OriginalCount += listItem[i].OriginalCount;
+                            //                                DuplicateCount += listItem[i].DuplicateCount;
+                            //                                MaterialCount += listItem[i].MaterialCount;//统计数
+                            //                                listItem[i].Id = listItem[i].Id; ;
+                            //                                listItem[i].OwnerId = EidModle.Id;
+                            listItem[i].WhereExpression = TF_PersonnelFile_Transmitting_In_ItemSet.Id.Equal(listItem[i].Id);
+                            OPItemBiz.Update(listItem[i]);//添加项
+
+                        }
+
+
+                    }
+
+
+
+
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改成功";
+                }
+                else
+                {
+                    ReSultMode.Code = -13;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改失败";
+                }
+            }
+
+
+            return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+
+        }
         public JsonResult GetInfo(string ID)
         {
             var mql2 = TF_PersonnelFile_Transmitting_InSet.SelectAll().Where(TF_PersonnelFile_Transmitting_InSet.Id.Equal(ID));
