@@ -39,8 +39,8 @@
                     f = [[
                         { field: 'ck', checkbox: true },
            { field: 'TransmittingMan', title: '转递人', width: 100, sortable: true },
-              { field: 'Series', title: '字', width: 100, sortable: true },
-              { field: 'Nos', title: '号', width: 100, sortable: true },
+              { field: 'Series', title: '字号', width: 100, sortable: true },
+//              { field: 'Nos', title: '号', width: 100, sortable: true },
               { field: 'OriginalCount', title: '正本（卷）', width: 100, sortable: true },
               { field: 'DuplicateCount', title: '副本（卷）', width: 100, sortable: true },
               { field: 'MaterialCount', title: '材料（份）', width: 100, sortable: true },
@@ -58,10 +58,10 @@
                     formatter: function (value, rowData, rowIndex) {
 //                        alert(rowData.States);
                         if (rowData.States==1) {
-                            var d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">补全信息</a>  ';
+                            var d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">填写资料</a>  ';
                             d += '<a href="#"  href="javascript:void(0);" style="cursor: default;">提交</a>  ';
                         } else {
-                            var d = '<a href="#" onclick="EditInfo(\'' + rowData.Id + '\')">补全信息</a>  ';
+                            var d = '<a href="#" onclick="EditInfo(\'' + rowData.Id + '\')">填写资料</a>  ';
                             d += '<a href="#" onclick="sign(\'' + rowData.Id + '\')">提交</a>  ';
                         }
                     
@@ -77,8 +77,8 @@
                     f = [[
                       { field: 'ck', checkbox: true },
          { field: 'TransmittingMan', title: '转递人', width: 100, sortable: true },
-            { field: 'Series', title: '字', width: 100, sortable: true },
-            { field: 'Nos', title: '号', width: 100, sortable: true },
+            { field: 'Series', title: '字号', width: 100, sortable: true },
+//            { field: 'Nos', title: '号', width: 100, sortable: true },
             { field: 'OriginalCount', title: '正本（卷）', width: 100, sortable: true },
             { field: 'DuplicateCount', title: '副本（卷）', width: 100, sortable: true },
             { field: 'MaterialCount', title: '材料（份）', width: 100, sortable: true },
@@ -156,7 +156,7 @@
 //                    $.messager.alert("友情提示", "请选择", "error");
 //                    return;
 //                }
-                window.parent.JumpP("登记转入记录", "TF_PersonnelFile_Transmitting_In/Edit?Id=" + id, "icon-rgb");
+                window.parent.JumpP("填写资料", "TF_PersonnelFile_Transmitting_In/Edit?Id=" + id, "icon-rgb");
             }
             //查看
             function ExportWord() {

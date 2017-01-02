@@ -190,6 +190,10 @@ namespace ESUI.Controllers
                 else
                 {
                     EidModle.WhereExpression = TF_PersonnelFile_Transmitting_OutSet.Id.Equal(EidModle.Id);
+                    List<TF_PersonnelFile_Transmitting_In_Item> listItem = JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_In_Item>(EidModle.FistName);
+                    EidModle.FistName = listItem[0].RealName;
+                    EidModle.TransmittingMan = UserData.UserName;
+                    EidModle.TransmittingTime = DateTime.Now;
                     // EidModle.ChangedMap.Remove("id");//移除主键值
                     if (OPBiz.Update(EidModle) > 0)
                     {
@@ -213,8 +217,11 @@ namespace ESUI.Controllers
         {
             var mql2 = TF_PersonnelFile_Transmitting_OutSet.SelectAll().Where(TF_PersonnelFile_Transmitting_OutSet.Id.Equal(ID));
             TF_PersonnelFile_Transmitting_Out Rmodel = OPBiz.GetEntity(mql2);
+            var mql3 = TF_PersonnelFile_Transmitting_Out_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_Out_ItemSet.OwnerId.Equal(ID));
+            var ItemBlist = OPItemBiz.GetEntities(mql3);
+            var df = new { inmode = Rmodel, InItem = ItemBlist };
             //  groupsBiz.Add(rol);
-            return Json(Rmodel, JsonRequestBehavior.AllowGet);
+            return Json(df, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 获取项
@@ -289,5 +296,7 @@ namespace ESUI.Controllers
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
+
+     
     }
 }

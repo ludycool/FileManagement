@@ -43,8 +43,8 @@
                     f = [[
                         { field: 'ck', checkbox: true },
            { field: 'TransmittingMan', title: '转递人', width: 100, sortable: true },
-              { field: 'Series', title: '字', width: 100, sortable: true },
-              { field: 'Nos', title: '号', width: 100, sortable: true },
+              { field: 'Series', title: '字号', width: 100, sortable: true },
+//              { field: 'Nos', title: '号', width: 100, sortable: true },
               { field: 'OriginalCount', title: '正本（卷）', width: 100, sortable: true },
               { field: 'DuplicateCount', title: '副本（卷）', width: 100, sortable: true },
               { field: 'MaterialCount', title: '材料（份）', width: 100, sortable: true },
@@ -81,8 +81,8 @@
                     f = [[
                       { field: 'ck', checkbox: true },
          { field: 'TransmittingMan', title: '转递人', width: 100, sortable: true },
-            { field: 'Series', title: '字', width: 100, sortable: true },
-            { field: 'Nos', title: '号', width: 100, sortable: true },
+            { field: 'Series', title: '字号', width: 100, sortable: true },
+//            { field: 'Nos', title: '号', width: 100, sortable: true },
             { field: 'OriginalCount', title: '正本（卷）', width: 100, sortable: true },
             { field: 'DuplicateCount', title: '副本（卷）', width: 100, sortable: true },
             { field: 'MaterialCount', title: '材料（份）', width: 100, sortable: true },
@@ -382,13 +382,17 @@
             function createList(datas) {
 
                 $("#SelectList").empty();
-                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
                 for (var i = 0; i < datas.length; i++) {
-                    result += '<tr id="' + datas[i].Id + '" >'
+                    result += '<tr id="' + datas[i].Id + '" >';
                     result += "<td>" + datas[i].RealName + "</td>";
-                    result += "<td>" + datas[i].Units + "</td>";
+             
                     result += "<td>" + datas[i].Duties + "</td>";
-                    result += "<td>" + datas[i].Reasons + "</td>";
+                    var re = "";
+                    if (datas[i].Reasons) {
+                        re = datas[i].Reasons;
+                    }
+                    result += "<td>" + re + "</td>";
                     result += "<td>" + datas[i].OriginalCount + "</td>";
                     result += "<td>" + datas[i].DuplicateCount + "</td>";
                     result += "<td>" + datas[i].MaterialCount + "</td>";
@@ -400,13 +404,16 @@
             function createList2(datas) {
 
                 $("#SelectList2").empty();
-                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
                 for (var i = 0; i < datas.length; i++) {
-                    result += '<tr id="' + datas[i].Id + '" >'
+                    result += '<tr id="' + datas[i].Id + '" >';
                     result += "<td>" + datas[i].RealName + "</td>";
-                    result += "<td>" + datas[i].Units + "</td>";
+                    var re = "";
+                    if (datas[i].Reasons) {
+                        re = datas[i].Reasons;
+                    }
                     result += "<td>" + datas[i].Duties + "</td>";
-                    result += "<td>" + datas[i].Reasons + "</td>";
+                    result += "<td>" + re+ "</td>";
                     result += "<td>" + datas[i].OriginalCount + "</td>";
                     result += "<td>" + datas[i].DuplicateCount + "</td>";
                     result += "<td>" + datas[i].MaterialCount + "</td>";
