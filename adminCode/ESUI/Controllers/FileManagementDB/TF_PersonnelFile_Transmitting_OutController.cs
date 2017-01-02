@@ -34,6 +34,18 @@ namespace ESUI.Controllers
             ViewBag.toolbar = toolbar();
             return View();
         }
+        public ActionResult OutUserListResult()
+        {
+            ViewBag.RuteUrl = RuteUrl();
+            ViewBag.toolbar = toolbar();
+            return View();
+        }
+        public ActionResult Edit()
+        {
+            ViewBag.id = Request["Id"] + "";
+            ViewBag.RuteUrl = RuteUrl();
+            return View();
+        }
         /// <summary>
         /// 登记页面
         /// </summary>
@@ -62,14 +74,14 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = "v_TF_PersonnelFile_Transmitting_Out";
-            if (UserData.UserTypes == 1)
-            {
+//            if (UserData.UserTypes == 1)
+//            {
                 pc.sys_Where = Where;
-            }
-            else
-            {
-                pc.sys_Where = Where + " and   CreateMan='" + UserData.UserName + "'";
-            }
+//            }
+//            else
+//            {
+//                pc.sys_Where = Where + " and   CreateMan='" + UserData.UserName + "'";
+//            }
             //pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
             DataSet ds = OPBiz.GetPagingDataP(pc);
@@ -81,7 +93,37 @@ namespace ESUI.Controllers
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
+        public JsonResult UserSearch()
+        {
+            // SelectWhere.selectwherestring(Request["sqlSet"]);
+            int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
+            //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
+            string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
 
+            Where += " and (isDeleted=0) ";
+            ////字段排序
+            String sortField = Request["sort"];
+            String sortOrder = Request["order"];
+            PageClass pc = new PageClass();
+            pc.sys_Fields = "*";
+            pc.sys_Key = "Id";
+            pc.sys_PageIndex = pageIndex;
+            pc.sys_PageSize = pageSize;
+            pc.sys_Table = "v_TF_PersonnelFile_Transmitting_Out";
+            pc.sys_Where = Where + " and   DepartmentId='" + UserData.DepartmentId + "'";
+            //pc.sys_Where = Where;
+            pc.sys_Order = " " + sortField + " " + sortOrder;
+            DataSet ds = OPBiz.GetPagingDataP(pc);
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+
+            // var mql = TF_PersonnelFile_Transmitting_OutSet.Id.NotEqual("");
+            dic.Add("rows", ds.Tables[0]);
+            dic.Add("total", pc.RCount);
+            return Json(dic, JsonRequestBehavior.AllowGet);
+        }
         public JsonResult EditInfo(TF_PersonnelFile_Transmitting_Out EidModle)
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
