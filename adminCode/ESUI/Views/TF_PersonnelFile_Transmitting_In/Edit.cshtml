@@ -217,13 +217,17 @@
 
                 $("#SelectList").empty();
 
-                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td> <td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
                 for (var i = 0; i < datas.length; i++) {
-                    result += '<tr id="' + datas[i].Id + '" >'
+                    result += '<tr id="' + datas[i].Id + '" >';
                     result += "<td>" + datas[i].RealName + "</td>";
-                    result += "<td>" + datas[i].Units + "</td>";
+           
                     result += "<td>" + datas[i].Duties + "</td>";
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Reasons" value=' + datas[i].Reasons + '>'+
+                    var rea = "";
+                    if (datas[i].Reasons) {
+                        rea = datas[i].Reasons;
+                    }
+                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Reasons" value=' + rea + '>' +
                         '</input></td>';
                     result += "<td> " + datas[i].OriginalCount + "</td>";
                     result += "<td> " + datas[i].DuplicateCount + "</td>";
@@ -246,12 +250,12 @@
 
                     var tdArr = trList.eq(i).find("td");
                     items.RealName = tdArr.eq(0).html();//名称
-                    items.Units = tdArr.eq(1).html();//单位
-                    items.Duties = tdArr.eq(2).html();//职位
-                    items.Reasons = tdArr.eq(3).find("input").val();//
-                    items.OriginalCount = tdArr.eq(4).find("input").val();//    
-                    items.DuplicateCount = tdArr.eq(5).find("input").val();//    
-                    items.MaterialCount = tdArr.eq(6).find("input").val();//    
+//                    items.Units = tdArr.eq(1).html();//单位
+                    items.Duties = tdArr.eq(1).html();//职位
+                    items.Reasons = tdArr.eq(2).find("input").val();//
+                    items.OriginalCount = tdArr.eq(3).find("input").val();//    
+                    items.DuplicateCount = tdArr.eq(4).find("input").val();//    
+                    items.MaterialCount = tdArr.eq(5).find("input").val();//    
 
                     data.push(items);
                 }
@@ -343,7 +347,7 @@
         <tr>
             <td>
                 <div style="text-align: center; width: 100%; margin-bottom: 5px; margin-top: 10px;">
-@*                    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-arrow_left" onclick="step.preStep();">返回</a>*@
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="window.parent.closeC();">关闭</a>
                     <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
 
                 </div>
