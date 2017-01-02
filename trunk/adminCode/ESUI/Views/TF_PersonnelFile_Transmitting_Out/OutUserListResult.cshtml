@@ -1,0 +1,326 @@
+﻿<!DOCTYPE html>
+@{
+    ViewBag.TName = "Index";
+}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+
+    @* ReSharper disable once NotAllPathsReturnValue *@
+
+    <style>
+
+            /*table细边框 end*/
+        .border-table {
+            border-collapse: collapse;
+            border: none;
+        }
+
+            .border-table td {
+                border: solid #000 1px;
+                padding: 5px 15px;
+            }
+        /*table细边框 end*/
+
+    </style>
+    @section Jsprepare{
+
+        <script type="text/javascript">
+            @Html.Raw(ViewBag.RuteUrl)
+         @Html.Raw(ViewBag.toolbar)
+
+            jQuery(document).ready(function () {
+                DataGridSet();
+            })
+            function DataGridSet() {
+                $('#dg').datagrid({
+                    url: BaseUrl + 'Search',
+                    columns: [[
+                        { field: 'ck', checkbox: true },
+           { field: 'TransmittingMan', title: '转递人', width: 100, sortable: true },
+              { field: 'Series', title: '字', width: 100, sortable: true },
+              { field: 'Nos', title: '号', width: 100, sortable: true },
+              { field: 'OriginalCount', title: '正本（卷）', width: 100, sortable: true },
+              { field: 'DuplicateCount', title: '副本（卷）', width: 100, sortable: true },
+              { field: 'MaterialCount', title: '材料（份）', width: 100, sortable: true },
+              { field: 'CreateMan', title: '创建人', width: 100, sortable: true },
+              { field: 'StatesName', title: '状态', width: 100, sortable: true },
+              { field: 'TransmittingTime', title: '转递时间', width: 100, sortable: true }
+                    ]],
+                    iconCls: 'icon-save',
+                    title: '转出记录',
+                    nowrap: true,
+                    fit: true,
+                    fitColumns: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    pageSize: 20,
+                    pagination: true,
+                    rownumbers: true,
+                    sortName: 'CreateTime',
+                    sortOrder: 'desc',
+                    toolbar: toolbars
+                });
+            }
+            //easyUI 弹出添加的对话框
+            function AddInfo() {
+                //弹出层
+                // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
+                //    $('#DivEditor').dialog({
+                //        title: '转递单登记',
+                //        //width: 400,
+                //        //height: 200,
+                //        closed: false,
+                //        cache: false,
+                //        // href: 'get_content.php',
+                //        modal: true, top: 50,
+                //        onClose: function () {
+                //            //解决弹出窗口关闭后，验证消息还显示在最上面
+
+                //        }
+                //    });
+                //    $('#TransmittingTime').datetimebox('setValue', '9999');
+                //    $(".validatebox-tip").remove();//清除验证样式
+                window.parent.JumpP("登记转出记录", "TF_PersonnelFile_Transmitting_Out/Add", "icon-rgb");
+            }
+
+
+
+            //查看
+            function ShowDetails() {
+                var rows = $("#dg").datagrid('getSelected');
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    // $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+                $("#DivShow").dialog('open').dialog('setTitle', '查看-' + rows.Series + "字" + rows.Nos + "号").window('resize', { top: 20 });
+                DataBaseFunction.BindForm("f1", rows);
+                DataBaseFunction.BindForm("f2", rows);
+                var ID = rows.Id;  //获取项
+                $.ajax({
+                    url: BaseUrl + 'GetListItems',
+                    type: 'POST',
+                    data: { ID: ID },
+                    cache: false,
+                    error: function () { alert('Error $.ajax'); },
+                    success: function (data) {
+                        createList(data)
+                    }
+                });
+
+            }
+
+
+            //实现的编辑，包括增查改
+            function SaveInfo() {
+
+                //判断的信息是否通过验证
+                var validate = $("#ff").form('validate');
+                if (validate == false) {
+                    return false;
+                }
+                //获取需要传递的参数传递给前台
+                var data = DataBaseFunction.GetFormData("ff")
+                //发送异步请求到后台保存数据
+                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                    alerts(data.Msg, 2);
+                    if (data.Code > 0) {
+                        $('#DivEditor').dialog('close');
+                        $(".validatebox-tip").remove();
+                        $("#dg").datagrid("reload");
+
+                    }
+                });
+
+            }
+            function ExportWord() {
+                var rows = $("#dg").datagrid('getSelected');
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    // $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+
+                var ID = rows.Id;  //获取项
+
+                $("#exportToExcelForm").remove();
+                var form = $("<form>"); //定义一个form表单
+                form.attr("id", "exportToExcelForm");
+                form.attr("style", "display:none");
+                form.attr("target", "");
+                form.attr("method", "post");
+                form.attr("action", "/Excel/CommonExportWordout");
+                var input1 = $("<input>");
+                input1.attr("type", "hidden");
+                input1.attr("name", "id");
+                input1.attr("value", ID);
+
+                $("body").append(form); //将表单放置在web中
+                form.append(input1);
+
+                form.submit(); //表单提交
+
+                $("#exportToExcelForm").remove();
+
+            }
+            //刷新
+            function RefreshOP() {
+                $("#dg").datagrid("reload");
+            }
+            //搜索
+            function SearchGo() {
+                DataBaseFunction.Search("fSearh", "dg");
+                $("#Div_Searh").dialog('close');
+            }
+            //搜索
+            function Search() {
+                // $("#fSearh").form("clear");
+                $("#Div_Searh").dialog('open').dialog('setTitle', '搜索').window('resize', { top: 100, left: 100 });
+            }
+            //删除
+            function Del() {
+                DataBaseFunction.deleteInfo("dg", "Id", "TransmittingMan");
+            }
+            function createList(datas) {
+
+                $("#SelectList").empty();
+                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                for (var i = 0; i < datas.length; i++) {
+                    result += '<tr id="' + datas[i].Id + '" >'
+                    result += "<td>" + datas[i].RealName + "</td>";
+                    result += "<td>" + datas[i].Units + "</td>";
+                    result += "<td>" + datas[i].Duties + "</td>";
+                    result += "<td>" + datas[i].Reasons + "</td>";
+                    result += "<td>" + datas[i].OriginalCount + "</td>";
+                    result += "<td>" + datas[i].DuplicateCount + "</td>";
+                    result += "<td>" + datas[i].MaterialCount + "</td>";
+                    result += "</tr>"
+                }
+                $("#SelectList").append(result);
+
+            }
+
+        </script>
+    }
+
+</head>
+<body style="overflow-y: hidden">
+
+    <table id="dg"></table>
+
+
+    <!------------------------搜索弹出层---------------------------------->
+    <div id="Div_Searh" class="easyui-dialog" style="width: 380px; padding: 10px 20px;"
+        closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+        <form id="fSearh">
+
+            <table class="stripes" style="table-layout: fixed; margin: 0 auto; width: 320px;" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td style="width: 60px;">
+                        <label>转递人：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="TransmittingMan_like" style="width: 200px;" />
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <label>字：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="Series_like" style="width: 200px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>号：</label></td>
+                    <td>
+                        <input type="text" class="textbox" name="Nos_like" style="width: 200px;" />
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <div style="text-align: center; width: 100%; margin: 5px 0px; display: block;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-undo" style="float: left;" onclick=" DataBaseFunction.ClearForm('fSearh');">清除</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" style="float: right;" iconcls="icon-search" onclick="SearchGo();">搜索</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" style="float: right;" iconcls="icon-cancel" onclick="$('#Div_Searh').dialog('close')">关闭</a>
+        </div>
+    </div>
+  
+
+
+    <!------------------------弹出查看层---------------------------------->
+    <div id="DivShow" class="easyui-dialog" style="width: 750px;"
+        closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+        <div class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:300,width:730,border:false">
+           
+
+                <table style="table-layout: fixed; margin: 0 auto; width: 720px;" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td>
+                            <form id="f1">
+                                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td style="width: 20px;">
+                                            <label>字：</label></td>
+                                        <td style="width: 120px;">
+                                            <span name="Series"></span></td>
+                                        <td style="width: 20px;">
+                                            <label>号：</label></td>
+                                        <td style="width: 660px;">
+                                            <span name="Nos"></span></td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 10px;"></td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                            <table class="border-table" id="SelectList" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 720px;">
+                            </table>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 20px;"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <form id="f2" method="post" enctype="multipart/form-data">
+
+                                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td style="width: 80px;">
+                                            <label>转递人：</label></td>
+                                        <td style="width: 220px;">
+                                            <span name="TransmittingMan"></span></td>
+
+                                        <td style="width: 80px;">
+                                            <label>转递时间：</label></td>
+                                        <td style="width: 340px;">
+                                            <span name="TransmittingTime"></span></td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+
+            
+        </div>
+
+        <div style="text-align: center; width: 100%; margin-bottom: 5px;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow').dialog('close')">关闭</a>
+        </div>
+    </div>
+</body>
+</html>

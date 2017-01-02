@@ -3581,6 +3581,8 @@
     <Content Include="Views\Register\Index.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Transmitting_In\Edit.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Transmitting_In\UserListResult.cshtml" />
+    <Content Include="Views\TF_PersonnelFile_Transmitting_Out\OutUserListResult.cshtml" />
+    <Content Include="Views\TF_PersonnelFile_Transmitting_Out\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />
