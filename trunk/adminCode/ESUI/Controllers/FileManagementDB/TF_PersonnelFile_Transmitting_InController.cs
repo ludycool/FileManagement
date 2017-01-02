@@ -124,7 +124,7 @@ namespace ESUI.Controllers
 //            }
 //            else
 //            {
-                pc.sys_Where = Where + " and   CreateMan='" + UserData.UserName + "'";
+            pc.sys_Where = Where + " and   DepartmentId='" + UserData.DepartmentId + "'";
 //            }
 
             pc.sys_Order = " " + sortField + " " + sortOrder;
