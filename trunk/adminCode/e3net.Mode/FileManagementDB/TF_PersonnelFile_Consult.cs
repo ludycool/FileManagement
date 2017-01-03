@@ -6,9 +6,7 @@ using Moon.Orm;
 
 namespace e3net.Mode.FileManagementDB
 {
-    /// <summary>
-    /// 人员档案查阅单
-    /// </summary>
+
     [Table("[TF_PersonnelFile_Consult]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
     public partial class TF_PersonnelFile_Consult : EntityBase
@@ -193,6 +191,15 @@ namespace e3net.Mode.FileManagementDB
             get { return GetPropertyValue<byte[]>("signatureimage"); }
             set { SetPropertyValue("signatureimage", value); }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String DepartmentName
+        {
+            get { return GetPropertyValue<String>("DepartmentName"); }
+            set { SetPropertyValue("DepartmentName", value); }
+        }
     }
 
     [Table("[TF_PersonnelFile_Consult]", DbType.SqlServer)]
@@ -310,6 +317,11 @@ namespace e3net.Mode.FileManagementDB
         /// 
         /// </summary>
         public static readonly FieldBase signatureimage = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Consult]", FieldType.Common, "[signatureimage]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase DepartmentName = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Consult]", FieldType.Common, "[DepartmentName]");
     }
 
 }
