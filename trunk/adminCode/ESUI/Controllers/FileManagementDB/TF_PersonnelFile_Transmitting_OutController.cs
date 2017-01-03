@@ -435,6 +435,26 @@ namespace ESUI.Controllers
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
+        public FileContentResult GetImage(string id)
+        {
+            var df = TF_PersonnelFile_Transmitting_OutSet.SelectAll().Where(TF_PersonnelFile_Transmitting_OutSet.Id.Equal(id));
+            var dfw = OPBiz.GetEntity(df);
+
+
+            if (dfw != null)
+            {
+
+                return File(dfw.signatureimage, "jpg");
+
+            }
+            else
+            {
+
+                return null;
+
+            }
+
+        }
      
     }
 }

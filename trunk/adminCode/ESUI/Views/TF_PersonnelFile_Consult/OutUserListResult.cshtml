@@ -27,18 +27,18 @@
     @section Jsprepare{
 
         <script type="text/javascript">
-            var BaseUrl = "TF_PersonnelFile_Consult/";
+            var BaseUrl2 = "/TF_PersonnelFile_Consult/";
 
             jQuery(document).ready(function () {
                 DataGridSet();
             })
             function DataGridSet() {
                 $('#dg').datagrid({
-                    url: BaseUrl + 'Search',
+                    url: BaseUrl2 + 'Search',
                     columns: [[
                  { field: 'ck', checkbox: true },
                { field: 'PersonnelFile', title: '档案姓名', width: 100, sortable: true },
-              { field: 'Units', title: '查阅人单位', width: 100, sortable: true },
+              { field: 'DepartmentName', title: '查阅人单位', width: 100, sortable: true },
                { field: 'ConsultMan', title: '查阅人姓名', width: 100, sortable: true },
               { field: 'ConsultDetail', title: '查阅内容', width: 100, sortable: true },
                { field: 'ConsultTime', title: '查阅时间', width: 100, sortable: true },
@@ -54,7 +54,7 @@
                                var d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">查阅</a>  ';
 //                               d += '<a href="#"  href="javascript:void(0);" style="cursor: default;">提交</a>  ';
                            } else {
-                               var d = '<a href="#" onclick="EditInfo(\'' + rowData.Id + '\')">查阅</a>  ';
+                               var d = '<a href="#" onclick="ShowDetailsSing(' + rowIndex + ')">查阅</a>  ';
 //                               d += '<a href="#" onclick="sign(\'' + rowData.Id + '\')">提交</a>  ';
                            }
 
@@ -81,7 +81,24 @@
                 });
             }
            
+            function ShowDetailsSing(id) {
+                var rows = $('#dg').datagrid('getData').rows[id];
+                
+                //                var rows = $("#dg").datagrid('getSelected');
+                //                //首先取出来值判断只能选择一个
+                //                if (rows == null) {
+                //                    // $.messager.alert("友情提示", "请选择", "error");
+                //                    return;
+                //                }
+                //                $("#DivShow2").dialog('open').dialog('setTitle', '查看-字号' + "" + "").window('resize', { top: 20 });
+                $("#DivShow").dialog('open').dialog('setTitle', '查看-查阅-' + rows.PersonnelFile).window('resize', { top: 20 });
+                rows.ConsultMan = '@ViewBag.UserName';
+                 
+                rows.ConsultTime = '@ViewBag.Userdatetime ';
 
+                DataBaseFunction.BindForm("fshow", rows);
+
+            }
 
             //查看
             function ShowDetails() {
@@ -100,14 +117,14 @@
             function SaveInfo() {
 
                 //判断的信息是否通过验证
-                var validate = $("#ff").form('validate');
+                var validate = $("#fshow").form('validate');
                 if (validate == false) {
                     return false;
                 }
                 //获取需要传递的参数传递给前台
-                var data = DataBaseFunction.GetFormData("ff")
+                var data = DataBaseFunction.GetFormData("fshow")
                 //发送异步请求到后台保存数据
-                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                $.post(BaseUrl2 + 'SumbtEditInfo', data, function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
                         $('#DivEditor').dialog('close');
@@ -197,17 +214,19 @@
                     <tr>
                         <td>
                             <label>档案姓名：</label></td>
-                        <td><span name="PersonnelFile"></span></td>
+                        <td><span name="PersonnelFile"></span>
+                             <input type="hidden" name="Id"/>
+                        </td>
                     </tr>
                     <tr>
                         <td>
                             <label>查阅人单位：</label></td>
-                        <td><span name="Units"></span></td>
+                        <td><span name="DepartmentName"></span></td>
                     </tr>
                     <tr>
                         <td style="width: 120px;">
                             <label>查阅人姓名：</label></td>
-                        <td style="width: 480px;"><span name="ConsultMan"></span></td>
+                        <td style="width: 480px;"><span name="ConsultMan" ></span></td>
                     </tr>
                     <tr>
                         <td>
@@ -217,25 +236,28 @@
                     <tr>
                         <td>
                             <label>查阅内容：</label></td>
-                        <td><span name="ConsultDetail"></span></td>
+                        <td>
+                            
+                              <input class="easyui-validatebox" type="text" id="ConsultDetail" name="ConsultDetail"  style="width: 100%"   />
+                        </td>
                     </tr>
                     <tr>
                         <td>
                             <label>备注：</label></td>
-                        <td><span name="Remarks"></span></td>
+                        <td>
+                              <input class="easyui-validatebox" type="text" id="Remarks" name="Remarks"  style="width: 100%" />
+                           
+
+                        </td>
                     </tr>
 
-                    <tr>
-                        <td>
-                            <label>添加时间：</label></td>
-                        <td><span name="CreateTime"></span></td>
-                    </tr>
                 </table>
             </form>
         </div>
 
         <div style="text-align: center; width: 100%; margin-bottom: 5px;">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow').dialog('close')">关闭</a>
+             <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
         </div>
     </div>
 </body>
