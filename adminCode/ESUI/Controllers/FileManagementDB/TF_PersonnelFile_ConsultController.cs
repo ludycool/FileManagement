@@ -30,6 +30,13 @@ namespace ESUI.Controllers
             ViewBag.toolbar = toolbar();
             return View();
         }
+
+        public ActionResult OutUserListResult()
+        {
+            ViewBag.RuteUrl = RuteUrl();
+            ViewBag.toolbar = toolbar();
+            return View();
+        }
         /// <summary>
         /// 登记页面
         /// </summary>

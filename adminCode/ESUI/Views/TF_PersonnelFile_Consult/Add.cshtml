@@ -78,6 +78,7 @@
 
             var CurrentList;
             var step;
+            var pum = [];
             jQuery(document).ready(function () {
 
                 CurrentList = new Array();//当前选择的
@@ -90,7 +91,12 @@
                 $('#TransmittingTime').datetimebox('setValue', '9999');
                 $(".validatebox-tip").remove();//清除验证样式
                 PersonnelFile();
-
+//                $('#DepartmentId').combobox({
+//                    url: "/TF_Units/GetAllInfo"
+//
+//
+//                });
+            
             })
 
      
@@ -109,16 +115,19 @@
                 if (validate2 == false) {
                     return false;
                 }
-               
-                var ItemList=getTableData();//项
+                var ItemList = getTableData();//项
+                
                 var jsonstr = JSON.stringify(ItemList);
                 var listAll = [{
                     name: "listAll",
                     value: jsonstr
 
                 }]
-  
-              //  发送异步请求到后台保存数据
+               
+//                var df = $('#DepartmentId').combobox('getValue');
+              
+//  
+//                发送异步请求到后台保存数据
                 $.post(BaseUrl + 'AddList', listAll, function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
@@ -174,48 +183,78 @@
             function nextGo() {
                 step.nextStep();
                 createList(DataGridCheck.checkedItems);
+//                $("#DepartmentId").combobox({
+//                    onChange: function(values, o) {
+//                        if (values != "") {
+//
+//                            var url = "/TF_Units/GetAllInfo?syr=" + values.trim();
+//
+//                            $("#DepartmentId").combobox("reload", url);
+//
+//                        }
+//
+//                    }
+//
+//                });
 
             }
 
             function createList(datas) {
 
                 $("#SelectList").empty();
-
-                var result = ' <tr> <td style="width: 100px;">档案姓名</td><td style="width: 120px;">查阅人单位</td><td style="width: 50px;">查阅人姓名</td><td style="width: 200px;">查阅内容</td><td style="width: 50px;">查阅时间</td><td style="width: 50px;">备注</td></</tr>';
+              
+                var result = ' <tr> <td style="width: 100px;">档案姓名</td><td style="width: 120px;">查阅人单位</td></</tr>';
                 for (var i = 0; i < datas.length; i++) {
-                    result += '<tr id="' + datas[i].Id + '" >'
+                    result += '<tr id="' + datas[i].Id + '" >';
                     result += "<td>" + datas[i].RealName + "</td>";
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Units" /></td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="ConsultMan" /></td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="ConsultDetail" /></td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="ConsultTime" /> </td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Remarks" /></td>';
+                    var pusid = "DepartmentId" + i;
+                    result += '<td>  <input class="easyui-combobox" style="width: 200px;"  id="' + pusid + '"/"></td>';
 
-                    result += "</tr>"
+                    pum.push(pusid);
+                    result += "</tr>";
                 }
                 $("#SelectList").append(result);
-
+                $.parser.parse();
+                for (var i = 0; i < pum.length; i++) {
+                    bind(pum[i]);
+                }
+               
             }
 
-            function getTableData()
-            {
+            function bind(parameters) {
+                
+             var   dffflt = "#" + parameters;
+             $(dffflt).combobox({
+                                    url: "/TF_Units/GetAllInfo",
+                                    valueField: 'Id',
+                                    textField: 'TName',
+                
+                
+                                });
+            }
+
+            function getTableData() {
+               
                 var data = new Array();//当前选择的
                 var trList = $("#SelectList").children("tr")
                 for (var i = 1; i < trList.length; i++) {//第二项开始
                     var items = new Object();;
-                    items.PersonnelFileId = trList.eq(i).attr("id");
+                    items.Id = trList.eq(i).attr("id");
 
                     var tdArr = trList.eq(i).find("td");
                     items.PersonnelFile = tdArr.eq(0).html();//名称
-                    items.Units = tdArr.eq(1).find("input").val();//
-                    items.ConsultMan = tdArr.eq(2).find("input").val();//
-                    items.ConsultDetail = tdArr.eq(3).find("input").val();//
-                    items.ConsultTime = tdArr.eq(4).find("input").val();//    
-                    items.Remarks = tdArr.eq(5).find("input").val();//     
+                    var dffflt = "#" + pum[i-1];
+                    items.DepartmentId = $(dffflt).combobox('getValue');//
+                    items.DepartmentName = $(dffflt).combobox('getText');//
+//                    items.DepartmentId = tdArr.eq(2).find("input").val();//
+//                    items.ConsultMan = tdArr.eq(2).find("input").val();//
+//                    items.ConsultDetail = tdArr.eq(3).find("input").val();//
+//                    items.ConsultTime = tdArr.eq(4).find("input").val();//    
+//                    items.Remarks = tdArr.eq(5).find("input").val();//     
 
                     data.push(items);
                 }
-
+ 
                 return data;
             }
         </script>
@@ -287,6 +326,7 @@
                         <tr>
                             <td>
                                 <div style="text-align: center; width: 100%; margin-bottom: 5px; margin-top: 10px;">
+                                  
                                     <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-arrow_left" onclick="step.preStep();">返回</a>
                                     <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
 
