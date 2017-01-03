@@ -158,7 +158,7 @@
                     // $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                $("#imgId").attr('src', "TF_PersonnelFile_Transmitting_In/GetImage?id=" + rows.Id);
+                $("#imgId").attr('src', "TF_PersonnelFile_Transmitting_Out/GetImage?id=" + rows.Id);
                 $("#DivShow2").dialog('open').dialog('setTitle', '查看-字号' + rows.Series + "").window('resize', { top: 20 });
                 DataBaseFunction.BindForm("f3", rows);
                 DataBaseFunction.BindForm("f4", rows);
@@ -376,7 +376,9 @@
                                 <td style="width: 60px;">
                                     <label>字号：</label></td>
                                 <td style="width: 120px;">
-                                    <span name="Series"></span></td>
+                                    <span name="Series"></span>
+                                    <input type="hidden" name="Id"/>
+                                </td>
                                 <td style="width: 20px;">
                                     @*                                            <label>号：</label>*@
 
