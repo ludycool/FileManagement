@@ -131,7 +131,7 @@ namespace e3net.Mode.FileManagementDB
         }
 
         /// <summary>
-        /// 状态（0--待审核；1--审核通过；2--审核不通过）
+        /// 状态（-1;--未提交；0--待审核；1--审核通过；2--审核不通过）
         /// </summary>
         public Int32? ApprovalStates
         {
@@ -187,10 +187,10 @@ namespace e3net.Mode.FileManagementDB
         /// <summary>
         /// 是否删除
         /// </summary>
-        public bool? IsDeleted
+        public bool? isDeleted
         {
-            get { return GetPropertyValue<bool?>("IsDeleted"); }
-            set { SetPropertyValue("IsDeleted", value); }
+            get { return GetPropertyValue<bool?>("isDeleted"); }
+            set { SetPropertyValue("isDeleted", value); }
         } /// <summary>
           /// 备注
           /// </summary>
@@ -312,7 +312,7 @@ namespace e3net.Mode.FileManagementDB
         /// <summary>
         /// 是否删除
         /// </summary>
-        public static readonly FieldBase IsDeleted = new FieldBase(DbType.SqlServer, "[TF_EntryAndExitRegistration]", FieldType.Common, "[IsDeleted]");
+        public static readonly FieldBase isDeleted = new FieldBase(DbType.SqlServer, "[TF_EntryAndExitRegistration]", FieldType.Common, "[isDeleted]");
         /// <summary>
         /// 备注
         /// </summary>

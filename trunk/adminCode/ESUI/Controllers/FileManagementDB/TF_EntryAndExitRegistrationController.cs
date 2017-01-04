@@ -68,26 +68,80 @@ namespace ESUI.Controllers.FileManagementDB
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
+
         public JsonResult Approve(string ID, string state = "-1")
-        {//States 状态（已审核--2、审核中--1，已提交--0，编辑中--1）
-            string sql = string.Format("update TF_EntryAndExitRegistration set States={0},AprovalTime=getdate() Where Id='{1}'", state, ID);
+        {//ApprovalStates 状态（-1;--未提交；0--待审核；1--审核通过；2--审核不通过）
+            string sql = string.Format("update TF_EntryAndExitRegistration set ApprovalStates={0},AprovalTime=getdate() Where Id='{1}'", state, ID);
             int f = OPBiz.ExecuteSqlWithNonQuery(sql);
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
             {
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
-                ReSultMode.Msg = "审核通过成功！";
+                if (state == "0")
+                {
+                    ReSultMode.Msg = "审核成功！";
+                }
+                else
+                {
+                    ReSultMode.Msg = "审核提交成功！";
+                }
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
             {
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
-                ReSultMode.Msg = "审核通过失败！";
+                if (state == "0")
+                {
+                    ReSultMode.Msg = "审核提交失败！";
+                }
+                else
+                {
+                    ReSultMode.Msg = "审核失败！";
+                }
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
+
+        //证件审核
+        public JsonResult Approval()
+        {
+            int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
+            //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
+            string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
+
+            Where += " and IsDeleted='false'";
+            ////字段排序
+            String sortField = Request["sort"];
+            String sortOrder = Request["order"];
+            PageClass pc = new PageClass();
+            pc.sys_Fields = "*";
+            pc.sys_Key = "Id";
+            pc.sys_PageIndex = pageIndex;
+            pc.sys_PageSize = pageSize;
+            pc.sys_Table = "TF_EntryAndExitRegistration";
+            if (UserData.UserTypes == 1)
+            {
+                pc.sys_Where = Where;
+            }
+            else
+            {
+                pc.sys_Where = Where + " and CreateMan='" + UserData.UserName + "'";
+            }
+
+            pc.sys_Order = " " + sortField + " " + sortOrder;
+            List<TF_EntryAndExitRegistration> list2 = OPBiz.GetPagingData<TF_EntryAndExitRegistration>(pc);
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+
+            // var mql = TF_EntryAndExitRegistrationSet.Id.NotEqual("");
+            dic.Add("rows", list2);
+            dic.Add("total", pc.RCount);
+            return Json(dic, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult EditInfo(TF_EntryAndExitRegistration EidModle)
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
@@ -104,9 +158,9 @@ namespace ESUI.Controllers.FileManagementDB
                 EidModle.CreateMan = UserData.UserName;
                 EidModle.CreateTime = DateTime.Now;
                 EidModle.isValid = true;
-                EidModle.IsDeleted = false;
-                EidModle.ApprovalStates = 0;
-               
+                EidModle.isDeleted = false;
+                EidModle.ApprovalStates = -1;
+
                 try
                 {
                     OPBiz.Add(EidModle);
