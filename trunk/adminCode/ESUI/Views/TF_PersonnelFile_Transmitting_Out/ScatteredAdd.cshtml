@@ -93,8 +93,8 @@
 
             })
 
-     
- 
+
+
 
             //实现的编辑，包括增查改
             function SaveInfo() {
@@ -116,9 +116,9 @@
 
                     data.push(data2[i]);
                 }
-               
-                var ItemList=getTableData();//项
-             
+
+                var ItemList = getTableData();//项
+
                 var jsonstr = JSON.stringify(ItemList);
                 var FistName = {
                     name: "FistName",
@@ -126,8 +126,8 @@
 
                 }
                 data.push(FistName);
-              //  发送异步请求到后台保存数据
-                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                //  发送异步请求到后台保存数据
+                $.post(BaseUrl + 'ScatteredEditInfo', data, function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
 
@@ -198,9 +198,9 @@
                 for (var i = 0; i < datas.length; i++) {
                     result += '<tr id="' + datas[i].Id + '" >'
                     result += "<td>" + datas[i].RealName + "</td>";
-//                    result += "<td>" + datas[i].Units + "</td>";
+                    //                    result += "<td>" + datas[i].Units + "</td>";
                     result += "<td>" + datas[i].Duties + "</td>";
-//                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Reasons" /></td>';
+                    //                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Reasons" /></td>';
                     result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="OriginalCount" /></td>';
                     result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="DuplicateCount" /></td>';
                     result += '<td>  <input class="easyui-validatebox textbox" style="width: 50px;" type="text" name="MaterialCount" /></td>';
@@ -211,8 +211,7 @@
 
             }
 
-            function getTableData()
-            {
+            function getTableData() {
                 var data = new Array();//当前选择的
                 var trList = $("#SelectList").children("tr")
                 for (var i = 1; i < trList.length; i++) {//第二项开始
@@ -221,9 +220,9 @@
 
                     var tdArr = trList.eq(i).find("td");
                     items.RealName = tdArr.eq(0).html();//名称
-//                    items.Units = tdArr.eq(1).html();//单位
+                    //                    items.Units = tdArr.eq(1).html();//单位
                     items.Duties = tdArr.eq(1).html();//职位
-//                    items.Reasons = tdArr.eq(3).find("input").val();//
+                    //                    items.Reasons = tdArr.eq(3).find("input").val();//
                     items.OriginalCount = tdArr.eq(2).find("input").val();//    
                     items.DuplicateCount = tdArr.eq(3).find("input").val();//    
                     items.MaterialCount = tdArr.eq(4).find("input").val();//    

@@ -34,6 +34,7 @@ namespace ESUI.Controllers
             ViewBag.toolbar = toolbar();
             return View();
         }
+     
         public ActionResult OutUserListResult()
         {
             ViewBag.RuteUrl = RuteUrl();
@@ -456,6 +457,223 @@ namespace ESUI.Controllers
             }
 
         }
+
+        #region 零散材料转出
+
+        public ActionResult scatteredIndex()
+        {
+            ViewBag.RuteUrl = RuteUrl();
+            ViewBag.toolbar = toolbar();
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult ScatteredSearch()
+        {
+            // SelectWhere.selectwherestring(Request["sqlSet"]);
+            int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
+            //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
+            string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
+
+            Where += " and (isDeleted=0) and SubmitState='零散'";
+            ////字段排序
+            String sortField = Request["sort"];
+            String sortOrder = Request["order"];
+            PageClass pc = new PageClass();
+            pc.sys_Fields = "*";
+            pc.sys_Key = "Id";
+            pc.sys_PageIndex = pageIndex;
+            pc.sys_PageSize = pageSize;
+            pc.sys_Table = "v_TF_PersonnelFile_Transmitting_Out";
+            //            if (UserData.UserTypes == 1)
+            //            {
+            pc.sys_Where = Where;
+            //            }
+            //            else
+            //            {
+            //                pc.sys_Where = Where + " and   CreateMan='" + UserData.UserName + "'";
+            //            }
+            //pc.sys_Where = Where;
+            pc.sys_Order = " " + sortField + " " + sortOrder;
+            DataSet ds = OPBiz.GetPagingDataP(pc);
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+
+            // var mql = TF_PersonnelFile_Transmitting_OutSet.Id.NotEqual("");
+            dic.Add("rows", ds.Tables[0]);
+            dic.Add("total", pc.RCount);
+            return Json(dic, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ScatteredAdd()
+        {
+            ViewBag.RuteUrl = RuteUrl();
+            return View();
+        }
+
+
+        public ActionResult ScatteredEdit()
+        {
+            ViewBag.id = Request["Id"] + "";
+            ViewBag.RuteUrl = RuteUrl();
+            return View();
+        }
+
+        public ActionResult ScatteredOutUserListResult()
+        {
+            ViewBag.RuteUrl = RuteUrl();
+            ViewBag.toolbar = toolbar();
+            return View();
+        }
+
+        public JsonResult ScatteredEditInfo(TF_PersonnelFile_Transmitting_Out EidModle)
+        {
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            bool IsAdd = false;
+
+            if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+            {
+                IsAdd = true;
+            }
+            if (IsAdd)
+            {
+                EidModle.Id = Guid.NewGuid();
+                EidModle.CreateMan = UserData.UserName;
+                EidModle.CreateManId = UserData.Id;
+                EidModle.CreateTime = DateTime.Now;
+                EidModle.isDeleted = false;
+                EidModle.States = 0;
+                EidModle.SubmitState = "零散";
+                try
+                {
+                    List<TF_PersonnelFile_Transmitting_Out_Item> listItem = JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_Out_Item>(EidModle.FistName);
+                    int OriginalCount = 0;
+                    int DuplicateCount = 0;
+                    int MaterialCount = 0;
+
+
+                    if (listItem != null && listItem.Count > 0)
+                    {
+                        EidModle.FistName = listItem[0].RealName;
+
+                        for (int i = 0; i < listItem.Count; i++)
+                        {
+                            OriginalCount += listItem[i].OriginalCount;
+                            DuplicateCount += listItem[i].DuplicateCount;
+                            MaterialCount += listItem[i].MaterialCount;//统计数
+                            listItem[i].Id = Guid.NewGuid(); ;
+                            listItem[i].OwnerId = EidModle.Id;
+                            OPItemBiz.Add(listItem[i]);//添加项
+
+                        }
+                        EidModle.OriginalCount = OriginalCount;
+                        EidModle.DuplicateCount = DuplicateCount;
+                        EidModle.MaterialCount = MaterialCount;
+                        EidModle.NumberS = listItem.Count;
+
+                    }
+
+
+
+                    OPBiz.Add(EidModle);
+
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = EidModle.Id.ToString();
+                    ReSultMode.Msg = "添加成功";
+                }
+                catch (Exception e)
+                {
+
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data = e.ToString();
+                    ReSultMode.Msg = "添加失败";
+                }
+
+            }
+            else
+            {
+                EidModle.WhereExpression = TF_PersonnelFile_Transmitting_OutSet.Id.Equal(EidModle.Id);
+                List<TF_PersonnelFile_Transmitting_Out_Item> listItem = JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_Out_Item>(EidModle.FistName);
+                EidModle.FistName = listItem[0].RealName;
+                EidModle.TransmittingMan = UserData.UserName;
+                EidModle.TransmittingTime = DateTime.Now;
+                // EidModle.ChangedMap.Remove("id");//移除主键值
+                if (OPBiz.Update(EidModle) > 0)
+                {
+                    int OriginalCount = 0;
+                    int DuplicateCount = 0;
+                    int MaterialCount = 0;
+
+
+                    if (listItem != null && listItem.Count > 0)
+                    {
+                        EidModle.FistName = listItem[0].RealName;
+
+                        for (int i = 0; i < listItem.Count; i++)
+                        {
+                            //                                OriginalCount += listItem[i].OriginalCount;
+                            //                                DuplicateCount += listItem[i].DuplicateCount;
+                            //                                MaterialCount += listItem[i].MaterialCount;//统计数
+                            //                                listItem[i].Id = listItem[i].Id; ;
+                            //                                listItem[i].OwnerId = EidModle.Id;
+                            listItem[i].WhereExpression = TF_PersonnelFile_Transmitting_Out_ItemSet.Id.Equal(listItem[i].Id);
+                            OPItemBiz.Update(listItem[i]);//添加项
+
+                        }
+
+
+                    }
+
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改成功";
+                }
+                else
+                {
+                    ReSultMode.Code = -13;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改失败";
+                }
+            }
+
+
+            return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+        public JsonResult ScatteredUserSearch()
+        {
+            // SelectWhere.selectwherestring(Request["sqlSet"]);
+            int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
+            //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
+            string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
+
+            Where += " and (isDeleted=0) and SubmitState='零散'";
+            ////字段排序
+            String sortField = Request["sort"];
+            String sortOrder = Request["order"];
+            PageClass pc = new PageClass();
+            pc.sys_Fields = "*";
+            pc.sys_Key = "Id";
+            pc.sys_PageIndex = pageIndex;
+            pc.sys_PageSize = pageSize;
+            pc.sys_Table = "v_TF_PersonnelFile_Transmitting_Out";
+            pc.sys_Where = Where + " and   DepartmentId='" + UserData.DepartmentId + "'";
+            //pc.sys_Where = Where;
+            pc.sys_Order = " " + sortField + " " + sortOrder;
+            DataSet ds = OPBiz.GetPagingDataP(pc);
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+
+            // var mql = TF_PersonnelFile_Transmitting_OutSet.Id.NotEqual("");
+            dic.Add("rows", ds.Tables[0]);
+            dic.Add("total", pc.RCount);
+            return Json(dic, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
      
     }
 }

@@ -166,8 +166,9 @@
                         value: stream
 
                     }
+                    data.push(signatureimage);
                 }
-                data.push(signatureimage);
+             
                 //发送异步请求到后台保存数据
                 $.post(BaseUrl + 'EditInfo', data, function (data) {
                     alerts(data.Msg, 2);

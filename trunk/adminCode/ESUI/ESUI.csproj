@@ -3589,6 +3589,10 @@
     <Content Include="Views\TF_PersonnelFile_Borrow\OutUserListResult.cshtml" />
     <Content Include="Views\TF_EntryAndExitRegistration\Approval.cshtml" />
     <Content Include="Views\TF_EntryAndExitRegistration\StatisticsView.cshtml" />
+    <Content Include="Views\TF_PersonnelFile_Transmitting_Out\scatteredIndex.cshtml" />
+    <Content Include="Views\TF_PersonnelFile_Transmitting_Out\ScatteredAdd.cshtml" />
+    <Content Include="Views\TF_PersonnelFile_Transmitting_Out\ScatteredEdit.cshtml" />
+    <Content Include="Views\TF_PersonnelFile_Transmitting_Out\ScatteredOutUserListResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />
