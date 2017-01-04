@@ -37,7 +37,7 @@
             })
             function DataGridSet() {
                 $('#dg').datagrid({
-                    url: BaseUrl + 'Search',
+                    url: BaseUrl + 'ScatteredSearch',
                     columns: [[
                         { field: 'ck', checkbox: true },
            { field: 'TransmittingMan', title: '转递人', width: 100, sortable: true },
@@ -90,8 +90,8 @@
             }
             //easyUI 弹出添加的对话框
             function AddInfo() {
-            
-                window.parent.JumpP("登记转出记录", "TF_PersonnelFile_Transmitting_Out/Add", "icon-rgb");
+
+                window.parent.JumpP("登记转出记录", "TF_PersonnelFile_Transmitting_Out/ScatteredAdd", "icon-rgb");
             }
 
             function ShowDetailsSing(id) {
@@ -125,29 +125,29 @@
             }
 
             //查看
-//            function ShowDetails() {
-//                var rows = $("#dg").datagrid('getSelected');
-//                //首先取出来值判断只能选择一个
-//                if (rows == null) {
-//                    // $.messager.alert("友情提示", "请选择", "error");
-//                    return;
-//                }
-//                $("#DivShow").dialog('open').dialog('setTitle', '查看-' + rows.Series + "字" + rows.Nos + "号").window('resize', { top: 20 });
-//                DataBaseFunction.BindForm("f1", rows);
-//                DataBaseFunction.BindForm("f2", rows);
-//                var ID = rows.Id;  //获取项
-//                $.ajax({
-//                    url: BaseUrl + 'GetListItems',
-//                    type: 'POST',
-//                    data: { ID: ID },
-//                    cache: false,
-//                    error: function () { alert('Error $.ajax'); },
-//                    success: function (data) {
-//                        createList(data)
-//                    }
-//                });
-//
-//            }
+            //            function ShowDetails() {
+            //                var rows = $("#dg").datagrid('getSelected');
+            //                //首先取出来值判断只能选择一个
+            //                if (rows == null) {
+            //                    // $.messager.alert("友情提示", "请选择", "error");
+            //                    return;
+            //                }
+            //                $("#DivShow").dialog('open').dialog('setTitle', '查看-' + rows.Series + "字" + rows.Nos + "号").window('resize', { top: 20 });
+            //                DataBaseFunction.BindForm("f1", rows);
+            //                DataBaseFunction.BindForm("f2", rows);
+            //                var ID = rows.Id;  //获取项
+            //                $.ajax({
+            //                    url: BaseUrl + 'GetListItems',
+            //                    type: 'POST',
+            //                    data: { ID: ID },
+            //                    cache: false,
+            //                    error: function () { alert('Error $.ajax'); },
+            //                    success: function (data) {
+            //                        createList(data)
+            //                    }
+            //                });
+            //
+            //            }
             //查看
             function ShowDetails() {
 
@@ -178,7 +178,7 @@
             function createList2(datas) {
 
                 $("#SelectList2").empty();
-                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 200px;">材料内容</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
                 for (var i = 0; i < datas.length; i++) {
                     result += '<tr id="' + datas[i].Id + '" >';
                     result += "<td>" + datas[i].RealName + "</td>";
@@ -198,7 +198,7 @@
             }
             //实现的编辑，包括增查改
             function SaveInfo() {
-
+                debugger;
                 var stream;
                 var obj = document.getElementById("HWPenSign");
                 stream = obj.HWGetBase64Stream(2);
@@ -212,7 +212,7 @@
                 //}
 
                 var ItemList = getTableData();//项
-
+//
                 var jsonstr = JSON.stringify(ItemList);
                 var FistName = {
                     name: "FistName",
@@ -227,7 +227,7 @@
                     }
                     data.push(signatureimage);
                 }
-               
+
                 var States = {
                     name: "States",
                     value: "2"
@@ -240,7 +240,7 @@
                 $.post(BaseUrl + 'AdminEditInfo', data, function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
-                        
+
                     }
                 });
 
@@ -261,6 +261,7 @@
                     items.OriginalCount = tdArr.eq(2).find("input").val();//    
                     items.DuplicateCount = tdArr.eq(3).find("input").val();//    
                     items.MaterialCount = tdArr.eq(4).find("input").val();//    
+
 
                     data.push(items);
                 }
@@ -318,11 +319,11 @@
             function createList(datas) {
 
                 $("#SelectList").empty();
-                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 200px;">材料内容</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
                 for (var i = 0; i < datas.length; i++) {
                     result += '<tr id="' + datas[i].Id + '" >'
                     result += "<td>" + datas[i].RealName + "</td>";
-                
+
                     result += "<td>" + datas[i].Duties + "</td>";
                     result += "<td>" + datas[i].Reasons + "</td>";
                     result += "<td>" + datas[i].OriginalCount + "</td>";
@@ -490,10 +491,7 @@
                                     <span name="Series"></span>
                                     <input type="hidden" name="Id"/>
                                 </td>
-                                @*                                        <td style="width: 20px;">*@
-                                @*                                            <label>号：</label></td>*@
-                                @*                                        <td style="width: 660px;">*@
-                                @*                                            <span name="Nos"></span></td>*@
+                             
                             </tr>
                         </table>
                     </form>

@@ -29,15 +29,15 @@
     @section Jsprepare{
 
         <script type="text/javascript">
-//            @Html.Raw(ViewBag.RuteUrl)
-//         @Html.Raw(ViewBag.toolbar)
+            //            @Html.Raw(ViewBag.RuteUrl)
+            //         @Html.Raw(ViewBag.toolbar)
             var SherUrl = "/TF_PersonnelFile_Transmitting_Out/";
             jQuery(document).ready(function () {
                 DataGridSet();
             })
             function DataGridSet() {
                 $('#dg').datagrid({
-                    url: SherUrl + 'UserSearch',
+                    url: SherUrl + 'ScatteredUserSearch',
                     columns: [[
                         { field: 'ck', checkbox: true },
            { field: 'TransmittingMan', title: '转递人', width: 100, sortable: true },
@@ -83,7 +83,7 @@
                     rownumbers: true,
                     sortName: 'CreateTime',
                     sortOrder: 'desc',
-//                    toolbar: toolbars
+                    //                    toolbar: toolbars
                 });
             }
             //easyUI 弹出添加的对话框
@@ -105,7 +105,7 @@
                 //    });
                 //    $('#TransmittingTime').datetimebox('setValue', '9999');
                 //    $(".validatebox-tip").remove();//清除验证样式
-                window.parent.JumpP("登记转出记录", SherUrl+"Add", "icon-rgb");
+                window.parent.JumpP("登记转出记录", SherUrl + "Add", "icon-rgb");
             }
 
             function sign(id) {
@@ -155,7 +155,7 @@
                 //                    $.messager.alert("友情提示", "请选择", "error");
                 //                    return;
                 //                }
-                window.parent.JumpP("填写资料", SherUrl+"Edit?Id=" + id, "icon-rgb");
+                window.parent.JumpP("填写资料", SherUrl + "ScatteredEdit?Id=" + id, "icon-rgb");
             }
 
             //查看
@@ -195,7 +195,7 @@
                 //获取需要传递的参数传递给前台
                 var data = DataBaseFunction.GetFormData("ff")
                 //发送异步请求到后台保存数据
-                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                $.post(BaseUrl + 'ScatteredEditInfo', data, function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
                         $('#DivEditor').dialog('close');
@@ -257,7 +257,7 @@
             function createList(datas) {
 
                 $("#SelectList").empty();
-                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">材料内容</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
                 for (var i = 0; i < datas.length; i++) {
                     result += '<tr id="' + datas[i].Id + '" >'
                     result += "<td>" + datas[i].RealName + "</td>";
