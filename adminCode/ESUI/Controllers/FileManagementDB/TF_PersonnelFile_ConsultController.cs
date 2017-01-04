@@ -80,7 +80,46 @@ namespace ESUI.Controllers
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
+        public JsonResult UserSearch()
+        {
+            // SelectWhere.selectwherestring(Request["sqlSet"]);
+            int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
+            //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
+            string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
 
+            Where += " and (isDeleted=0) ";
+            ////字段排序
+            String sortField = Request["sort"];
+            String sortOrder = Request["order"];
+            PageClass pc = new PageClass();
+            pc.sys_Fields = "*";
+            pc.sys_Key = "Id";
+            pc.sys_PageIndex = pageIndex;
+            pc.sys_PageSize = pageSize;
+            pc.sys_Table = "TF_PersonnelFile_Consult";
+
+            if (UserData.UserTypes == 1)
+            {
+                pc.sys_Where = Where;
+            }
+            else
+            {
+                pc.sys_Where = Where + " and   DepartmentId='" + UserData.DepartmentId + "'";
+            }
+//            pc.sys_Where = Where;
+            pc.sys_Order = " " + sortField + " " + sortOrder;
+            //List<TF_PersonnelFile_Consult> list2 = OPBiz.GetPagingData<TF_PersonnelFile_Consult>(pc);
+            DataSet ds = OPBiz.GetPagingDataP(pc);
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+
+            // var mql = TF_PersonnelFile_ConsultSet.Id.NotEqual("");
+            dic.Add("rows", ds.Tables[0]);
+            dic.Add("total", pc.RCount);
+            return Json(dic, JsonRequestBehavior.AllowGet);
+        }
         public JsonResult EditInfo(TF_PersonnelFile_Consult EidModle)
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
@@ -332,6 +371,33 @@ namespace ESUI.Controllers
 
             }
 
+        }
+
+        public JsonResult ChangeSign(string IDSet)
+        {
+            //int f
+            //=0;
+
+            var catmodle = OPBiz.GetEntity(TF_PersonnelFile_ConsultSet.SelectAll().Where(TF_PersonnelFile_ConsultSet.Id.Equal(IDSet)));
+            catmodle.States = 0;
+            catmodle.WhereExpression = TF_PersonnelFile_ConsultSet.Id.Equal(IDSet);
+
+            var f = OPBiz.Update(catmodle);
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            if (f > 0)
+            {
+                ReSultMode.Code = 11;
+                ReSultMode.Data = f.ToString();
+                ReSultMode.Msg = "退回成功！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                ReSultMode.Code = -13;
+                ReSultMode.Data = "0";
+                ReSultMode.Msg = "退回失败！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

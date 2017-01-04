@@ -203,12 +203,12 @@
 
                 $("#SelectList").empty();
               
-                var result = ' <tr> <td style="width: 100px;">档案姓名</td><td style="width: 120px;">查阅人单位</td></</tr>';
+                var result = ' <tr> <td style="width: 100px;">档案姓名</td><td style="width: 80px;">查阅人单位</td></tr>';
                 for (var i = 0; i < datas.length; i++) {
                     result += '<tr id="' + datas[i].Id + '" >';
                     result += "<td>" + datas[i].RealName + "</td>";
                     var pusid = "DepartmentId" + i;
-                    result += '<td>  <input class="easyui-combobox" style="width: 200px;"  id="' + pusid + '"/"></td>';
+                    result += '<td style="width: 80px;">  <input class="easyui-combobox" style="width: 200px;"  id="' + pusid + '"/"></td>';
 
                     pum.push(pusid);
                     result += "</tr>";
@@ -308,7 +308,7 @@
                         <tr>
                             <td>
 
-                                <table class="border-table" id="SelectList" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 1300px; margin-top:10px;">
+                                <table class="border-table" id="SelectList" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 600px; margin-top:10px;">
 
 
                                     <tr>
