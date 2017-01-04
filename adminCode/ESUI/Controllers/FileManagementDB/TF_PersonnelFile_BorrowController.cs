@@ -30,6 +30,15 @@ namespace ESUI.Controllers
             ViewBag.toolbar = toolbar();
             return View();
         }
+
+        public ActionResult OutUserListResult()
+        {
+            ViewBag.RuteUrl = RuteUrl();
+            ViewBag.toolbar = toolbar();
+            ViewBag.UserName = UserData.UserName;
+            ViewBag.Userdatetime = DateTime.Today;
+            return View();
+        }
         /// <summary>
         /// 登记页面
         /// </summary>
@@ -88,7 +97,15 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = "TF_PersonnelFile_Borrow";
-            pc.sys_Where = Where;
+//            pc.sys_Where = Where;
+            if (UserData.UserTypes == 1)
+            {
+                pc.sys_Where = Where;
+            }
+            else
+            {
+                pc.sys_Where = Where + " and   DepartmentId='" + UserData.DepartmentId + "'";
+            }
             pc.sys_Order = " " + sortField + " " + sortOrder;
             DataSet ds = OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
@@ -139,6 +156,74 @@ namespace ESUI.Controllers
                 {
                     EidModle.WhereExpression = TF_PersonnelFile_BorrowSet.Id.Equal(EidModle.Id);
                     // EidModle.ChangedMap.Remove("id");//移除主键值
+                    EidModle.States = 3;
+                    EidModle.StatesName = "归还完成";
+                    EidModle.ReturnTime = DateTime.Today.ToString();
+                    if (OPBiz.Update(EidModle) > 0)
+                    {
+                        ReSultMode.Code = 11;
+                        ReSultMode.Data = "";
+                        ReSultMode.Msg = "保存成功";
+                    }
+                    else
+                    {
+                        ReSultMode.Code = -13;
+                        ReSultMode.Data = "";
+                        ReSultMode.Msg = "保存失败";
+                    }
+                }
+            
+
+            return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+
+        }
+        public JsonResult SumbtEditInfo(TF_PersonnelFile_Borrow EidModle)
+        {
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            bool IsAdd = false;
+           
+
+                if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+                {
+                    IsAdd = true;
+                }
+                if (IsAdd)
+                {
+                    EidModle.Id = Guid.NewGuid();
+                    EidModle.CreateMan = UserData.UserName;
+                    EidModle.CreateManId = UserData.Id;        
+                    EidModle.CreateTime = DateTime.Now;
+    
+                    EidModle.isDeleted = false;
+                 
+                    try
+                    {
+                        OPBiz.Add(EidModle);
+
+                        ReSultMode.Code = 11;
+                        ReSultMode.Data = EidModle.Id.ToString();
+                        ReSultMode.Msg = "添加成功";
+                    }
+                    catch (Exception e)
+                    {
+
+                        ReSultMode.Code = -11;
+                        ReSultMode.Data = e.ToString();
+                        ReSultMode.Msg = "添加失败";
+                    }
+
+                }
+                else
+                {
+                    EidModle.WhereExpression = TF_PersonnelFile_BorrowSet.Id.Equal(EidModle.Id);
+                    // EidModle.ChangedMap.Remove("id");//移除主键值
+
+
+                    EidModle.BorrowMan = UserData.UserName;
+
+                    EidModle.BorrowTime = DateTime.Now.ToString("yyyy-MM-dd");
+                EidModle.States = 1;
+                EidModle.StatesName = "已借出";;
                     if (OPBiz.Update(EidModle) > 0)
                     {
                         ReSultMode.Code = 11;
@@ -260,6 +345,57 @@ namespace ESUI.Controllers
             dic.Add("rows", ds.Tables[0]);
             dic.Add("total", pc.RCount);
             return Json(dic, JsonRequestBehavior.AllowGet);
+        }
+
+        public FileContentResult GetImage(string id)
+        {
+            var df = TF_PersonnelFile_BorrowSet.SelectAll().Where(TF_PersonnelFile_BorrowSet.Id.Equal(id));
+            var dfw = OPBiz.GetEntity(df);
+
+
+            if (dfw != null)
+            {
+
+                return File(dfw.signatureimage, "jpg");
+
+            }
+            else
+            {
+
+                return null;
+
+            }
+
+        }
+
+
+        public JsonResult ReturnSign(string IDSet)
+        {
+            //int f
+            //=0;
+
+            var catmodle = OPBiz.GetEntity(TF_PersonnelFile_BorrowSet.SelectAll().Where(TF_PersonnelFile_BorrowSet.Id.Equal(IDSet)));
+            catmodle.States = 2;
+            catmodle.StatesName = "提交归还";
+            catmodle.ReturnTime = DateTime.Today.ToString();
+            catmodle.WhereExpression = TF_PersonnelFile_BorrowSet.Id.Equal(IDSet);
+
+            var f = OPBiz.Update(catmodle);
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            if (f > 0)
+            {
+                ReSultMode.Code = 11;
+                ReSultMode.Data = f.ToString();
+                ReSultMode.Msg = "提交成功！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                ReSultMode.Code = -13;
+                ReSultMode.Data = "0";
+                ReSultMode.Msg = "提交失败！";
+                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }
