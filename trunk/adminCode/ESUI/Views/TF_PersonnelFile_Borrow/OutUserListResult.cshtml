@@ -27,15 +27,15 @@
     @section Jsprepare{
 
         <script type="text/javascript">
-            @Html.Raw(ViewBag.RuteUrl)
-         @Html.Raw(ViewBag.toolbar)
-
+//            @Html.Raw(ViewBag.RuteUrl)
+//         @Html.Raw(ViewBag.toolbar)
+            var BaseUrl2 = "/TF_PersonnelFile_Borrow/";
             jQuery(document).ready(function () {
                 DataGridSet();
             })
             function DataGridSet() {
                 $('#dg').datagrid({
-                    url: BaseUrl + 'Search',
+                    url: BaseUrl2 + 'UserSearch',
                     columns: [[
                  { field: 'ck', checkbox: true },
             { field: 'PersonnelFile', title: '档案姓名', width: 100, sortable: true },
@@ -45,25 +45,26 @@
                 { field: 'BorrowTime', title: '借用时间', width: 100, sortable: true },
               { field: 'ReturnTime', title: '归还时间', width: 100, sortable: true },
               { field: 'Remarks', title: '备注', width: 100, sortable: true },
-               { field: 'StatesName', title: '状态', width: 100, sortable: true },
+              { field: 'StatesName', title: '状态', width: 100, sortable: true },
                     {
-                        field: 'Id',
-                title: '操作',
-                width: 50,
+                        field: 'Id', title: '操作', width: 50,
 
                 //添加超级链 
 
-                formatter: function(value, rowData, rowIndex) {
-                    var d = "";
-
-                    if (rowData.States == 3) {
-                        d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">确认查阅</a>  ';
-            
-                    } else if (rowData.States == 2) {
-                        d = '<a href="#" onclick="ShowDetailsSing(\'' + rowIndex + '\')">确认归还</a>  ';
-                   
+                formatter: function (value, rowData, rowIndex) {
+                    //                        alert(rowData.States);
+                    if (rowData.States == 1) {
+                        var d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">借阅</a>  ';
+//                        d += '<a href="#"  onclick="ReturnBorrow(' + rowData.Id + ')"   >确认归还</a>  ';
+                        d += '<a href="#" onclick="ReturnBorrow(\'' + rowData.Id + '\')">确认归还</a>  ';
+                       
+                    } else if (rowData.States ==0)
+                    {
+                        var d = '<a href="#" onclick="ShowDetailsSing(' + rowIndex + ')">借阅</a>  ';
+//                        d += '<a href="#" onclick="ReturnBorrow(\'' + rowData.Id + '\')">确认归还</a>  ';
+                        d += '<a href="#" href="javascript:void(0);"  style="cursor: default;">确认归还</a>  ';
+                        //                               d += '<a href="#" onclick="sign(\'' + rowData.Id + '\')">提交</a>  ';
                     }
-
 
                     return d;
 
@@ -83,8 +84,8 @@
                     pagination: true,
                     rownumbers: true,
                     sortName: 'CreateTime',
-                    sortOrder: 'desc',
-                    toolbar: toolbars
+                    sortOrder: 'desc'
+                    
                 });
             }
             //easyUI 弹出添加的对话框
@@ -108,13 +109,31 @@
                 //    $(".validatebox-tip").remove();//清除验证样式
                 window.parent.JumpP("借用档案登记", "TF_PersonnelFile_Borrow/Add", "icon-rgb");
             }
+            function ReturnBorrow(id) {
+                $.messager.confirm("归还信息", "您确认归还<font color='red' size='3'>" + "" + "</font>吗？", function (Delete) {
+                    if (Delete) {
+                        $.ajax({
+                            url: BaseUrl2 + 'ReturnSign',
+                            type: 'POST',
+                            data: { IDSet: id },
+                            cache: false,
+                            error: function () { alert('Error loading PHP document'); },
+                            success: function (data) {
+
+                                alerts(data.Msg, 2);
+                                if (data.Code > 0) {
+                                    $("#dg").datagrid("reload");
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
 
             function ShowDetailsSing(id) {
                 var rows = $('#dg').datagrid('getData').rows[id];
-                var obj = document.getElementById("HWPenSign");
-                obj.HWSetBkColor(0xE0F8E0);
-                obj.HWSetCtlFrame(1, 0x000000);
-                res = obj.HWInitialize();
+
                 //                var rows = $("#dg").datagrid('getSelected');
                 //                //首先取出来值判断只能选择一个
                 //                if (rows == null) {
@@ -122,54 +141,52 @@
                 //                    return;
                 //                }
                 //                $("#DivShow2").dialog('open').dialog('setTitle', '查看-字号' + "" + "").window('resize', { top: 20 });
-                //首先取出来值判断只能选择一个
-                if (rows == null) {
-                    // $.messager.alert("友情提示", "请选择", "error");
-                    return;
-                }
                 $("#DivShow").dialog('open').dialog('setTitle', '查看-借阅-' + rows.PersonnelFile).window('resize', { top: 20 });
-                DataBaseFunction.BindForm("fshow", rows);
+                rows.BorrowMan = '@ViewBag.UserName';
 
-            }
+                rows.BorrowTime = '@ViewBag.Userdatetime ';
 
-            //查看
-            function ShowDetails() {
-                var rows = $("#dg").datagrid('getSelected');
-                //首先取出来值判断只能选择一个
-                if (rows == null) {
-                    // $.messager.alert("友情提示", "请选择", "error");
-                    return;
+                    DataBaseFunction.BindForm("fshow", rows);
+
                 }
-                $("#imgId").attr('src', "TF_PersonnelFile_Borrow/GetImage?id=" + rows.Id);
-                $("#DivShow2").dialog('open').dialog('setTitle', '查看-借阅-' + rows.PersonnelFile).window('resize', { top: 20 });
-                DataBaseFunction.BindForm("fshow2", rows);
-            }
+
+                //查看
+                function ShowDetails() {
+                    var rows = $("#dg").datagrid('getSelected');
+                    //首先取出来值判断只能选择一个
+                    if (rows == null) {
+                        // $.messager.alert("友情提示", "请选择", "error");
+                        return;
+                    }
+                    $("#DivShow").dialog('open').dialog('setTitle', '查看-查阅-' + rows.PersonnelFile).window('resize', { top: 20 });
+                    DataBaseFunction.BindForm("fshow", rows);
+                }
+
+//            //查看
+//            function ShowDetails() {
+//                var rows = $("#dg").datagrid('getSelected');
+//                //首先取出来值判断只能选择一个
+//                if (rows == null) {
+//                    // $.messager.alert("友情提示", "请选择", "error");
+//                    return;
+//                }
+//                $("#DivShow").dialog('open').dialog('setTitle', '查看-借阅-' + rows.PersonnelFile).window('resize', { top: 20 });
+//                DataBaseFunction.BindForm("fshow", rows);
+//            }
 
 
             //实现的编辑，包括增查改
             function SaveInfo() {
-                debugger;
+
                 //判断的信息是否通过验证
                 var validate = $("#fshow").form('validate');
                 if (validate == false) {
                     return false;
                 }
                 //获取需要传递的参数传递给前台
-                var stream;
-                var obj = document.getElementById("HWPenSign");
-                stream = obj.HWGetBase64Stream(2);
-                //获取需要传递的参数传递给前台
                 var data = DataBaseFunction.GetFormData("fshow");
-                if (stream) {
-                    var signatureimage = {
-                        name: "signatureimage",
-                        value: stream
-
-                    }
-                }
-                data.push(signatureimage);
                 //发送异步请求到后台保存数据
-                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                $.post(BaseUrl2 + 'SumbtEditInfo', data, function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
                         $('#DivEditor').dialog('close');
@@ -249,85 +266,18 @@
 
 
     <!------------------------弹出查看层---------------------------------->
-<div id="DivShow" class="easyui-dialog" style="width: 620px;"
-     closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-    <div class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:300,width:600,border:false">
-        <form id="fshow" method="post" enctype="multipart/form-data">
-
-            <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td>
-                        <label>档案姓名：</label></td>
-                    <td><span name="PersonnelFile"></span>
-                        
-                         <input type="hidden" name="Id"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>借用人单位：</label></td>
-                    <td><span name="DepartmentName"></span></td>
-                </tr>
-                <tr>
-
-                    <td style="width: 120px;">
-                        <label>借用人姓名：</label></td>
-                    <td style="width: 480px;"><span name="BorrowMan"></span></td>
-                </tr>
-
-
-                <tr>
-                    <td>
-                        <label>借用内容：</label></td>
-                    <td><span name="BorrowDetail"></span></td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <label>借用时间：</label></td>
-                    <td><span name="BorrowTime"></span></td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>归还时间：</label></td>
-                    <td><span name="ReturnTime"></span></td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>备注：</label></td>
-                    <td><span name="Remarks"></span></td>
-                </tr>
-                   <tr>
-                    <td>
-                        <label>签名：</label></td>
-                    <td>
-                                        <object id="HWPenSign"
-                    name="HWPenSign"
-                    classid="clsid:E8F5278C-0C72-4561-8F7E-CCBC3E48C2E3"
-                    width="400"
-                    height="200">
-              </object> </td>
-                </tr>
-            </table>
-        </form>
-    </div>
-
-    <div style="text-align: center; width: 100%; margin-bottom: 5px;">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow').dialog('close')">关闭</a>
-         <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
-    </div>
-</div>
-
-      <div id="DivShow2" class="easyui-dialog" style="width: 620px;"
+    <div id="DivShow" class="easyui-dialog" style="width: 620px;"
         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
         <div class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:300,width:600,border:false">
-            <form id="fshow2" method="post" enctype="multipart/form-data">
+            <form id="fshow" method="post" enctype="multipart/form-data">
 
                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
                     <tr>
                         <td>
                             <label>档案姓名：</label></td>
-                        <td><span name="PersonnelFile"></span></td>
+                        <td><span name="PersonnelFile"></span>
+                               <input type="hidden" name="Id"/>
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -338,42 +288,50 @@
 
                         <td style="width: 120px;">
                             <label>借用人姓名：</label></td>
-                        <td style="width: 480px;"><span name="BorrowMan"></span></td>
+                        <td style="width: 480px;">
+                            <span name="BorrowMan"></span>
+
+                        </td>
                     </tr>
 
 
                     <tr>
                         <td>
                             <label>借用内容：</label></td>
-                        <td><span name="BorrowDetail"></span></td>
+                        <td>
+                     
+                                 <input class="easyui-validatebox" type="text" id="BorrowDetail" name="BorrowDetail"  style="width: 100%"   />
+                        </td>
                     </tr>
 
                     <tr>
                         <td>
                             <label>借用时间：</label></td>
-                        <td><span name="BorrowTime"></span></td>
-                    </tr>
-                    <tr>
                         <td>
-                            <label>归还时间：</label></td>
-                        <td><span name="ReturnTime"></span></td>
+                            <span name="BorrowTime"></span>
+
+                        </td>
                     </tr>
+@*                    <tr>*@
+@*                        <td>*@
+@*                            <label>归还时间：</label></td>*@
+@*                        <td><span name="ReturnTime"></span></td>*@
+@*                    </tr>*@
                     <tr>
                         <td>
                             <label>备注：</label></td>
-                        <td><span name="Remarks"></span></td>
-                    </tr>
-                     <tr>
                         <td>
-                            <label>签名：</label></td>
-                        <td>   <img id="imgId" /></td>
+                            <input class="easyui-validatebox" type="text" id="Remarks" name="Remarks"  style="width: 100%" />
+
+                        </td>
                     </tr>
                 </table>
             </form>
         </div>
 
         <div style="text-align: center; width: 100%; margin-bottom: 5px;">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow2').dialog('close')">关闭</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow').dialog('close')">关闭</a>
+               <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
         </div>
     </div>
 </body>

@@ -1592,10 +1592,13 @@ string.Format("~/UploadFiles/{0}", filename);
             //              { field: 'location', title: '存放位置', width: 100, sortable: true },
 
             DataColumn column = new DataColumn("RealName");
-            DataColumn column2 = new DataColumn("Units");
-            DataColumn column3 = new DataColumn("Duties");
-            DataColumn column4 = new DataColumn("Summary");
-            DataColumn column5 = new DataColumn("location");
+            DataColumn column2 = new DataColumn("Duties");
+            DataColumn column3 = new DataColumn("PersonalStatus");
+            DataColumn column4 = new DataColumn("TankNo");
+            DataColumn column5 = new DataColumn("LayerNo");
+            DataColumn column6 = new DataColumn("SerialNumber");
+            DataColumn column7 = new DataColumn("ArchivesVolumes");
+            DataColumn column8 = new DataColumn("Remark");
 
 
             ffd.Columns.Add(column);
@@ -1603,6 +1606,9 @@ string.Format("~/UploadFiles/{0}", filename);
             ffd.Columns.Add(column3);
             ffd.Columns.Add(column4);
             ffd.Columns.Add(column5);
+            ffd.Columns.Add(column6);
+            ffd.Columns.Add(column7);
+            ffd.Columns.Add(column8);
             ///  if (ddd != null)
             //  {
             NewExeclHelper.ImportExceltoDt(filePath, 0, 0, ffd);

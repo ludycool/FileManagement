@@ -64,7 +64,7 @@ namespace ESUI.Controllers
             //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
 
-            Where += " and (isDeleted=0) ";
+            Where += " and (isDeleted=0) and SubmitState='整卷'";
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
@@ -102,7 +102,7 @@ namespace ESUI.Controllers
             //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
 
-            Where += " and (isDeleted=0) ";
+            Where += " and (isDeleted=0) and SubmitState='整卷'";
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
@@ -141,6 +141,7 @@ namespace ESUI.Controllers
                     EidModle.CreateTime = DateTime.Now;
                     EidModle.isDeleted = false;
                     EidModle.States = 0;
+                    EidModle.SubmitState = "整卷";
                     try
                     {
                         List<TF_PersonnelFile_Transmitting_Out_Item> listItem=JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_Out_Item>(EidModle.FistName);

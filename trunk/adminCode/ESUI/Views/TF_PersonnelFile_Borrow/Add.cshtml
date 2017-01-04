@@ -75,7 +75,7 @@
         <script type="text/javascript">
             @Html.Raw(ViewBag.RuteUrl)
          @Html.Raw(ViewBag.toolbar)
-
+            var pum = [];
             var CurrentList;
             var step;
             jQuery(document).ready(function () {
@@ -181,23 +181,41 @@
 
                 $("#SelectList").empty();
 
-                var result = ' <tr> <td style="width: 100px;">档案姓名</td><td style="width: 120px;">借用人单位</td><td style="width: 50px;">借用人姓名</td><td style="width: 200px;">借用内容</td><td style="width: 50px;">借出时间</td><td style="width: 50px;">归还时间</td><td style="width: 50px;">备注</td></</tr>';
+                var result = ' <tr> <td style="width: 100px;">档案姓名</td><td style="width: 120px;">借用人单位</td></</tr>';
                 for (var i = 0; i < datas.length; i++) {
                     result += '<tr id="' + datas[i].Id + '" >'
                     result += "<td>" + datas[i].RealName + "</td>";
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Units" /></td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="BorrowMan" /></td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="BorrowDetail" /></td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="BorrowTime" /> </td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="ReturnTime" /> </td>';
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Remarks" /></td>';
+                    var pusid = "DepartmentId" + i;
+                    result += '<td style="width: 80px;">  <input class="easyui-combobox" style="width: 200px;"  id="' + pusid + '"/"></td>';
+
+                    pum.push(pusid);
+//                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Units" /></td>';
+                    //result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="BorrowMan" /></td>';
+                    //result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="BorrowDetail" /></td>';
+                    //result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="BorrowTime" /> </td>';
+                    //result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="ReturnTime" /> </td>';
+                    //result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Remarks" /></td>';
 
                     result += "</tr>"
                 }
                 $("#SelectList").append(result);
-
+                $.parser.parse();
+                for (var i = 0; i < pum.length; i++) {
+                    bind(pum[i]);
+                }
             }
 
+            function bind(parameters) {
+
+                var dffflt = "#" + parameters;
+                $(dffflt).combobox({
+                    url: "/TF_Units/GetAllInfo",
+                    valueField: 'Id',
+                    textField: 'TName',
+
+
+                });
+            }
             function getTableData() {
                 var data = new Array();//当前选择的
                 var trList = $("#SelectList").children("tr")
@@ -207,12 +225,15 @@
 
                     var tdArr = trList.eq(i).find("td");
                     items.PersonnelFile = tdArr.eq(0).html();//名称
-                    items.Units = tdArr.eq(1).find("input").val();//
-                    items.BorrowMan = tdArr.eq(2).find("input").val();//
-                    items.BorrowDetail = tdArr.eq(3).find("input").val();//
-                    items.BorrowTime = tdArr.eq(4).find("input").val();//    
-                    items.ReturnTime = tdArr.eq(5).find("input").val();//     
-                    items.Remarks = tdArr.eq(6).find("input").val();//    
+                    var dffflt = "#" + pum[i - 1];
+                    items.DepartmentId = $(dffflt).combobox('getValue');//
+                    items.DepartmentName = $(dffflt).combobox('getText');//
+//                    items.Units = tdArr.eq(1).find("input").val();//
+//                    items.BorrowMan = tdArr.eq(2).find("input").val();//
+//                    items.BorrowDetail = tdArr.eq(3).find("input").val();//
+//                    items.BorrowTime = tdArr.eq(4).find("input").val();//    
+//                    items.ReturnTime = tdArr.eq(5).find("input").val();//     
+//                    items.Remarks = tdArr.eq(6).find("input").val();//    
                     data.push(items);
                 }
 
@@ -269,7 +290,7 @@
                         <tr>
                             <td>
 
-                                <table class="border-table" id="SelectList" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 1500px; margin-top:10px;">
+                                <table class="border-table" id="SelectList" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto; width: 600px; margin-top:10px;">
 
 
                                     <tr>

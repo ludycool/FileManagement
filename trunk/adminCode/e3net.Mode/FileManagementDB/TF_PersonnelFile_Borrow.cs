@@ -202,6 +202,24 @@ namespace e3net.Mode.FileManagementDB
             get { return GetPropertyValue<byte[]>("signatureimage"); }
             set { SetPropertyValue("signatureimage", value); }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String DepartmentName
+        {
+            get { return GetPropertyValue<String>("DepartmentName"); }
+            set { SetPropertyValue("DepartmentName", value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String StatesName
+        {
+            get { return GetPropertyValue<String>("StatesName"); }
+            set { SetPropertyValue("StatesName", value); }
+        }
     }
 
     [Table("[TF_PersonnelFile_Borrow]", DbType.SqlServer)]
@@ -324,6 +342,16 @@ namespace e3net.Mode.FileManagementDB
         /// 
         /// </summary>
         public static readonly FieldBase signatureimage = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Borrow]", FieldType.Common, "[signatureimage]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase DepartmentName = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Borrow]", FieldType.Common, "[DepartmentName]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase StatesName = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Borrow]", FieldType.Common, "[StatesName]");
     }
 
 }

@@ -58,7 +58,7 @@
 
                                     if (rowData.States == 2) {
                                         d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">确认查阅</a>  ';
-                                        d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">退回查阅</a>  ';
+                                        d += '<a href="#" href="javascript:void(0);"  style="cursor: default;">退回查阅</a>  ';
                                     } else {
                                         d = '<a href="#" onclick="ShowDetailsSing(\'' + rowIndex + '\')">确认查阅</a>  ';
                                         d += '<a href="#" onclick="ReturnConsult(\'' + rowData.Id + '\')">退回查阅</a>  ';

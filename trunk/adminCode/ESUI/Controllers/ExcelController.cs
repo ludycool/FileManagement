@@ -152,8 +152,9 @@ namespace ESUI.Controllers
 
             Dictionary<string, string> dir = new Dictionary<string, string>();
             dir.Add("Series", Rmodel.Series);
-            dir.Add("Nos", Rmodel.Nos); dir.Add("Series2", Rmodel.Series);
-            dir.Add("Nos2", Rmodel.Nos);
+//            dir.Add("Nos", Rmodel.Nos); 
+            dir.Add("Series2", Rmodel.Series);
+//            dir.Add("Nos2", Rmodel.Nos);
 
 
             var mql3 = TF_PersonnelFile_Transmitting_In_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_In_ItemSet.OwnerId.Equal(id));
@@ -174,8 +175,9 @@ namespace ESUI.Controllers
 
             Dictionary<string, string> dir = new Dictionary<string, string>();
             dir.Add("Series", Rmodel.Series);
-            dir.Add("Nos", Rmodel.Nos); dir.Add("Series2", Rmodel.Series);
-            dir.Add("Nos2", Rmodel.Nos);
+//            dir.Add("Nos", Rmodel.Nos);
+            dir.Add("Series2", Rmodel.Series);
+//            dir.Add("Nos2", Rmodel.Nos);
 
             var mql3 = TF_PersonnelFile_Transmitting_Out_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_Out_ItemSet.OwnerId.Equal(id));
             var  listItem = OPItemoutBiz.GetDictionaryList(mql3);
