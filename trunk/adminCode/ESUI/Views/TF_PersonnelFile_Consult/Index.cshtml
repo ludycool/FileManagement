@@ -28,45 +28,50 @@
 
         <script type="text/javascript">
             @Html.Raw(ViewBag.RuteUrl)
-         @Html.Raw(ViewBag.toolbar)
+            @Html.Raw(ViewBag.toolbar)
 
-            jQuery(document).ready(function () {
+            jQuery(document).ready(function() {
                 DataGridSet();
             })
+
             function DataGridSet() {
                 $('#dg').datagrid({
                     url: BaseUrl + 'Search',
-                    columns: [[
-                 { field: 'ck', checkbox: true },
-               { field: 'PersonnelFile', title: '档案姓名', width: 100, sortable: true },
-              { field: 'DepartmentName', title: '查阅人单位', width: 100, sortable: true },
-               { field: 'ConsultMan', title: '查阅人姓名', width: 100, sortable: true },
-              { field: 'ConsultDetail', title: '查阅内容', width: 100, sortable: true },
-               { field: 'ConsultTime', title: '查阅时间', width: 100, sortable: true },
-              { field: 'Remarks', title: '备注', width: 100, sortable: true },
-              
-                    {
-                        field: 'Id', title: '操作', width: 50,
+                    columns: [
+                        [
+                            { field: 'ck', checkbox: true },
+                            { field: 'PersonnelFile', title: '档案姓名', width: 100, sortable: true },
+                            { field: 'DepartmentName', title: '查阅人单位', width: 100, sortable: true },
+                            { field: 'ConsultMan', title: '查阅人姓名', width: 100, sortable: true },
+                            { field: 'ConsultDetail', title: '查阅内容', width: 100, sortable: true },
+                            { field: 'ConsultTime', title: '查阅时间', width: 100, sortable: true },
+                            { field: 'Remarks', title: '备注', width: 100, sortable: true },
+                            {
+                                field: 'Id',
+                                title: '操作',
+                                width: 50,
 
-                //添加超级链 
+                                //添加超级链 
 
-                formatter: function (value, rowData, rowIndex) {
-                    var d = "";
+                                formatter: function(value, rowData, rowIndex) {
+                                    var d = "";
 
-                    if (rowData.States == 2) {
-                        d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">确认查阅</a>  ';
-                                
-                    } else {
-                        d = '<a href="#" onclick="ShowDetailsSing(\'' + rowIndex + '\')">确认查阅</a>  ';
-                    }
-
-                         
-                    return d;
+                                    if (rowData.States == 2) {
+                                        d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">确认查阅</a>  ';
+                                        d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">退回查阅</a>  ';
+                                    } else {
+                                        d = '<a href="#" onclick="ShowDetailsSing(\'' + rowIndex + '\')">确认查阅</a>  ';
+                                        d += '<a href="#" onclick="ReturnConsult(\'' + rowData.Id + '\')">退回查阅</a>  ';
+                                    }
 
 
-                }
-            }
-                    ]],
+                                    return d;
+
+
+                                }
+                            }
+                        ]
+                    ],
                     iconCls: 'icon-save',
                     title: '查阅干部人事档案记录',
                     nowrap: true,
@@ -83,7 +88,8 @@
                     toolbar: toolbars
                 });
             }
-            //easyUI 弹出添加的对话框
+
+//easyUI 弹出添加的对话框
             function AddInfo() {
                 //弹出层
                 // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
@@ -103,6 +109,27 @@
                 //    $('#TransmittingTime').datetimebox('setValue', '9999');
                 //    $(".validatebox-tip").remove();//清除验证样式
                 window.parent.JumpP("查阅档案登记", "TF_PersonnelFile_Consult/Add", "icon-rgb");
+            }
+
+            function ReturnConsult(id) {
+                $.messager.confirm("退回信息", "您确认退回查阅<font color='red' size='3'>" + "" + "</font>吗？", function (Delete) {
+                    if (Delete) {
+                        $.ajax({
+                            url: BaseUrl + 'ChangeSign',
+                            type: 'POST',
+                            data: { IDSet: id },
+                            cache: false,
+                            error: function () { alert('Error loading PHP document'); },
+                            success: function (data) {
+
+                                alerts(data.Msg, 2);
+                                if (data.Code > 0) {
+                                    $("#dg").datagrid("reload");
+                                }
+                            }
+                        });
+                    }
+                });
             }
 
             function ShowDetailsSing(id) {
@@ -164,7 +191,7 @@
                 }
                 data.push(signatureimage);
                 //发送异步请求到后台保存数据
-                $.post(BaseUrl + 'EditInfo', data, function (data) {
+                $.post(BaseUrl + 'EditInfo', data, function(data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
                         $('#DivEditor').dialog('close');
@@ -175,21 +202,25 @@
                 });
 
             }
-            //刷新
+
+//刷新
             function RefreshOP() {
                 $("#dg").datagrid("reload");
             }
-            //搜索
+
+//搜索
             function SearchGo() {
                 DataBaseFunction.Search("fSearh", "dg");
                 $("#Div_Searh").dialog('close');
             }
-            //搜索
+
+//搜索
             function Search() {
                 // $("#fSearh").form("clear");
                 $("#Div_Searh").dialog('open').dialog('setTitle', '搜索').window('resize', { top: 100, left: 100 });
             }
-            //删除
+
+//删除
             function Del() {
                 DataBaseFunction.deleteInfo("dg", "Id", "PersonnelFile");
             }
@@ -366,7 +397,7 @@
         </div>
 
         <div style="text-align: center; width: 100%; margin-bottom: 5px;">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow').dialog('close')">关闭</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow2').dialog('close')">关闭</a>
         </div>
     </div>
 </body>
