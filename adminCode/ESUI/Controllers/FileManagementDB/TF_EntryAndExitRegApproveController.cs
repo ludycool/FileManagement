@@ -16,8 +16,7 @@ using e3net.Mode;
 
 namespace ESUI.Controllers.FileManagementDB
 {
-
-    public class TF_EntryAndExitRegistrationController : BaseController
+    public class TF_EntryAndExitRegApproveController : BaseController
     {
         [Dependency]
         public TF_EntryAndExitRegistrationBiz OPBiz { get; set; }
@@ -39,7 +38,7 @@ namespace ESUI.Controllers.FileManagementDB
             //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
 
-            Where += " and IsDeleted='false'";
+            Where += " and IsDeleted='false' and ApprovalStates<>-1";
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
@@ -69,7 +68,7 @@ namespace ESUI.Controllers.FileManagementDB
             return Json(dic, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult Approve(string ID, string state = "-1")
+        public JsonResult Approve(string ID, string state = "0")
         {//ApprovalStates 状态（-1;--未提交；0--待审核；1--审核通过；2--审核不通过）
             string sql = string.Format("update TF_EntryAndExitRegistration set ApprovalStates={0},AprovalTime=getdate() Where Id='{1}'", state, ID);
             int f = OPBiz.ExecuteSqlWithNonQuery(sql);
@@ -78,32 +77,17 @@ namespace ESUI.Controllers.FileManagementDB
             {
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
-                if (state == "0")
-                {
-                    ReSultMode.Msg = "审核成功！";
-                }
-                else
-                {
-                    ReSultMode.Msg = "审核提交成功！";
-                }
+                ReSultMode.Msg = "审核处理成功！";
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
             {
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
-                if (state == "0")
-                {
-                    ReSultMode.Msg = "审核提交失败！";
-                }
-                else
-                {
-                    ReSultMode.Msg = "审核失败！";
-                }
+                ReSultMode.Msg = "审核处理失败！";
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
-
 
         public JsonResult EditInfo(TF_EntryAndExitRegistration EidModle)
         {
@@ -168,27 +152,6 @@ namespace ESUI.Controllers.FileManagementDB
             TF_EntryAndExitRegistration Rmodel = OPBiz.GetEntity(mql2);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
-
-        public JsonResult Del(string IDSet)
-        {
-
-            int f = OPBiz.DelForSetDelete("Id", IDSet);
-            HttpReSultMode ReSultMode = new HttpReSultMode();
-            if (f > 0)
-            {
-                ReSultMode.Code = 11;
-                ReSultMode.Data = f.ToString();
-                ReSultMode.Msg = "成功删除" + f + "条数据！";
-                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                ReSultMode.Code = -13;
-                ReSultMode.Data = "0";
-                ReSultMode.Msg = "删除失败！";
-                return Json(ReSultMode, JsonRequestBehavior.AllowGet);
-            }
-        }
-
+      
     }
 }
