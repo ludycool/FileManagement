@@ -225,7 +225,13 @@
                 DataBaseFunction.Search("fSearh", "dg");
                 //                $("#Div_Searh").dialog('close');
             }
+            function luruInfo(not, erfid, name) {
+                // alert(erfid);
+//                addTab(name + "录入", '/DynamicTable/MemberRegistration?ID=' + not + '&EntryRecordFormID=' + erfid + '');
+                addTab("零散档案材料转入", '/DynamicTable/MemberRegistration?ID=c7d96b43-20e2-4630-b927-5e3ea59d21aa&EntryRecordFormID=c7d96b43-20e2-4630-b927-5e3ea59d21aa');
 
+
+            }
             //            function LooKInfo(not) {
             //                //得到按钮选择的数据的ID
             //                var rows = $("#dg").datagrid("getSelections");
@@ -253,10 +259,11 @@
          
 
               <td style="text-align:right;">
-                         模板选择：</td>
+                         新增：</td>
                        <td  >
-                         <input class="easyui-combobox" id="ChineseName" name="CategoryTableID_eq"
-                   data-options="valueField:'ID',textField:'ChineseName'">
+@*                         <input class="easyui-combobox" id="ChineseName" name="CategoryTableID_eq"*@
+                           @*                   data-options="valueField:'ID',textField:'ChineseName'">*@
+                            <a href="javascript:void(0)" class="easyui-linkbutton"  iconcls="icon-mini-add" onclick="luruInfo();">新增</a>
                     </td>
               
                     <td style="text-align:right;">
