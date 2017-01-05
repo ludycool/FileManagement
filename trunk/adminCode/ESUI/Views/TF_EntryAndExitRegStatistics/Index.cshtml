@@ -19,9 +19,6 @@
             //var BaseUrl = "/TF_LifeComments/";
             jQuery(document).ready(function () {
                 DataGridSet();
-                changeUseCategory();
-                $('#States').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
-                FTypes = 1;//上传类型 1为文件 0 为图片
             })
 
             Date.prototype.Format = function (fmt) {
@@ -70,29 +67,9 @@
                     url: BaseUrl + 'Search',
                     columns: [[
                         { field: 'ck', checkbox: true },
+                        { field: 'TrueName', title: '姓名', width: 80, sortable: true },
                         {
-                            field: 'UseCategory', title: '使用类型', width: 150, sortable: true, formatter: function (value, row, index) {
-                                if (value == 1) {
-                                    return "保管";
-                                }
-                                else if (value == 2) {
-                                    return "领用";
-                                }
-                                else if (value == 3) {
-                                    return "归还";
-                                }
-                                else if (value == 4) {
-                                    return "退回";
-                                }
-                                else {
-                                    return "";
-                                }
-                            }
-                        },
-                        { field: 'OfficialDocOrRemarks', title: '批文', width: 100, sortable: true },
-                        { field: 'TrueName', title: '干部名字', width: 100, sortable: true },
-                        {
-                            field: 'Sex', title: '性别', width: 100, sortable: true, formatter: function (value, row, index) {
+                            field: 'Sex', title: '性别', width: 30, align: "center", sortable: true, formatter: function (value, row, index) {
                                 if (value == 1) {
                                     return "男";
                                 }
@@ -104,54 +81,19 @@
                                 }
                             }
                         },
+                        { field: 'IdentityCardNumber', title: '身份证号码', align: "left", width: 100, sortable: true },
                         { field: 'Units', title: '所在单位', align: "center", width: 140, sortable: true },
+                        { field: 'TotalCertificate', title: '证件数', align: "center", width: 30, sortable: true },
+                        { field: 'TotalHZ', title: '护照', align: "center", width: 30, sortable: true },
+                        { field: 'TotalGA', title: '港澳通行证', align: "center", width: 30, sortable: true },
+                        { field: 'TotalTW', title: '台湾通行证', align: "center", width: 30, sortable: true },
                         {
-                            field: 'CertificateCategory', title: '证件类型', width: 100, sortable: true, formatter: function (value, row, index) {
-                                if (value == 1) {
-                                    return "护照";
-                                }
-                                else if (value == 2) {
-                                    return "港澳通行证";
-                                }
-                                else if (value == 3) {
-                                    return "台湾通行证";
-                                }
-                                else {
-                                    return "";
-                                }
-                            }
-                        },
-                        { field: 'CertificateNumber', title: '证件号码', align: "center", width: 100, sortable: true },
-                        { field: 'IdentityCardNumber', title: '身份证号码', align: "center", width: 100, sortable: true },
-                        { field: 'ApproverUnit', title: '办理人单位', align: "center", width: 140, sortable: true },
-                        { field: 'Approver', title: '办理人', align: "center", width: 100, sortable: true },
-                        { field: 'ContactInformation', title: '联系方式', align: "center", width: 100, sortable: true },
-                        {
-                            field: 'AprovalTime', title: '日期', width: 120, sortable: true, formatter: function (value, row, index) {
-                                if (value != null && value != "") {
-                                    var pa = /.*\((.*)\)/;
-                                    var unixtime = value.match(pa)[1].substring(0, 10);
-                                    var currtime = new Date(unixtime * 1000);
-                                    return currtime.Format("yyyy-MM-dd");
-                                }
-                                else {
-                                    return "";
-                                }
-                            }
-                        },
-                        {
-                            field: 'ApprovalStates', title: '状态', width: 100, sortable: true, formatter: function (value, row, index) {
-                                if (value == -1) {
-                                    return "未提交";
-                                } else if (value == 0) {
-                                    return "待审核";
-                                }
-                                else if (value == 1) {
-                                    return "通过";
-                                }
-                                else if (value == 2) {
-                                    return "不通过";
-                                }
+                            field: 'IdentityCardNumber',
+                            title: '操作',
+                            width: 100,
+                            formatter: function (value, rowData, rowIndex) {
+                                var d = "<a href='#' onclick='viewDetail(\"" + rowData.IdentityCardNumber + "\")'>查看</a> ";
+                                return d;
                             }
                         }
                     ]],
@@ -166,7 +108,7 @@
                     pageSize: 20,
                     pagination: true,
                     rownumbers: true,
-                    sortName: 'CreateTime',
+                    sortName: 'IdentityCardNumber',
                     sortOrder: 'desc',
                     toolbar: toolbars
                 });

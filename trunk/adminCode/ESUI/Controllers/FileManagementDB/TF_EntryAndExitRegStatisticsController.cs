@@ -38,23 +38,26 @@ namespace ESUI.Controllers.FileManagementDB
             //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
 
-            Where += " and IsDeleted='false'";
+            Where += " and IsDeleted='false' and a.ApprovalStates=1 ";
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
             PageClass pc = new PageClass();
-            pc.sys_Fields = "*";
-            pc.sys_Key = "Id";
+            pc.sys_Fields = @" distinct IdentityCardNumber,TrueName, Sex,  Units, (Select COUNT(Id) From TF_EntryAndExitRegistration Where IsDeleted='false' and a.ApprovalStates=1 and IdentityCardNumber=a.IdentityCardNumber)as TotalCertificate,
+(Select COUNT(Id) From TF_EntryAndExitRegistration Where CertificateCategory = 1 and IsDeleted='false' and a.ApprovalStates=1 and IdentityCardNumber = a.IdentityCardNumber) as TotalHZ,
+(Select COUNT(Id) From TF_EntryAndExitRegistration Where CertificateCategory = 2 and IsDeleted='false' and a.ApprovalStates=1 and IdentityCardNumber = a.IdentityCardNumber)as TotalGA,
+(Select COUNT(Id) From TF_EntryAndExitRegistration Where CertificateCategory = 3 and IsDeleted='false' and a.ApprovalStates=1 and IdentityCardNumber = a.IdentityCardNumber)as TotalTW  ";
+            pc.sys_Key = "IdentityCardNumber";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "TF_EntryAndExitRegistration";
+            pc.sys_Table = "TF_EntryAndExitRegistration as a";
             if (UserData.UserTypes == 1)
             {
                 pc.sys_Where = Where;
             }
             else
             {
-                pc.sys_Where = Where + " and CreateMan='" + UserData.UserName + "'";
+                pc.sys_Where = Where + " and a.CreateMan='" + UserData.UserName + "'";
             }
 
             pc.sys_Order = " " + sortField + " " + sortOrder;
