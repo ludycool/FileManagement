@@ -63,6 +63,7 @@
     <Compile Include="ColumnCharts.cs" />
     <Compile Include="CorrelateColumns.cs" />
     <Compile Include="EntryRecordForm.cs" />
+    <Compile Include="FileManagementDB\TF_ChuRuJingStatistics.cs" />
     <Compile Include="FileManagementDB\TF_ElectronicFile.cs" />
     <Compile Include="FileManagementDB\TF_EntryAndExitRegistration.cs" />
     <Compile Include="FileManagementDB\TF_LifeComments.cs" />
