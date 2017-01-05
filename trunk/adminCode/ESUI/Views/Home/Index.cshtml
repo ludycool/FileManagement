@@ -130,7 +130,25 @@
         function closePwd() {
             $('#w').window('close');
         }
+        //刷新tabs 里的grid
+        function reloadTabGrid(title) {
+            if ($("#tabs").tabs('exists', title)) {
+                $('#tabs').tabs('select', title);
+                //window.top.reload_Abnormal_Monitor.call();
 
+                //刷新当前tab
+                var currTab = self.parent.$('#tabs').tabs('getSelected'); //获得当前tab
+                var url = $(currTab.panel('options').content).attr('src');
+                //self.parent.$('#tabs').tabs('update', {
+                //    tab: currTab,
+                //    options: {
+                //        content: createFrame(url)
+                //    }
+                //});
+                $("#" + url)[0].contentWindow.ReloadOP();//调用刷新功能
+
+            }
+        }
         //跳转url 内有的菜单少可以 window.parent.JumpN("CommunityNotice");
         function JumpN(URL) {
             $.each(_menus, function (j, o) {
