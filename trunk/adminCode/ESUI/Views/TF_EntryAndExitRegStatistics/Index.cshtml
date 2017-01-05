@@ -36,38 +36,20 @@
                     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
                 return fmt;
             }
-
-            function changeUseCategory() {
-                // debugger
-                $("#UseCategory").change(function () {
-                    // var use = $("#UseCategory").val();
-                    alert($(this).children('option:selected').val());
-                });
-                //var use = $("#UseCategory").val();
-                //if (use == 1) {
-                //    //保管
-                //    alert(use);
-                //}
-                //else if (use = 2) {
-                //    //领用
-                //    alert(use);
-                //}
-                //else if (use = 3) {
-                //    //归还
-                //    alert(use);
-                //}
-                //else if (use = 4) {
-                //    //退回
-                //    alert(use);
-                //}
+            function GetUrlParam(name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) { return unescape(r[2]); } else {
+                    return null;
+                }
             }
-
             function DataGridSet() {
                 $('#dg').datagrid({
                     url: BaseUrl + 'Search',
+                   
                     columns: [[
                         { field: 'ck', checkbox: true },
-                        { field: 'TrueName', title: '姓名', width: 80, sortable: true },
+                        { field: 'TrueName', title: '姓名', width: 60, sortable: true },
                         {
                             field: 'Sex', title: '性别', width: 30, align: "center", sortable: true, formatter: function (value, row, index) {
                                 if (value == 1) {
@@ -81,21 +63,26 @@
                                 }
                             }
                         },
-                        { field: 'IdentityCardNumber', title: '身份证号码', align: "left", width: 100, sortable: true },
+                        { field: 'IdentityCardNumber', title: '身份证号码', align: "center", width: 80, sortable: true },
                         { field: 'Units', title: '所在单位', align: "center", width: 140, sortable: true },
                         { field: 'TotalCertificate', title: '证件数', align: "center", width: 30, sortable: true },
-                        { field: 'TotalHZ', title: '护照', align: "center", width: 30, sortable: true },
-                        { field: 'TotalGA', title: '港澳通行证', align: "center", width: 30, sortable: true },
-                        { field: 'TotalTW', title: '台湾通行证', align: "center", width: 30, sortable: true },
-                        {
-                            field: 'IdentityCardNumber',
-                            title: '操作',
-                            width: 100,
-                            formatter: function (value, rowData, rowIndex) {
-                                var d = "<a href='#' onclick='viewDetail(\"" + rowData.IdentityCardNumber + "\")'>查看</a> ";
-                                return d;
-                            }
-                        }
+                        { field: 'TotalHZ', title: '护照', align: "center", width: 100, sortable: true },
+                        { field: 'TotalGA', title: '港澳通行证', align: "center", width: 100, sortable: true },
+                        { field: 'TotalTW', title: '台湾通行证', align: "center", width: 100, sortable: true }
+                      ,
+                          {
+                              field: 'Id',
+                              title: '操作',
+                              width: 30,
+                              align: "center",
+                              formatter: function (value, rowData, rowIndex) {
+                                  var d = "";
+                                  //  if (rowData.IdentityCardNumber != "") {
+                                  d = '<a href="#" href="javascript:void(0);" onclick="ShowDetails(\'' + rowData.IdentityCardNumber + '\')" style="cursor: default;">查看</a>  '
+                                  // }
+                                  return d;
+                              }
+                          }
                     ]],
                     iconCls: 'icon-save',
                     title: '证件登记',
@@ -113,90 +100,26 @@
                     toolbar: toolbars
                 });
             }
-            //easyUI 弹出添加的对话框
-            function AddInfo() {
-                //弹出层
-                // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
-                $('#DivEditor').dialog({
-                    title: '证件登记',
-                    //width: 400,
-                    //height: 200,
-                    closed: false,
-                    cache: false,
-                    // href: 'get_content.php',
-                    modal: true, top: 50,
-                    onClose: function () {
-                        //解决弹出窗口关闭后，验证消息还显示在最上面
 
+            function ShowDetails(Idcard) {                
+                var curId = "";
+                if (Idcard ==undefined) {
+                    var rows = $("#dg").datagrid('getSelected');
+                    //首先取出来值判断只能选择一个
+                    if (rows == null) {
+                        $.messager.alert("友情提示", "请选择", "error");
+                        return;
                     }
-                });
-                AutoMaxH("#Div_form", 150)
-                $(".validatebox-tip").remove();//清除验证样式
-                DataBaseFunction.ClearForm("ff");
-            }
-
-            //绑定修改显示详细信息的方法
-            function EditInfo() {
-
-                var rows = $("#dg").datagrid('getSelected');
-                //首先取出来值判断只能选择一个
-                if (rows == null) {
-                    $.messager.alert("友情提示", "请选择", "error");
-                    return;
+                    else {
+                        curId = rows.IdentityCardNumber;
+                    }
                 }
-                //var aprovalstatus = rows.States;
-                //if (aprovalstatus != "-1") {
-                //    $.messager.alert("友情提示", "此文件不可编辑", "error");
-                //    return;
-                //}
-
-                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.TrueName).window('resize', { top: 50 });
-                $(".validatebox-tip").remove();//清除验证样式
-                var ID = rows.Id;  //获取到了用选择的ID
-                $.ajax({
-                    url: BaseUrl + 'GetInfo',
-                    type: 'POST',
-                    data: { ID: ID },
-                    cache: false,
-                    error: function () { alert('Error $.ajax'); },
-                    success: function (data) {
-                        //var result = eval('(' + data + ')');
-                        DataBaseFunction.BindForm("ff", data);
-                        //$('#Category').combotree('setValue', data['Category']);
-                        //$('#States').combobox('select', data.States);
-                        //GetFileList(data.Id);//图片
-                    }
-                });
-            }
-
-            //实现的编辑，包括增查改
-            function SaveInfo() {
-                //判断的信息是否通过验证
-                var validate = $("#ff").form('validate');
-                if (validate == false) {
-                    return false;
+                else {
+                    curId = Idcard;
                 }
 
-                //获取需要传递的参数传递给前台
-                var data = DataBaseFunction.GetFormData("ff")
-                //发送异步请求到后台保存数据
-                $.post(BaseUrl + 'EditInfo', data, function (data) {
-                    alerts(data.Msg, 2);
-                    if (data.Code > 0) {
-                        $('#DivEditor').dialog('close');
-                        $(".validatebox-tip").remove();
-                        $("#dg").datagrid("reload");
-
-
-                        var id = $("input[name='Id']").val();
-                        if (id == "") {
-                            id = data.Data;//id
-                        }
-                        Delfile();//删除移除的图片
-                        SaveToid(id);//保存添加的图片
-                    }
-                });
-
+                var url = "TF_EntryAndExitRegStatistics/CertificateDetail?idd=" + curId;
+                window.open(url, "_blank");
             }
 
             //搜索
@@ -209,45 +132,6 @@
                 // $("#fSearh").form("clear");
                 $('#States_eq').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
                 $("#Div_Searh").dialog('open').dialog('setTitle', '搜索').window('resize', { top: 100, left: 100 });
-            }
-            //删除
-            function Del() {
-                DataBaseFunction.deleteInfo("dg", "Id", "TrueName");
-            }
-
-            function AddImg() {
-                FileUp("TF_EntryAndExitRegistration");
-            }
-
-            //提交审核
-            function submitApprove() {
-                var rows = $("#dg").datagrid('getSelected');
-                //首先取出来值判断只能选择一个
-                if (rows == null) {
-                    $.messager.alert("友情提示", "请选择", "error");
-                    return;
-                }
-                var aprovalstatus = rows.ApprovalStates;
-                if (aprovalstatus != "-1") {
-                    $.messager.alert("友情提示", "此证件已经提交过", "error");
-                    return;
-                }
-                $.messager.confirm("友情提示", "提交后不可在编辑，您确定现在提交审核吗？", function (r) {
-                    if (r) {
-                        var ID = rows.Id;
-                        $.ajax({
-                            url: BaseUrl + 'Approve',
-                            type: 'POST',
-                            data: { ID: ID, state: "0" },
-                            cache: false,
-                            error: function () { alert('Error $.ajax'); },
-                            success: function (data) {
-                                $.messager.alert("友情提示", data.Msg);
-                                DataGridSet();
-                            }
-                        });
-                    }
-                });
             }
 
             function RefreshOP() {
@@ -279,20 +163,6 @@
             <table class="stripes" style="table-layout: fixed; margin: 0 auto; width: 320px;" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td style="width: 100px;">
-                        <label>使用类型：</label>
-                    </td>
-                    <td>
-                        <select id="UseCategory" name="UseCategory_eq" class="easyui-combobox" style="width: 150px;">
-                            <option value="">==请选择==</option>
-                            <option value="1">保管</option>
-                            <option value="2">领用</option>
-                            <option value="3">归还</option>
-                            <option value="4">退回</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width: 100px;">
                         <label>干部名字：</label>
                     </td>
                     <td>
@@ -301,31 +171,23 @@
                 </tr>
                 <tr>
                     <td style="width: 100px;">
+                        <label>身份证号：</label>
+                    </td>
+                    <td>
+                        <input class="textbox" type="text" maxlength="18" name="IdentityCardNumber_eq" style="width: 150px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 100px;">
                         <label>证件类型：</label>
                     </td>
                     <td>
-                        <select id="Sex" name="CertificateCategory_eq" class="easyui-combobox" style="width: 150px;">
+                        <select id="CertificateCategory" name="CertificateCategory_eq" class="easyui-combobox" style="width: 150px;">
                             <option value="">==请选择==</option>
                             <option value="1">护照</option>
                             <option value="2">港澳通行证</option>
                             <option value="3">台湾通行证</option>
                         </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width: 100px;">
-                        <label>证件号码：</label>
-                    </td>
-                    <td>
-                        <input class="textbox" type="text" maxlength="9" name="CertificateNumber_eq" style="width: 150px;" />
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width: 100px;">
-                        <label>身份证号：</label>
-                    </td>
-                    <td>
-                        <input class="textbox" type="text" maxlength="18" name="IdentityCardNumber_eq" style="width: 150px;" />
                     </td>
                 </tr>
             </table>
