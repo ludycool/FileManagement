@@ -80,7 +80,8 @@
 
                                     var d = '<a href="#" onclick="LooKInfo(\'' + rowData.CategoryTableID + '\',\'' + rowData.ID + '\',\'' + rowData.CreateDate + rowData.ChineseName + '\')">办理</a>  ';
 
-                                    d += '<a href="#" onclick="sign(\'' + rowData.ID + '\')">确认签收</a>  ';
+                                    d += '<a href="#" onclick="sign(\'' + rowIndex + '\')">确认签收</a>  ';
+                                    d += '<a href="#" onclick="signLook(\'' + rowIndex + '\')">查看签名</a>  ';
                                     return d;
 
                                     //                    return "<a href='#' onclick='LooKInfo('" + rowData.ID + "');'>角色管理</a>";
@@ -115,24 +116,28 @@
             });
 
             function sign(id) {
-     $.messager.confirm("签收信息", "您确认签收<font color='red' size='3'>" + "" + "</font>吗？", function(Delete) {
-                        if (Delete) {
-                           $.ajax({
-                   url: BaseUrl + 'ChangeSign',
-                    type: 'POST',
-                    data: { IDSet: id },
-                    cache: false,
-                    error: function () { alert('Error loading PHP document'); },
-                    success: function (data) {
+                var rows = $('#dg').datagrid('getData').rows[id];
+                var obj = document.getElementById("HWPenSign");
+                obj.HWSetBkColor(0xE0F8E0);
+                obj.HWSetCtlFrame(1, 0x000000);
+                res = obj.HWInitialize();
+                //                var rows = $("#dg").datagrid('getSelected');
+                //                //首先取出来值判断只能选择一个
+                //                if (rows == null) {
+                //                    // $.messager.alert("友情提示", "请选择", "error");
+                //                    return;
+                //                }
+                //                $("#DivShow2").dialog('open').dialog('setTitle', '查看-字号' + "" + "").window('resize', { top: 20 });
+                $("#DivShow").dialog('open').dialog('setTitle', '确认办理').window('resize', { top: 20 });
+                DataBaseFunction.BindForm("f2", rows);
+             
+            }
 
-                        alerts(data.Msg, 2);
-                        if (data.Code > 0) {
-                            $("#dg").datagrid("reload");
-                        }
-                    }
-                });
-                        }
-                    });
+            function signLook(id) {
+                var rows = $('#dg').datagrid('getData').rows[id];
+                $("#imgId").attr('src', "DynamicTable/GetImage?id=" + rows.ID);
+                $("#DivShow2").dialog('open').dialog('setTitle', '确认办理').window('resize', { top: 20 });
+             
              
             }
 
@@ -253,7 +258,48 @@
                 }
 
             }
+            function SaveInfo() {
 
+                //判断的信息是否通过验证
+                //var validate = $("#f1").form('validate');
+                //if (validate == false) {
+                //    return false;
+                //}
+                ////判断的信息是否通过验证
+                //var validate2 = $("#f2").form('validate');
+                //if (validate2 == false) {
+                //    return false;
+                //}
+                debugger;
+                var stream;
+                var obj = document.getElementById("HWPenSign");
+                stream = obj.HWGetBase64Stream(2);
+
+                var data = DataBaseFunction.GetFormData("f2");
+
+          
+                if (stream) {
+                    var signatureimage = {
+                        name: "signatureimage",
+                        value: stream
+
+                    }
+                    data.push(signatureimage);
+                }
+
+              
+          
+                //  发送异步请求到后台保存数据
+                $.post(BaseUrl + 'AdminEditInfo', data, function (data) {
+                    alerts(data.Msg, 2);
+                    if (data.Code > 0) {
+                        //                        alert("保存成功");
+                        //                        window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
+                    }
+                });
+
+ 
+            }
 //            function LooKInfo(not) {
 //                //得到按钮选择的数据的ID
 //                var rows = $("#dg").datagrid("getSelections");
@@ -289,11 +335,7 @@
          
 
               <td style="text-align:right;">
-                         模板选择：</td>
-                       <td  >
-                         <input class="easyui-combobox" id="ChineseName" name="CategoryTableID_eq"
-                   data-options="valueField:'ID',textField:'ChineseName'">
-                    </td>
+ 
               
                     <td style="text-align:right;">
                        录入时间（注：只能查大于某个时间段）：</td>
@@ -347,8 +389,86 @@
     @*        <table id="dg3"></table>*@
 </div>
 
+    <div id="DivShow" class="easyui-dialog" style="width: 750px;"
+     closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+    <div class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:300,width:730,border:false">
 
 
-  
+        <table style="table-layout: fixed; margin: 0 auto; width: 720px;" border="0" cellspacing="0" cellpadding="0">
+      
+         
+            <tr>
+                <td>
+                    <form id="f2" method="post" enctype="multipart/form-data">
+
+                        <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                         
+                            <tr>
+                                <td style="width: 80px;">
+                                    <label>签名：<input type="hidden" name="ID"/> </label></td>
+                                <td colspan="3">
+
+                                        <object id="HWPenSign"
+                    name="HWPenSign"
+                    classid="clsid:E8F5278C-0C72-4561-8F7E-CCBC3E48C2E3"
+                    width="400"
+                    height="200">
+              </object>
+                                </td>
+
+
+                            </tr>
+                        </table>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+
+    </div>
+
+    <div style="text-align: center; width: 100%; margin-bottom: 5px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow').dialog('close')">关闭</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
+    </div>
+</div>
+
+    <div id="DivShow2" class="easyui-dialog" style="width: 750px;"
+     closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+    <div class="easyui-panel" style="padding: 10px 10px; overflow-x: hidden;" data-options=" height:300,width:730,border:false">
+
+
+        <table style="table-layout: fixed; margin: 0 auto; width: 720px;" border="0" cellspacing="0" cellpadding="0">
+      
+         
+            <tr>
+                <td>
+                    <form id="f3" method="post" enctype="multipart/form-data">
+
+                        <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                         
+                            <tr>
+                                <td style="width: 80px;">
+                                    <label>签名： </label></td>
+                                <td colspan="3">
+                                    <img id="imgId" />
+                                </td>
+
+
+                            </tr>
+                        </table>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+
+    </div>
+
+    <div style="text-align: center; width: 100%; margin-bottom: 5px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow2').dialog('close')">关闭</a>
+       
+    </div>
+</div>
 </body>
 </html>

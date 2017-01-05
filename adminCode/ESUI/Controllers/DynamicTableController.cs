@@ -353,9 +353,9 @@ namespace ESUI.Controllers
                                 {
                                     if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
-                                        menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" +
-                                      item.rowspan + "\", width:\"" + item.width + "\",editor:{" +
-                                           "}" + ",align:\"" + item.align + "\"";
+//                                        menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" +
+//                                      item.rowspan + "\", width:\"" + item.width + "\",editor:{" +
+//                                           "}" + ",align:\"" + item.align + "\"";
                                     }
                                     else
                                     {
@@ -370,10 +370,10 @@ namespace ESUI.Controllers
                                 {
                                     if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
-                                        menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" +
-                                                 item.rowspan + "\", width:\"" + item.width + "\",editor:{" +
-
-                                                 "}";
+//                                        menus += "title:\"" + item.title + "\",field:\"" + item.field + "\",rowspan:\"" +
+//                                                 item.rowspan + "\", width:\"" + item.width + "\",editor:{" +
+//
+//                                                 "}";
                                     }
                                     else
                                     {
@@ -394,9 +394,9 @@ namespace ESUI.Controllers
                                 {
                                     if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
-                                        menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
-                                           item.width + "\",editor:{" + "}" + ",align:\"" + item.align +
-                                           "\"";
+//                                        menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
+//                                           item.width + "\",editor:{" + "}" + ",align:\"" + item.align +
+//                                           "\"";
                                     }
                                     else
                                     {
@@ -410,8 +410,8 @@ namespace ESUI.Controllers
                                 {
                                     if (item.ManagingStatus == true && UserData.UserTypes != 1)
                                     {
-                                        menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
-                                                  item.width + "\",editor:{" + "}";
+//                                        menus += "title:\"" + item.title + "\",field:\"" + item.field + "\", width:\"" +
+//                                                  item.width + "\",editor:{" + "}";
                                     }
                                     else
                                     {
@@ -698,10 +698,10 @@ namespace ESUI.Controllers
                 EntryRecordForm erfmodle = new EntryRecordForm();
                 erfmodle.ID = ErfCategoryTableID;
                 erfmodle.CategoryTableID = CategoryTableID;
-                erfmodle.Name = UserData.UserName;
-                erfmodle.Unit = UserData.DepartmentName;
+                erfmodle.name = UserData.UserName;
+                erfmodle.unit = UserData.DepartmentName;
                 erfmodle.CreateDate = DateTime.Now;
-                erfmodle.State = EnumConfig.ArchiveType.GenerationSign.ToString();
+                erfmodle.state = EnumConfig.ArchiveType.GenerationSign.ToString();
                 erfbiz.Add(erfmodle);
             }
             else
@@ -1530,7 +1530,7 @@ namespace ESUI.Controllers
             //=0;
 
             var catmodle = erfbiz.GetEntity(EntryRecordFormSet.SelectAll().Where(EntryRecordFormSet.ID.Equal(IDSet)));
-            catmodle.State = EnumConfig.ArchiveType.HaveSign.ToString();
+            catmodle.state = EnumConfig.ArchiveType.HaveSign.ToString();
             catmodle.WhereExpression = EntryRecordFormSet.ID.Equal(IDSet);
 
             var f = erfbiz.Update(catmodle);
@@ -1667,6 +1667,64 @@ string.Format("~/UploadFiles/{0}", filename);
             // ExcelHelper ff=new ExcelHelper();
 
             return Json(ffd);
+
+        }
+
+
+        public JsonResult AdminEditInfo(EntryRecordForm EidModle)
+        {
+            HttpReSultMode ReSultMode = new HttpReSultMode();
+            bool IsAdd = false;
+
+            if (!(EidModle.ID != null && !EidModle.ID.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+            {
+                IsAdd = true;
+            }
+            if (IsAdd)
+            {
+                
+            }
+            else
+            {
+                EidModle.WhereExpression = EntryRecordFormSet.ID.Equal(EidModle.ID);
+                EidModle.state = EnumConfig.ArchiveType.HaveSign.ToString();
+                // EidModle.ChangedMap.Remove("id");//移除主键值
+                if (erfbiz.Update(EidModle) > 0)
+                {
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改成功";
+                }
+                else
+                {
+                    ReSultMode.Code = -13;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改失败";
+                }
+            }
+
+
+            return Json(ReSultMode, JsonRequestBehavior.AllowGet);
+
+        }
+        public FileContentResult GetImage(string id)
+        {
+            var df = EntryRecordFormSet.SelectAll().Where(EntryRecordFormSet.ID.Equal(id));
+            var dfw = erfbiz.GetEntity(df);
+
+
+            if (dfw != null)
+            {
+
+                return File(dfw.signatureimage, "jpg");
+
+            }
+            else
+            {
+
+                return null;
+
+            }
 
         }
     }

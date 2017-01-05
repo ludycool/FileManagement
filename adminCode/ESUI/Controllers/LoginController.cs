@@ -162,7 +162,10 @@ namespace ESUI.Controllers
                 #region 存用户数据
 
                 UserData = new AdminUserInfo();
-                UserData.UserTypes =int.Parse( adminRole[0].UserType.ToString());
+
+                var sql222 = V_UserRoleSet.SelectAll().Where(V_UserRoleSet.LoginName.Equal(mode.LoginName));
+                var newadminRole = URBiz.GetOwnList<V_UserRole>(sql222);
+                UserData.UserTypes = int.Parse(newadminRole[0].UserType.ToString());
                 // UserData.adminUserInfo = adminRole[0];
                 UserData.Id = adminRole[0].Id;
                 UserData.UserName = adminRole[0].LoginName;
