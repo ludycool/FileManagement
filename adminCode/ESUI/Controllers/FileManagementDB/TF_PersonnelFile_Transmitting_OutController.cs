@@ -150,11 +150,11 @@ namespace ESUI.Controllers
                           int DuplicateCount=0;
                           int MaterialCount=0;
 
-
+                          string allname = "";
                         if(listItem!=null&&listItem.Count>0)
                         {
                             EidModle.FistName=listItem[0].RealName;
-
+                            allname += listItem[0].RealName + "、";
                             for(int i=0;i<listItem.Count;i++)
                             {
                             OriginalCount+=listItem[i].OriginalCount;
@@ -171,7 +171,9 @@ namespace ESUI.Controllers
                             EidModle.NumberS=listItem.Count;
 
                         }
-
+                      
+                        allname = allname.TrimEnd('、');
+                        EidModle.FileName = allname;
 
 
                         OPBiz.Add(EidModle);
@@ -387,11 +389,11 @@ namespace ESUI.Controllers
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
             Where += "  and (isDeleted=0) ";
             string table = "TF_PersonnelFile";
-            if (UserData.UserTypes != 1)
-            {
-                Where += " and ( UnitsId='" + UserData.DepartmentId + "')";
-                table = "v_TF_PersonnelFile_Units_Out";
-            }
+//            if (UserData.UserTypes != 1)
+//            {
+//                Where += " and ( UnitsId='" + UserData.DepartmentId + "')";
+//                table = "v_TF_PersonnelFile_Units_Out";
+//            }
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
@@ -551,11 +553,11 @@ namespace ESUI.Controllers
                     int DuplicateCount = 0;
                     int MaterialCount = 0;
 
-
+                    string allname = "";
                     if (listItem != null && listItem.Count > 0)
                     {
                         EidModle.FistName = listItem[0].RealName;
-
+                        allname += listItem[0].RealName + "、";
                         for (int i = 0; i < listItem.Count; i++)
                         {
                             OriginalCount += listItem[i].OriginalCount;
@@ -573,6 +575,8 @@ namespace ESUI.Controllers
 
                     }
 
+                    allname = allname.TrimEnd('、');
+                    EidModle.FileName = allname;
 
 
                     OPBiz.Add(EidModle);

@@ -148,11 +148,16 @@
                     url: BaseUrl + 'PersonnelFile_Units',
                     columns: [[
                           { field: 'ck', checkbox: true },
-                { field: 'RealName', title: '姓名', width: 100, sortable: true },
-              //{ field: 'Category', title: '类别', width: 100, sortable: true },
-              { field: 'Units', title: '单位', width: 100, sortable: true },
-              { field: 'Duties', title: '职务', width: 100, sortable: true },
-              { field: 'Summary', title: '摘要', width: 100, sortable: true }
+                  { field: 'RealName', title: '档案姓名', width: 100, sortable: true },
+
+              { field: 'Duties', title: '所在单位职务', width: 100, sortable: true },
+              { field: 'PersonalStatus', title: '状态', width: 100, sortable: true },
+              { field: 'TankNo', title: '柜号', width: 100, sortable: true },
+             { field: 'LayerNo', title: '层号', width: 100, sortable: true },
+              { field: 'SerialNumber', title: '序号', width: 100, sortable: true },
+              { field: 'ArchivesVolumes', title: '档案卷数', width: 100, sortable: true },
+
+              { field: 'Remark', title: '备注', width: 100, sortable: true }
                     ]],
                     iconCls: 'icon-save',
                     title: '可用的档案',

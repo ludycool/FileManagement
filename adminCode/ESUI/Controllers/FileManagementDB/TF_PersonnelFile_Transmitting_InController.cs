@@ -160,12 +160,12 @@ namespace ESUI.Controllers
                         int OriginalCount=0;
                           int DuplicateCount=0;
                           int MaterialCount=0;
-
+                          string allname = "";
 
                         if(listItem!=null&&listItem.Count>0)
                         {
                             EidModle.FistName=listItem[0].RealName;
-
+                            allname += listItem[0].RealName + "、";
                             for(int i=0;i<listItem.Count;i++)
                             {
                             OriginalCount+=listItem[i].OriginalCount;
@@ -182,7 +182,8 @@ namespace ESUI.Controllers
                             EidModle.NumberS=listItem.Count;
 
                         }
-
+                        allname = allname.TrimEnd('、');
+                        EidModle.FileName = allname;
 
 
                         OPBiz.Add(EidModle);
@@ -284,11 +285,11 @@ namespace ESUI.Controllers
                     int DuplicateCount = 0;
                     int MaterialCount = 0;
 
-
+                    string allname = "";
                     if (listItem != null && listItem.Count > 0)
                     {
                         EidModle.FistName = listItem[0].RealName;
-
+                        allname += listItem[0].RealName + "、";
                         for (int i = 0; i < listItem.Count; i++)
                         {
                             OriginalCount += listItem[i].OriginalCount;
@@ -305,8 +306,8 @@ namespace ESUI.Controllers
                         EidModle.NumberS = listItem.Count;
 
                     }
-
-
+                    allname = allname.TrimEnd('、');
+                    EidModle.FileName = allname;
 
                     OPBiz.Add(EidModle);
 
@@ -496,7 +497,7 @@ namespace ESUI.Controllers
 //            if (UserData.UserTypes != 1)
 //            {
 //                Where += " and ( UnitsId='" + UserData.DepartmentId + "')";
-            string table = "v_TF_PersonnelFile_Units_In";
+            string table = "TF_PersonnelFile";
 //            }
             ////字段排序
             String sortField = Request["sort"];

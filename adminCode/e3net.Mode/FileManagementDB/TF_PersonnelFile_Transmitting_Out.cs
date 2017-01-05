@@ -220,6 +220,15 @@ namespace e3net.Mode.FileManagementDB
             get { return GetPropertyValue<String>("TransferWay"); }
             set { SetPropertyValue("TransferWay", value); }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String FileName
+        {
+            get { return GetPropertyValue<String>("FileName"); }
+            set { SetPropertyValue("FileName", value); }
+        }
     }
 
     [Table("[TF_PersonnelFile_Transmitting_Out]", DbType.SqlServer)]
@@ -352,6 +361,11 @@ namespace e3net.Mode.FileManagementDB
         /// 
         /// </summary>
         public static readonly FieldBase TransferWay = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_Out]", FieldType.Common, "[TransferWay]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase FileName = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_Out]", FieldType.Common, "[FileName]");
     }
 
 }

@@ -210,6 +210,15 @@ using Moon.Orm;
             get { return GetPropertyValue<byte[]>("signatureimage"); }
             set { SetPropertyValue("signatureimage", value); }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public String FileName
+        {
+            get { return GetPropertyValue<String>("FileName"); }
+            set { SetPropertyValue("FileName", value); }
+        }
     }
 
     [Table("[TF_PersonnelFile_Transmitting_In]", DbType.SqlServer)]
@@ -337,6 +346,11 @@ using Moon.Orm;
         /// 
         /// </summary>
         public static readonly FieldBase signatureimage = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_In]", FieldType.Common, "[signatureimage]");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly FieldBase FileName = new FieldBase(DbType.SqlServer, "[TF_PersonnelFile_Transmitting_In]", FieldType.Common, "[FileName]");
     }
 
 }

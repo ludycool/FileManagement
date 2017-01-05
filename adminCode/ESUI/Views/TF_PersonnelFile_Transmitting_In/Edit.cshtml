@@ -227,8 +227,8 @@
                     if (datas[i].Reasons) {
                         rea = datas[i].Reasons;
                     }
-                    result += '<td>  <input class="easyui-validatebox textbox" style="width: 200px;" type="text" name="Reasons" value=' + rea + '>' +
-                        '</input></td>';
+                    result += '<td>  <textarea      style="width:300px;height:100px"  name="Reasons"  >' + rea+
+                        '</textarea ></td>';
                     result += "<td> " + datas[i].OriginalCount + "</td>";
                     result += "<td> " + datas[i].DuplicateCount + "</td>";
                     result += "<td> " + datas[i].MaterialCount + "</td>";
@@ -238,7 +238,7 @@
                     result += "</tr>";
                 }
                 $("#SelectList").append(result);
-
+                $.parser.parse();
             }
 
             function getTableData() {
@@ -252,7 +252,7 @@
                     items.RealName = tdArr.eq(0).html();//名称
 //                    items.Units = tdArr.eq(1).html();//单位
                     items.Duties = tdArr.eq(1).html();//职位
-                    items.Reasons = tdArr.eq(2).find("input").val();//
+                    items.Reasons = tdArr.eq(2).find("textarea").val();//
                     items.OriginalCount = tdArr.eq(3).find("input").val();//    
                     items.DuplicateCount = tdArr.eq(4).find("input").val();//    
                     items.MaterialCount = tdArr.eq(5).find("input").val();//    
