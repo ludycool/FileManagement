@@ -19,6 +19,7 @@
             //var BaseUrl = "/TF_LifeComments/";
             jQuery(document).ready(function () {
                 DataGridSet();
+                changeUseCategory();
                 $('#States').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
                 FTypes = 1;//上传类型 1为文件 0 为图片
             })
@@ -39,9 +40,34 @@
                 return fmt;
             }
 
+            function changeUseCategory() {
+                // debugger
+                $("#UseCategory").change(function () {
+                    // var use = $("#UseCategory").val();
+                    alert($(this).children('option:selected').val());
+                });
+                //var use = $("#UseCategory").val();
+                //if (use == 1) {
+                //    //保管
+                //    alert(use);
+                //}
+                //else if (use = 2) {
+                //    //领用
+                //    alert(use);
+                //}
+                //else if (use = 3) {
+                //    //归还
+                //    alert(use);
+                //}
+                //else if (use = 4) {
+                //    //退回
+                //    alert(use);
+                //}
+            }
+
             function DataGridSet() {
                 $('#dg').datagrid({
-                    url: BaseUrl + 'StatisticsView',
+                    url: BaseUrl + 'Search',
                     columns: [[
                         { field: 'ck', checkbox: true },
                         {
@@ -101,15 +127,30 @@
                         { field: 'Approver', title: '办理人', align: "center", width: 100, sortable: true },
                         { field: 'ContactInformation', title: '联系方式', align: "center", width: 100, sortable: true },
                         {
-                            field: 'CreateTime', title: '日期', width: 120, sortable: true, formatter: function (value, row, index) {
+                            field: 'AprovalTime', title: '日期', width: 120, sortable: true, formatter: function (value, row, index) {
                                 if (value != null && value != "") {
                                     var pa = /.*\((.*)\)/;
                                     var unixtime = value.match(pa)[1].substring(0, 10);
                                     var currtime = new Date(unixtime * 1000);
-                                    return currtime.Format("yyyy-MM-dd hh:mm:ss");
+                                    return currtime.Format("yyyy-MM-dd");
                                 }
                                 else {
                                     return "";
+                                }
+                            }
+                        },
+                        {
+                            field: 'ApprovalStates', title: '状态', width: 100, sortable: true, formatter: function (value, row, index) {
+                                if (value == -1) {
+                                    return "未提交";
+                                } else if (value == 0) {
+                                    return "待审核";
+                                }
+                                else if (value == 1) {
+                                    return "通过";
+                                }
+                                else if (value == 2) {
+                                    return "不通过";
                                 }
                             }
                         }
@@ -193,7 +234,7 @@
                 if (validate == false) {
                     return false;
                 }
-              
+
                 //获取需要传递的参数传递给前台
                 var data = DataBaseFunction.GetFormData("ff")
                 //发送异步请求到后台保存数据
@@ -236,22 +277,6 @@
                 FileUp("TF_EntryAndExitRegistration");
             }
 
-            function hasFiles() {
-                var arr = new Array();
-                $("#zhi a").filter(function (index) {
-                    var ss = $(this).attr('href');
-                    if (ss != "") {
-                        arr.push(ss);
-                    }
-                })
-                if (arr.length > 0) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-
             //提交审核
             function submitApprove() {
                 var rows = $("#dg").datagrid('getSelected');
@@ -260,28 +285,23 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                var aprovalstatus = rows.States;
+                var aprovalstatus = rows.ApprovalStates;
                 if (aprovalstatus != "-1") {
-                    $.messager.alert("友情提示", "此文件已经提交过", "error");
+                    $.messager.alert("友情提示", "此证件已经提交过", "error");
                     return;
                 }
                 $.messager.confirm("友情提示", "提交后不可在编辑，您确定现在提交审核吗？", function (r) {
                     if (r) {
-                        var _toid = rows.Id;  //获取到了用选择的ID
+                        var ID = rows.Id;
                         $.ajax({
-                            url: '/httpHandle/WebOfficeHandler.ashx',
+                            url: BaseUrl + 'Approve',
                             type: 'POST',
-                            data: { action: "copyfilebak", toid: _toid },
+                            data: { ID: ID, state: "0" },
                             cache: false,
                             error: function () { alert('Error $.ajax'); },
                             success: function (data) {
-                                if (data == "true") {
-                                    $.messager.alert("友情提示", "提交审核成功", "info");
-                                    DataGridSet();
-                                }
-                                else {
-                                    $.messager.alert("友情提示", "提交审核失败", "error");
-                                }
+                                $.messager.alert("友情提示", data.Msg);
+                                DataGridSet();
                             }
                         });
                     }
@@ -300,7 +320,6 @@
                     message: '身份证号码格式不正确'
                 }
             });
-
         </script>
     }
 
@@ -317,37 +336,54 @@
 
             <table class="stripes" style="table-layout: fixed; margin: 0 auto; width: 320px;" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td style="width: 60px;">
-                        <label>名称：</label>
+                    <td style="width: 100px;">
+                        <label>使用类型：</label>
                     </td>
                     <td>
-                        <input type="text" class="textbox" name="TrueName_like" style="width: 200px;" />
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        <label>职务：</label>
-                    </td>
-                    <td>
-                        <input type="text" class="textbox" name="Duties_like" style="width: 200px;" />
+                        <select id="UseCategory" name="UseCategory_eq" class="easyui-combobox" style="width: 150px;">
+                            <option value="">==请选择==</option>
+                            <option value="1">保管</option>
+                            <option value="2">领用</option>
+                            <option value="3">归还</option>
+                            <option value="4">退回</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <label>单位：</label>
+                    <td style="width: 100px;">
+                        <label>干部名字：</label>
                     </td>
                     <td>
-                        <input type="text" class="textbox" name="Units_like" style="width: 200px;" />
+                        <input class="textbox" type="text" name="TrueName_like" style="width: 150px;" />
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <label>状态：</label>
+                    <td style="width: 100px;">
+                        <label>证件类型：</label>
                     </td>
                     <td>
-                        <input id="States_eq" class="easyui-combobox" name="States_eq"
-                               data-options="valueField:'ItemValue',textField:'ItemName'" />
+                        <select id="Sex" name="CertificateCategory_eq" class="easyui-combobox" style="width: 150px;">
+                            <option value="">==请选择==</option>
+                            <option value="1">护照</option>
+                            <option value="2">港澳通行证</option>
+                            <option value="3">台湾通行证</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 100px;">
+                        <label>证件号码：</label>
+                    </td>
+                    <td>
+                        <input class="textbox" type="text" maxlength="9" name="CertificateNumber_eq" style="width: 150px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 100px;">
+                        <label>身份证号：</label>
+                    </td>
+                    <td>
+                        <input class="textbox" type="text" maxlength="18" name="IdentityCardNumber_eq" style="width: 150px;" />
                     </td>
                 </tr>
             </table>
@@ -389,7 +425,7 @@
                             <label>批文：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="OfficialDocOrRemarks" style="width: 600px;" data-options="required:true" />
+                            <input class="easyui-validatebox textbox" type="text" name="OfficialDocOrRemarks" style="width: 600px;" />
                         </td>
                     </tr>
                     <tr>
@@ -397,7 +433,7 @@
                             <label>干部名字：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="TrueName" data-options="required:true" />
+                            <input class="easyui-validatebox textbox" type="text" name="TrueName" />
                         </td>
                     </tr>
                     <tr>
@@ -416,7 +452,7 @@
                             <label>所在单位：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Units" style="width:600px;" data-options="required:true" />
+                            <input class="easyui-validatebox textbox" type="text" name="Units" style="width:600px;" />
                         </td>
                     </tr>
                     <tr>
@@ -452,7 +488,7 @@
                             <label>办理人单位：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="ApproverUnit" style="width: 600px;"  data-options="required:true" />
+                            <input class="easyui-validatebox textbox" type="text" name="ApproverUnit" style="width: 600px;" />
                         </td>
                     </tr>
                     <tr>
@@ -460,7 +496,7 @@
                             <label>办理人：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Approver" data-options="required:true" />
+                            <input class="easyui-validatebox textbox" type="text" name="Approver" />
                         </td>
                     </tr>
                     <tr>

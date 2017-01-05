@@ -266,7 +266,9 @@
     <Compile Include="Controllers\DictionaryController.cs" />
     <Compile Include="Controllers\DynamicTableController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
+    <Compile Include="Controllers\FileManagementDB\TF_EntryAndExitRegApproveController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_EntryAndExitRegistrationController.cs" />
+    <Compile Include="Controllers\FileManagementDB\TF_EntryAndExitRegStatisticsController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_LiftApproveController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PaperFileController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_ElectronicFileController.cs" />
@@ -3587,12 +3589,12 @@
     <Content Include="Views\TF_EntryAndExitRegistration\Index.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Consult\OutUserListResult.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Borrow\OutUserListResult.cshtml" />
-    <Content Include="Views\TF_EntryAndExitRegistration\Approval.cshtml" />
-    <Content Include="Views\TF_EntryAndExitRegistration\StatisticsView.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Transmitting_Out\scatteredIndex.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Transmitting_Out\ScatteredAdd.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Transmitting_Out\ScatteredEdit.cshtml" />
     <Content Include="Views\TF_PersonnelFile_Transmitting_Out\ScatteredOutUserListResult.cshtml" />
+    <Content Include="Views\TF_EntryAndExitRegApprove\Index.cshtml" />
+    <Content Include="Views\TF_EntryAndExitRegStatistics\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />

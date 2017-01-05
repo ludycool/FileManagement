@@ -16,8 +16,7 @@ using e3net.Mode;
 
 namespace ESUI.Controllers.FileManagementDB
 {
-
-    public class TF_EntryAndExitRegistrationController : BaseController
+    public class TF_EntryAndExitRegStatisticsController : BaseController
     {
         [Dependency]
         public TF_EntryAndExitRegistrationBiz OPBiz { get; set; }
@@ -104,6 +103,43 @@ namespace ESUI.Controllers.FileManagementDB
             }
         }
 
+        //证件审核
+        public JsonResult Approval()
+        {
+            int pageIndex = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            int pageSize = Request["rows"] == null ? 10 : int.Parse(Request["rows"]);
+            //string Where = Request["sqlSet"] == null ? "1=1" : SelectWhere.selectwherestring(Request["sqlSet"]);
+            string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
+
+            Where += " and IsDeleted='false'";
+            ////字段排序
+            String sortField = Request["sort"];
+            String sortOrder = Request["order"];
+            PageClass pc = new PageClass();
+            pc.sys_Fields = "*";
+            pc.sys_Key = "Id";
+            pc.sys_PageIndex = pageIndex;
+            pc.sys_PageSize = pageSize;
+            pc.sys_Table = "TF_EntryAndExitRegistration";
+            if (UserData.UserTypes == 1)
+            {
+                pc.sys_Where = Where;
+            }
+            else
+            {
+                pc.sys_Where = Where + " and CreateMan='" + UserData.UserName + "'";
+            }
+
+            pc.sys_Order = " " + sortField + " " + sortOrder;
+            List<TF_EntryAndExitRegistration> list2 = OPBiz.GetPagingData<TF_EntryAndExitRegistration>(pc);
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+
+            // var mql = TF_EntryAndExitRegistrationSet.Id.NotEqual("");
+            dic.Add("rows", list2);
+            dic.Add("total", pc.RCount);
+            return Json(dic, JsonRequestBehavior.AllowGet);
+        }
 
         public JsonResult EditInfo(TF_EntryAndExitRegistration EidModle)
         {
@@ -169,6 +205,19 @@ namespace ESUI.Controllers.FileManagementDB
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
 
+        public FileResult GetFileInfo(string ID)
+        {
+            string TFPaperFileid = Request["id"];
+
+            var mql2 = File_ImageSet.SelectAll().Where(File_ImageSet.ToId.Equal(TFPaperFileid));
+
+            var f = imgBiz.GetEntity(mql2);
+            var dd = Server.MapPath("~" + f.FullRoute);
+
+            return File(dd, "1", Url.Encode(f.FileName));
+            //  groupsBiz.Add(rol);
+            // return File(dd, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", string.Format("{0}.doc", f.FileName));
+        }
         public JsonResult Del(string IDSet)
         {
 
