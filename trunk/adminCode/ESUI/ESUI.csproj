@@ -3596,6 +3596,8 @@
     <Content Include="Views\TF_PersonnelFile_Transmitting_Out\ScatteredOutUserListResult.cshtml" />
     <Content Include="Views\TF_EntryAndExitRegApprove\Index.cshtml" />
     <Content Include="Views\TF_EntryAndExitRegStatistics\Index.cshtml" />
+    <Content Include="Views\TF_Units\PersonnelFileInput.cshtml" />
+    <Content Include="tempword\部门模板.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />

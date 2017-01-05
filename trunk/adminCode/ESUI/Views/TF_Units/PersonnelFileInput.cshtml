@@ -1,0 +1,317 @@
+﻿
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+
+
+    <link href="~/Content/uploadify/uploadify.css" rel="stylesheet" />
+    <style type="text/css">
+        /*body {
+            font-size: 14px;
+            font-family: 微软雅黑;
+        }
+
+        #custom-demo .uploadifyQueueItem {
+            background-color: #FFFFFF;
+            border: none;
+            border-bottom: 1px solid #E5E5E5;
+            font: 11px Verdana, Geneva, sans-serif;
+            height: 20px;
+            margin-top: 0;
+            padding: 10px;
+            width: 350px;
+        }
+
+        #custom-demo #custom-queue {
+            border: 1px solid #E5E5E5;
+            margin-bottom: 10px;
+            width: 370px;
+        }*/
+    </style>
+    @section Jsprepare
+    {
+        @*    <script src="~/Content/uploadify/swfobject.js"></script>*@
+        <script src="~/Content/uploadify/jquery.uploadify.js"></script>
+        <script type="text/javascript">
+            var BaseUrl = '/DynamicTable/';
+            var editIndex = undefined;
+
+
+            jQuery(document).ready(function () {
+                var catid = GetUrlParam('ID');
+                //                $("#CategoryTableID").val(catid);
+                $("#CategoryTableID").val(catid);
+                AutoWH("#body", 200, 200); //自适应宽度
+                loadColum(catid);
+
+            });
+            function loadColum(id) {
+                //var Column = $.ajax({
+                //    //获取列数据
+                //    url: BaseUrl + 'GetBtnColumn',
+                //    cache: false,
+                //    data: { Condition: id },
+                //    async: false
+                //}).responseText;
+                //var Columndata = eval(Column);
+                //var erfiid = $("#EntryRecordFormID").val();
+                $('#dg2').datagrid({
+                    //                   url: BaseUrl + 'GetJsonResultListByUserNew',
+                    //                    url: '/Excel/ReadExcel',
+                    columns: [[
+                        { field: 'ck', checkbox: true },
+                 { field: 'TName', title: '名称', width: 100, sortable: true },
+              //{ field: 'Category', title: '类别', width: 100, sortable: true },
+              { field: 'TCode', title: '序号', width: 100, sortable: true },
+              { field: 'remarks', title: '备注', width: 100, sortable: true },
+//              { field: 'CreateMan', title: '创建人', width: 100, sortable: true },
+//              { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
+//              { field: 'UpdateTime', title: '修改时间', width: 100, sortable: true }
+                    ]],
+
+                    height: 450,
+
+                    nowrap: true,
+                    //singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    pagination: true,
+                    fit: true,
+                    // fitColumns: true,
+                    rownumbers: true,
+                    toolbar: [
+
+                        {
+                            id: 'btnAccept',
+                            text: '导入',
+                            iconCls: 'icon-save',
+                            handler: function () {
+                                //实现修改的方法
+                                //if (endEditing()) {
+                                //alert(editIndex);
+
+                                var rows = $("#dg2").datagrid("getRows");
+
+                                if (rows.length > 0) {
+
+                                    var rowstr = JSON.stringify(rows);
+                                    // alert(rowstr);
+                                    $.ajax({
+                                        url: '/TF_Units/inpormt',
+                                        type: 'POST',
+                                        data: { categoryTable: rowstr },
+                                        cache: false,
+                                        error: function () { alert('Error loading PHP document'); },
+                                        success: function (data) {
+
+                                            alerts(data.Msg, 2);
+                                            if (data.Code > 0) {
+
+
+                                                window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
+                                            } else {
+                                                editIndex = undefined;
+
+                                                $("#dg2").datagrid('rejectChanges');
+
+                                                $("#dg2").datagrid('unselectAll');
+
+                                            }
+
+
+                                        }
+                                    });
+                                }
+                                $('#dg2').datagrid('acceptChanges');
+
+                            }
+
+                        }, '-', {
+                            id: 'btnAccept',
+                            text: '删除',
+                            iconCls: 'icon-remove',
+                            handler: function () {
+
+                                Del();
+                            }
+                        }
+                    ],
+
+                    onAfterEdit: function (rowIndex, rowData, changes) {
+
+                        editIndex = undefined;
+
+                    },
+
+                    onDblClickRow: function (rowIndex, rowData) {
+
+                        if (editIndex != undefined) {
+
+                            $("#dg2").datagrid('endEdit', editIndex);
+
+                        }
+
+
+                        if (editIndex == undefined) {
+
+                            $("#dg2").datagrid('beginEdit', rowIndex);
+
+                            editIndex = rowIndex;
+
+                        }
+
+
+                    }
+                });
+            }
+
+
+
+
+            function GetUrlParam(name) {
+
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) { return unescape(r[2]); } else {
+                    return null;
+                }
+
+
+            }
+
+
+            //绑定修改显示详细信息的方法
+            function EditInfo() {
+
+                var rows = $("#dg").datagrid('getSelected');
+
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.title).window('resize', { top: 50 });
+                $(".validatebox-tip").remove();//清除验证样式
+                var ID = rows.ID;  //获取到了用选择的ID
+                $.ajax({
+                    url: BaseUrl + 'GetColumnInfo',
+                    type: 'POST',
+                    data: { ID: ID },
+                    cache: false,
+                    error: function () { alert('Error $.ajax'); },
+                    success: function (data) {
+                        //var result = eval('(' + data + ')');
+                        DataBaseFunction.BindForm("ff", data);
+                        $('#cc').combobox('setValue', data['editor']);
+                        $('#align').combobox('setValue', data['align']);
+                        $('#ParentId').combobox('setValue', data['ParentId']);
+                        $('#field').attr('readonly', true);
+                    }
+                });
+
+            }
+
+            //实现的编辑，包括增查改
+
+            //删除
+            function Del() {
+                //                DataBaseFunction.deleteInfo("dg", "Id", "TName");
+                var rows = $("#dg2").datagrid('getSelections');
+                if (rows.length > 0) {//选中几行的话触发事件
+                    //                    $.message.confirm("提示", "您确定要删除这些数据吗？", function (res) {//提示是否删除
+                    //                        if (res) {
+
+                    for (var i = 0; i < rows.length; i++) {
+                        var d = $("#dg2").datagrid('getRowIndex', rows[i]);
+                        $("#dg2").datagrid('deleteRow', d);
+                    }
+
+                }
+                //                    });
+
+
+            }
+
+        </script>
+    }
+
+</head>
+<body>
+    <input type="hidden" id="Filename" />
+    <input type="hidden" id="EntryRecordFormID" />
+    <input type="hidden" id="CategoryTableID" />
+    @*    <h1>Uploadify Demo</h1>*@
+    <form>
+
+        <div id="custom-demo" class="demo">
+            <div class="demo-box">
+                <div id="status-message">请选择要上传的文件:</div>
+                <div id="custom-queue"></div>
+                <input id="file_upload" type="file" name="file_upload" />
+                <a href="javascript:void(0)" class="easyui-linkbutton" id="btnUpload" data-options="plain:true,iconCls:'icon-save'"
+                   onclick="javascript: $('#file_upload').uploadify('upload', '*')">上传</a>
+            </div>
+        </div>
+        @*        <div id="queue"></div>*@
+        @*        <input id="file_upload" name="file_upload" type="file" multiple="true">*@
+
+    </form>
+    <div id="body">
+        <table id="dg2"></table>
+
+        @*        <table id="dg3"></table>*@
+    </div>
+    <script type="text/javascript">
+
+        $(function () {
+            //添加界面的附件管理
+            $('#file_upload').uploadify({
+                'swf': '/Content/uploadify/uploadify.swf', //FLash文件路径
+
+                'uploader': '/FileUpload/Upload', //处理文件上传Action
+                'queueID': 'custom-queue', //队列的ID
+                'queueSizeLimit': 10, //队列最多可上传文件数量，默认为999
+                'auto': false, //选择文件后是否自动上传，默认为true
+                'multi': false, //是否为多选，默认为true
+                'removeCompleted': true, //是否完成后移除序列，默认为true
+                'fileSizeLimit': '10MB', //单个文件大小，0为无限制，可接受KB,MB,GB等单位的字符串值
+                'fileTypeDesc': 'Image Files', //文件描述
+                'fileTypeExts': '*.xls;*.xlsx', //上传的文件后缀过滤器
+                'cancelImg': '/Content/uploadify/uploadify-cancel.png',
+                //                'queueSizeLimit': 999,
+                //                'simUploadLimit': 999,
+                'buttonText': '选择文件',
+                'onSelectOnce': function (event, data) {
+                    $('#status-message').text(data.filesSelected + ' 个文件加入上传队列');
+                },
+                'onQueueComplete': function (event, data) { //所有队列完成后事件
+                    //	                ShowUpFiles($("#Attachment_GUID").val(), "div_files"); //完成后更新已上传的文件列表
+
+                    $.messager.alert("提示", "上传完毕！"); //提示完成
+                },
+                'onUploadStart': function (file) {
+                    $("#file_upload").uploadify("settings", 'formData', { 'folder': '政策法规', 'guid': $("#Attachment_GUID").val() }); //动态传参数
+                },
+                'onUploadError': function (event, queueId, fileObj, errorObj) {
+                    //alert(errorObj.type + "：" + errorObj.info);
+                },
+                'onUploadSuccess': function (file, data, response) {
+                    var d = JSON.parse(data);
+                    if (d.Code > 0) {
+                        //                        alert(d.Data);
+                        //                   $("#Filename").val(d.Data);
+                        var catid = GetUrlParam('ID');
+                        var dg = $('#dg2').datagrid({ url: '/DynamicTable/ReadExcelUnitsPaperFile', queryParams: { filename: d.Data, CategoryTableID: catid } });
+
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

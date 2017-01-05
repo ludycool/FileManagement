@@ -31,7 +31,7 @@
                         { field: 'ck', checkbox: true },
                       { field: 'TName', title: '名称', width: 100, sortable: true },
               //{ field: 'Category', title: '类别', width: 100, sortable: true },
-              { field: 'TCode', title: '编号', width: 100, sortable: true },
+              { field: 'TCode', title: '序号', width: 100, sortable: true },
               { field: 'remarks', title: '备注', width: 100, sortable: true },
               { field: 'CreateMan', title: '创建人', width: 100, sortable: true },
               { field: 'CreateTime', title: '添加时间', width: 100, sortable: true },
@@ -74,7 +74,14 @@
                 DataBaseFunction.ClearForm("ff");
             }
 
+            function Import() {
+                window.parent.JumpP("导入", "TF_Units/PersonnelFileInput", "icon-rgb");
+                //  addTab("导入", '/TF_PersonnelFile/PersonnelFileInput');
+            }
+            function downExecl() {
 
+                window.location = "../tempword/部门模板.xlsx";
+            }
             //绑定修改显示详细信息的方法
             function EditInfo() {
 
@@ -189,17 +196,17 @@
                         <td>
                             <input class="easyui-validatebox textbox" type="text" name="TName" /></td>
                     </tr>
+@*                    <tr>*@
+@*                        <td>*@
+@*                            <label>类别：</label></td>*@
+@*                        <td>*@
+@*                            <select id="Category" name="Category" class="easyui-combotree" style="width: 200px;"*@
+@*                                data-options="required:true">*@
+@*                            </select></td>*@
+@*                    </tr>*@
                     <tr>
                         <td>
-                            <label>类别：</label></td>
-                        <td>
-                            <select id="Category" name="Category" class="easyui-combotree" style="width: 200px;"
-                                data-options="required:true">
-                            </select></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>编号：</label></td>
+                            <label>序号：</label></td>
                         <td>
                             <input class="easyui-validatebox textbox" type="text" name="TCode" /></td>
                     </tr>
