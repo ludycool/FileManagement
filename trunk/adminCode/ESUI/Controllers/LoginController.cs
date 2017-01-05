@@ -118,9 +118,6 @@ namespace ESUI.Controllers
 
                         adminRole = URBiz.GetOwnList<V_UserRole>(sql0);
                     }
-
-
-
                     break;
                 case "2"://身份证登录
                     var sql2 = V_UserRoleSet.SelectAll().Where(V_UserRoleSet.LoginName.Equal(mode.LoginName).And(V_UserRoleSet.UserType.Equal(2)));
