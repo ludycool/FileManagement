@@ -160,9 +160,21 @@
         //关闭当前页面 window.parent.closeC();
         function closeC() {
             var currentTab = $('#tabs').tabs('getSelected');
-           var   currentTabIndex = $('#tabs').tabs('getTabIndex', currentTab);
+            var currentTabIndex = $('#tabs').tabs('getTabIndex', currentTab);
+//          var df=  $('#tabs').tabs('select', currentTabIndex+1);
+//          RefreshTab(df);
             $('#tabs').tabs('close', currentTabIndex);
 
+        }
+        function RefreshTab(currentTab) {
+            var url = $(currentTab.panel('options')).attr('href');
+            $('#tabs').tabs('update', {
+                tab: currentTab,
+                options: {
+                    href: url
+                }
+            });
+            currentTab.panel('refresh');
         }
         $(function () {
 
