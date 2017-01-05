@@ -66,6 +66,7 @@
     <Compile Include="DynamicTable\BaschartypeBiz.cs" />
     <Compile Include="DynamicTable\VcorrelateColumnsBiz.cs" />
     <Compile Include="DynamicTable\VEntryRecordFormBiz.cs" />
+    <Compile Include="FileManagementDB\TF_ChuRuJingStatisticsBiz.cs" />
     <Compile Include="FileManagementDB\TF_EntryAndExitRegistrationBiz.cs" />
     <Compile Include="FileManagementDB\TF_PaperFileBiz.cs" />
     <Compile Include="FileManagementDB\TF_LifeCommentsBiz.cs" />
