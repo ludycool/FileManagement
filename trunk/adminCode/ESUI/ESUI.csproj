@@ -3496,8 +3496,8 @@
     <Content Include="httpHandle\WebOfficeHandler.ashx" />
     <Content Include="MOON_WORK_DIRECTORY_PATH\MoonLogs\2015-12-10.log" />
     <Content Include="MOON_WORK_DIRECTORY_PATH\sqls\sql.config" />
+    <None Include="Properties\PublishProfiles\3.pubxml" />
     <None Include="Properties\PublishProfiles\ddd.pubxml" />
-    <None Include="Properties\PublishProfiles\ESUIConfig.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -3514,6 +3514,11 @@
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="version.html" />
+    <Content Include="Version\修改内容 - 12.21.files\修改内容 - 12.211260.png" />
+    <Content Include="Version\修改内容 - 12.21.files\修改内容 - 12.21575.png" />
+    <Content Include="Version\修改内容 - 12.21.files\修改内容 - 12.21576.png" />
+    <Content Include="Version\修改内容 - 12.21.files\修改内容 - 12.21689.png" />
+    <Content Include="Version\修改内容 - 12.21.html" />
     <Content Include="Views\TF_PersonnelFile\PersonnelFileInput.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
