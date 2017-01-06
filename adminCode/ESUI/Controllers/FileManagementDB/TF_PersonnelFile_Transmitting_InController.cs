@@ -118,14 +118,14 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = "v_TF_PersonnelFile_Transmitting_In";
-//            if (UserData.UserTypes == 1)
-//            {
-//                pc.sys_Where = Where;
-//            }
-//            else
-//            {
-            pc.sys_Where = Where + " and   DepartmentId='" + UserData.DepartmentId + "'";
-//            }
+            if (UserData.UserTypes == 1)
+            {
+                pc.sys_Where = Where;
+            }
+            else
+            {
+                pc.sys_Where = Where + " and   DepartmentId='" + UserData.DepartmentId + "'";
+            }
 
             pc.sys_Order = " " + sortField + " " + sortOrder;
             DataSet ds = OPBiz.GetPagingDataP(pc);
