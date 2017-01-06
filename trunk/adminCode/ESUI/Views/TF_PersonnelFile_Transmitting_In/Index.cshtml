@@ -437,6 +437,37 @@
                 alert('发送后');
 
             }
+            function Button3_onclick() {
+                var obj = document.getElementById("HWPenSign");
+                obj.HWClearPenSign();
+            }
+
+            function Button10_onclick() {
+                var obj = document.getElementById("HWPenSign");
+                penwidth++;
+                if (penwidth > 5)
+                    penwidth = 5;
+                obj.HWSetPenWidth(penwidth);
+            }
+
+            function Button11_onclick() {
+                var obj = document.getElementById("HWPenSign");
+                penwidth--;
+                if (penwidth < 1)
+                    penwidth = 1;
+                obj.HWSetPenWidth(penwidth);
+            }
+
+            function Button12_onclick() {
+                var obj = document.getElementById("HWPenSign");
+                obj.HWSetPenMode(1);
+            }
+
+            function Button13_onclick() {
+                var obj = document.getElementById("HWPenSign");
+                obj.HWSetPenMode(0);
+            }
+
         </script>
     }
 
@@ -539,12 +570,29 @@
                                     <label>签名：</label></td>
                                 <td colspan="3">
 
-                                        <object id="HWPenSign"
-                    name="HWPenSign"
-                    classid="clsid:E8F5278C-0C72-4561-8F7E-CCBC3E48C2E3"
-                    width="400"
-                    height="200">
-              </object>
+                                    <object id="HWPenSign"
+                                            name="HWPenSign"
+                                            classid="clsid:E8F5278C-0C72-4561-8F7E-CCBC3E48C2E3"
+                                            width="400"
+                                            height="200">
+                                    </object>
+                                </td>
+
+
+                            </tr>
+                            <tr>
+        <td style="width: 80px;">
+            签名操作：
+        </td>
+                                <td colspan="3">
+                                       <input id="Button3" type="button" value="重新签名" onclick="return Button3_onclick()" />
+                                    <input id="Button10" type="button" value="笔宽加粗" onclick="return Button10_onclick()" />
+		
+          <input id="Button11" type="button" value="笔宽减细" onclick="return Button11_onclick()" /> 
+             
+          <input id="Button12" type="button" value="压力笔" onclick="return Button12_onclick()" />
+		
+          <input id="Button13" type="button" value="钢笔" onclick="return Button13_onclick()" />
                                 </td>
 
 
