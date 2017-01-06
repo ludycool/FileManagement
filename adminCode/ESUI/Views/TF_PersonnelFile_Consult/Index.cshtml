@@ -29,7 +29,7 @@
         <script type="text/javascript">
             @Html.Raw(ViewBag.RuteUrl)
             @Html.Raw(ViewBag.toolbar)
-
+            var penwidth = 3;
             jQuery(document).ready(function() {
                 DataGridSet();
             })
@@ -195,7 +195,10 @@
                 //发送异步请求到后台保存数据
                 $.post(BaseUrl + 'EditInfo', data, function(data) {
                     $('#shuchu').html(data.Msg);
+
                     if (data.Code > 0) {
+                        var stream;
+                        stream = obj.HWFinalize();
                         $('#DivEditor').dialog('close');
                         $(".validatebox-tip").remove();
                         $("#dg").datagrid("reload");

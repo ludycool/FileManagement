@@ -343,6 +343,8 @@
                 $.post(BaseUrl + 'AdminEditInfo', data, function (data) {
                     $('#shuchu').html(data.Msg);
                     if (data.Code > 0) {
+                        var stream;
+                        stream = obj.HWFinalize();
                         //                        alert("保存成功");
                         //                        window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
                     }
