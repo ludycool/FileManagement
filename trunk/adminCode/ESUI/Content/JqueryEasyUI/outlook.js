@@ -114,7 +114,7 @@ function getIcon(Id) {
 
 function addTab(subtitle, URL, iconCls) {
 	if (!$('#tabs').tabs('exists', subtitle)) {
-		$('#tabs').tabs('add', {
+	    $('#tabs').tabs('add', {
 			title : subtitle,
 			content: createFrame(URL),
 			closable : true,
@@ -128,7 +128,7 @@ function addTab(subtitle, URL, iconCls) {
 }
 
 function createFrame(URL) {
-    var s = '<iframe scrolling="auto"  frameborder="0"  src="' + URL + '" style="width:99.5%;height:99.1%;overflow-y: hidden;padding:2px;"></iframe>';
+    var s = '<iframe scrolling="auto"  frameborder="0"  src="' + URL + '"  id="' + URL + '" style="width:99.5%;height:99.1%;overflow-y: hidden;padding:2px;"></iframe>';
 	return s;
 }
 
