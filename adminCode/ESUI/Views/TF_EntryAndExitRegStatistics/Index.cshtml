@@ -8,6 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script type="text/javascript" charset="utf-8" src="~/Content/js/ImgUp.js"></script>
     <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+    <script src="~/Content/js/publicMethod.js"></script>
     @* ReSharper disable once NotAllPathsReturnValue *@
 
 
@@ -77,15 +78,16 @@
                               align: "center",
                               formatter: function (value, rowData, rowIndex) {
                                   var d = "";
+                                  //debugger
                                   //  if (rowData.IdentityCardNumber != "") {
-                                  d = '<a href="#" href="javascript:void(0);" onclick="ShowDetails(\'' + rowData.IdentityCardNumber + '\')" style="cursor: default;">查看</a>  '
+                                  d = '<a href="#" href="javascript:void(0);" onclick="ShowDetails(\'' + rowData.IdentityCardNumber + '\',\'' + rowData.TrueName +'\')" style="cursor: default;">查看</a>  '
                                   // }
                                   return d;
                               }
                           }
                     ]],
                     iconCls: 'icon-save',
-                    title: '证件登记',
+                    title: '证件汇总',
                     nowrap: true,
                     fit: true,
                     fitColumns: true,
@@ -101,7 +103,7 @@
                 });
             }
 
-            function ShowDetails(Idcard) {                
+            function ShowDetails(Idcard,name) {                
                 var curId = "";
                 if (Idcard ==undefined) {
                     var rows = $("#dg").datagrid('getSelected');
@@ -112,14 +114,14 @@
                     }
                     else {
                         curId = rows.IdentityCardNumber;
+                        name = rows.TrueName;
                     }
                 }
                 else {
                     curId = Idcard;
-                }
+                }                
+                addTab(name + "的证件",  "TF_EntryAndExitRegStatistics/CertificateDetail?idd=" + curId);
 
-                var url = "TF_EntryAndExitRegStatistics/CertificateDetail?idd=" + curId;
-                window.open(url, "_blank");
             }
 
             //搜索
