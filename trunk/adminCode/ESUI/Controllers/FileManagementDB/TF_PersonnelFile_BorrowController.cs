@@ -260,6 +260,8 @@ namespace ESUI.Controllers
                     EidModle.CreateTime = DateTime.Now;
                     EidModle.isDeleted = false;
                     EidModle.States = 0;
+                   
+                    EidModle.StatesName = "未操作";
                     OPBiz.Add(EidModle);
                 }
             }
