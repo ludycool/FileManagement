@@ -261,13 +261,13 @@
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                //var aprovalstatus = rows.States;
-                //if (aprovalstatus != "-1") {
-                //    $.messager.alert("友情提示", "此文件不可编辑", "error");
-                //    return;
-                //}
+                var aprovalstatus = rows.ApprovalStates;
+                if (aprovalstatus != "-1") {
+                    $.messager.alert("友情提示", "此证件已提交，不可编辑！", "error");
+                    return;
+                }
 
-                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.TrueName).window('resize', { top: 50 });
+                $("#DivEditor1").dialog('open').dialog('setTitle', '修改-' + rows.TrueName).window('resize', { top: 50 });
                 $(".validatebox-tip").remove();//清除验证样式
                 var ID = rows.Id;  //获取到了用选择的ID
                 $.ajax({
@@ -278,7 +278,7 @@
                     error: function () { alert('Error $.ajax'); },
                     success: function (data) {
                         //var result = eval('(' + data + ')');
-                        DataBaseFunction.BindForm("ff", data);
+                        DataBaseFunction.BindForm("ff1", data);
                         //$('#Category').combotree('setValue', data['Category']);
                         //$('#States').combobox('select', data.States);
                         //GetFileList(data.Id);//图片
@@ -289,18 +289,18 @@
             //实现的编辑，包括增查改
             function SaveInfo() {
                 //判断的信息是否通过验证
-                var validate = $("#ff").form('validate');
+                var validate = $("#ff1").form('validate');
                 if (validate == false) {
                     return false;
                 }
 
                 //获取需要传递的参数传递给前台
-                var data = DataBaseFunction.GetFormData("ff")
+                var data = DataBaseFunction.GetFormData("ff1")
                 //发送异步请求到后台保存数据
                 $.post(BaseUrl + 'EditInfo', data, function (data) {
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
-                        $('#DivEditor').dialog('close');
+                        $('#DivEditor1').dialog('close');
                         $(".validatebox-tip").remove();
                         $("#dg").datagrid("reload");
 
