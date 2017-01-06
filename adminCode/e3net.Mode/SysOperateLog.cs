@@ -9,9 +9,9 @@ namespace e3net.Mode
     /// <summary>
     /// 操作日志
     /// </summary>
-    [Table("[TF_SysOperateLog]", DbType.SqlServer)]
+    [Table("[SysOperateLog]", DbType.SqlServer)]
     [TablesPrimaryKey(PrimaryKeyType.CustomerGUID, typeof(Guid), "Id")]
-    public partial class TF_SysOperateLog : EntityBase
+    public partial class SysOperateLog : EntityBase
     {
         /// <summary>
         /// 主键
@@ -104,68 +104,67 @@ namespace e3net.Mode
         }
     }
 
-    [Table("[TF_SysOperateLog]", DbType.SqlServer)]
-    public partial class TF_SysOperateLogSet : MQLBase
+    [Table("[SysOperateLog]", DbType.SqlServer)]
+    public partial class SysOperateLogSet : MQLBase
     {
         public static new MQLBase Select(params FieldBase[] fields)
         {
-            return MQLBase.Select(DbType.SqlServer, "[TF_SysOperateLog]", fields);
+            return MQLBase.Select(DbType.SqlServer, "[SysOperateLog]", fields);
         }
         public static new MQLBase SelectAll()
         {
-            return MQLBase.SelectAll(DbType.SqlServer, "[TF_SysOperateLog]");
+            return MQLBase.SelectAll(DbType.SqlServer, "[SysOperateLog]");
         }
 
         /// <summary>
         /// 主键
         /// </summary>
-        public static readonly FieldBase Id = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.OnlyPrimaryKey, "[Id]");
+        public static readonly FieldBase Id = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.OnlyPrimaryKey, "[Id]");
 
         /// <summary>
         /// 操作人ID
         /// </summary>
-        public static readonly FieldBase UserId = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.Common, "[UserId]");
+        public static readonly FieldBase UserId = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.Common, "[UserId]");
 
         /// <summary>
         /// 操作人姓名
         /// </summary>
-        public static readonly FieldBase TrueName = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.Common, "[TrueName]");
+        public static readonly FieldBase TrueName = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.Common, "[TrueName]");
 
         /// <summary>
         /// 操作名称
         /// </summary>
-        public static readonly FieldBase OperateName = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.Common, "[OperateName]");
+        public static readonly FieldBase OperateName = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.Common, "[OperateName]");
 
         /// <summary>
         /// 操作时间
         /// </summary>
-        public static readonly FieldBase OperateTime = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.Common, "[OperateTime]");
+        public static readonly FieldBase OperateTime = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.Common, "[OperateTime]");
 
         /// <summary>
         /// 操作内容
         /// </summary>
-        public static readonly FieldBase OperateConten = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.Common, "[OperateConten]");
+        public static readonly FieldBase OperateConten = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.Common, "[OperateConten]");
 
         /// <summary>
         /// 操作IP
         /// </summary>
-        public static readonly FieldBase OperateIP = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.Common, "[OperateIP]");
+        public static readonly FieldBase OperateIP = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.Common, "[OperateIP]");
 
         /// <summary>
         /// 是否删除
         /// </summary>
-        public static readonly FieldBase isDeleted = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.Common, "[isDeleted]");
+        public static readonly FieldBase isDeleted = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.Common, "[isDeleted]");
 
         /// <summary>
         /// 备注
         /// </summary>
-        public static readonly FieldBase Remark = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.Common, "[Remark]");
+        public static readonly FieldBase Remark = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.Common, "[Remark]");
        
         /// <summary>
         /// 是否成功
         /// </summary>
-        public static readonly FieldBase IsSuccess = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.Common, "[IsSuccess]");
+        public static readonly FieldBase IsSuccess = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.Common, "[IsSuccess]");
 
     }
-
 }
