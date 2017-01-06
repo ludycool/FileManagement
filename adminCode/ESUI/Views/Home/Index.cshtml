@@ -149,6 +149,11 @@
 
             }
         }
+        //刷新
+        function ReloadOP() {
+            $("#dg").datagrid("reload");
+        }
+
         //跳转url 内有的菜单少可以 window.parent.JumpN("CommunityNotice");
         function JumpN(URL) {
             $.each(_menus, function (j, o) {
