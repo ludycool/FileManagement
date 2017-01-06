@@ -8,6 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script type="text/javascript" charset="utf-8" src="~/Content/js/ImgUp.js"></script>
     <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+    <script src="~/Content/js/publicMethod.js"></script>
     @* ReSharper disable once NotAllPathsReturnValue *@
 
 
@@ -138,7 +139,7 @@
                     pageSize: 20,
                     pagination: true,
                     rownumbers: true,
-                    sortName: 'CreateTime',
+                    sortName: 'ApprovalStates asc,CreateTime',
                     sortOrder: 'desc',
                     toolbar: toolbars
                 });
@@ -266,10 +267,14 @@
                 if (rows == null) {
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
-                }
-                $("#DivEditor3").dialog('open').dialog('setTitle', '详情-' + rows.TrueName).window('resize', { top: 50 });
-                $(".validatebox-tip").remove();//清除验证样式
+                }               
+
                 var ID = rows.Id;  //获取到了用选择的ID
+                addTab("详情", "TF_EntryAndExitRegApprove/GetInfo?idd=" + ID);
+
+                //$("#DivEditor3").dialog('open').dialog('setTitle', '详情-' + rows.TrueName).window('resize', { top: 50 });
+                $(".validatebox-tip").remove();//清除验证样式
+                
                 $.ajax({
                     url: BaseUrl + 'GetInfo',
                     type: 'POST',
@@ -499,10 +504,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <label>备注dd：</label>
+                            <label>备注：</label>
                         </td>
                         <td>
-                            <textarea class="areabox" name="Remark" maxlength="250" style="height: 50px; width: 600px;"></textarea>
+                            <textarea class="areabox" name="Remark" maxlength="250" style="height: 30px; width: 600px;"></textarea>
                         </td>
                     </tr>
                 </table>
@@ -640,7 +645,7 @@
                             <label>备注：</label>
                         </td>
                         <td>
-                            <textarea class="areabox" name="Remark" maxlength="250" style="height: 50px; width: 600px;" readonly></textarea>
+                            <textarea class="areabox" name="Remark" maxlength="250" style="height: 30px; width: 600px;" readonly></textarea>
                         </td>
                     </tr>
                     <tr>
