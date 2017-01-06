@@ -81,7 +81,7 @@
                                     var d = '<a href="#" onclick="LooKInfo(\'' + rowData.CategoryTableID + '\',\'' + rowData.ID + '\',\'' + rowData.CreateDate + rowData.ChineseName + '\')">办理</a>  ';
 
                                     d += '<a href="#" onclick="sign(\'' + rowIndex + '\')">确认签收</a>  ';
-                                    d += '<a href="#" onclick="signLook(\'' + rowIndex + '\')">查看签名</a>  ';
+                                    d += '<a href="#" onclick="signLook(' + rowIndex + ')">查看签名</a>  ';
                                     return d;
 
                                     //                    return "<a href='#' onclick='LooKInfo('" + rowData.ID + "');'>角色管理</a>";
@@ -135,7 +135,7 @@
 
             function signLook(id) {
                 var rows = $('#dg').datagrid('getData').rows[id];
-                $("#imgId").attr('src', "DynamicTable/GetImage?id=" + rows.ID);
+                $("#imgId").attr('src', "/DynamicTable/GetImage?id=" + rows.ID);
                 $("#DivShow2").dialog('open').dialog('setTitle', '确认办理').window('resize', { top: 20 });
              
              
@@ -185,7 +185,9 @@
                 $.post(BaseUrl + 'EditInfo', postData, function(data) {
                     if (data = "OK") {
                         //添加成功  1.关闭弹出层，2.刷新DataGird
-                        alert("编辑成功");
+                                         alert("编辑成功");
+                       
+                        
                         $('#DivEditor').dialog('close');
                         $(".validatebox-tip").remove();
                         // $("#DivEditor").dialog("close");
@@ -270,7 +272,7 @@
                 //if (validate2 == false) {
                 //    return false;
                 //}
-                debugger;
+               
                 var stream;
                 var obj = document.getElementById("HWPenSign");
                 stream = obj.HWGetBase64Stream(2);
@@ -291,8 +293,9 @@
           
                 //  发送异步请求到后台保存数据
                 $.post(BaseUrl + 'AdminEditInfo', data, function (data) {
-                    alerts(data.Msg, 2);
+//                    alerts(data.Msg, 2);
                     if (data.Code > 0) {
+                        $('#shuchu').html(data.Msg);
                         //                        alert("保存成功");
                         //                        window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
                     }
@@ -402,23 +405,24 @@
                     <form id="f2" method="post" enctype="multipart/form-data">
 
                         <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
-                         
+
                             <tr>
                                 <td style="width: 80px;">
                                     <label>签名：<input type="hidden" name="ID"/> </label></td>
                                 <td colspan="3">
 
-                                        <object id="HWPenSign"
-                    name="HWPenSign"
-                    classid="clsid:E8F5278C-0C72-4561-8F7E-CCBC3E48C2E3"
-                    width="400"
-                    height="200">
-              </object>
+                                    <object id="HWPenSign"
+                                            name="HWPenSign"
+                                            classid="clsid:E8F5278C-0C72-4561-8F7E-CCBC3E48C2E3"
+                                            width="400"
+                                            height="200">
+                                    </object>
                                 </td>
 
 
                             </tr>
                         </table>
+                        <label id="shuchu" style="color:red;">  </label>
                     </form>
                 </td>
             </tr>

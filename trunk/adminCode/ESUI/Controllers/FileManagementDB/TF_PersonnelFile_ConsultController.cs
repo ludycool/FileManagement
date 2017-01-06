@@ -197,6 +197,7 @@ namespace ESUI.Controllers
 
                 EidModle.isDeleted = false;
                 EidModle.States = 0;
+                EidModle.StatesName = "未操作";
                 try
                 {
                     OPBiz.Add(EidModle);
