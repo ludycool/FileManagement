@@ -8,6 +8,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script type="text/javascript" charset="utf-8" src="~/Content/js/ImgUp.js"></script>
     <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+    <style type="text/css">
+        .disabledbgcolor{
+            background-color:whiteSmoke;
+        }
+    </style>
     @* ReSharper disable once NotAllPathsReturnValue *@
 
 
@@ -19,9 +24,85 @@
             //var BaseUrl = "/TF_LifeComments/";
             jQuery(document).ready(function () {
                 DataGridSet();
-                changeUseCategory();
-                $('#States').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
-                FTypes = 1;//上传类型 1为文件 0 为图片
+                $('#ffUseCategory').combobox({
+                    onChange: function (value) {
+                        $("#ffOfficialDocOrRemarks").removeAttr("disabled");//批文
+                        $("#ffTrueName").removeAttr("disabled");//名字
+                        $("#ffSex").combobox("enable");//性别
+                        $("#ffUnits").removeAttr("disabled");//所在单位
+                        $("#ffCertificateCategory").combobox("enable");//证件类型
+                        $("#ffCertificateNumber").removeAttr("disabled");//证件号码
+                        $("#ffIdentityCardNumber").removeAttr("disabled");//身份证                       
+                        $("#ffApproverUnit").removeAttr("disabled");//办理人单位
+                        $("#ffApprover").removeAttr("disabled");//办理人
+                        $("#ffContactInformation").removeAttr("disabled");//联系方式
+                        $("#ffAprovalTime").removeAttr("disabled");//日期
+                        $("#ffRemark").removeAttr("disabled");//备注
+
+                        $("#ffOfficialDocOrRemarks").removeClass("disabledbgcolor");//批文
+                        $("#ffTrueName").removeClass("disabledbgcolor");//名字
+                        $("#ffSex").removeClass("disabledbgcolor");//性别
+                        $("#ffUnits").removeClass("disabledbgcolor");//所在单位
+                        $("#ffCertificateCategory").removeClass("disabledbgcolor");//证件类型
+                        $("#ffCertificateNumber").removeClass("disabledbgcolor");//证件号码
+                        $("#ffIdentityCardNumber").removeClass("disabledbgcolor");//身份证                       
+                        $("#ffApproverUnit").removeClass("disabledbgcolor");//办理人单位
+                        $("#ffApprover").removeClass("disabledbgcolor");//办理人
+                        $("#ffContactInformation").removeClass("disabledbgcolor");//联系方式
+                        $("#ffAprovalTime").removeClass("disabledbgcolor");//日期
+                        $("#ffRemark").removeClass("disabledbgcolor");//备注
+
+
+                        if (value == "1") {
+                            //保管
+                            $("#ffOfficialDocOrRemarks").attr("disabled", "disabled");
+                            $("#ffApproverUnit").attr("disabled", "disabled");
+                            $("#ffContactInformation").attr("disabled", "disabled");
+
+                            $("#ffOfficialDocOrRemarks").addClass("disabledbgcolor");
+                            $("#ffApproverUnit").addClass("disabledbgcolor");
+                            $("#ffContactInformation").addClass("disabledbgcolor");
+                        }
+                        else if (value == "2") {
+                            //领用
+                            $("#ffSex").combobox("disable");
+                            $("#ffUnits").attr("disabled", "disabled");
+
+                            $("#ffSex").addClass("disabledbgcolor");
+                            $("#ffUnits").addClass("disabledbgcolor");
+                        }
+                        else if (value == "3") {
+                            //新增归还：只填名字、证件类型、证件号码、身份证号、办理人、日期；
+                            $("#ffOfficialDocOrRemarks").attr("disabled", "disabled");
+                            $("#ffCertificateCategory").combobox("disable");
+                            $("#ffSex").combobox("disable");
+                            $("#ffUnits").attr("disabled", "disabled");                              
+                            $("#ffApproverUnit").attr("disabled", "disabled"); 
+                            $("#ffContactInformation").attr("disabled", "disabled");
+                            $("#ffRemark").attr("disabled", "disabled");
+
+                            $("#ffOfficialDocOrRemarks").addClass("disabledbgcolor");
+                            $("#ffCertificateCategory").addClass("disabledbgcolor");
+                            $("#ffSex").addClass("disabledbgcolor");
+                            $("#ffUnits").addClass("disabledbgcolor");
+                            $("#ffApproverUnit").addClass("disabledbgcolor");
+                            $("#ffContactInformation").addClass("disabledbgcolor");
+                            $("#ffRemark").addClass("disabledbgcolor");
+                        }
+                        else if (value == "4") {
+                            //退回
+                            $("#ffSex").combobox("disable");
+                            $("#ffUnits").attr("disabled", "disabled");
+                            $("#ffCertificateNumber").attr("disabled", "disabled");
+
+                            $("#ffSex").addClass("disabledbgcolor");
+                            $("#ffUnits").addClass("disabledbgcolor");
+                            $("#ffCertificateNumber").addClass("disabledbgcolor");
+                        }
+                    }
+                });
+
+                //  $('#ffUseCategory').bind('onChange', function (n, o) { alert(n); });
             })
 
             Date.prototype.Format = function (fmt) {
@@ -40,30 +121,6 @@
                 return fmt;
             }
 
-            function changeUseCategory() {
-                // debugger
-                $("#UseCategory").change(function () {
-                    // var use = $("#UseCategory").val();
-                    alert($(this).children('option:selected').val());
-                });
-                //var use = $("#UseCategory").val();
-                //if (use == 1) {
-                //    //保管
-                //    alert(use);
-                //}
-                //else if (use = 2) {
-                //    //领用
-                //    alert(use);
-                //}
-                //else if (use = 3) {
-                //    //归还
-                //    alert(use);
-                //}
-                //else if (use = 4) {
-                //    //退回
-                //    alert(use);
-                //}
-            }
 
             function DataGridSet() {
                 $('#dg').datagrid({
@@ -171,11 +228,13 @@
                     toolbar: toolbars
                 });
             }
-            //easyUI 弹出添加的对话框
+
+
+            //添加
             function AddInfo() {
                 //弹出层
                 // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
-                $('#DivEditor').dialog({
+                $('#DivEditor1').dialog({
                     title: '证件登记',
                     //width: 400,
                     //height: 200,
@@ -188,9 +247,9 @@
 
                     }
                 });
-                AutoMaxH("#Div_form", 150)
+                AutoMaxH("#Div_form1", 150)
                 $(".validatebox-tip").remove();//清除验证样式
-                DataBaseFunction.ClearForm("ff");
+                DataBaseFunction.ClearForm("ff1");
             }
 
             //绑定修改显示详细信息的方法
@@ -273,9 +332,6 @@
                 DataBaseFunction.deleteInfo("dg", "Id", "TrueName");
             }
 
-            function AddImg() {
-                FileUp("TF_EntryAndExitRegistration");
-            }
 
             //提交审核
             function submitApprove() {
@@ -340,7 +396,7 @@
                         <label>使用类型：</label>
                     </td>
                     <td>
-                        <select id="UseCategory" name="UseCategory_eq" class="easyui-combobox" style="width: 150px;">
+                        <select name="UseCategory_eq" class="easyui-combobox" style="width: 150px;">
                             <option value="">==请选择==</option>
                             <option value="1">保管</option>
                             <option value="2">领用</option>
@@ -395,11 +451,12 @@
             <a href="javascript:void(0)" class="easyui-linkbutton" style="float: right;" iconcls="icon-cancel" onclick="$('#Div_Searh').dialog('close')">关闭</a>
         </div>
     </div>
-    <!------------------------弹出信息的弹出层---------------------------------->
-    <div id="DivEditor" class="easyui-dialog" style="width: 800px;"
+
+    <!------------------------弹出信息的弹出层  添加&修改---------------------------------->
+    <div id="DivEditor1" class="easyui-dialog" style="width: 800px;"
          closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options="height:520,width:780,border:false">
-            <form id="ff" method="post" enctype="multipart/form-data">
+        <div id="Div_form1" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options="height:520,width:780,border:false">
+            <form id="ff1" method="post" enctype="multipart/form-data">
                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
                     <input type="hidden" name="Id" />
                     <input type="hidden" name="CreateMan" />
@@ -412,8 +469,8 @@
                             <label>使用类型：</label>
                         </td>
                         <td>
-                            <select id="UseCategory" name="UseCategory" class="easyui-combobox" style="width: 200px;" data-options="required:true">
-                                <option value="1">保管</option>
+                            <select id="ffUseCategory" name="UseCategory" class="easyui-combobox" style="width: 200px;" data-options="required:true">
+                                <option value="1" selected="selected">保管</option>
                                 <option value="2">领用</option>
                                 <option value="3">归还</option>
                                 <option value="4">退回</option>
@@ -425,7 +482,7 @@
                             <label>批文：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="OfficialDocOrRemarks" style="width: 600px;" />
+                            <input id="ffOfficialDocOrRemarks" class="easyui-validatebox textbox" type="text" name="OfficialDocOrRemarks" style="width: 600px;" />
                         </td>
                     </tr>
                     <tr>
@@ -433,7 +490,7 @@
                             <label>干部名字：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="TrueName" />
+                            <input id="ffTrueName" class="easyui-validatebox textbox" type="text" name="TrueName" />
                         </td>
                     </tr>
                     <tr>
@@ -441,7 +498,7 @@
                             <label>性别：</label>
                         </td>
                         <td>
-                            <select id="Sex" name="Sex" class="easyui-combobox" style="width: 200px;">
+                            <select id="ffSex" name="Sex" class="easyui-combobox" style="width: 200px;">
                                 <option value="1">男</option>
                                 <option value="0">女</option>
                             </select>
@@ -452,7 +509,7 @@
                             <label>所在单位：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Units" style="width:600px;" />
+                            <input id="ffUnits" class="easyui-validatebox textbox" type="text" name="Units" style="width:600px;" />
                         </td>
                     </tr>
                     <tr>
@@ -460,7 +517,7 @@
                             <label>证件类型：</label>
                         </td>
                         <td>
-                            <select id="Sex" name="CertificateCategory" class="easyui-combobox" style="width: 200px;">
+                            <select id="ffCertificateCategory" name="CertificateCategory" class="easyui-combobox" style="width: 200px;">
                                 <option value="1">护照</option>
                                 <option value="2">港澳通行证</option>
                                 <option value="3">台湾通行证</option>
@@ -472,7 +529,7 @@
                             <label>证件号码：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" maxlength="9" name="CertificateNumber" />
+                            <input id="ffCertificateNumber" class="easyui-validatebox textbox" type="text" maxlength="9" name="CertificateNumber" />
                         </td>
                     </tr>
                     <tr>
@@ -480,7 +537,7 @@
                             <label>身份证号：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" maxlength="18" name="IdentityCardNumber" />
+                            <input id="ffIdentityCardNumber" class="easyui-validatebox textbox" type="text" maxlength="18" name="IdentityCardNumber" />
                         </td>
                     </tr>
                     <tr>
@@ -488,7 +545,7 @@
                             <label>办理人单位：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="ApproverUnit" style="width: 600px;" />
+                            <input id="ffApproverUnit" class="easyui-validatebox textbox" type="text" name="ApproverUnit" style="width: 600px;" />
                         </td>
                     </tr>
                     <tr>
@@ -496,7 +553,7 @@
                             <label>办理人：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Approver" />
+                            <input id="ffApprover" class="easyui-validatebox textbox" type="text" name="Approver" />
                         </td>
                     </tr>
                     <tr>
@@ -504,7 +561,7 @@
                             <label>联系方式：</label>
                         </td>
                         <td>
-                            <input class="easyui-validatebox textbox" type="text" name="ContactInformation" />
+                            <input id="ffContactInformation" class="easyui-validatebox textbox" type="text" name="ContactInformation" />
                         </td>
                     </tr>
                     <tr>
@@ -512,7 +569,7 @@
                             <label>日期：</label>
                         </td>
                         <td>
-                            <input class="easyui-datebox easyui-validatebox" type="text" style="width: 200px;" name="AprovalTime" />
+                            <input id="ffAprovalTime" class="easyui-datebox easyui-validatebox" type="text" style="width: 200px;" name="AprovalTime" />
                         </td>
                     </tr>
                     <tr>
@@ -520,7 +577,7 @@
                             <label>备注：</label>
                         </td>
                         <td>
-                            <textarea class="areabox" name="Remark" maxlength="250" style="height: 50px; width: 600px;"></textarea>
+                            <textarea id="ffRemark" class="areabox" name="Remark" maxlength="250" style="height: 50px; width: 600px;"></textarea>
                         </td>
                     </tr>
                 </table>
@@ -529,7 +586,7 @@
 
         <div style="text-align: center; width: 100%; margin-bottom: 5px;">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor1').dialog('close')">关闭</a>
         </div>
     </div>
 </body>
