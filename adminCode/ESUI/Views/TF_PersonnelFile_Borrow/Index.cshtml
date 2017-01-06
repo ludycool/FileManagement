@@ -115,6 +115,7 @@
             function ShowDetailsSing(id) {
                 var rows = $('#dg').datagrid('getData').rows[id];
                 var obj = document.getElementById("HWPenSign");
+             
                 obj.HWSetBkColor(0xE0F8E0);
                 obj.HWSetCtlFrame(1, 0x000000);
                 res = obj.HWInitialize();
@@ -236,6 +237,22 @@
                 var obj = document.getElementById("HWPenSign");
                 obj.HWSetPenMode(0);
             }
+            function Button1_Clos() {
+//                var obj = document.getElementById("HWPenSign");
+//                var stream;
+//                stream = obj.HWFinalize();
+                $('#DivShow').dialog('close');
+            }
+            function Button1_onclick() {
+                var obj = document.getElementById("HWPenSign");
+                res = obj.HWInitialize();
+            }
+
+            function Button2_onclick() {
+                var obj = document.getElementById("HWPenSign");
+                var stream;
+                stream = obj.HWFinalize();
+            }
 
         </script>
     }
@@ -350,15 +367,18 @@
                     <td >
                         签名操作：
                     </td>
-                    <td  >
-                        <input id="Button3" type="button" value="重新签名" onclick="return Button3_onclick()" />
-                        <input id="Button10" type="button" value="笔宽加粗" onclick="return Button10_onclick()" />
-		
-                        <input id="Button11" type="button" value="笔宽减细" onclick="return Button11_onclick()" /> 
-             
-                        <input id="Button12" type="button" value="压力笔" onclick="return Button12_onclick()" />
-		
-                        <input id="Button13" type="button" value="钢笔" onclick="return Button13_onclick()" />
+                    <td >
+                        <input id="button1" type="button" value="初始化设备" onclick="return Button1_onclick()" />
+               
+                        <input id="button2" type="button" value="关闭设备" onclick="return Button2_onclick()" />
+                        <input id="Button3" type="button" value="重新签名" onclick="return Button3_onclick()"/>
+                        <input id="Button10" type="button" value="笔宽加粗" onclick="return Button10_onclick()"/>
+
+                        <input id="Button11" type="button" value="笔宽减细" onclick="return Button11_onclick()"/>
+
+                        <input id="Button12" type="button" value="压力笔" onclick="return Button12_onclick()"/>
+
+                        <input id="Button13" type="button" value="钢笔" onclick="return Button13_onclick()"/>
                     </td>
 
 
@@ -369,7 +389,7 @@
     </div>
 
     <div style="text-align: center; width: 100%; margin-bottom: 5px;">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivShow').dialog('close')">关闭</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="Button1_Clos()">关闭</a>
          <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
     </div>
 </div>
