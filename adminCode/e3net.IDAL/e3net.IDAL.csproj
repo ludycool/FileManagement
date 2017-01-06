@@ -80,7 +80,7 @@
     <Compile Include="FileManagementDB\ITF_PersonnelFile_Transmitting_Out_ItemDao.cs" />
     <Compile Include="FileManagementDB\ITF_PersonnelFile_Units_InDao.cs" />
     <Compile Include="FileManagementDB\ITF_PersonnelFile_Units_OutDao.cs" />
-    <Compile Include="FileManagementDB\ITF_SysOperateLogDao.cs" />
+    <Compile Include="ISysOperateLogDao.cs" />
     <Compile Include="FileManagementDB\ITF_UnitsDao.cs" />
     <Compile Include="IBaseDao.cs" />
     <Compile Include="IFile_ImageDao.cs" />
