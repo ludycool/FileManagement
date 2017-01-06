@@ -194,7 +194,7 @@
              
                 //发送异步请求到后台保存数据
                 $.post(BaseUrl + 'EditInfo', data, function(data) {
-                    alerts(data.Msg, 2);
+                    $('#shuchu').html(data.Msg);
                     if (data.Code > 0) {
                         $('#DivEditor').dialog('close');
                         $(".validatebox-tip").remove();
@@ -365,23 +365,24 @@
                         </object> </td>
                 </tr>
                 <tr>
-        <td  >
-            签名操作：
-        </td>
-                                <td  >
-                                       <input id="Button3" type="button" value="重新签名" onclick="return Button3_onclick()" />
-                                    <input id="Button10" type="button" value="笔宽加粗" onclick="return Button10_onclick()" />
+                    <td  >
+                        签名操作：
+                    </td>
+                    <td  >
+                        <input id="Button3" type="button" value="重新签名" onclick="return Button3_onclick()" />
+                        <input id="Button10" type="button" value="笔宽加粗" onclick="return Button10_onclick()" />
 		
-          <input id="Button11" type="button" value="笔宽减细" onclick="return Button11_onclick()" /> 
+                        <input id="Button11" type="button" value="笔宽减细" onclick="return Button11_onclick()" /> 
              
-          <input id="Button12" type="button" value="压力笔" onclick="return Button12_onclick()" />
+                        <input id="Button12" type="button" value="压力笔" onclick="return Button12_onclick()" />
 		
-          <input id="Button13" type="button" value="钢笔" onclick="return Button13_onclick()" />
-                                </td>
+                        <input id="Button13" type="button" value="钢笔" onclick="return Button13_onclick()" />
+                    </td>
 
 
-                            </tr>
+                </tr>
             </table>
+            <label id="shuchu" style="color:red;">  </label>
         </form>
     </div>
 
