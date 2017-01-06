@@ -77,7 +77,7 @@
     <Compile Include="FileManagementDB\TF_PersonnelFile_Transmitting_Out_Item.cs" />
     <Compile Include="FileManagementDB\TF_PersonnelFile_Units_In.cs" />
     <Compile Include="FileManagementDB\TF_PersonnelFile_Units_Out.cs" />
-    <Compile Include="FileManagementDB\TF_SysOperateLog.cs" />
+    <Compile Include="SysOperateLog.cs" />
     <Compile Include="FileManagementDB\TF_Units.cs" />
     <Compile Include="File_Image.cs" />
     <Compile Include="MainAssociation.cs" />
