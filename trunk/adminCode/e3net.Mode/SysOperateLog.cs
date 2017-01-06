@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace e3net.Mode.FileManagementDB
+namespace e3net.Mode
 {
     /// <summary>
     /// 操作日志
@@ -93,6 +93,15 @@ namespace e3net.Mode.FileManagementDB
             get { return GetPropertyValue<string>("Remark"); }
             set { SetPropertyValue("Remark", value); }
         }
+
+        /// <summary>
+        /// 操作是否成功
+        /// </summary>
+        public bool? IsSuccess
+        {
+            get { return GetPropertyValue<bool?>("IsSuccess"); }
+            set { SetPropertyValue("IsSuccess", value); }
+        }
     }
 
     [Table("[TF_SysOperateLog]", DbType.SqlServer)]
@@ -151,6 +160,11 @@ namespace e3net.Mode.FileManagementDB
         /// 备注
         /// </summary>
         public static readonly FieldBase Remark = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.Common, "[Remark]");
+       
+        /// <summary>
+        /// 是否成功
+        /// </summary>
+        public static readonly FieldBase IsSuccess = new FieldBase(DbType.SqlServer, "[TF_SysOperateLog]", FieldType.Common, "[IsSuccess]");
 
     }
 
