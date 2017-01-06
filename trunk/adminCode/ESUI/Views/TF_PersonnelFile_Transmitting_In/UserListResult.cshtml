@@ -88,7 +88,26 @@
             { field: 'StatesName', title: '状态', width: 100, sortable: true },
             { field: 'TransmittingTime', title: '转递时间', width: 200, sortable: true },
 
+               {
+                   field: 'Id', title: '操作', width: 100,
 
+                   //添加超级链 
+
+                   formatter: function (value, rowData, rowIndex) {
+                       //                        alert(rowData.States);
+                       if (rowData.States == 1) {
+                           var d = '<a href="#" href="javascript:void(0);"  style="cursor: default;">填写资料</a>  ';
+                           d += '<a href="#"  href="javascript:void(0);" style="cursor: default;">提交</a>  ';
+                       } else {
+                           var d = '<a href="#" onclick="EditInfo(\'' + rowData.Id + '\')">填写资料</a>  ';
+                           d += '<a href="#" onclick="sign(\'' + rowData.Id + '\')">提交</a>  ';
+                       }
+
+                       return d;
+
+
+                   }
+               }
 
                     ]];
                 }
@@ -261,7 +280,7 @@
             function createList(datas) {
 
                 $("#SelectList").empty();
-                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">原单位务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
+                var result = ' <tr> <td style="width: 80px;">姓名</td><td style="width: 120px;">所在单位职务</td><td style="width: 50px;">职务</td><td style="width: 200px;">转递原因</td><td style="width: 50px;">正本(卷)</td><td style="width: 50px;">副本(卷)</td><td style="width: 50px;">档案材料(份)</td></</tr>';
                 for (var i = 0; i < datas.length; i++) {
                     result += '<tr id="' + datas[i].Id + '" >'
                     result += "<td>" + datas[i].RealName + "</td>";
