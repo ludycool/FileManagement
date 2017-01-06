@@ -132,7 +132,10 @@
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
 
-                        window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
+                        //                        window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
+                        window.setTimeout("parent.closeN('查阅档案记录')", 1500);//关闭当前页面
+                        parent.JumpN("TF_PersonnelFile_Consult");
+                        parent.reloadTabGrid("档案查阅管理");
                     }
                 });
 
