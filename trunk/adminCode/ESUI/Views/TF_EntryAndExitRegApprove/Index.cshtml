@@ -19,9 +19,6 @@
             //var BaseUrl = "/TF_LifeComments/";
             jQuery(document).ready(function () {
                 DataGridSet();
-                changeUseCategory();
-                $('#States').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
-                FTypes = 1;//上传类型 1为文件 0 为图片
             })
 
             Date.prototype.Format = function (fmt) {
@@ -39,32 +36,7 @@
                     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
                 return fmt;
             }
-
-            function changeUseCategory() {
-                // debugger
-                $("#UseCategory").change(function () {
-                    // var use = $("#UseCategory").val();
-                    alert($(this).children('option:selected').val());
-                });
-                //var use = $("#UseCategory").val();
-                //if (use == 1) {
-                //    //保管
-                //    alert(use);
-                //}
-                //else if (use = 2) {
-                //    //领用
-                //    alert(use);
-                //}
-                //else if (use = 3) {
-                //    //归还
-                //    alert(use);
-                //}
-                //else if (use = 4) {
-                //    //退回
-                //    alert(use);
-                //}
-            }
-
+            
             function DataGridSet() {
                 $('#dg').datagrid({
                     url: BaseUrl + 'Search',
@@ -171,44 +143,22 @@
                     toolbar: toolbars
                 });
             }
-            //easyUI 弹出添加的对话框
-            function AddInfo() {
-                //弹出层
-                // $("#DivEditor").dialog('open').dialog('setTitle', '添加信息');
-                $('#DivEditor').dialog({
-                    title: '证件登记',
-                    //width: 400,
-                    //height: 200,
-                    closed: false,
-                    cache: false,
-                    // href: 'get_content.php',
-                    modal: true, top: 50,
-                    onClose: function () {
-                        //解决弹出窗口关闭后，验证消息还显示在最上面
-
-                    }
-                });
-                AutoMaxH("#Div_form", 150)
-                $(".validatebox-tip").remove();//清除验证样式
-                DataBaseFunction.ClearForm("ff");
-            }
-
+                       
             //绑定修改显示详细信息的方法
             function EditInfo() {
-
                 var rows = $("#dg").datagrid('getSelected');
                 //首先取出来值判断只能选择一个
                 if (rows == null) {
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
                 }
-                //var aprovalstatus = rows.States;
-                //if (aprovalstatus != "-1") {
-                //    $.messager.alert("友情提示", "此文件不可编辑", "error");
-                //    return;
-                //}
+                var aprovalstatus = rows.ApprovalStates;
+                if (aprovalstatus == "1") {
+                    $.messager.alert("友情提示", "此证件已经审核通过，不可编辑！", "error");
+                    return;
+                }
 
-                $("#DivEditor").dialog('open').dialog('setTitle', '修改-' + rows.TrueName).window('resize', { top: 50 });
+                $("#DivEditor1").dialog('open').dialog('setTitle', '修改-' + rows.TrueName).window('resize', { top: 50 });
                 $(".validatebox-tip").remove();//清除验证样式
                 var ID = rows.Id;  //获取到了用选择的ID
                 $.ajax({
@@ -218,11 +168,7 @@
                     cache: false,
                     error: function () { alert('Error $.ajax'); },
                     success: function (data) {
-                        //var result = eval('(' + data + ')');
-                        DataBaseFunction.BindForm("ff", data);
-                        //$('#Category').combotree('setValue', data['Category']);
-                        //$('#States').combobox('select', data.States);
-                        //GetFileList(data.Id);//图片
+                        DataBaseFunction.BindForm("ff1", data);
                     }
                 });
             }
@@ -234,7 +180,13 @@
                 if (rows == null) {
                     $.messager.alert("友情提示", "请选择", "error");
                     return;
-                }              
+                }
+                var aprovalstatus = rows.ApprovalStates;
+                if (aprovalstatus == "1") {
+                    $.messager.alert("友情提示", "此证件已经审核通过，不需要重复审核！", "error");
+                    return;
+                }
+
                 $("#DivEditor2").dialog('open').dialog('setTitle', '审核-' + rows.TrueName).window('resize', { top: 50 });
                 $(".validatebox-tip").remove();//清除验证样式
                 var ID = rows.Id;  //获取到了用选择的ID
@@ -245,7 +197,7 @@
                     cache: false,
                     error: function () { alert('Error $.ajax'); },
                     success: function (data) {
-                        DataBaseFunction.BindForm("ffv", data);
+                        DataBaseFunction.BindForm("ff2", data);
                     }
                 });
             }
@@ -253,13 +205,13 @@
             //审核
             function SaveInfo() {
                 //判断的信息是否通过验证
-                var validate = $("#ff").form('validate');
+                var validate = $("#ff1").form('validate');
                 if (validate == false) {
                     return false;
                 }
 
                 //获取需要传递的参数传递给前台
-                var data = DataBaseFunction.GetFormData("ff")
+                var data = DataBaseFunction.GetFormData("ff1")
                 //发送异步请求到后台保存数据
                 $.post(BaseUrl + 'EditInfo', data, function (data) {
                     alerts(data.Msg, 2);
@@ -280,41 +232,35 @@
 
             }
             //提交审核
-            function subApproval()
-            {
-                    var rows = $("#dg").datagrid('getSelected');
-                    //首先取出来值判断只能选择一个
-                    if (rows == null) {
-                        $.messager.alert("友情提示", "请选择", "error");
-                        return;
+            function subApproval() {
+                var rows = $("#dg").datagrid('getSelected');
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+               
+                var _state = $("input[name='approvalStates']:checked").val();
+                $.messager.confirm("友情提示", "提交后不可在编辑，您确定现在审核吗？", function (r) {
+                    if (r) {
+                        var ID = rows.Id;
+                        $.ajax({
+                            url: BaseUrl + 'Approve',
+                            type: 'POST',
+                            data: { ID: ID, state: _state },
+                            cache: false,
+                            error: function () { alert('Error $.ajax'); },
+                            success: function (data) {
+                                $.messager.alert("友情提示", data.Msg);
+                                $('#DivEditor2').dialog('close');
+                                DataGridSet();
+                            }
+                        });
                     }
-                    var aprovalstatus = rows.ApprovalStates;
-                    if (aprovalstatus != "0") {
-                        $.messager.alert("友情提示", "此证件已经审核", "error");
-                        return;
-                    }
-                    var _state = $("input[name='approvalStates']:checked").val();                   
-                    $.messager.confirm("友情提示", "提交后不可在编辑，您确定现在审核吗？", function (r) {
-                        if (r) {
-                            var ID = rows.Id;
-                            $.ajax({
-                                url: BaseUrl + 'Approve',
-                                type: 'POST',
-                                data: { ID: ID, state: _state },
-                                cache: false,
-                                error: function () { alert('Error $.ajax'); },
-                                success: function (data) {
-                                    $.messager.alert("友情提示", data.Msg);
-                                    $('#DivEditor2').dialog('close');
-                                    DataGridSet();
-                                }
-                            });
-                        }
-                    });
+                });
             }
 
-            function ShowDetails()
-            {
+            function ShowDetails() {
                 var rows = $("#dg").datagrid('getSelected');
                 //首先取出来值判断只能选择一个
                 if (rows == null) {
@@ -343,11 +289,9 @@
             }
             //搜索
             function Search() {
-                // $("#fSearh").form("clear");
-                $('#States_eq').combobox('reload', '/httpHandle/DictionaryHandler.ashx?action=GetSysItem&ItemType=LifeCommentsStates');  // 使用新的URL重新载入列表数据
                 $("#Div_Searh").dialog('open').dialog('setTitle', '搜索').window('resize', { top: 100, left: 100 });
             }
-              
+
             function RefreshOP() {
                 DataGridSet();
             }
@@ -367,10 +311,8 @@
 <body style="overflow-y: hidden">
 
     <table id="dg"></table>
-
-
     <!------------------------搜索弹出层---------------------------------->
-    <div id="Div_Searh" class="easyui-dialog" style="width: 380px; padding: 10px 20px;"
+    <div id="Div_Searh" class="easyui-dialog" style="width: 400px; padding: 10px 20px;"
          closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
         <form id="fSearh">
 
@@ -427,7 +369,6 @@
                     </td>
                 </tr>
             </table>
-
         </form>
         <div style="text-align: center; width: 100%; margin: 5px 0px; display: block;">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-undo" style="float: left;" onclick=" DataBaseFunction.ClearForm('fSearh');">清除</a>
@@ -435,11 +376,12 @@
             <a href="javascript:void(0)" class="easyui-linkbutton" style="float: right;" iconcls="icon-cancel" onclick="$('#Div_Searh').dialog('close')">关闭</a>
         </div>
     </div>
-    <!------------------------弹出信息的弹出层---------------------------------->
-    <div id="DivEditor" class="easyui-dialog" style="width: 800px;"
+
+    <!------------------------弹出信息的弹出层 修改 ---------------------------------->
+    <div id="DivEditor1" class="easyui-dialog" style="width: 800px;"
          closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options="height:520,width:780,border:false">
-            <form id="ff" method="post" enctype="multipart/form-data">
+        <div id="Div_form1" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options="height:520,width:780,border:false">
+            <form id="ff1" method="post" enctype="multipart/form-data">
                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
                     <input type="hidden" name="Id" />
                     <input type="hidden" name="CreateMan" />
@@ -452,7 +394,7 @@
                             <label>使用类型：</label>
                         </td>
                         <td>
-                            <select id="UseCategory" name="UseCategory" class="easyui-combobox" style="width: 200px;" data-options="required:true">
+                            <select id="UseCategory" name="UseCategory" class="easyui-combobox" onchange="changeUseCategory()" style="width: 200px;" data-options="required:true">
                                 <option value="1">保管</option>
                                 <option value="2">领用</option>
                                 <option value="3">归还</option>
@@ -557,7 +499,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label>备注：</label>
+                            <label>备注dd：</label>
                         </td>
                         <td>
                             <textarea class="areabox" name="Remark" maxlength="250" style="height: 50px; width: 600px;"></textarea>
@@ -569,14 +511,15 @@
 
         <div style="text-align: center; width: 100%; margin-bottom: 5px;">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor1').dialog('close')">关闭</a>
         </div>
     </div>
-    <!------------------------弹出信息的弹出层---------------------------------->
+ 
+    <!------------------------弹出信息的弹出层  审核---------------------------------->
     <div id="DivEditor2" class="easyui-dialog" style="width: 800px;"
          closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options="height:540,width:780,border:false">
-            <form id="ffv" method="post" enctype="multipart/form-data">
+        <div id="Div_form2" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options="height:540,width:780,border:false">
+            <form id="ff2" method="post" enctype="multipart/form-data">
                 <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
                     <input type="hidden" name="Id" />
                     <input type="hidden" name="CreateMan" />
@@ -586,154 +529,7 @@
                     <input type="hidden" name="isDeleted" />
                     <tr>
                         <td style="width: 100px;">
-                            <label>使用类型：</label>
-                        </td>
-                        <td>
-                            <select id="UseCategory" name="UseCategory" class="easyui-combobox" style="width: 200px;" data-options="required:true" readonly>
-                                <option value="1">保管</option>
-                                <option value="2">领用</option>
-                                <option value="3">归还</option>
-                                <option value="4">退回</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>批文：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="OfficialDocOrRemarks" style="width: 600px;" readonly/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>干部名字：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="TrueName" readonly/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>性别：</label>
-                        </td>
-                        <td>
-                            <select id="Sex" name="Sex" class="easyui-combobox" style="width: 200px;" readonly>
-                                <option value="1">男</option>
-                                <option value="0">女</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>所在单位：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Units" style="width:600px;" readonly/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>证件类型：</label>
-                        </td>
-                        <td>
-                            <select id="Sex" name="CertificateCategory" class="easyui-combobox" style="width: 200px;" readonly>
-                                <option value="1">护照</option>
-                                <option value="2">港澳通行证</option>
-                                <option value="3">台湾通行证</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>证件号码：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" maxlength="9" name="CertificateNumber" readonly/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>身份证号：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" maxlength="18" name="IdentityCardNumber" readonly/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>办理人单位：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="ApproverUnit" style="width: 600px;" readonly/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>办理人：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="Approver" readonly/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>联系方式：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-validatebox textbox" type="text" name="ContactInformation" readonly/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>日期：</label>
-                        </td>
-                        <td>
-                            <input class="easyui-datebox easyui-validatebox" type="text" style="width: 200px;" name="AprovalTime" readonly/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>备注：</label>
-                        </td>
-                        <td>
-                            <textarea class="areabox" name="Remark" maxlength="250" style="height: 50px; width: 600px;" readonly></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>审核：</label>
-                        </td>
-                        <td>
-                            <input id="approval1" name="approvalStates" type="radio" value="1" checked="checked" title="通过" />通过
-                            <input id="approval2" name="approvalStates" type="radio" value="2" title="不通过" />不通过
-                        </td>
-                    </tr>
-                </table>
-            </form>
-        </div>
-
-        <div style="text-align: center; width: 100%; margin-bottom: 5px;" id="approvalbtn">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="subApproval();">提交审核</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor2').dialog('close')">关闭</a>
-        </div>
-    </div>
-
-    <!------------------------弹出信息的弹出层---------------------------------->
-    <div id="DivEditor3" class="easyui-dialog" style="width: 800px;"
-         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
-        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options="height:540,width:780,border:false">
-            <form id="ff3" method="post" enctype="multipart/form-data">
-                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
-                    <input type="hidden" name="Id" />
-                    <input type="hidden" name="CreateMan" />
-                    <input type="hidden" name="CreateTime" />
-                    <input type="hidden" name="UpdateTime" />
-                    <input type="hidden" name="isValid" />
-                    <input type="hidden" name="isDeleted" />
-                    <tr>
-                        <td style="width: 100px;">
-                            <label>使用类型：</label>
+                            <label>使用类型2：</label>
                         </td>
                         <td>
                             <select id="UseCategory" name="UseCategory" class="easyui-combobox" style="width: 200px;" data-options="required:true" readonly>
@@ -852,15 +648,162 @@
                             <label>审核：</label>
                         </td>
                         <td>
-                            <input id="approval1" name="ApprovalStates" type="radio" value="1" title="通过" />通过
-                            <input id="approval2" name="ApprovalStates" type="radio" value="2" title="不通过" />不通过
+                            <input id="approval1" name="approvalStates" type="radio" value="1" checked="checked" title="通过" />通过
+                            <input id="approval2" name="approvalStates" type="radio" value="2" title="不通过" />不通过
                         </td>
                     </tr>
                 </table>
             </form>
         </div>
 
-        <div style="text-align: center; width: 100%; margin-bottom: 5px;">           
+        <div style="text-align: center; width: 100%; margin-bottom: 5px;" id="approvalbtn">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" onclick="subApproval();">提交审核</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor2').dialog('close')">关闭</a>
+        </div>
+    </div>
+
+    <!------------------------弹出信息的弹出层 查看---------------------------------->
+    <div id="DivEditor3" class="easyui-dialog" style="width: 800px;"
+         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+        <div id="Div_form3" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options="height:540,width:780,border:false">
+            <form id="ff3" method="post" enctype="multipart/form-data">
+                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                    <input type="hidden" name="Id" />
+                    <input type="hidden" name="CreateMan" />
+                    <input type="hidden" name="CreateTime" />
+                    <input type="hidden" name="UpdateTime" />
+                    <input type="hidden" name="isValid" />
+                    <input type="hidden" name="isDeleted" />
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>使用类型3：</label>
+                        </td>
+                        <td>
+                            <select id="UseCategory" name="UseCategory" class="easyui-combobox" style="width: 200px;" data-options="required:true" readonly>
+                                <option value="1">保管</option>
+                                <option value="2">领用</option>
+                                <option value="3">归还</option>
+                                <option value="4">退回</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>批文：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="OfficialDocOrRemarks" style="width: 600px;" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>干部名字：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="TrueName" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>性别：</label>
+                        </td>
+                        <td>
+                            <select id="Sex" name="Sex" class="easyui-combobox" style="width: 200px;" readonly>
+                                <option value="1">男</option>
+                                <option value="0">女</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>所在单位：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="Units" style="width:600px;" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>证件类型：</label>
+                        </td>
+                        <td>
+                            <select id="Sex" name="CertificateCategory" class="easyui-combobox" style="width: 200px;" readonly>
+                                <option value="1">护照</option>
+                                <option value="2">港澳通行证</option>
+                                <option value="3">台湾通行证</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>证件号码：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" maxlength="9" name="CertificateNumber" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>身份证号：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" maxlength="18" name="IdentityCardNumber" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>办理人单位：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="ApproverUnit" style="width: 600px;" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>办理人：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="Approver" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>联系方式：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="ContactInformation" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>日期：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-datebox easyui-validatebox" type="text" style="width: 200px;" name="AprovalTime" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>备注：</label>
+                        </td>
+                        <td>
+                            <textarea class="areabox" name="Remark" maxlength="250" style="height: 50px; width: 600px;" readonly></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>审核：</label>
+                        </td>
+                        <td>
+                            <input id="approval1" name="ApprovalStates" type="radio" value="1" disabled title="通过" />通过
+                            <input id="approval2" name="ApprovalStates" type="radio" value="2" disabled title="不通过" />不通过
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        <div style="text-align: center; width: 100%; margin-bottom: 5px;">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor3').dialog('close')">关闭</a>
         </div>
     </div>
