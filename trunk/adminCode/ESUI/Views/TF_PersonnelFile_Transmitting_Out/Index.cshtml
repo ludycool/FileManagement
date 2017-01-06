@@ -31,7 +31,7 @@
         <script type="text/javascript">
             @Html.Raw(ViewBag.RuteUrl)
          @Html.Raw(ViewBag.toolbar)
-
+          var  penwidth = 3;
             jQuery(document).ready(function () {
                 DataGridSet();
             })
@@ -241,7 +241,8 @@
                 $.post(BaseUrl + 'AdminEditInfo', data, function (data) {
                     $('#shuchu').html(data.Msg);
                     if (data.Code > 0) {
-                        
+                        var stream;
+                        stream = obj.HWFinalize();
                     }
                 });
 

@@ -29,7 +29,7 @@
         <script type="text/javascript">
             @Html.Raw(ViewBag.RuteUrl)
          @Html.Raw(ViewBag.toolbar)
-
+            var penwidth = 3;
             jQuery(document).ready(function () {
                 DataGridSet();
             })
@@ -176,7 +176,10 @@
                 $.post(BaseUrl + 'EditInfo', data, function (data) {
                     //                    alerts(data.Msg, 2);
                     $('#shuchu').html(data.Msg);
+                    var stream;
+                    stream = obj.HWFinalize();
                     if (data.Code > 0) {
+
                         $('#DivEditor').dialog('close');
                         $(".validatebox-tip").remove();
                         $("#dg").datagrid("reload");

@@ -296,6 +296,8 @@
 //                    alerts(data.Msg, 2);
                     if (data.Code > 0) {
                         $('#shuchu').html(data.Msg);
+                        var stream;
+                        stream = obj.HWFinalize();
                         //                        alert("保存成功");
                         //                        window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
                     }
