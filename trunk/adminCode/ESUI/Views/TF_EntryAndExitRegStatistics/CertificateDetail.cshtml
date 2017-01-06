@@ -66,7 +66,20 @@
                                 }
                             }
                         },
-                        { field: 'CertificateNumber', title: '证件号码', align: "center", width: 100, sortable: true }    
+                        { field: 'CertificateNumber', title: '证件号码', align: "center", width: 100, sortable: true },
+                        {
+                            field: 'AprovalTime', title: '日期', width: 120, sortable: true, formatter: function (value, row, index) {
+                                if (value != null && value != "") {
+                                    var pa = /.*\((.*)\)/;
+                                    var unixtime = value.match(pa)[1].substring(0, 10);
+                                    var currtime = new Date(unixtime * 1000);
+                                    return currtime.Format("yyyy-MM-dd");
+                                }
+                                else {
+                                    return "";
+                                }
+                            }
+                        }
                     ]],
                     iconCls: 'icon-save',
                     title: '证件登记',
