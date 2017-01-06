@@ -80,6 +80,7 @@
     <Compile Include="FileManagementDB\TF_PersonnelFile_Transmitting_Out_ItemBiz.cs" />
     <Compile Include="FileManagementDB\TF_PersonnelFile_Units_InBiz.cs" />
     <Compile Include="FileManagementDB\TF_PersonnelFile_Units_OutBiz.cs" />
+    <Compile Include="FileManagementDB\TF_SysOperateLogBiz.cs" />
     <Compile Include="FileManagementDB\TF_UnitsBiz.cs" />
     <Compile Include="File_ImageBiz.cs" />
     <Compile Include="ParameterXmlHelper.cs" />
