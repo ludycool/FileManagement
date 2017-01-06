@@ -145,13 +145,9 @@
                 //        content: createFrame(url)
                 //    }
                 //});
-              $("#" + url)[0].contentWindow.ReloadOP();//调用刷新功能
+                $("#" + url)[0].contentWindow.RefreshOP();//调用刷新功能
 
             }
-        }
-        //刷新
-        function ReloadOP() {
-            $("#dg").datagrid("reload");
         }
 
         //跳转url 内有的菜单少可以 window.parent.JumpN("CommunityNotice");
