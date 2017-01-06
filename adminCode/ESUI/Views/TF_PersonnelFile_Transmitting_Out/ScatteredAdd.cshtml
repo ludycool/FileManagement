@@ -131,7 +131,11 @@
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
 
-                        window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
+                        //                        window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
+
+                        window.setTimeout("parent.closeN('登记转出记录')", 1500);//关闭当前页面
+                        parent.JumpN("TF_PersonnelFile_Transmitting_Out/scatteredIndex");
+                        parent.reloadTabGrid("零散档案材料转出");
                     }
                 });
 

@@ -150,7 +150,10 @@
                     alerts(data.Msg, 2);
                     if (data.Code > 0) {
 
-                        window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
+                        //                        window.setTimeout("window.parent.closeC()", 1500);//关闭当前页面
+                        window.setTimeout("parent.closeN('填写资料')", 1500);//关闭当前页面
+                        parent.JumpN("TF_PersonnelFile_Transmitting_Out/ScatteredOutUserListResult");
+                        parent.reloadTabGrid("单位零散档案材料转出");
                     }
                 });
 
