@@ -29,14 +29,14 @@ namespace e3net.BLL
         /// <param name="operateIP">操作人IP</param>
         /// <param name="remark">备注</param>
         /// <param name="isDeleted">是否删除（默认未删除）</param>
-        public static void AddSysOperateLog(string userId, string trueName, string operateName, string operateConten,
+        public static void AddSysOperateLog(string userId, string trueName, OperatEnumName operateName, string operateConten,
             bool isSuccess, string operateIP, string remark, bool isDeleted = false)
         {
             SysOperateLog log = new SysOperateLog();
             log.Id = Guid.NewGuid();
             log.UserId = userId;
             log.TrueName = trueName;
-            log.OperateName = operateName;
+            log.OperateName = operateName.ToString();
             log.OperateTime = DateTime.Now;
             log.OperateConten = operateConten;
             log.OperateIP = operateIP;
