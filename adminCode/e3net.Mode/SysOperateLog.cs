@@ -160,11 +160,18 @@ namespace e3net.Mode
         /// 备注
         /// </summary>
         public static readonly FieldBase Remark = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.Common, "[Remark]");
-       
+
         /// <summary>
         /// 是否成功
         /// </summary>
         public static readonly FieldBase IsSuccess = new FieldBase(DbType.SqlServer, "[SysOperateLog]", FieldType.Common, "[IsSuccess]");
 
+    }
+
+    public enum OperatEnumName
+    {
+        新增 = 1,
+        修改 = 2,
+        删除 = 3
     }
 }
