@@ -47,7 +47,7 @@ namespace ESUI.Controllers
         [AllowAnonymous]
         //[ValidateAntiForgeryToken] 安全必须 外网出错 所需的防伪 Cookie“__RequestVerificationToken”不存在。 暂时去掉，待解决
         public ActionResult Index(LoginModel mode)
-        {
+        {          
             // if (ModelState.IsValid)
 
             ViewData["UserType"] = GenerateList();
@@ -168,6 +168,7 @@ namespace ESUI.Controllers
                 UserData.UserName = adminRole[0].LoginName;
                 UserData.RoleId = adminRole[0].RoleId;
                 UserData.Password = adminRole[0].Password;
+                
                 if (!string.IsNullOrEmpty(adminRole[0].Tel))
                 {
                     UserData.Modify = true;
@@ -223,6 +224,7 @@ namespace ESUI.Controllers
 
                     #endregion
 
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.登录, "登录", true, WebClientIP, "用户登录");
 
                     return RedirectToAction("index", "home");
                 }
@@ -235,6 +237,7 @@ namespace ESUI.Controllers
                 // 如果我们进行到这一步时某个地方出错，则重新显示表单
                 ViewData["IsShowAlert"] = true;
                 ViewData["Alert"] = "账号或者密码有误";
+                SysOperateLogBiz.AddSysOperateLog(mode.LoginName, mode.LoginName, e3net.Mode.OperatEnumName.登录, "登录失败", false, WebClientIP, "用户登录");
 
             }
             //}
@@ -244,6 +247,8 @@ namespace ESUI.Controllers
             //    ViewData["Alert"] = "验证码有误";
             //}
             //}
+
+
             return View();
 
 
