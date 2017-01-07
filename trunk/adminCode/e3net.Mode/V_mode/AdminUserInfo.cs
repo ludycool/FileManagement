@@ -82,6 +82,12 @@ namespace e3net.Mode.V_mode
             get;
             set;
         }
+
+        public string IP
+        {
+            get;
+            set;
+        }
         ///// <summary>
         ///// 管理员用户信息
         ///// </summary>
