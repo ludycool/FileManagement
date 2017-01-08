@@ -170,8 +170,10 @@ namespace e3net.Mode
 
     public enum OperatEnumName
     {
+        登录 = 0,
         新增 = 1,
         修改 = 2,
-        删除 = 3
+        删除 = 3,
+        审核=4
     }
 }
