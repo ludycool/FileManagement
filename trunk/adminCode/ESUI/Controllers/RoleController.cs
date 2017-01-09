@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using Microsoft.Practices.Unity;
 using e3net.Mode.HttpView;
 using System.Configuration;
+using e3net.BLL;
 
 namespace ESUI.Controllers
 {
@@ -101,6 +102,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = RMS_RoleModle.Id.ToString();
                     ReSultMode.Msg = "添加成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "角色管理--新增", true, WebClientIP, "角色管理");
                 }
                 catch (Exception e)
                 {
@@ -108,6 +110,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = -11;
                     ReSultMode.Data = e.ToString();
                     ReSultMode.Msg = "添加失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "角色管理--新增", false, WebClientIP, "角色管理");
                 }
 
             }
@@ -120,12 +123,14 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "角色管理--修改", true, WebClientIP, "角色管理");
                 }
                 else
                 {
                     ReSultMode.Code = -13;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "角色管理--修改", false, WebClientIP, "角色管理");
                 }
             }
 
@@ -152,6 +157,7 @@ namespace ESUI.Controllers
 
             var mql2 = RMS_RoleSet.Id.Equal(ID);
             int f = RDBiz.Remove<RMS_RoleSet>(mql2);
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "角色管理--删除", true, WebClientIP, "角色管理");
             return Json("OK", JsonRequestBehavior.AllowGet);
 
         }
@@ -360,10 +366,14 @@ namespace ESUI.Controllers
             }
             if (res == manu.Count + ManuButtons.Count)
             {
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.分配权限, "角色管理--分配权限", true, WebClientIP, "角色管理");
+
                 return "ok";
             }
             else
             {
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.分配权限, "角色管理--分配权限", false, WebClientIP, "角色管理");
+
                 return "Nok";
             }
         }

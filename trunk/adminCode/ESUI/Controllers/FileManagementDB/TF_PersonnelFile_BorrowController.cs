@@ -69,7 +69,7 @@ namespace ESUI.Controllers
             pc.sys_Table = "TF_PersonnelFile_Borrow";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
-            DataSet ds= OPBiz.GetPagingDataP(pc);
+            DataSet ds = OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
 
@@ -97,7 +97,7 @@ namespace ESUI.Controllers
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
             pc.sys_Table = "TF_PersonnelFile_Borrow";
-//            pc.sys_Where = Where;
+            //            pc.sys_Where = Where;
             if (UserData.UserTypes == 1)
             {
                 pc.sys_Where = Where;
@@ -120,60 +120,64 @@ namespace ESUI.Controllers
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
             bool IsAdd = false;
-           
 
-                if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+
+            if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+            {
+                IsAdd = true;
+            }
+            if (IsAdd)
+            {
+                EidModle.Id = Guid.NewGuid();
+                EidModle.CreateMan = UserData.UserName;
+                EidModle.CreateManId = UserData.Id;
+                EidModle.CreateTime = DateTime.Now;
+
+                EidModle.isDeleted = false;
+                EidModle.States = 0;
+                EidModle.StatesName = "未操作";
+                try
                 {
-                    IsAdd = true;
+                    OPBiz.Add(EidModle);
+
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = EidModle.Id.ToString();
+                    ReSultMode.Msg = "添加成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案借用--新增", true, WebClientIP, "档案借用");
                 }
-                if (IsAdd)
+                catch (Exception e)
                 {
-                    EidModle.Id = Guid.NewGuid();
-                    EidModle.CreateMan = UserData.UserName;
-                    EidModle.CreateManId = UserData.Id;        
-                    EidModle.CreateTime = DateTime.Now;
-    
-                    EidModle.isDeleted = false;
-                    EidModle.States = 0;
-                    EidModle.StatesName = "未操作";
-                    try
-                    {
-                        OPBiz.Add(EidModle);
 
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = EidModle.Id.ToString();
-                        ReSultMode.Msg = "添加成功";
-                    }
-                    catch (Exception e)
-                    {
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data = e.ToString();
+                    ReSultMode.Msg = "添加失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案借用--新增", false, WebClientIP, "档案借用");
+                }
 
-                        ReSultMode.Code = -11;
-                        ReSultMode.Data = e.ToString();
-                        ReSultMode.Msg = "添加失败";
-                    }
-
+            }
+            else
+            {
+                EidModle.WhereExpression = TF_PersonnelFile_BorrowSet.Id.Equal(EidModle.Id);
+                // EidModle.ChangedMap.Remove("id");//移除主键值
+                EidModle.States = 3;
+                EidModle.StatesName = "归还完成";
+                EidModle.ReturnTime = DateTime.Today.ToString();
+                if (OPBiz.Update(EidModle) > 0)
+                {
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "保存成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.归还, "档案借用--归还", true, WebClientIP, "档案借用");
                 }
                 else
                 {
-                    EidModle.WhereExpression = TF_PersonnelFile_BorrowSet.Id.Equal(EidModle.Id);
-                    // EidModle.ChangedMap.Remove("id");//移除主键值
-                    EidModle.States = 3;
-                    EidModle.StatesName = "归还完成";
-                    EidModle.ReturnTime = DateTime.Today.ToString();
-                    if (OPBiz.Update(EidModle) > 0)
-                    {
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "保存成功";
-                    }
-                    else
-                    {
-                        ReSultMode.Code = -13;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "保存失败";
-                    }
+                    ReSultMode.Code = -13;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "保存失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.归还, "档案借用--归还", false, WebClientIP, "档案借用");
                 }
-            
+            }
+
 
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
@@ -182,63 +186,67 @@ namespace ESUI.Controllers
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
             bool IsAdd = false;
-           
 
-                if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+
+            if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+            {
+                IsAdd = true;
+            }
+            if (IsAdd)
+            {
+                EidModle.Id = Guid.NewGuid();
+                EidModle.CreateMan = UserData.UserName;
+                EidModle.CreateManId = UserData.Id;
+                EidModle.CreateTime = DateTime.Now;
+
+                EidModle.isDeleted = false;
+
+                try
                 {
-                    IsAdd = true;
+                    OPBiz.Add(EidModle);
+
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = EidModle.Id.ToString();
+                    ReSultMode.Msg = "添加成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案借用--已借出新增", true, WebClientIP, "档案借用");
                 }
-                if (IsAdd)
+                catch (Exception e)
                 {
-                    EidModle.Id = Guid.NewGuid();
-                    EidModle.CreateMan = UserData.UserName;
-                    EidModle.CreateManId = UserData.Id;        
-                    EidModle.CreateTime = DateTime.Now;
-    
-                    EidModle.isDeleted = false;
-                 
-                    try
-                    {
-                        OPBiz.Add(EidModle);
 
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = EidModle.Id.ToString();
-                        ReSultMode.Msg = "添加成功";
-                    }
-                    catch (Exception e)
-                    {
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data = e.ToString();
+                    ReSultMode.Msg = "添加失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案借用--已借出新增", false, WebClientIP, "档案借用");
+                }
 
-                        ReSultMode.Code = -11;
-                        ReSultMode.Data = e.ToString();
-                        ReSultMode.Msg = "添加失败";
-                    }
+            }
+            else
+            {
+                EidModle.WhereExpression = TF_PersonnelFile_BorrowSet.Id.Equal(EidModle.Id);
+                // EidModle.ChangedMap.Remove("id");//移除主键值
 
+
+                EidModle.BorrowMan = UserData.UserName;
+
+                EidModle.BorrowTime = DateTime.Now.ToString("yyyy-MM-dd");
+                EidModle.States = 1;
+                EidModle.StatesName = "已借出"; ;
+                if (OPBiz.Update(EidModle) > 0)
+                {
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "档案借用--已借出修改", true, WebClientIP, "档案借用");
                 }
                 else
                 {
-                    EidModle.WhereExpression = TF_PersonnelFile_BorrowSet.Id.Equal(EidModle.Id);
-                    // EidModle.ChangedMap.Remove("id");//移除主键值
-
-
-                    EidModle.BorrowMan = UserData.UserName;
-
-                    EidModle.BorrowTime = DateTime.Now.ToString("yyyy-MM-dd");
-                EidModle.States = 1;
-                EidModle.StatesName = "已借出";;
-                    if (OPBiz.Update(EidModle) > 0)
-                    {
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "修改成功";
-                    }
-                    else
-                    {
-                        ReSultMode.Code = -13;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "修改失败";
-                    }
+                    ReSultMode.Code = -13;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "档案借用--已借出修改", true, WebClientIP, "档案借用");
                 }
-            
+            }
+
 
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
@@ -260,7 +268,7 @@ namespace ESUI.Controllers
                     EidModle.CreateTime = DateTime.Now;
                     EidModle.isDeleted = false;
                     EidModle.States = 0;
-                   
+
                     EidModle.StatesName = "未操作";
                     OPBiz.Add(EidModle);
                 }
@@ -273,6 +281,8 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = "";
                 ReSultMode.Msg = "成功添加" + listItem.Count + "条";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案借用--新增List", true, WebClientIP, "档案借用");
+
             }
             catch (Exception e)
             {
@@ -280,6 +290,8 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -11;
                 ReSultMode.Data = e.ToString();
                 ReSultMode.Msg = "添加失败";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "档案借用--新增List", false, WebClientIP, "档案借用");
+
             }
 
 
@@ -307,6 +319,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "成功删除" + f + "条数据！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案借用--删除", true, WebClientIP, "档案借用");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -314,6 +327,8 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "删除失败！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案借用--删除", false, WebClientIP, "档案借用");
+
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
@@ -390,6 +405,8 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "提交成功！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.归还, "档案借用--归还", true, WebClientIP, "档案借用");
+
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -397,6 +414,8 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "提交失败！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.归还, "档案借用--归还", false, WebClientIP, "档案借用");
+
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }

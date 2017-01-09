@@ -95,6 +95,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = EidModle.Id.ToString();
                     ReSultMode.Msg = "保存成功，请尽快提交审核！";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "生平管理--新增", true, WebClientIP, "生平管理");
                 }
                 catch (Exception e)
                 {
@@ -102,6 +103,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = -11;
                     ReSultMode.Data = e.ToString();
                     ReSultMode.Msg = "添加失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "生平管理--新增", false, WebClientIP, "生平管理");
                 }
 
             }
@@ -114,12 +116,14 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "保存成功，请尽快提交审核！";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "生平管理--修改", true, WebClientIP, "生平管理");
                 }
                 else
                 {
                     ReSultMode.Code = -13;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "生平管理--修改", false, WebClientIP, "生平管理");
                 }
             }
 
@@ -131,9 +135,8 @@ namespace ESUI.Controllers
         public ActionResult LifeWebOfficeDoc()
         {
             ViewBag.ViewBag = Request["id"];
-
-
             ViewBag.RuteUrl = RuteUrl();
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.查看文档, "查看原始文档", true, WebClientIP, "生平");
             return View();
         }
 
@@ -155,6 +158,7 @@ namespace ESUI.Controllers
         {
             var mql = File_ImageSet.SelectAll().Where(File_ImageSet.ToId.Equal(id));
             List<File_Image> list = new File_ImageBiz().GetOwnList(mql);
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "生平管理--编辑/查看文档", true, WebClientIP, "生平管理");
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
@@ -168,6 +172,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "提交审核成功！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.提交, "生平管理--用户提交", true, WebClientIP, "生平管理");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -175,6 +180,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "提交审核失败！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.提交, "生平管理--用户提交", false, WebClientIP, "生平管理");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
@@ -211,6 +217,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "成功删除" + f + "条数据！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "生平管理--删除", true, WebClientIP, "生平管理");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -218,6 +225,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "删除失败！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "生平管理--删除", false, WebClientIP, "生平管理");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }

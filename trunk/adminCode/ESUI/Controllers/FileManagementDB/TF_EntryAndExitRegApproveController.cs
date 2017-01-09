@@ -75,6 +75,8 @@ namespace ESUI.Controllers.FileManagementDB
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
             {
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.审核, "证件审核--审核", true, WebClientIP, "证件审核");
+
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "审核处理成功！";
@@ -99,49 +101,51 @@ namespace ESUI.Controllers.FileManagementDB
             {
                 IsAdd = true;
             }
-            if (IsAdd)
+            //if (IsAdd)
+            //{
+            //    EidModle.Id = Guid.NewGuid();
+            //    EidModle.CreateMan = UserData.UserName;
+            //    EidModle.CreateTime = DateTime.Now;
+            //    EidModle.isValid = true;
+            //    EidModle.isDeleted = false;
+            //    EidModle.ApprovalStates = -1;
+
+            //    try
+            //    {
+            //        OPBiz.Add(EidModle);
+
+            //        ReSultMode.Code = 11;
+            //        ReSultMode.Data = EidModle.Id.ToString();
+            //        ReSultMode.Msg = "添加成功";
+            //    }
+            //    catch (Exception e)
+            //    {
+
+            //        ReSultMode.Code = -11;
+            //        ReSultMode.Data = e.ToString();
+            //        ReSultMode.Msg = "添加失败";
+            //    }
+
+            //}
+            //else
+            //{
+            EidModle.WhereExpression = TF_EntryAndExitRegistrationSet.Id.Equal(EidModle.Id);
+            // EidModle.ChangedMap.Remove("id");//移除主键值
+            if (OPBiz.Update(EidModle) > 0)
             {
-                EidModle.Id = Guid.NewGuid();
-                EidModle.CreateMan = UserData.UserName;
-                EidModle.CreateTime = DateTime.Now;
-                EidModle.isValid = true;
-                EidModle.isDeleted = false;
-                EidModle.ApprovalStates = -1;
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "证件审核--修改", true, WebClientIP, "证件审核");
 
-                try
-                {
-                    OPBiz.Add(EidModle);
-
-                    ReSultMode.Code = 11;
-                    ReSultMode.Data = EidModle.Id.ToString();
-                    ReSultMode.Msg = "添加成功";
-                }
-                catch (Exception e)
-                {
-
-                    ReSultMode.Code = -11;
-                    ReSultMode.Data = e.ToString();
-                    ReSultMode.Msg = "添加失败";
-                }
-
+                ReSultMode.Code = 11;
+                ReSultMode.Data = "";
+                ReSultMode.Msg = "修改成功";
             }
             else
             {
-                EidModle.WhereExpression = TF_EntryAndExitRegistrationSet.Id.Equal(EidModle.Id);
-                // EidModle.ChangedMap.Remove("id");//移除主键值
-                if (OPBiz.Update(EidModle) > 0)
-                {
-                    ReSultMode.Code = 11;
-                    ReSultMode.Data = "";
-                    ReSultMode.Msg = "修改成功";
-                }
-                else
-                {
-                    ReSultMode.Code = -13;
-                    ReSultMode.Data = "";
-                    ReSultMode.Msg = "修改失败";
-                }
+                ReSultMode.Code = -13;
+                ReSultMode.Data = "";
+                ReSultMode.Msg = "修改失败";
             }
+            //}
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
         }
@@ -152,6 +156,6 @@ namespace ESUI.Controllers.FileManagementDB
             TF_EntryAndExitRegistration Rmodel = OPBiz.GetEntity(mql2);
             return Json(Rmodel, JsonRequestBehavior.AllowGet);
         }
-      
+
     }
 }

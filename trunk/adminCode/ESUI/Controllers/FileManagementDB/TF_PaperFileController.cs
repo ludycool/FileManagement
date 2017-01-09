@@ -93,6 +93,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = EidModle.Id.ToString();
                     ReSultMode.Msg = "添加成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "纸质文件--新增", true, WebClientIP, "纸质文件");
                 }
                 catch (Exception e)
                 {
@@ -100,6 +101,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = -11;
                     ReSultMode.Data = e.ToString();
                     ReSultMode.Msg = "添加失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "纸质文件--新增", false, WebClientIP, "纸质文件");
                 }
 
             }
@@ -112,12 +114,14 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "纸质文件--修改", true, WebClientIP, "纸质文件");
                 }
                 else
                 {
                     ReSultMode.Code = -13;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "纸质文件--修改", false, WebClientIP, "纸质文件");
                 }
             }
 
@@ -139,7 +143,7 @@ namespace ESUI.Controllers
             //TF_PaperFile Rmodel = OPBiz.GetEntity(mql2);
             ////  groupsBiz.Add(rol);
             //return Json(Rmodel, JsonRequestBehavior.AllowGet);
-            string TFPaperFileid = Request["id"]; 
+            string TFPaperFileid = Request["id"];
             ViewBag.RuteUrl = RuteUrl();
             return View();
         }
@@ -154,6 +158,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "成功删除" + f + "条数据！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "纸质文件--删除", true, WebClientIP, "纸质文件");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -161,6 +166,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "删除失败！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "纸质文件--删除", true, WebClientIP, "纸质文件");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }

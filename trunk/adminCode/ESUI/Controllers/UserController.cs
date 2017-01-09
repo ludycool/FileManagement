@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using Microsoft.Practices.Unity;
 using System.Data;
 using e3net.Mode.HttpView;
+using e3net.BLL;
 
 namespace ESUI.Controllers
 {
@@ -113,6 +114,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = EidModle.Id.ToString();
                 ReSultMode.Msg = "添加成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "用户管理--新增", true, WebClientIP, "用户管理");
                 }
             }
             else
@@ -125,12 +127,14 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "用户管理--修改", true, WebClientIP, "用户管理");
                 }
                 else
                 {
                     ReSultMode.Code = -13;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "用户管理--修改", false, WebClientIP, "用户管理");
                 }
             }
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
@@ -152,6 +156,7 @@ namespace ESUI.Controllers
 
             var mql2 = RMS_UserSet.Id.Equal(ID);
             int f = OPBiz.Remove<RMS_UserSet>(mql2);
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "用户管理--删除", true, WebClientIP, "用户管理");
             return Json("OK", JsonRequestBehavior.AllowGet);
 
         }
@@ -170,6 +175,8 @@ namespace ESUI.Controllers
                 Rmodel.UserId = uId;
                 Rmodel.RoleId = rId;
                 URBiz.Add(Rmodel);
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.分配角色, "用户管理--分配角色", true, WebClientIP, "用户管理");
+
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
@@ -179,10 +186,14 @@ namespace ESUI.Controllers
                 //  spmodel.GroupId = GroupId;
                 if (URBiz.Update(Rmodel) > 0)
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.分配角色, "用户管理--分配角色", true, WebClientIP, "用户管理");
+
                     return Json("ok", JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.分配角色, "用户管理--分配角色", false, WebClientIP, "用户管理");
+
                     return Json("Nok", JsonRequestBehavior.AllowGet);
                 }
 

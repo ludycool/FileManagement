@@ -74,6 +74,7 @@ namespace ESUI.Controllers
                 //rol.RoleOrder = RMS_ButtonsModle.RoleOrder;
 
                 OPBiz.Add(RMS_ButtonsModle);
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "按钮管理--新增", true, WebClientIP, "按钮管理");
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
@@ -83,10 +84,12 @@ namespace ESUI.Controllers
                 //  spmodel.GroupId = GroupId;
                 if (OPBiz.Update(RMS_ButtonsModle) > 0)
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "按钮管理--修改", true, WebClientIP, "按钮管理");
                     return Json("ok", JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "按钮管理--修改", false, WebClientIP, "按钮管理");
                     return Json("Nok", JsonRequestBehavior.AllowGet);
                 }
             }
@@ -108,6 +111,7 @@ namespace ESUI.Controllers
 
             var mql2 = RMS_ButtonsSet.Id.Equal(ID);
             int f = OPBiz.Remove<RMS_ButtonsSet>(mql2);
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "按钮管理--删除", true, WebClientIP, "按钮管理");
             return Json("OK", JsonRequestBehavior.AllowGet);
 
         }
