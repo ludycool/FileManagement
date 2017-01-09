@@ -77,6 +77,7 @@ namespace ESUI.Controllers.FileManagementDB
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "审核通过成功！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.审核, "生平审核--审核文档", true, WebClientIP, "生平审核");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -84,6 +85,7 @@ namespace ESUI.Controllers.FileManagementDB
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "审核通过失败！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.审核, "生平审核--审核文档", false, WebClientIP, "生平审核");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
@@ -112,6 +114,8 @@ namespace ESUI.Controllers.FileManagementDB
                     ReSultMode.Code = 11;
                     ReSultMode.Data = EidModle.Id.ToString();
                     ReSultMode.Msg = "添加成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "生平审核--新增", false, WebClientIP, "生平审核");
+
                 }
                 catch (Exception e)
                 {
@@ -131,12 +135,14 @@ namespace ESUI.Controllers.FileManagementDB
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "生平审核--编辑", true, WebClientIP, "生平审核");
                 }
                 else
                 {
                     ReSultMode.Code = -13;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "生平审核--编辑", false, WebClientIP, "生平审核");
                 }
             }
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
@@ -146,8 +152,6 @@ namespace ESUI.Controllers.FileManagementDB
         public ActionResult EditWebOffice()
         {
             ViewBag.ViewBag = Request["id"];
-
-
             ViewBag.RuteUrl = RuteUrl();
             return View();
         }
@@ -163,6 +167,7 @@ namespace ESUI.Controllers.FileManagementDB
         {
             var mql = File_ImageSet.SelectAll().Where(File_ImageSet.ToId.Equal(id));//.Where(File_ImageSet.FullRouteCopy.NotEqual(""));
             List<File_Image> list = new File_ImageBiz().GetOwnList(mql);
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.审核, "生平审核--审核文档", true, WebClientIP, "生平审核");
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 

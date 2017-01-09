@@ -11,6 +11,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity;
+using e3net.BLL;
 
 namespace ESUI.Controllers
 {
@@ -59,7 +60,7 @@ namespace ESUI.Controllers
                 Mode.IsEnable = true;
                 Mode.IsShow = true;
                 MDBiz.Add(Mode);
-
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "菜单管理--新增", true, WebClientIP, "菜单管理");
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
@@ -70,10 +71,12 @@ namespace ESUI.Controllers
                 Mode.ModifyTime = DateTime.Now;
                 if (MDBiz.Update(Mode) > 0)
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "菜单管理--修改", true, WebClientIP, "菜单管理");
                     return Json("ok", JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "菜单管理--修改", false, WebClientIP, "菜单管理");
                     return Json("Nok", JsonRequestBehavior.AllowGet);
                 }
 
@@ -117,6 +120,7 @@ namespace ESUI.Controllers
 
             var mql2 = RMS_MenusSet.Id.Equal(ID);
             int f = MDBiz.Remove<RMS_MenusSet>(mql2);
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "菜单管理--删除", true, WebClientIP, "菜单管理");
             return Json("OK", JsonRequestBehavior.AllowGet);
 
         }
@@ -146,6 +150,8 @@ namespace ESUI.Controllers
             item.ManuId = Guid.Parse(ManuId);
             item.OrderNo = int.Parse(OrderNo);
             MBDBiz.Add(item);
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "菜单管理--添加菜单按钮", true, WebClientIP, "菜单管理");
+
             return Json("OK", JsonRequestBehavior.AllowGet);
 
         }
@@ -160,6 +166,8 @@ namespace ESUI.Controllers
             string[] ids=IdSet.Split(',');
             var mql2 = RMS_MenuButtonsSet.ButtonId.In(ids).And(RMS_MenuButtonsSet.ManuId.Equal(ManuId));
             int f = MBDBiz.Remove<RMS_MenuButtonsSet>(mql2);
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "菜单管理--删除菜单按钮", true, WebClientIP, "菜单管理");
+
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
     }

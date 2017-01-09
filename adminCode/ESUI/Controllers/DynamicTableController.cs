@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using TZHSWEET.Common;
 using e3net.Mode.HttpView;
 using ESUI.Models;
+using e3net.BLL;
 
 namespace ESUI.Controllers
 {
@@ -116,6 +117,7 @@ namespace ESUI.Controllers
                 OPBiz.Add(categoryTable);
                 OPBiz.ExecuteSqlWithNonQuery("create table [" + categoryTable.UserTableName + "]  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null,ck nvarchar(100) null,EntryRecordFormID  nvarchar(100) null)");
                 OPBiz.ExecuteSqlWithNonQuery("INSERT INTO [ColumnCharts]      ([ID],[CategoryTableID],[field],[title],[rowspan],[width],[IsEnable]) VALUES('" + Guid.NewGuid().ToString() + "','" + categoryTable.ID + "','ck','ck',1,100,1) ");
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "模板管理--添加", true, WebClientIP, "模板管理");
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
@@ -125,6 +127,7 @@ namespace ESUI.Controllers
                 //  spmodel.GroupId = GroupId;
                 if (OPBiz.Update(categoryTable) > 0)
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "模板管理--修改", true, WebClientIP, "模板管理");
                     return Json("ok", JsonRequestBehavior.AllowGet);
                 }
                 else
@@ -207,7 +210,7 @@ namespace ESUI.Controllers
                         ReSultMode.Code = 11;
                         ReSultMode.Data = "";
                         ReSultMode.Msg = "添加成功";
-                    }
+                       }
                 }
 
 
@@ -259,6 +262,8 @@ namespace ESUI.Controllers
 
 
             }
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "模板管理--编辑表格", true, WebClientIP, "模板管理");
+
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
         }
@@ -953,6 +958,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = "";
                 ReSultMode.Msg = "添加成功";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, OperatEnumName.新增, "字典类型--添加", true, WebClientIP, "字典类型");
                 //                OPBiz.ExecuteSqlWithNonQuery("create table [" + categoryTable.UserTableName + "]  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null,ck nvarchar(100) null) ");
                 //                OPBiz.ExecuteSqlWithNonQuery("INSERT INTO [ColumnCharts]      ([ID],[CategoryTableID],[field],[title],[rowspan],[width],[IsEnable]) VALUES('" + Guid.NewGuid().ToString() + "','" + categoryTable.ID + "','ck','ck',1,100,1) ");
                 //return Json("ok", JsonRequestBehavior.AllowGet);
@@ -967,12 +973,14 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "更新成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, OperatEnumName.修改, "字典类型--修改", true, WebClientIP, "字典类型");
                 }
                 else
                 {
                     ReSultMode.Code = -11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "更新失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, OperatEnumName.修改, "字典类型--修改", false, WebClientIP, "字典类型");
                 }
             }
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
@@ -1027,10 +1035,12 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "成功删除" + f + "条数据！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, OperatEnumName.删除, "字典类型--删除", true, WebClientIP, "字典类型");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
             {
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, OperatEnumName.删除, "字典类型--删除", false, WebClientIP, "字典类型");
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "删除失败！";
@@ -1091,6 +1101,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = "";
                 ReSultMode.Msg = "添加成功";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, OperatEnumName.新增, "字典值录入--新增", true, WebClientIP, "字典值录入");
                 //                OPBiz.ExecuteSqlWithNonQuery("create table [" + categoryTable.UserTableName + "]  ( ID varchar(50) primary key,CreatName nvarchar(100) null ,CreateTime datetime null,ck nvarchar(100) null) ");
                 //                OPBiz.ExecuteSqlWithNonQuery("INSERT INTO [ColumnCharts]      ([ID],[CategoryTableID],[field],[title],[rowspan],[width],[IsEnable]) VALUES('" + Guid.NewGuid().ToString() + "','" + categoryTable.ID + "','ck','ck',1,100,1) ");
                 //return Json("ok", JsonRequestBehavior.AllowGet);
@@ -1102,12 +1113,14 @@ namespace ESUI.Controllers
                 //  spmodel.GroupId = GroupId;
                 if (Bcviz.Update(categoryTable) > 0)
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, OperatEnumName.修改, "字典值录入--修改", true, WebClientIP, "字典值录入");
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "更新成功";
                 }
                 else
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, OperatEnumName.修改, "字典值录入--修改", false, WebClientIP, "字典值录入");
                     ReSultMode.Code = -11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "更新失败";
@@ -1140,6 +1153,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "成功删除" + f + "条数据！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "字典值录入--删除", true, WebClientIP, "字典类型");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -1147,6 +1161,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "删除失败！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "字典值录入--删除", false, WebClientIP, "字典类型");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }

@@ -76,6 +76,8 @@ namespace ESUI.Controllers.FileManagementDB
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
             {
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.审核, "证件登记--客户提交审核", true, WebClientIP, "证件登记");
+
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 if (state == "0")
@@ -128,6 +130,8 @@ namespace ESUI.Controllers.FileManagementDB
                 {
                     OPBiz.Add(EidModle);
 
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "证件登记--添加", true, WebClientIP, "证件登记");
+
                     ReSultMode.Code = 11;
                     ReSultMode.Data = EidModle.Id.ToString();
                     ReSultMode.Msg = "添加成功";
@@ -147,6 +151,7 @@ namespace ESUI.Controllers.FileManagementDB
                 // EidModle.ChangedMap.Remove("id");//移除主键值
                 if (OPBiz.Update(EidModle) > 0)
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "证件登记--修改", true, WebClientIP, "证件登记");
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改成功";
@@ -176,6 +181,7 @@ namespace ESUI.Controllers.FileManagementDB
             HttpReSultMode ReSultMode = new HttpReSultMode();
             if (f > 0)
             {
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "证件登记--删除", true, WebClientIP, "证件登记");
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "成功删除" + f + "条数据！";

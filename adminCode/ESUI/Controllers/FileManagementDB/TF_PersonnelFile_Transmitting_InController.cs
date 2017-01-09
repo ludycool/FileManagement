@@ -26,7 +26,7 @@ namespace ESUI.Controllers
         public TF_PersonnelFile_Transmitting_InBiz OPBiz { get; set; }
 
 
-         [Dependency]
+        [Dependency]
         public TF_PersonnelFile_Transmitting_In_ItemBiz OPItemBiz { get; set; }
         public ActionResult Index()
         {
@@ -82,13 +82,13 @@ namespace ESUI.Controllers
             pc.sys_Table = "v_TF_PersonnelFile_Transmitting_In";
             if (UserData.UserTypes == 1)
             {
-                pc.sys_Where = Where ;
+                pc.sys_Where = Where;
             }
             else
             {
                 pc.sys_Where = Where + " and   CreateMan='" + UserData.UserName + "'";
             }
-      
+
             pc.sys_Order = " " + sortField + " " + sortOrder;
             DataSet ds = OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
@@ -141,122 +141,126 @@ namespace ESUI.Controllers
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
             bool IsAdd = false;
-           
-                if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+
+            if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+            {
+                IsAdd = true;
+            }
+            if (IsAdd)
+            {
+                EidModle.Id = Guid.NewGuid();
+                EidModle.CreateMan = UserData.UserName;
+                EidModle.CreateManId = UserData.Id;
+                EidModle.CreateTime = DateTime.Now;
+                EidModle.isDeleted = false;
+                EidModle.States = 0;
+                try
                 {
-                    IsAdd = true;
-                }
-                if (IsAdd)
-                {
-                    EidModle.Id = Guid.NewGuid();
-                    EidModle.CreateMan = UserData.UserName;
-                    EidModle.CreateManId = UserData.Id;    
-                    EidModle.CreateTime = DateTime.Now;
-                    EidModle.isDeleted = false;
-                    EidModle.States = 0;
-                    try
+                    List<TF_PersonnelFile_Transmitting_In_Item> listItem = JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_In_Item>(EidModle.FistName);
+                    int OriginalCount = 0;
+                    int DuplicateCount = 0;
+                    int MaterialCount = 0;
+                    string allname = "";
+
+                    if (listItem != null && listItem.Count > 0)
                     {
-                        List<TF_PersonnelFile_Transmitting_In_Item> listItem=JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_In_Item>(EidModle.FistName);
-                        int OriginalCount=0;
-                          int DuplicateCount=0;
-                          int MaterialCount=0;
-                          string allname = "";
-
-                        if(listItem!=null&&listItem.Count>0)
+                        EidModle.FistName = listItem[0].RealName;
+                        allname += listItem[0].RealName + "、";
+                        for (int i = 0; i < listItem.Count; i++)
                         {
-                            EidModle.FistName=listItem[0].RealName;
-                            allname += listItem[0].RealName + "、";
-                            for(int i=0;i<listItem.Count;i++)
-                            {
-                            OriginalCount+=listItem[i].OriginalCount;
-                            DuplicateCount+=listItem[i].DuplicateCount;
-                            MaterialCount+=listItem[i].MaterialCount;//统计数
-                            listItem[i].Id = Guid.NewGuid();;
-                            listItem[i].OwnerId=EidModle.Id ;
-                           OPItemBiz.Add(listItem[i]);//添加项
-
-                            }
-                            EidModle.OriginalCount=OriginalCount;
-                            EidModle.DuplicateCount=DuplicateCount;
-                            EidModle.MaterialCount=MaterialCount;
-                            EidModle.NumberS=listItem.Count;
+                            OriginalCount += listItem[i].OriginalCount;
+                            DuplicateCount += listItem[i].DuplicateCount;
+                            MaterialCount += listItem[i].MaterialCount;//统计数
+                            listItem[i].Id = Guid.NewGuid(); ;
+                            listItem[i].OwnerId = EidModle.Id;
+                            OPItemBiz.Add(listItem[i]);//添加项
 
                         }
-                        allname = allname.TrimEnd('、');
-                        EidModle.FileName = allname;
+                        EidModle.OriginalCount = OriginalCount;
+                        EidModle.DuplicateCount = DuplicateCount;
+                        EidModle.MaterialCount = MaterialCount;
+                        EidModle.NumberS = listItem.Count;
 
-
-                        OPBiz.Add(EidModle);
-
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = EidModle.Id.ToString();
-                        ReSultMode.Msg = "添加成功";
                     }
-                    catch (Exception e)
-                    { 
+                    allname = allname.TrimEnd('、');
+                    EidModle.FileName = allname;
 
-                        ReSultMode.Code = -11;
-                        ReSultMode.Data = e.ToString();
-                        ReSultMode.Msg = "添加失败";
+
+                    OPBiz.Add(EidModle);
+
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = EidModle.Id.ToString();
+                    ReSultMode.Msg = "添加成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案转入--新增", true, WebClientIP, "档案转入");
+                }
+                catch (Exception e)
+                {
+
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data = e.ToString();
+                    ReSultMode.Msg = "添加失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案转入--新增", false, WebClientIP, "档案转入");
+                }
+
+            }
+            else
+            {
+                EidModle.WhereExpression = TF_PersonnelFile_Transmitting_InSet.Id.Equal(EidModle.Id);
+                List<TF_PersonnelFile_Transmitting_In_Item> listItem = JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_In_Item>(EidModle.FistName);
+                // EidModle.ChangedMap.Remove("id");//移除主键值
+                EidModle.FistName = listItem[0].RealName;
+                EidModle.TransmittingMan = UserData.UserName;
+                EidModle.TransmittingTime = DateTime.Now;
+                if (EidModle.signatureimage == null || EidModle.signatureimage.Length == 0)
+                {
+                    byte[] myByteArray = new byte[1];
+                    EidModle.signatureimage = myByteArray;
+                }
+                if (OPBiz.Update(EidModle) > 0)
+                {
+
+
+                    int OriginalCount = 0;
+                    int DuplicateCount = 0;
+                    int MaterialCount = 0;
+
+
+                    if (listItem != null && listItem.Count > 0)
+                    {
+                        EidModle.FistName = listItem[0].RealName;
+
+                        for (int i = 0; i < listItem.Count; i++)
+                        {
+                            //                                OriginalCount += listItem[i].OriginalCount;
+                            //                                DuplicateCount += listItem[i].DuplicateCount;
+                            //                                MaterialCount += listItem[i].MaterialCount;//统计数
+                            //                                listItem[i].Id = listItem[i].Id; ;
+                            //                                listItem[i].OwnerId = EidModle.Id;
+                            listItem[i].WhereExpression = TF_PersonnelFile_Transmitting_In_ItemSet.Id.Equal(listItem[i].Id);
+                            OPItemBiz.Update(listItem[i]);//添加项
+
+                        }
+
+
                     }
 
+
+
+
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "档案转入--修改", true, WebClientIP, "档案转入");
                 }
                 else
                 {
-                    EidModle.WhereExpression = TF_PersonnelFile_Transmitting_InSet.Id.Equal(EidModle.Id);
-                    List<TF_PersonnelFile_Transmitting_In_Item> listItem = JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_In_Item>(EidModle.FistName);
-                    // EidModle.ChangedMap.Remove("id");//移除主键值
-                    EidModle.FistName = listItem[0].RealName;
-                    EidModle.TransmittingMan = UserData.UserName;
-                    EidModle.TransmittingTime = DateTime.Now;
-                    if (EidModle.signatureimage == null || EidModle.signatureimage.Length == 0)
-                    {
-                        byte[] myByteArray = new byte[1];
-                        EidModle.signatureimage = myByteArray;
-                    }
-                    if (OPBiz.Update(EidModle) > 0)
-                    {
-
-                      
-                        int OriginalCount = 0;
-                        int DuplicateCount = 0;
-                        int MaterialCount = 0;
-
-
-                        if (listItem != null && listItem.Count > 0)
-                        {
-                            EidModle.FistName = listItem[0].RealName;
-
-                            for (int i = 0; i < listItem.Count; i++)
-                            {
-//                                OriginalCount += listItem[i].OriginalCount;
-//                                DuplicateCount += listItem[i].DuplicateCount;
-//                                MaterialCount += listItem[i].MaterialCount;//统计数
-//                                listItem[i].Id = listItem[i].Id; ;
-//                                listItem[i].OwnerId = EidModle.Id;
-                                listItem[i].WhereExpression = TF_PersonnelFile_Transmitting_In_ItemSet.Id.Equal(listItem[i].Id);
-                                OPItemBiz.Update(listItem[i]);//添加项
-
-                            }
-                       
-
-                        }
-
-
-
-
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "修改成功";
-                    }
-                    else
-                    {
-                        ReSultMode.Code = -13;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "修改失败";
-                    }
+                    ReSultMode.Code = -13;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "档案转入--修改", false, WebClientIP, "档案转入");
                 }
-            
+            }
+
 
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
@@ -314,6 +318,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = EidModle.Id.ToString();
                     ReSultMode.Msg = "添加成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案转入--新增", true, WebClientIP, "档案转入");
                 }
                 catch (Exception e)
                 {
@@ -321,6 +326,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = -11;
                     ReSultMode.Data = e.ToString();
                     ReSultMode.Msg = "添加失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案转入--新增", false, WebClientIP, "档案转入");
                 }
 
             }
@@ -330,7 +336,7 @@ namespace ESUI.Controllers
                 List<TF_PersonnelFile_Transmitting_In_Item> listItem = JsonHelper.JSONToList<TF_PersonnelFile_Transmitting_In_Item>(EidModle.FistName);
                 // EidModle.ChangedMap.Remove("id");//移除主键值
                 EidModle.FistName = listItem[0].RealName;
-//                EidModle.TransmittingMan = UserData.UserName;
+                //                EidModle.TransmittingMan = UserData.UserName;
                 EidModle.TransmittingTime = DateTime.Now;
                 if (EidModle.signatureimage == null || EidModle.signatureimage.Length == 0)
                 {
@@ -371,12 +377,14 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "档案转入--修改", true, WebClientIP, "档案转入");
                 }
                 else
                 {
                     ReSultMode.Code = -13;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "档案转入--修改", false, WebClientIP, "档案转入");
                 }
             }
 
@@ -388,9 +396,9 @@ namespace ESUI.Controllers
         {
             var mql2 = TF_PersonnelFile_Transmitting_InSet.SelectAll().Where(TF_PersonnelFile_Transmitting_InSet.Id.Equal(ID));
             TF_PersonnelFile_Transmitting_In Rmodel = OPBiz.GetEntity(mql2);
-              var mql3 = TF_PersonnelFile_Transmitting_In_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_In_ItemSet.OwnerId.Equal(ID));
+            var mql3 = TF_PersonnelFile_Transmitting_In_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_In_ItemSet.OwnerId.Equal(ID));
             var ItemBlist = OPItemBiz.GetEntities(mql3);
-            var df = new {inmode = Rmodel, InItem = ItemBlist};
+            var df = new { inmode = Rmodel, InItem = ItemBlist };
             //  groupsBiz.Add(rol);
             return Json(df, JsonRequestBehavior.AllowGet);
         }
@@ -402,9 +410,9 @@ namespace ESUI.Controllers
         public JsonResult GetListItems(string ID)
         {
             var mql2 = TF_PersonnelFile_Transmitting_In_ItemSet.SelectAll().Where(TF_PersonnelFile_Transmitting_In_ItemSet.OwnerId.Equal(ID));
-           List<TF_PersonnelFile_Transmitting_In_Item> listItem = OPBiz.GetOwnList<TF_PersonnelFile_Transmitting_In_Item>(mql2);
+            List<TF_PersonnelFile_Transmitting_In_Item> listItem = OPBiz.GetOwnList<TF_PersonnelFile_Transmitting_In_Item>(mql2);
             //  groupsBiz.Add(rol);
-           return Json(listItem, JsonRequestBehavior.AllowGet);
+            return Json(listItem, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Del(string IDSet)
@@ -417,6 +425,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "成功删除" + f + "条数据！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案转入--删除", true, WebClientIP, "档案转入");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -424,6 +433,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "删除失败！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案转入--删除", false, WebClientIP, "档案转入");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
@@ -444,6 +454,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "转入成功！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.档案转入, "档案转入--档案转入", true, WebClientIP, "档案转入");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -451,6 +462,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "转入失败！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.档案转入, "档案转入--档案转入", false, WebClientIP, "档案转入");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
@@ -460,7 +472,7 @@ namespace ESUI.Controllers
             //=0;
 
             var catmodle = OPBiz.GetEntity(TF_PersonnelFile_Transmitting_InSet.SelectAll().Where(TF_PersonnelFile_Transmitting_InSet.Id.Equal(IDSet)));
-            catmodle.States =1;
+            catmodle.States = 1;
             catmodle.WhereExpression = TF_PersonnelFile_Transmitting_InSet.Id.Equal(IDSet);
 
             var f = OPBiz.Update(catmodle);
@@ -470,6 +482,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "转入成功！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.档案转入, "档案转入--档案转入", true, WebClientIP, "档案转入");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -477,6 +490,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "转入失败！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.档案转入, "档案转入--档案转入", false, WebClientIP, "档案转入");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
@@ -493,12 +507,12 @@ namespace ESUI.Controllers
             int pageSize = Request["rows"] == null ? 1000 : int.Parse(Request["rows"]);
             string Where = Request["sqlSet"] == null ? "1=1" : GetSql(Request["sqlSet"]);
             Where += "  and (isDeleted=0) ";
-//            string table = "TF_PersonnelFile";
-//            if (UserData.UserTypes != 1)
-//            {
-//                Where += " and ( UnitsId='" + UserData.DepartmentId + "')";
+            //            string table = "TF_PersonnelFile";
+            //            if (UserData.UserTypes != 1)
+            //            {
+            //                Where += " and ( UnitsId='" + UserData.DepartmentId + "')";
             string table = "TF_PersonnelFile";
-//            }
+            //            }
             ////字段排序
             String sortField = Request["sort"];
             String sortOrder = Request["order"];
@@ -523,19 +537,19 @@ namespace ESUI.Controllers
         public JsonResult Upload(HttpPostedFileBase fileData, string guid, string folder)
         {
             return null;
-            
+
         }
 
         public FileContentResult GetImage(string id)
         {
             var df = TF_PersonnelFile_Transmitting_InSet.SelectAll().Where(TF_PersonnelFile_Transmitting_InSet.Id.Equal(id));
-            var dfw =OPBiz.GetEntity(df);
+            var dfw = OPBiz.GetEntity(df);
 
 
             if (dfw != null)
             {
 
-                return File(dfw.signatureimage,"jpg");
+                return File(dfw.signatureimage, "jpg");
 
             }
             else

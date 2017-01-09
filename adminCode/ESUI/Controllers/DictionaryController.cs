@@ -43,7 +43,7 @@ namespace ESUI.Controllers
                 Mode.CreateTime = DateTime.Now;
                 Mode.ModifyTime = DateTime.Now;
                 DDBiz.Add(Mode);
-
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "数据字典--添加", true, WebClientIP, "数据字典");
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             else
@@ -54,10 +54,13 @@ namespace ESUI.Controllers
                 Mode.ModifyTime = DateTime.Now;
                 if (DDBiz.Update(Mode) > 0)
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "数据字典--修改", true, WebClientIP, "数据字典");
                     return Json("ok", JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "数据字典--修改", false, WebClientIP, "数据字典");
+
                     return Json("Nok", JsonRequestBehavior.AllowGet);
                 }
 
@@ -85,6 +88,7 @@ namespace ESUI.Controllers
 
             var mql2 = Sys_DictionarySet.Id.Equal(ID);
             int f = DDBiz.Remove<Sys_DictionarySet>(mql2);
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "数据字典--删除", true, WebClientIP, "数据字典");
             return Json("OK", JsonRequestBehavior.AllowGet);
 
         }

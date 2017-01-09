@@ -23,9 +23,9 @@ namespace ESUI.Controllers
     {
         [Dependency]
         public TF_PersonnelFileBiz OPBiz { get; set; }
-         [Dependency]
+        [Dependency]
         public TF_PersonnelFile_Units_InBiz inOPBiz { get; set; }
-         [Dependency]
+        [Dependency]
         public TF_PersonnelFile_Units_OutBiz outOPBiz { get; set; }
         public ActionResult Index()
         {
@@ -55,7 +55,7 @@ namespace ESUI.Controllers
             pc.sys_Table = "TF_PersonnelFile";
             pc.sys_Where = Where;
             pc.sys_Order = " " + sortField + " " + sortOrder;
-            DataSet ds= OPBiz.GetPagingDataP(pc);
+            DataSet ds = OPBiz.GetPagingDataP(pc);
             Dictionary<string, object> dic = new Dictionary<string, object>();
 
 
@@ -72,54 +72,58 @@ namespace ESUI.Controllers
         {
             HttpReSultMode ReSultMode = new HttpReSultMode();
             bool IsAdd = false;
-           
-                EidModle.UpdateTime = DateTime.Now;
-                if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+
+            EidModle.UpdateTime = DateTime.Now;
+            if (!(EidModle.Id != null && !EidModle.Id.ToString().Equals("00000000-0000-0000-0000-000000000000")))//id为空，是添加
+            {
+                IsAdd = true;
+            }
+            if (IsAdd)
+            {
+                EidModle.Id = Guid.NewGuid();
+                EidModle.CreateMan = UserData.UserName;
+                EidModle.CreateTime = DateTime.Now;
+                EidModle.isValid = true;
+                EidModle.isDeleted = false;
+                try
                 {
-                    IsAdd = true;
+                    OPBiz.Add(EidModle);
+
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = EidModle.Id.ToString();
+                    ReSultMode.Msg = "添加成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "人员档案库--新增", true, WebClientIP, "人员档案库");
                 }
-                if (IsAdd)
+                catch (Exception e)
                 {
-                    EidModle.Id = Guid.NewGuid();
-                    EidModle.CreateMan = UserData.UserName;
-                    EidModle.CreateTime = DateTime.Now;
-                    EidModle.isValid = true;
-                    EidModle.isDeleted = false;
-                    try
-                    {
-                        OPBiz.Add(EidModle);
 
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = EidModle.Id.ToString();
-                        ReSultMode.Msg = "添加成功";
-                    }
-                    catch (Exception e)
-                    {
+                    ReSultMode.Code = -11;
+                    ReSultMode.Data = e.ToString();
+                    ReSultMode.Msg = "添加失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "人员档案库--新增", false, WebClientIP, "人员档案库");
+                }
 
-                        ReSultMode.Code = -11;
-                        ReSultMode.Data = e.ToString();
-                        ReSultMode.Msg = "添加失败";
-                    }
-
+            }
+            else
+            {
+                EidModle.WhereExpression = TF_PersonnelFileSet.Id.Equal(EidModle.Id);
+                // EidModle.ChangedMap.Remove("id");//移除主键值
+                if (OPBiz.Update(EidModle) > 0)
+                {
+                    ReSultMode.Code = 11;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "人员档案库--修改", true, WebClientIP, "人员档案库");
                 }
                 else
                 {
-                    EidModle.WhereExpression = TF_PersonnelFileSet.Id.Equal(EidModle.Id);
-                    // EidModle.ChangedMap.Remove("id");//移除主键值
-                    if (OPBiz.Update(EidModle) > 0)
-                    {
-                        ReSultMode.Code = 11;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "修改成功";
-                    }
-                    else
-                    {
-                        ReSultMode.Code = -13;
-                        ReSultMode.Data = "";
-                        ReSultMode.Msg = "修改失败";
-                    }
+                    ReSultMode.Code = -13;
+                    ReSultMode.Data = "";
+                    ReSultMode.Msg = "修改失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "人员档案库--修改", true, WebClientIP, "人员档案库");
                 }
-            
+            }
+
 
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
@@ -143,6 +147,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "成功删除" + f + "条数据！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "人员档案库--删除", true, WebClientIP, "人员档案库");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -150,6 +155,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "删除失败！";
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "人员档案库--删除", false, WebClientIP, "人员档案库");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }
@@ -159,7 +165,7 @@ namespace ESUI.Controllers
         public ActionResult SetUnitsIn(Guid Id)
         {
             ViewBag.RuteUrl = RuteUrl();
-            string Script = "var Id='" + Id+"'";
+            string Script = "var Id='" + Id + "'";
             ViewBag.Script = Script;
             return View();
         }
@@ -242,7 +248,7 @@ namespace ESUI.Controllers
             if (item != null)
             {
                 ReSultMode.Code = 11;
-                ReSultMode.Data ="";
+                ReSultMode.Data = "";
                 ReSultMode.Msg = "添加转入单位";
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
@@ -254,6 +260,8 @@ namespace ESUI.Controllers
             ReSultMode.Code = 11;
             ReSultMode.Data = item.Id.ToString(); ;
             ReSultMode.Msg = "添加转入单位成功";
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.分配转入单位, "人员档案库--分配转入单位", true, WebClientIP, "人员档案库");
+
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
         }
@@ -272,6 +280,8 @@ namespace ESUI.Controllers
             ReSultMode.Code = 11;
             ReSultMode.Data = f.ToString();
             ReSultMode.Msg = "成功删除" + f + "条数据！";
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "人员档案库--删除转入单位", true, WebClientIP, "人员档案库");
+
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
         }
 
@@ -376,6 +386,8 @@ namespace ESUI.Controllers
             ReSultMode.Code = 11;
             ReSultMode.Data = item.Id.ToString(); ;
             ReSultMode.Msg = "添加转出单位成功";
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.分配转出单位, "人员档案库--分配转出单位", true, WebClientIP, "人员档案库");
+
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
 
         }
@@ -394,6 +406,8 @@ namespace ESUI.Controllers
             ReSultMode.Code = 11;
             ReSultMode.Data = f.ToString();
             ReSultMode.Msg = "成功删除" + f + "条数据！";
+            SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "人员档案库--删除转出单位", true, WebClientIP, "人员档案库");
+
             return Json(ReSultMode, JsonRequestBehavior.AllowGet);
         }
 
@@ -430,6 +444,8 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = file.Id.ToString();
                     ReSultMode.Msg = "添加成功";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "人员档案库--导入", true, WebClientIP, "人员档案库");
+
                 }
                 catch (Exception e)
                 {
@@ -437,6 +453,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = -11;
                     ReSultMode.Data = e.ToString();
                     ReSultMode.Msg = "添加失败";
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "人员档案库--导入", false, WebClientIP, "人员档案库");
                     break;
                 }
             }

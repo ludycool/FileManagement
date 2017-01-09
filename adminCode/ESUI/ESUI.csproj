@@ -276,6 +276,7 @@
     <Compile Include="Controllers\FileManagementDB\TF_PersonnelFileController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_BorrowController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_ConsultController.cs" />
+    <Compile Include="Controllers\SysOperateLogController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_UnitsController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_Transmitting_InController.cs" />
     <Compile Include="Controllers\FileManagementDB\TF_PersonnelFile_Transmitting_OutController.cs" />
@@ -3496,8 +3497,6 @@
     <Content Include="httpHandle\WebOfficeHandler.ashx" />
     <Content Include="MOON_WORK_DIRECTORY_PATH\MoonLogs\2015-12-10.log" />
     <Content Include="MOON_WORK_DIRECTORY_PATH\sqls\sql.config" />
-    <None Include="Properties\PublishProfiles\3.pubxml" />
-    <None Include="Properties\PublishProfiles\ddd.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -3607,6 +3606,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="temp\" />
     <Folder Include="UploadFiles\" />
     <Folder Include="upload\file\" />
