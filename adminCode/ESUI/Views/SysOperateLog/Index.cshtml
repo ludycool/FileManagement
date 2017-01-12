@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+@{
+    ViewBag.TrueName = "Index";
+}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" charset="utf-8" src="~/Content/js/ImgUp.js"></script>
+    <script type="text/javascript" charset="utf-8" src="~/Content/js/DictionaryHelper.js"></script>
+    @* ReSharper disable once NotAllPathsReturnValue *@
+
+
+    @section Jsprepare{
+
+        <script type="text/javascript">
+            @Html.Raw(ViewBag.RuteUrl)
+         @Html.Raw(ViewBag.toolbar)
+
+            jQuery(document).ready(function () {
+                DataGridSet();
+            })
+
+            Date.prototype.Format = function (fmt) {
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+
+            function DataGridSet() {
+                $('#dg').datagrid({
+                    url: BaseUrl + 'Search',
+                    columns: [[
+                        { field: 'ck', checkbox: true },
+                        { field: 'TrueName', title: '用户', width: 80, sortable: true },
+                        { field: 'OperateName', title: '操作', width: 100, sortable: true },
+                        {
+                            field: 'OperateTime', title: '时间', width: 100, sortable: true, formatter: function (value, row, index) {
+                                if (value != null && value != "") {
+                                    var pa = /.*\((.*)\)/;
+                                    var unixtime = value.match(pa)[1].substring(0, 10);
+                                    var currtime = new Date(unixtime * 1000);
+                                    return currtime.Format("yyyy-MM-dd hh:mm:ss");
+                                }
+                                else {
+                                    return "";
+                                }
+                            }
+                        },
+                        { field: 'OperateConten', title: '操作内容', width: 200, align: "left" },
+                        { field: 'OperateIP', title: '用户IP', width: 100, sortable: true },
+                    ]],
+                    iconCls: 'icon-save',
+                    title: '操作日志',
+                    nowrap: true,
+                    fit: true,
+                    fitColumns: true,
+                    singleSelect: true,
+                    striped: true,
+                    collapsible: true,
+                    pageSize: 20,
+                    pagination: true,
+                    rownumbers: true,
+                    sortName: 'OperateTime',
+                    sortOrder: 'desc',
+                    toolbar: toolbars
+                });
+            }
+            //搜索
+            function SearchGo() {
+                DataBaseFunction.Search("fSearh", "dg");
+                $("#Div_Searh").dialog('close');
+            }
+            //搜索
+
+            function Search() {
+                // $("#fSearh").form("clear");
+                $("#Div_Searh").dialog('open').dialog('setTitle', '搜索').window('resize', { top: 100, left: 100 });
+            }
+
+            function RefreshOP() {
+                DataGridSet();
+            }
+        </script>
+    }
+
+</head>
+<body style="overflow-y: hidden">
+
+    <table id="dg"></table>
+
+
+    <!------------------------搜索弹出层---------------------------------->
+    <div id="Div_Searh" class="easyui-dialog" style="width: 380px; padding: 10px 20px;"
+         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+        <form id="fSearh">
+
+            <table class="stripes" style="table-layout: fixed; margin: 0 auto; width: 320px;" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td style="width: 60px;">
+                        <label>操作：</label>
+                    </td>
+                    <td>
+                        <input type="text" class="textbox" name="OperateName_like" style="width: 200px;" />
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <label>用户：</label>
+                    </td>
+                    <td>
+                        <input type="text" class="textbox" name="TrueName_like" style="width: 200px;" />
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <div style="text-align: center; width: 100%; margin: 5px 0px; display: block;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-undo" style="float: left;" onclick=" DataBaseFunction.ClearForm('fSearh');">清除</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" style="float: right;" iconcls="icon-search" onclick="SearchGo();">搜索</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" style="float: right;" iconcls="icon-cancel" onclick="$('#Div_Searh').dialog('close')">关闭</a>
+        </div>
+    </div>
+
+    <!------------------------弹出信息的弹出层---------------------------------->
+    <div id="DivEditor" class="easyui-dialog" style="width: 900px;"
+         closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+        <div id="Div_form" class="easyui-panel" style="padding: 10px 20px; overflow-x: hidden;" data-options=" height:600,width:880,border:false">
+            <form id="ff" method="post" enctype="multipart/form-data">
+                <table class="stripes" style="table-layout: fixed;" border="0" cellspacing="0" cellpadding="0">
+                    <input type="hidden" name="Id" />
+                    <input type="hidden" name="CreateMan" />
+                    <input type="hidden" name="CreateTime" />
+                    <input type="hidden" name="UpdateTime" />
+                    <input type="hidden" name="isValid" />
+                    <input type="hidden" name="isDeleted" />
+                    <tr>
+                        <td style="width: 100px;">
+                            <label>姓名：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="TrueName" id="TrueName" data-options="required:true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>单位：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="Units" id="Units" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>职务：</label>
+                        </td>
+                        <td>
+                            <input class="easyui-validatebox textbox" type="text" name="Duties" id="Duties" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>详情：</label>
+                        </td>
+                        <td>
+                            <textarea class="areabox" name="Details" id="Details" style="height: 400px; width: 600px;"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>评语：</label>
+                        </td>
+                        <td>
+                            <textarea class="areabox" name="Summary" id="Summary" style="height: 100px; width: 600px;"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>状态：</label>
+                        </td>
+                        <td>
+                            <input id="States" class="easyui-combobox" name="States"
+                                   data-options="valueField:'ItemValue',textField:'ItemName'" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>附件：</label>
+                        </td>
+                        <td>
+                            <div style="display: none">
+                                <div id="content" style="display: block; width: 450px; float: left;margin-top:2px;">
+                                    <input id="fileId" type="hidden" />
+                                    <a href="/Content/js/ImgUp.js" target="_blank" id="aflie"></a>
+                                </div>
+                            </div>
+                            <div id="zhi" style="display: block; width: 450px;">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div style="text-align: center; width: 100%; margin-bottom: 5px;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" id="btnOK" iconcls="icon-ok" onclick="SaveInfo();">确定</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="$('#DivEditor').dialog('close')">关闭</a>
+        </div>
+    </div>
+</body>
+</html>

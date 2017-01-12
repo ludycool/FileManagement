@@ -15,7 +15,7 @@ using e3net.Mode;
 
 namespace ESUI.Controllers
 {
-    public class TF_SysOperateLogController : BaseController
+    public class SysOperateLogController : BaseController
     {
         [Dependency]
         public SysOperateLogBiz OPBiz { get; set; }
@@ -45,7 +45,7 @@ namespace ESUI.Controllers
             pc.sys_Key = "Id";
             pc.sys_PageIndex = pageIndex;
             pc.sys_PageSize = pageSize;
-            pc.sys_Table = "TF_SysOperateLog";
+            pc.sys_Table = "SysOperateLog";
             if (UserData.UserTypes == 1)
             {
                 pc.sys_Where = Where;

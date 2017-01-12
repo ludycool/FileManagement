@@ -3603,6 +3603,7 @@
     <Content Include="Views\TF_Units\PersonnelFileInput.cshtml" />
     <Content Include="tempword\部门模板.xlsx" />
     <Content Include="Views\TF_EntryAndExitRegStatistics\CertificateDetail.cshtml" />
+    <Content Include="Views\SysOperateLog\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MOON_WORK_DIRECTORY_PATH\moontemp\" />

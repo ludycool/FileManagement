@@ -329,6 +329,17 @@
             }
             //删除
             function Del() {
+                var rows = $("#dg").datagrid('getSelected');
+                //首先取出来值判断只能选择一个
+                if (rows == null) {
+                    $.messager.alert("友情提示", "请选择", "error");
+                    return;
+                }
+                var aprovalstatus = rows.ApprovalStates;
+                if (aprovalstatus != "-1") {
+                    $.messager.alert("友情提示", "此证件已经提交不可删除", "error");
+                    return;
+                }
                 DataBaseFunction.deleteInfo("dg", "Id", "TrueName");
             }
 

@@ -146,7 +146,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = EidModle.Id.ToString();
                     ReSultMode.Msg = "添加成功";
-                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案查阅--新增", true, WebClientIP, "档案查阅");
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案查阅管理--新增", true, WebClientIP, "档案查阅");
                 }
                 catch (Exception e)
                 {
@@ -154,7 +154,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = -11;
                     ReSultMode.Data = e.ToString();
                     ReSultMode.Msg = "添加失败";
-                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案查阅--新增", false, WebClientIP, "档案查阅");
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案查阅管理--新增", false, WebClientIP, "档案查阅");
                 }
 
             }
@@ -167,14 +167,14 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改成功";
-                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "档案查阅--修改", true, WebClientIP, "档案查阅");
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "档案查阅管理--修改", true, WebClientIP, "档案查阅");
                 }
                 else
                 {
                     ReSultMode.Code = -13;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "修改失败";
-                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "档案查阅--修改", false, WebClientIP, "档案查阅");
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.修改, "档案查阅管理--修改", false, WebClientIP, "档案查阅");
                 }
             }
 
@@ -319,7 +319,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "成功删除" + f + "条数据！";
-                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案查阅--删除", true, WebClientIP, "档案查阅");
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案查阅管理--删除", true, WebClientIP, "档案查阅");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -327,7 +327,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "删除失败！";
-                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案查阅--删除", false, WebClientIP, "档案查阅");
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案查阅管理--删除", false, WebClientIP, "档案查阅");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
         }

@@ -143,7 +143,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = EidModle.Id.ToString();
                     ReSultMode.Msg = "添加成功";
-                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案借用--新增", true, WebClientIP, "档案借用");
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案借用管理--新增", true, WebClientIP, "档案借用");
                 }
                 catch (Exception e)
                 {
@@ -151,7 +151,7 @@ namespace ESUI.Controllers
                     ReSultMode.Code = -11;
                     ReSultMode.Data = e.ToString();
                     ReSultMode.Msg = "添加失败";
-                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案借用--新增", false, WebClientIP, "档案借用");
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.新增, "档案借用管理--新增", false, WebClientIP, "档案借用");
                 }
 
             }
@@ -167,14 +167,14 @@ namespace ESUI.Controllers
                     ReSultMode.Code = 11;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "保存成功";
-                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.归还, "档案借用--归还", true, WebClientIP, "档案借用");
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.归还, "档案借用管理--归还", true, WebClientIP, "档案借用");
                 }
                 else
                 {
                     ReSultMode.Code = -13;
                     ReSultMode.Data = "";
                     ReSultMode.Msg = "保存失败";
-                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.归还, "档案借用--归还", false, WebClientIP, "档案借用");
+                    SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.归还, "档案借用管理--归还", false, WebClientIP, "档案借用");
                 }
             }
 
@@ -319,7 +319,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = 11;
                 ReSultMode.Data = f.ToString();
                 ReSultMode.Msg = "成功删除" + f + "条数据！";
-                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案借用--删除", true, WebClientIP, "档案借用");
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案借用管理--删除", true, WebClientIP, "档案借用");
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
             else
@@ -327,7 +327,7 @@ namespace ESUI.Controllers
                 ReSultMode.Code = -13;
                 ReSultMode.Data = "0";
                 ReSultMode.Msg = "删除失败！";
-                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案借用--删除", false, WebClientIP, "档案借用");
+                SysOperateLogBiz.AddSysOperateLog(UserData.Id.ToString(), UserData.UserName, e3net.Mode.OperatEnumName.删除, "档案借用管理--删除", false, WebClientIP, "档案借用");
 
                 return Json(ReSultMode, JsonRequestBehavior.AllowGet);
             }
